@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.media.MediaView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.5" prefWidth="799.0" stylesheets="@../CSS/DashBoard_general.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.loginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.5" prefWidth="799.0" stylesheets="@../CSS/DashBoard_general.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.Controllers.loginController">
    <children>
       <MediaView fx:id="videoview" fitHeight="449.5" fitWidth="799.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <AnchorPane layoutX="465.0" layoutY="67.0" prefHeight="315.0" prefWidth="282.0" style="-fx-border-radius: 30px; -fx-background-radius: 30px;" styleClass="glass" stylesheets="@../CSS/login.css" AnchorPane.bottomAnchor="68.0" AnchorPane.rightAnchor="38.0" AnchorPane.topAnchor="67.0">
