@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.media.MediaView?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.5" prefWidth="799.0" stylesheets="@../CSS/DashBoard_general.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.loginController">
+   <children>
+      <MediaView fx:id="videoview" fitHeight="449.5" fitWidth="799.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <AnchorPane layoutX="465.0" layoutY="67.0" prefHeight="315.0" prefWidth="282.0" style="-fx-border-radius: 30px; -fx-background-radius: 30px;" styleClass="glass" stylesheets="@../CSS/login.css" AnchorPane.bottomAnchor="68.0" AnchorPane.rightAnchor="38.0" AnchorPane.topAnchor="67.0">
+         <children>
+            <TextField fx:id="nametxt" layoutX="106.0" layoutY="102.0" prefHeight="40.0" prefWidth="175.0" style="-fx-border-radius: 20px; -fx-background-color: white; -fx-background-radius: 20px;" />
+            <PasswordField fx:id="pwtxt" layoutX="106.0" layoutY="175.0" prefHeight="40.0" prefWidth="175.0" style="-fx-background-radius: 20px; -fx-border-radius: 20; -fx-background-color: white;" />
+            <Button fx:id="login" layoutX="42.0" layoutY="257.0" mnemonicParsing="false" onAction="#clickLogin" prefHeight="35.0" prefWidth="83.0" style="-fx-background-color: rgb(57, 57, 57); -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="Login" />
+            <Button fx:id="clear" layoutX="193.0" layoutY="257.0" mnemonicParsing="false" onAction="#clickClear" prefHeight="35.0" prefWidth="83.0" style="-fx-background-color: rgb(57, 57, 57); -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="Clear" />
+            <Label layoutX="20.0" layoutY="186.0" prefHeight="18.0" prefWidth="67.0" style="-fx-alignment: center; -fx-text-fill: black; -fx-font-size: 13;" styleClass="selected_dash_font" stylesheets="@../CSS/DashBoard_general.css" text="Password" />
+            <Label layoutX="16.0" layoutY="113.0" prefHeight="18.0" prefWidth="74.0" style="-fx-alignment: center; -fx-text-fill: black; -fx-font-size: 13;" styleClass="selected_dash_font" stylesheets="@../CSS/DashBoard_general.css" text="UserName" />
+            <ImageView fx:id="usericon_image" fitHeight="86.0" fitWidth="90.0" layoutX="114.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Image/usericon.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <ImageView fx:id="porsche_image" fitHeight="168.0" fitWidth="220.0" layoutX="494.0" layoutY="-49.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Image/porsche_text.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="porsche_logo_image" fitHeight="28.0" fitWidth="25.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Image/porsche_logo.png" />
+         </image>
+      </ImageView>
+      <HBox layoutX="761.0" layoutY="13.0" prefHeight="30.0" prefWidth="30.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <ImageView fx:id="closeimg" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+               <image>
+                  <Image url="@../Image/close.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <StackPane fx:id="errorPane" layoutY="410.0" prefHeight="40.0" prefWidth="799.0" style="-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(255, 60, 41); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(255, 102, 40);" translateY="42.0">
+         <children>
+            <Label fx:id="errorlbl" style="-fx-text-fill: white;" styleClass="selected_dash_font" stylesheets="@../CSS/DashBoard_general.css" text="ERROR Message">
+               <padding>
+                  <Insets bottom="3.0" />
+               </padding>
+            </Label>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

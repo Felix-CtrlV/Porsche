@@ -1,0 +1,46 @@
+.textfield{
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 6 10 6 10;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #999999;
+}
+.font{
+    -fx-font-family: Arial;
+    -fx-font-size: 14px;
+    -fx-font-fill:black;
+    -fx-opacity: 0.85;
+}
+.button{
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.2, 0, 2);
+}
+.v_nav{
+
+    -fx-background-color:transparent;
+    -fx-border-radius: 8;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-font-fill:black;
+
+}
+.v_nav:hover{
+    -fx-background-color: black;
+    -fx-font-fill:white;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+
+}
+.anchorpane{
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-background-color: #cfcbcb;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.2, 0, 2);
+}

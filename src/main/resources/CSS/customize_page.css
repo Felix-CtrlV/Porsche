@@ -1,0 +1,120 @@
+/* Customize option names */
+.customize_options {
+    -fx-font-family: "Arial";
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+}
+
+.nav-button-highlight{
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+}
+
+/* Car model name */
+.car_model_name {
+    -fx-font-family: "Arial";
+    -fx-font-size: 32px;
+    -fx-font-weight: 700;
+}
+
+/* Car frame number */
+.car_frame_num {
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 48px;
+    -fx-font-style: italic;
+}
+
+/* Navigation Button */
+.navbutton {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.navbutton:hover {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+}
+
+/* Confirm Order Button */
+.confirmorderbtn {
+    -fx-background-color: #fe6579;  /* original color */
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 24;
+    -fx-cursor: hand;
+}
+
+.confirmorderbtn:hover {
+    -fx-background-color: #e0556b;  /* darken on hover */
+    -fx-text-fill: white;
+    -fx-background-radius: 24;
+}
+
+/* Glassmorphism main panel */
+.glass_main {
+    -fx-background-color:
+        rgba(255,255,255,0.9),
+        linear-gradient(to bottom right, rgba(255,255,255,0.35), rgba(255,255,255,0.06));
+    -fx-background-insets: 0, 0;
+    -fx-background-radius: 20 20 0 0;
+
+    -fx-border-color: rgba(255,255,255,0.45);
+    -fx-border-width: 1;
+    -fx-border-radius: 20 20 0 0;
+
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 24, 0.35, 0, 10);
+}
+
+/* Arrow button */
+.arrow-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #444444;
+    -fx-font-size: 18px;
+    -fx-cursor: hand;
+    -fx-padding: 4;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+.arrow-button:hover {
+    -fx-text-fill: #222222;
+}
+
+.arrow-button:pressed {
+    -fx-text-fill: #fe6579;
+}
+
+.arrow-button_options {
+    -fx-background-color: transparent;
+    -fx-text-fill: #444444;
+    -fx-font-size: 26px;
+    -fx-cursor: hand;
+    -fx-padding: 4;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.arrow-button_options:hover {
+    -fx-text-fill: #222222;
+}
+.arrow-button_options:pressed {
+    -fx-text-fill: #fe6579;
+}
+
+/* Fuel type */
+.fuel_type {
+    -fx-background-color: transparent;
+    -fx-border-color: #444444;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-padding: 4 12 4 12;
+    -fx-text-fill: #222222;
+    -fx-font-family: "Times New Roman";
+}

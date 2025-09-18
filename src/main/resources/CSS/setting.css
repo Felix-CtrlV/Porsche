@@ -1,0 +1,72 @@
+/* Style for input fields */
+.input-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 6 10 6 10;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #999999;
+}
+
+/* Eye button styling */
+.eye-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 4 10 4 10;
+    -fx-cursor: hand;
+    -fx-font-size: 16px;
+}
+
+/* Hover effect */
+.eye-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Focus effect for input */
+.input-field:focused {
+    -fx-border-color: #4a90e2;
+}
+.button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.2, 0, 2);
+}
+
+.goback_btn {
+    -fx-background-color: #ec221f;
+}
+
+.goback_btn:hover {
+    -fx-background-color: #ff3b38;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.goback_btn:pressed {
+    -fx-background-color: #b71a18;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.confirm_btn {
+    -fx-background-color: #000000;
+}
+
+.confirm_btn:hover {
+    -fx-background-color: #222222;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.confirm_btn:pressed {
+    -fx-background-color: #111111;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}

@@ -1,0 +1,17 @@
+.textfield {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-font-size: 14px;
+    -fx-font-family: "Times New Roman";
+    -fx-font-fill:black;
+
+
+}
+.font{
+    -fx-font-family:Arial;
+    -fx-font-size: 15px;
+    -fx-font-fill:black;
+    -fx-opacity: 0.75;
+}

@@ -1,0 +1,23 @@
+.button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.2, 0, 2);
+}
+.erroranc{
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    /*-fx-padding: 8 16;*/
+    /* -fx-background-radius: 15; */
+    /* -fx-border-radius: 14; */
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+    /*-fx-background-size: width 280  height 280;*/
+}
+.round{
+-fx-background-radius: 20;
+-fx-border-radius: 20;
+}

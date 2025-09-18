@@ -1,0 +1,85 @@
+.font {
+    -fx-font-family: "Arial";
+    -fx-font-size: 12px;
+    -fx-opacity: 0.70;
+}
+
+.head_font {
+    -fx-font-family: "Arial";
+    -fx-font-size: 20px;
+    -fx-opacity: 0.65;
+    -fx-font-weight: 700;
+}
+
+.topic_font {
+    -fx-font-family: "Arial";
+    -fx-font-size: 18px;
+    -fx-opacity: 1;
+    -fx-font-weight: 700;
+}
+
+.image_holder:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0.4, 0, 4);
+}
+
+.confirmorderbtn {
+    -fx-background-color: #fe6579;
+    -fx-font-size: 10px;
+    -fx-padding: 5 10;
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.confirmorderbtn:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.configbtn {
+    -fx-background-color: black;
+    -fx-font-size: 10px;
+    -fx-padding: 5 10;
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+}
+
+.configbtn:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.button {
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+#btnLeft, #btnRight {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 24px;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+#btnLeft:hover, #btnRight:hover {
+    -fx-text-fill: #ff6579;
+}
+
+.image_holder {
+    -fx-background-color: white;
+    -fx-background-radius: 15px;
+    -fx-border-width: 0;
+    -fx-padding: 5px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0.3, 0, 2);
+}

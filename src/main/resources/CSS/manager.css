@@ -1,0 +1,50 @@
+ /* manager.css */
+ .root {
+     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ }
+
+ .button {
+     -fx-cursor: hand;
+     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+     -fx-transition: all 0.3s ease;
+ }
+
+ .button:hover {
+     -fx-scale-x: 1.03;
+     -fx-scale-y: 1.03;
+     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);
+ }
+
+ .button:pressed {
+     -fx-scale-x: 0.98;
+     -fx-scale-y: 0.98;
+ }
+
+ /* Custom button styles */
+ #briminventory {
+     -fx-background-color: #3498db;
+ }
+
+ #btrorder {
+     -fx-background-color: #2ecc71;
+ }
+
+ #brustaff {
+     -fx-background-color: #9b59b6;
+ }
+
+ /* Additional styles for a more professional look */
+ .hbox {
+     -fx-alignment: center-left;
+     -fx-padding: 0 20;
+ }
+
+ .label {
+     -fx-text-fill: white;
+     -fx-font-size: 20;
+     -fx-font-weight: bold;
+ }
+
+ #contentPane {
+     -fx-background-color: #ecf0f1;
+ }

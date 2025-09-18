@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.StaffDashboardController">
+    <children>
+        <!-- Header Section with gradient background -->
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="linear-gradient(to right, #2c3e50, #3498db)" height="60.0" layoutX="14.0" layoutY="14.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1172.0" />
+        <Label layoutX="30.0" layoutY="30.0" text="Staff Management Dashboard" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 20;" />
+
+        <!-- Staff Selection -->
+        <HBox layoutX="30.0" layoutY="90.0" spacing="10.0" style="-fx-background-color: #e8f4f8; -fx-padding: 10; -fx-background-radius: 8;">
+            <children>
+                <Label text="Select Seller:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-size: 14;" />
+                <ComboBox fx:id="combostaff" onAction="#selectstaff" prefWidth="250.0" style="-fx-background-color: white; -fx-border-color: #3498db; -fx-border-radius: 5; -fx-font-size: 14;" />
+            </children>
+        </HBox>
+
+        <!-- User Information Table -->
+        <TableView fx:id="tbluserinfo" layoutX="14.0" layoutY="140.0" prefHeight="400.0" prefWidth="1172.0" style="-fx-background-radius: 8; -fx-border-radius: 8;">
+            <columns>
+                <TableColumn fx:id="colid" prefWidth="70.0" text="User ID" />
+                <TableColumn fx:id="colname" prefWidth="120.0" text="Name" />
+                <TableColumn fx:id="colemail" prefWidth="180.0" text="Email" />
+                <TableColumn fx:id="colnrc" prefWidth="100.0" text="NRC" />
+                <TableColumn fx:id="colpassword" prefWidth="100.0" text="Password" />
+                <TableColumn fx:id="coladdress" prefWidth="150.0" text="Address" />
+                <TableColumn fx:id="colphone" prefWidth="100.0" text="Phone" />
+                <TableColumn fx:id="colrole" prefWidth="80.0" text="Role" />
+                <TableColumn fx:id="colactive" prefWidth="80.0" text="Status" />
+            </columns>
+        </TableView>
+
+        <!-- Content Area for Order Management -->
+        <AnchorPane fx:id="mainContentPane" layoutX="14.0" layoutY="140.0" prefHeight="400.0" prefWidth="1172.0" visible="false" />
+    </children>
+</AnchorPane>

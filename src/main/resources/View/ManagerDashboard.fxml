@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="ManagerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerController">
+    <children>
+        <!-- Top Navigation Bar -->
+        <HBox layoutX="0.0" layoutY="0.0" prefHeight="70.0" prefWidth="1000.0" style="-fx-background-color: #2c3e50; -fx-alignment: center-left; -fx-padding: 0 20;">
+            <children>
+                <Label prefHeight="30.0" prefWidth="198.0" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="Manager DashBoard" />
+                <HBox prefHeight="70.0" prefWidth="755.0" spacing="15.0" style="-fx-alignment: center-right; -fx-padding: 0 0 0 400;">
+                    <children>
+                        <Button fx:id="briminventory" mnemonicParsing="false" onAction="#clickinventory" prefHeight="40.0" prefWidth="180.0" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Inventory ">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="btrorder" mnemonicParsing="false" onAction="#cllickorder" prefHeight="40.0" prefWidth="180.0" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Order ">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="brustaff" mnemonicParsing="false" onAction="#clickstaff" prefHeight="40.0" prefWidth="180.0" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Staff ">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </HBox>
+
+        <!-- Content Area - This is where other FXML files will be loaded -->
+        <AnchorPane fx:id="contentPane" layoutX="0.0" layoutY="70.0" prefHeight="630.0" prefWidth="1000.0" style="-fx-background-color: #ecf0f1;" />
+    </children>
+</AnchorPane>
