@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
-public class finalize_orderController {
+public class staffFinalizeController {
 
     @FXML
     private ImageView selected_model_image;

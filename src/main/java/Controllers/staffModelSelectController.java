@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 
-public class modelselectController {
+public class staffModelSelectController {
 
     @FXML private ScrollPane scrollPane;
     @FXML private Button btnLeft;

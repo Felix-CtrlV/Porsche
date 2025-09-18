@@ -170,7 +170,7 @@ public class loginController {
                     try {
                         Parent root = switch (u.getRole().toLowerCase()) {
                             case "admin" ->
-                                    FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/AdminDashboard.fxml")));
+                                    FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/adminDashboard.fxml")));
                             case "manager" ->
                                     FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/ManagerDashboard.fxml")));
                             case "staff" ->

@@ -19,12 +19,14 @@ import Model.Staff_info;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-public class accountController {
+public class adminAccountController {
 
     @FXML
     private Label StaffListTitleLabel;
@@ -137,7 +139,7 @@ public class accountController {
     private boolean cardtype = true;
 
     @FXML
-    void SwitchMouseClick(MouseEvent event) throws SQLException, IOException {
+    void SwitchMouseClick(MouseEvent event) throws SQLException, IOException, URISyntaxException {
             if (cardtype){
                 cardtype = false;
                 StaffListTitleLabel.setText("Staff List (InActive)");
@@ -169,7 +171,7 @@ public class accountController {
 
     private List<Staff_info> staffInfoList = new ArrayList<>();
 
-    public accountController() throws SQLException, ClassNotFoundException, IOException {
+    public adminAccountController() throws SQLException, ClassNotFoundException, IOException {
 
     }
 
@@ -178,7 +180,7 @@ public class accountController {
 
 
     @FXML
-    private void  initialize() throws SQLException, IOException {
+    private void  initialize() throws SQLException, IOException, URISyntaxException {
 
         StaffListTitleLabel.setText("Staff List (Active)");
         addStaffCard(cardtype);
@@ -190,10 +192,6 @@ public class accountController {
             }
        }
         highlightSelectedCard(first_id);
-
-
-
-
     }
 
 
@@ -226,7 +224,7 @@ public class accountController {
         }
     }
 
-    private void addStaffCard(boolean check) throws IOException, SQLException {
+    private void addStaffCard(boolean check) throws IOException, SQLException, URISyntaxException {
 
         staffListContainer.getChildren().clear();
         staffInfoList.clear();
@@ -249,39 +247,37 @@ public class accountController {
             Date dob = rs.getDate("dob");
             boolean status = rs.getBoolean("user_status");
 
-
             Staff_info staff = new Staff_info(id, name, phone, email, address, dob, status);
             staffInfoList.add(staff);
-
-
-            File fxmlFile = new File("src/main/resources/manager_dashboard/manager_staffcards.fxml");
-
-            FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-            Node staffCard = loader.load();
-
-            cardController cardController = loader.getController();
-
-            staffCard.setUserData(staff.getStaff_id());
-
-
-            cardController.setData(
-                    staff.getStaff_id(),
-                    staff.getStaff_name(),
-                    staff.isStatus()
-            );
-
-            staffCard.setOnMouseClicked(event -> {
-                showStaffDetails(staff);
-            });
-
+            Node staffCard = getCard(staff);
             staffListContainer.getChildren().add(staffCard);
-
-
         }
         rs.close();
         cs.close();
     }
 
+    private Node getCard(Staff_info staff) throws IOException, URISyntaxException {
+        File fxmlFile = new File(Objects.requireNonNull(getClass().getResource("/View/userCards.fxml")).toURI());
+
+        FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
+        Node staffCard = loader.load();
+
+        cardController cardController = loader.getController();
+
+        staffCard.setUserData(staff.getStaff_id());
+
+
+        cardController.setData(
+                staff.getStaff_id(),
+                staff.getStaff_name(),
+                staff.isStatus()
+        );
+
+        staffCard.setOnMouseClicked(event -> {
+            showStaffDetails(staff);
+        });
+        return staffCard;
+    }
 
 
 }

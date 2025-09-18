@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 
-public class UserRegisterController {
+public class adminUserRegisterController {
 
     @FXML
     private Button registerbtn;

@@ -3,7 +3,7 @@ package Controllers;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 
-public class toolController {
+public class staffToolsController {
 
     @FXML
     private ImageView img1;

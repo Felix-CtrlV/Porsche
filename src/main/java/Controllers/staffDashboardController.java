@@ -44,7 +44,7 @@ public class staffDashboardController {
     }
 
     public void initialize() throws IOException {
-        AnchorPane cars = FXMLLoader.load(getClass().getResource("/View/cards.fxml"));
+        AnchorPane cars = FXMLLoader.load(getClass().getResource("/View/staffCard.fxml"));
         Staff_anc.getChildren().add(cars);
 
         img.setImage(new Image(getClass().getResourceAsStream("/image/porsche_logo.png")));

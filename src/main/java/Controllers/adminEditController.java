@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 
 import java.time.LocalDate;
 
-public class editController {
+public class adminEditController {
 
     @FXML
     private Button registerbtn;

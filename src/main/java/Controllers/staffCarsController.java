@@ -4,9 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Rectangle;
 
-public class carsController {
+public class staffCarsController {
 
     @FXML private ImageView nine11_select_image;
     @FXML private ImageView seven18_select_image;

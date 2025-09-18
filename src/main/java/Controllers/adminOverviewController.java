@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-public class overviewController {
+public class adminOverviewController {
 
     @FXML
     private Label averageLbl;
@@ -75,7 +75,7 @@ public class overviewController {
 
     private int currentYear = LocalDate.now().getYear();
 
-    public overviewController() throws SQLException, ClassNotFoundException {
+    public adminOverviewController() throws SQLException, ClassNotFoundException {
     }
 
     private void updateYearLabels() {

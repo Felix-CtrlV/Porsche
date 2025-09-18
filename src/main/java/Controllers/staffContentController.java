@@ -3,7 +3,7 @@ package Controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class contentController {
+public class staffContentController {
 
     @FXML
     private TextField nametx;

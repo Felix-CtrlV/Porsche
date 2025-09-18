@@ -7,25 +7,19 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
-import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -34,7 +28,7 @@ import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class adminController {
+public class adminDashboardController {
 
     private int adminid;
 
@@ -81,19 +75,19 @@ public class adminController {
 
     @FXML
     void clickAccount(ActionEvent event) throws IOException {
-        loadView("/View/Accounts.fxml");
+        loadView("/View/adminAccounts.fxml");
         setActiveButton(accountbtn);
     }
 
     @FXML
     void clickOrders(ActionEvent event) throws IOException {
-        loadView("/View/Orders.fxml");
+        loadView("/View/adminOrders.fxml");
         setActiveButton(ordersbtn);
     }
 
     @FXML
     void clickOverview(ActionEvent event) throws IOException {
-        loadView("/View/overview.fxml");
+        loadView("/View/adminOverview.fxml");
         setActiveButton(overviewbtn);
     }
 
@@ -117,7 +111,7 @@ public class adminController {
 
         Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
         img.setImage(porsche_logo);
-        loadView("/View/overview.fxml");
+        loadView("/View/adminOverview.fxml");
         setActiveButton(overviewbtn);
         admin_anc.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
