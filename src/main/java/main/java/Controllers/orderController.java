@@ -1,7 +1,7 @@
 package main.java.Controllers;
 
-import Database.Porsche_DB;
-import Model.orderView;
+import main.java.Database.Porsche_DB;
+import main.java.Model.orderView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
