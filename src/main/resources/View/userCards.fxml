@@ -16,7 +16,7 @@
          <children>
             <ImageView fx:id="StaffImage" fitHeight="99.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
                <image>
-                  <Image url="@../images/usericon.png" />
+                  <Image url="@../Image/usericon.png" />
                </image>
             </ImageView>
             <VBox alignment="CENTER" prefHeight="60.0" prefWidth="103.0" spacing="3.0">
