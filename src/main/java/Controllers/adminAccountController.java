@@ -36,7 +36,7 @@ public class adminAccountController {
     @FXML
     private VBox staffListContainer;
 
-    private boolean cardtype = true; // true = active, false = inactive
+    private boolean cardtype = true;
     private List<Staff_info> staffInfoList = new ArrayList<>();
 
     private Porsche_DB db = new Porsche_DB();
@@ -64,9 +64,8 @@ public class adminAccountController {
         staffInfoList.clear();
 
         String status = active ? "active" : "inactive";
-        CallableStatement cs = con.prepareCall("CALL staffcard(?)");
-        cs.setString(1, status);
-        ResultSet rs = cs.executeQuery();
+        PreparedStatement generate = con.prepareStatement("select user_id, user_name, user_phone, user_email, user_address, dob, user_status from user_info order by user_status desc");
+        ResultSet rs = generate.executeQuery();
 
         while (rs.next()) {
             int id = rs.getInt("user_id");
@@ -85,7 +84,7 @@ public class adminAccountController {
         }
 
         rs.close();
-        cs.close();
+        generate.close();
 
         if (!staffInfoList.isEmpty()) {
             showStaffDetails(staffInfoList.get(0));
