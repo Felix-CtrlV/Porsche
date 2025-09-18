@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="78.0" prefWidth="238.0" styleClass="staffCard" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerStaffCardController">
+   <children>
+      <HBox focusTraversable="true" layoutX="-2.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="78.0" prefWidth="241.0" spacing="5.0">
+         <children>
+            <ImageView fx:id="StaffImage" fitHeight="99.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
+               <image>
+                  <Image url="@../Image/usericon.png" />
+               </image>
+            </ImageView>
+            <VBox alignment="CENTER" prefHeight="78.0" prefWidth="115.0" spacing="3.0">
+               <children>
+                  <HBox prefHeight="25.0" prefWidth="103.0" spacing="10.0">
+                     <children>
+                        <Label prefHeight="64.0" prefWidth="22.0" style="-fx-text-fill: red;" text="ID :">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="StaffId" prefHeight="27.0" prefWidth="26.0" style="-fx-text-fill: red;" text="ID :">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Label fx:id="StaffName" prefHeight="29.0" prefWidth="103.0" text="Name">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="17.0" prefWidth="108.0" text="Amount" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+            <StackPane prefHeight="78.0" prefWidth="42.0" HBox.hgrow="NEVER">
+               <children>
+                  <Circle fx:id="ActiveColor" fill="#34a853" radius="8.0" stroke="BLACK" strokeType="INSIDE" style="-fx-background-color: black;" StackPane.alignment="CENTER_LEFT" />
+                  <Circle fill="WHITE" radius="4.0" stroke="BLACK" strokeType="INSIDE" StackPane.alignment="CENTER_LEFT">
+                     <StackPane.margin>
+                        <Insets left="4.0" />
+                     </StackPane.margin></Circle>
+               </children>
+            </StackPane>
+            <Polygon fx:id="cardShapePolygon" points="216.0, 71.50311279296875, 232.0, 33.79351806640625, 232.0, 111.79351806640625" stroke="BLACK" strokeType="INSIDE" style="-fx-scale-x: 1; -fx-scale-y: 0.5;" styleClass="cardShape" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Polygon>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
