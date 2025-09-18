@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChartDAO {
+public class pullChartDAO {
 
     private Connection con;
 
