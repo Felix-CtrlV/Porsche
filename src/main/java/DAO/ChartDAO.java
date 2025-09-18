@@ -1,8 +1,8 @@
 package main.java.DAO;
 
-import Model.overviewBar;
-import Model.overviewLine;
-import Model.overviewPie;
+import main.java.Model.overviewBar;
+import main.java.Model.overviewLine;
+import main.java.Model.overviewPie;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
