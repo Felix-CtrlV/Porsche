@@ -395,3 +395,19 @@
 .default-color3.chart-bar {
     -fx-bar-fill: #FFD300; /* fourth series */
 }
+
+.staffCard{
+    -fx-background-color: #d6d3c2;
+    -fx-background-radius: 15px;
+    -fx-border-width: 0;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0.3, 0, 2);
+}
+.cardShape{
+    -fx-stroke: transparent;
+    -fx-fill: #d6d3c2;
+     -fx-border-width: 0;
+     -fx-scale-x :3;
+     -fx-scale-y: 3;
+    -fx-fill : #d6d3c2;
+}
