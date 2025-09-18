@@ -1,7 +1,7 @@
 package main.java.Controllers;
 
-import Database.Porsche_DB;
-import Model.order;
+import main.java.Database.Porsche_DB;
+import main.java.Model.order;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -15,7 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import project.MainClass.Staff_info;
+import main.java.Model.Staff_info;
 
 import java.io.File;
 import java.io.IOException;
