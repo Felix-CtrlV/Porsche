@@ -1,9 +1,9 @@
 package main.java.Controllers;
 
-import Database.Porsche_DB;
-import Model.user;
-import Utils.Session;
-import Utils.defaultStage;
+import main.java.Database.Porsche_DB;
+import main.java.Model.user;
+import main.java.Utils.Session;
+import main.java.Utils.defaultStage;
 import javafx.animation.*;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;

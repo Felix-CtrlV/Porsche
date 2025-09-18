@@ -1,24 +1,19 @@
 package main.java.Controllers;
 
-import Database.Porsche_DB;
-import javafx.beans.Observable;
+import main.java.Database.Porsche_DB;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ResizeFeaturesBase;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
 import java.sql.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class revenueController {
 

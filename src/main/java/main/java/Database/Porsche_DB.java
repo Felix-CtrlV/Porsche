@@ -21,7 +21,7 @@ public class Porsche_DB {
     public void disconnect() throws SQLException {
         if(con!=null && !con.isClosed()){
             con.close();
-            System.out.println("Disconnected from the Database");
+            System.out.println("Disconnected from the main.java.Database");
         }
     }
 }

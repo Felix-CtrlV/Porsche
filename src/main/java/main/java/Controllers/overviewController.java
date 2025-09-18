@@ -1,10 +1,10 @@
 package main.java.Controllers;
 
-import DAO.ChartDAO;
-import Database.Porsche_DB;
-import Model.overviewBar;
-import Model.overviewLine;
-import Model.overviewPie;
+import main.java.DAO.ChartDAO;
+import main.java.Database.Porsche_DB;
+import main.java.Model.overviewBar;
+import main.java.Model.overviewLine;
+import main.java.Model.overviewPie;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,7 +15,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
-import javax.swing.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;

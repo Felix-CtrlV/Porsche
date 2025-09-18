@@ -13,7 +13,7 @@ module Porsche {
 
     requires mysql.connector.j;
 
-    opens MainUI to javafx.fxml;
+    opens main.java.MainUI to javafx.fxml;
     opens Controllers to javafx.fxml;
 
     exports main.java.MainUI;

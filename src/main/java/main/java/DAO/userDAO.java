@@ -1,6 +1,6 @@
 package main.java.DAO;
 
-import Model.user;
+import main.java.Model.user;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
