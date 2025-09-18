@@ -2,44 +2,30 @@ package Controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 
 public class cardController {
-
-    @FXML
-    private Circle ActiveColor;
 
     @FXML
     private Label StaffId;
 
     @FXML
-    private ImageView StaffImage;
-
-    @FXML
     private Label StaffName;
 
-
     @FXML
-    private Polygon cardShapePolygon;
+    private Circle ActiveColor;
 
+    private int staffId;
 
-    public void setData(int id,String name,boolean status){
-
+    public void setData(int id, String name, boolean isActive) {
+        this.staffId = id;
         StaffId.setText(String.valueOf(id));
         StaffName.setText(name);
-//        if (imgPath != null && !imgPath.isEmpty()) {
-//            StaffImage.setImage(new Image(imgPath));
-//        }
-        if (status) {
-            ActiveColor.setStyle("-fx-fill: green;");
-        } else {
-            ActiveColor.setStyle("-fx-fill: red;");
-        }
-
+        ActiveColor.setFill(isActive ? Color.LIME : Color.RED);
     }
 
-
+    public int getStaffId() {
+        return staffId;
+    }
 }

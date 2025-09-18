@@ -1,25 +1,18 @@
 package Controllers;
 
 import Database.Porsche_DB;
+import Model.Staff_info;
 import Model.order;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import Model.Staff_info;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,249 +28,110 @@ public class adminAccountController {
     private Button ActiveInactiveSwitchbtn;
 
     @FXML
-    private TableColumn<order, Double> AmountCol;
-
-    @FXML
-    private Label CancelAmountLabel;
-
-    @FXML
-    private Label CompleAmountLabel;
-
-    @FXML
-    private TableColumn<order, String > CustomerNameCol;
-
-    @FXML
-    private TableColumn<order, Date> DateCol;
-
-    @FXML
-    private Label IsInstallPaidAmountLabel;
-
-    @FXML
-    private Label IsInstallRemainAmountLabel;
-
-    @FXML
-    private BorderPane IsInstallmentBorderPane;
-
-    @FXML
-    private TableColumn<order, String> IsInstallmentCol;
-
-    @FXML
-    private VBox IsInstallorderItemsContainer;
-
-    @FXML
-    private Label IsInstalltotalPriceLabel;
-
-    @FXML
-    private BorderPane IsNotInstallBorderPane;
-
-    @FXML
-    private PieChart MonthlyAttendancePieChart;
-
-    @FXML
-    private Label Monthslabel;
-
-    @FXML
-    private Button NextMonthbtn;
-
-    @FXML
-    private Button NextYearbtn;
-
-    @FXML
-    private TableColumn<order, Integer> NoCol;
-
-    @FXML
-    private Label NoInstallLabel;
-
-    @FXML
-    private VBox NoInstallorderItemsContainer;
-
-    @FXML
-    private Label PendAmountLabel;
-
-    @FXML
-    private Button PreviousMonthbtn;
-
-    @FXML
-    private Button PreviousYearbth;
-
-    @FXML
-    private Button SearchNamebtn;
-
-    @FXML
-    private Label StaffAddressLabel;
-
-    @FXML
-    private Label StaffDOBLabel;
-
-    @FXML
-    private Label StaffEmailLabel;
+    private Label StaffAddressLabel, StaffDOBLabel, StaffEmailLabel, StaffNameLable, StaffPhoneLabel;
 
     @FXML
     private ImageView StaffImage;
 
     @FXML
-    private Label StaffNameLable;
-
-    @FXML
-    private Label StaffPhoneLabel;
-
-    @FXML
-    private TextField StaffSearchText;
-
-    @FXML
-    private Label TotalOrdersAmountLabel;
-
-    @FXML
-    private Label Yearslabel;
-
-    @FXML
-    private TableView<order> ordersTable;
-
-    @FXML
     private VBox staffListContainer;
 
-    private boolean cardtype = true;
-
-    @FXML
-    void SwitchMouseClick(MouseEvent event) throws SQLException, IOException, URISyntaxException {
-            if (cardtype){
-                cardtype = false;
-                StaffListTitleLabel.setText("Staff List (InActive)");
-                addStaffCard(cardtype);
-
-                int first_id = staffInfoList.getFirst().getStaff_id();
-                for (Staff_info staffInfo : staffInfoList) {
-                    if (staffInfo.getStaff_id() == first_id){
-                        showStaffDetails(staffInfo);
-                    }
-                }
-                highlightSelectedCard(first_id);
-            }else{
-                cardtype = true;
-                StaffListTitleLabel.setText("Staff List (InActive)");
-                addStaffCard(cardtype);
-
-                int first_id = staffInfoList.getFirst().getStaff_id();
-                for (Staff_info staffInfo : staffInfoList) {
-                    if (staffInfo.getStaff_id() == first_id){
-                        showStaffDetails(staffInfo);
-                    }
-                }
-                highlightSelectedCard(first_id);
-            }
-    }
-
-
-
+    private boolean cardtype = true; // true = active, false = inactive
     private List<Staff_info> staffInfoList = new ArrayList<>();
 
-    public adminAccountController() throws SQLException, ClassNotFoundException, IOException {
+    private Porsche_DB db = new Porsche_DB();
+    private Connection con;
 
+    public adminAccountController() throws SQLException, ClassNotFoundException {
+        con = db.connect();
     }
-
-    Porsche_DB db = new Porsche_DB();
-    Connection con = db.connect();
-
 
     @FXML
-    private void  initialize() throws SQLException, IOException, URISyntaxException {
-
+    private void initialize() throws SQLException, IOException {
         StaffListTitleLabel.setText("Staff List (Active)");
-        addStaffCard(cardtype);
-
-        int first_id = staffInfoList.getFirst().getStaff_id();
-       for (Staff_info staffInfo : staffInfoList) {
-            if (staffInfo.getStaff_id() == first_id){
-                showStaffDetails(staffInfo);
-            }
-       }
-        highlightSelectedCard(first_id);
+        loadStaffCards(cardtype);
     }
 
+    @FXML
+    void SwitchMouseClick(MouseEvent event) throws SQLException, IOException {
+        cardtype = !cardtype;
+        StaffListTitleLabel.setText(cardtype ? "Staff List (Active)" : "Staff List (Inactive)");
+        loadStaffCards(cardtype);
+    }
+
+    private void loadStaffCards(boolean active) throws SQLException, IOException {
+        staffListContainer.getChildren().clear();
+        staffInfoList.clear();
+
+        String status = active ? "active" : "inactive";
+        CallableStatement cs = con.prepareCall("CALL staffcard(?)");
+        cs.setString(1, status);
+        ResultSet rs = cs.executeQuery();
+
+        while (rs.next()) {
+            int id = rs.getInt("user_id");
+            String name = rs.getString("user_name");
+            String phone = rs.getString("user_phone");
+            String email = rs.getString("user_email");
+            String address = rs.getString("user_address");
+            Date dob = rs.getDate("dob");
+            boolean userStatus = rs.getBoolean("user_status");
+
+            Staff_info staff = new Staff_info(id, name, phone, email, address, dob, userStatus);
+            staffInfoList.add(staff);
+
+            Node card = createStaffCard(staff);
+            staffListContainer.getChildren().add(card);
+        }
+
+        rs.close();
+        cs.close();
+
+        if (!staffInfoList.isEmpty()) {
+            showStaffDetails(staffInfoList.get(0));
+            highlightSelectedCard(staffInfoList.get(0).getStaff_id());
+        }
+    }
+
+    private Node createStaffCard(Staff_info staff) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/View/userCards.fxml")));
+        Node staffCard = loader.load();
+
+        cardController cardCtrl = loader.getController();
+        cardCtrl.setData(
+                staff.getStaff_id(),
+                staff.getStaff_name(),
+                staff.isStatus()
+        );
+
+        staffCard.setUserData(staff.getStaff_id());
+        staffCard.setOnMouseClicked(event -> {
+            showStaffDetails(staff);
+        });
+
+        return staffCard;
+    }
 
     private void showStaffDetails(Staff_info staff) {
         StaffNameLable.setText(staff.getStaff_name());
         StaffPhoneLabel.setText(staff.getStaff_phone());
         StaffEmailLabel.setText(staff.getStaff_email());
         StaffAddressLabel.setText(staff.getStaff_address());
-        StaffDOBLabel.setText(staff.getStaff_dob().toString());
-
-//        StaffImage.setImage(new Image(staff.getImagePath()));
+        StaffDOBLabel.setText(staff.getStaff_dob() != null ? staff.getStaff_dob().toString() : "");
 
         highlightSelectedCard(staff.getStaff_id());
     }
 
     private void highlightSelectedCard(int staffId) {
-        // Reset all cards to default style
         for (Node node : staffListContainer.getChildren()) {
-            node.setStyle(" -fx-border-color: transparent;");
+            node.setStyle("-fx-border-color: transparent;");
         }
 
-        // Highlight selected card
         for (Node node : staffListContainer.getChildren()) {
-            if (node.getUserData() != null && node.getUserData() instanceof Integer) {
-                if ((int) node.getUserData() == staffId) {
-                    node.setStyle("-fx-background-color: #e8f0fe; -fx-border-color: #1a73e8; -fx-border-radius: 8; -fx-background-radius: 8;");
-                    break;
-                }
+            if (node.getUserData() instanceof Integer && (int) node.getUserData() == staffId) {
+                node.setStyle("-fx-background-color: #e8f0fe; -fx-border-color: #1a73e8; -fx-border-radius: 8; -fx-background-radius: 8;");
+                break;
             }
         }
     }
-
-    private void addStaffCard(boolean check) throws IOException, SQLException, URISyntaxException {
-
-        staffListContainer.getChildren().clear();
-        staffInfoList.clear();
-
-        CallableStatement cs = con.prepareCall("CALL staffcard(?)");
-        if(check) {
-            cs.setString(1, "active");
-        }else{
-            cs.setString(1,"inactive");
-        }
-        ResultSet rs = cs.executeQuery();
-
-        while(rs.next()){
-            int id = rs.getInt("user_id");
-
-            String name = rs.getString("user_name");
-            String phone = rs.getString("user_phone");
-            String email = rs.getString("user_email");
-            String address = rs.getString("user_address");
-            Date dob = rs.getDate("dob");
-            boolean status = rs.getBoolean("user_status");
-
-            Staff_info staff = new Staff_info(id, name, phone, email, address, dob, status);
-            staffInfoList.add(staff);
-            Node staffCard = getCard(staff);
-            staffListContainer.getChildren().add(staffCard);
-        }
-        rs.close();
-        cs.close();
-    }
-
-    private Node getCard(Staff_info staff) throws IOException, URISyntaxException {
-        File fxmlFile = new File(Objects.requireNonNull(getClass().getResource("/View/userCards.fxml")).toURI());
-
-        FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-        Node staffCard = loader.load();
-
-        cardController cardController = loader.getController();
-
-        staffCard.setUserData(staff.getStaff_id());
-
-
-        cardController.setData(
-                staff.getStaff_id(),
-                staff.getStaff_name(),
-                staff.isStatus()
-        );
-
-        staffCard.setOnMouseClicked(event -> {
-            showStaffDetails(staff);
-        });
-        return staffCard;
-    }
-
-
 }
