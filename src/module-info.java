@@ -13,9 +13,9 @@ module Porsche {
 
     requires mysql.connector.j;
 
-    opens main.java.MainUI to javafx.fxml;
+    opens MainUI to javafx.fxml;
     opens Controllers to javafx.fxml;
 
-    exports main.java.MainUI;
-    exports main.java.Controllers;
+    exports MainUI;
+    exports Controllers;
 }

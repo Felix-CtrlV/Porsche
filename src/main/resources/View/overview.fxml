@@ -21,7 +21,7 @@
 <?import javafx.scene.shape.Circle?>
 
 
-<HBox prefHeight="580.0" prefWidth="1188.0" spacing="10.0" stylesheets="@../CSS/DashBoard_general.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.Controllers.overviewController">
+<HBox prefHeight="580.0" prefWidth="1188.0" spacing="10.0" stylesheets="@../CSS/DashBoard_general.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.overviewController">
    <children>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="600.0" HBox.hgrow="SOMETIMES">
          <HBox.margin>
