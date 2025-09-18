@@ -1,4 +1,4 @@
-package Controllers;
+package main.java.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;

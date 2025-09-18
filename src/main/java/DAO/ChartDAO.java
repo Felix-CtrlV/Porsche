@@ -1,4 +1,4 @@
-package DAO;
+package main.java.DAO;
 
 import Model.overviewBar;
 import Model.overviewLine;

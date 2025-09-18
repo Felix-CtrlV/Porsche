@@ -16,6 +16,6 @@ module Porsche {
     opens MainUI to javafx.fxml;
     opens Controllers to javafx.fxml;
 
-    exports MainUI;
+    exports main.java.MainUI;
     exports Controllers;
 }

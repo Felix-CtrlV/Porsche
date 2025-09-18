@@ -1,4 +1,4 @@
-package Controllers;
+package main.java.Controllers;
 
 import DAO.ChartDAO;
 import Database.Porsche_DB;

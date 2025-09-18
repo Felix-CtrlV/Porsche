@@ -1,4 +1,4 @@
-package Controllers;
+package main.java.Controllers;
 
 import Database.Porsche_DB;
 import javafx.beans.Observable;

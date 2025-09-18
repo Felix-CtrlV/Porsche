@@ -1,7 +1,7 @@
-package Controllers;
+package main.java.Controllers;
 
 import Database.Porsche_DB;
-import MainUI.login;
+import main.java.MainUI.login;
 import Utils.Session;
 import Utils.defaultStage;
 import javafx.animation.FadeTransition;

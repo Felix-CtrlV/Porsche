@@ -1,4 +1,4 @@
-package MainUI;
+package main.java.MainUI;
 
 import javafx.application.Application;
 import javafx.concurrent.Task;

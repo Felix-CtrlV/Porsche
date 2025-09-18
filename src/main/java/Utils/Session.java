@@ -1,6 +1,6 @@
-package Utils;
+package main.java.Utils;
 
-import Database.Porsche_DB;
+import main.java.Database.Porsche_DB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

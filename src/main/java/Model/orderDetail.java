@@ -1,4 +1,4 @@
-package Model;
+package main.java.Model;
 
 public class orderDetail {
     private int detailid, orderid, customizeid, carid, partid, quantity, price;

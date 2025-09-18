@@ -1,7 +1,7 @@
-package MainUI;
+package main.java.MainUI;
 
 public class Launcher {
     public static void main(String[] args) {
-        login.launch(login.class, args);
+        main.java.MainUI.login.launch(main.java.MainUI.login.class, args);
     }
 }
