@@ -5,6 +5,8 @@ import Model.user;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -27,7 +29,16 @@ public class adminAccountController {
     private Button ActiveInactiveSwitchbtn;
 
     @FXML
+    private LineChart<?,?> linePerformance;
+
+    @FXML
     private Label StaffAddressLabel, StaffDOBLabel, StaffEmailLabel, StaffNameLable, StaffPhoneLabel;
+
+    @FXML
+    private PieChart carTargetPie, partTargetPie;
+
+    @FXML
+    private Label carTarget, partTarget;
 
     @FXML
     private ImageView StaffImage;
