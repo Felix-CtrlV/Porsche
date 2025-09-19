@@ -36,7 +36,7 @@ public class managerStaffViewController {
     private Button ActiveInactiveSwitchbtn;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, Double> PaidAmountCol;
+    private TableColumn<managerOrderViewStaff, Double> TotalAmountCol;
 
     @FXML
     private Label CancelAmountLabel;
@@ -203,7 +203,7 @@ public class managerStaffViewController {
         NoCol.setCellValueFactory(d ->new ReadOnlyObjectWrapper<>(d.getValue().getNo()));
         CustomerNameCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getCus_name()));
         DateCol.setCellValueFactory(d->new ReadOnlyObjectWrapper<>(d.getValue().getOrder_date()));
-        PaidAmountCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
+        TotalAmountCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
         IsInstallmentCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getIs_installmenat()));
 
 
@@ -247,12 +247,19 @@ public class managerStaffViewController {
             String cus_name = rs.getString(3);
             Date date = rs.getDate(4);
             Double total_amount = rs.getDouble(5);
-            String is_installment = rs.getString(6);
+            boolean installment = rs.getBoolean(6);
             String carsandparts_name = rs.getString(7);
             String carsandparts_qty = rs.getString(8);
             Double payed_amount = rs.getDouble(9);
             Double remain_amount = rs.getDouble(10);
             Date due_date = rs.getDate(11);
+
+            String is_installment = "No" ;
+            if (installment == true){
+                is_installment = "Yes";
+            }else{
+                is_installment = "No";
+            }
 
             managerOrderViewStaff od = new managerOrderViewStaff(no,order_id,cus_name,date,total_amount,is_installment,carsandparts_name,carsandparts_qty,payed_amount,remain_amount,due_date);
 
