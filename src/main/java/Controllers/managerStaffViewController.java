@@ -1,7 +1,7 @@
 package Controllers;
 
 import Database.Porsche_DB;
-import Model.manager_orders;
+import Model.managerOrderViewStaff;
 import Model.user;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,7 +23,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +36,7 @@ public class managerStaffViewController {
     private Button ActiveInactiveSwitchbtn;
 
     @FXML
-    private TableColumn<manager_orders, Double> AmountCol;
+    private TableColumn<managerOrderViewStaff, Double> AmountCol;
 
     @FXML
     private Label CancelAmountLabel;
@@ -46,10 +45,10 @@ public class managerStaffViewController {
     private Label CompleAmountLabel;
 
     @FXML
-    private TableColumn<manager_orders, String > CustomerNameCol;
+    private TableColumn<managerOrderViewStaff, String > CustomerNameCol;
 
     @FXML
-    private TableColumn<manager_orders, Date> DateCol;
+    private TableColumn<managerOrderViewStaff, Date> DateCol;
 
     @FXML
     private Label IsInstallPaidAmountLabel;
@@ -61,7 +60,7 @@ public class managerStaffViewController {
     private BorderPane IsInstallmentBorderPane;
 
     @FXML
-    private TableColumn<manager_orders, String> IsInstallmentCol;
+    private TableColumn<managerOrderViewStaff, String> IsInstallmentCol;
 
     @FXML
     private VBox IsInstallorderItemsContainer;
@@ -85,7 +84,7 @@ public class managerStaffViewController {
     private Button NextYearbtn;
 
     @FXML
-    private TableColumn<manager_orders, Integer> NoCol;
+    private TableColumn<managerOrderViewStaff, Integer> NoCol;
 
     @FXML
     private Label NoInstallLabel;
@@ -133,7 +132,7 @@ public class managerStaffViewController {
     private Label Yearslabel;
 
     @FXML
-    private TableView<manager_orders> ordersTable;
+    private TableView<managerOrderViewStaff> ordersTable;
 
     @FXML
     private VBox staffListContainer;
@@ -237,8 +236,8 @@ public class managerStaffViewController {
 //        );
     }
 
-    private void showOrdersDetails(manager_orders managerorders) throws SQLException {
-        List<manager_orders> managerordersList = new ArrayList<>();
+    private void showOrdersDetails(managerOrderViewStaff managerorders) throws SQLException {
+        List<managerOrderViewStaff> managerordersList = new ArrayList<>();
         CallableStatement cs = con.prepareCall("");
         ResultSet rs = cs.executeQuery();
 
@@ -255,7 +254,7 @@ public class managerStaffViewController {
             Double remain_amount = rs.getDouble(10);
             Date due_date = rs.getDate(11);
 
-            manager_orders od = new manager_orders(no,order_id,cus_name,date,total_amount,is_installment,carsandparts_name,carsandparts_qty,payed_amount,remain_amount,due_date);
+            managerOrderViewStaff od = new managerOrderViewStaff(no,order_id,cus_name,date,total_amount,is_installment,carsandparts_name,carsandparts_qty,payed_amount,remain_amount,due_date);
 
             managerordersList.add(od);
         }
