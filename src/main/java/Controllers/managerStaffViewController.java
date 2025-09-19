@@ -36,7 +36,7 @@ public class managerStaffViewController {
     private Button ActiveInactiveSwitchbtn;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, Double> AmountCol;
+    private TableColumn<managerOrderViewStaff, Double> PaidAmountCol;
 
     @FXML
     private Label CancelAmountLabel;
@@ -203,7 +203,7 @@ public class managerStaffViewController {
         NoCol.setCellValueFactory(d ->new ReadOnlyObjectWrapper<>(d.getValue().getNo()));
         CustomerNameCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getCus_name()));
         DateCol.setCellValueFactory(d->new ReadOnlyObjectWrapper<>(d.getValue().getOrder_date()));
-        AmountCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
+        PaidAmountCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
         IsInstallmentCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getIs_installmenat()));
 
 

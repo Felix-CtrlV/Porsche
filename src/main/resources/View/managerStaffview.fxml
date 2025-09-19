@@ -214,7 +214,7 @@
                                 <TableColumn fx:id="NoCol" prefWidth="75.0" style="-fx-font-weight: bold;" text="No" />
                                 <TableColumn fx:id="CustomerNameCol" prefWidth="200.0" style="-fx-font-weight: bold;" text="Customer Name" />
                                 <TableColumn fx:id="DateCol" prefWidth="150.0" style="-fx-font-weight: bold;" text="Date" />
-                                <TableColumn fx:id="AmountCol" prefWidth="150.0" style="-fx-font-weight: bold;" text="Amount" />
+                                <TableColumn fx:id="PaidAmountCol" prefWidth="150.0" style="-fx-font-weight: bold;" text="Paided Amount" />
                                 <TableColumn fx:id="IsInstallmentCol" prefWidth="150.0" style="-fx-font-weight: bold;" text="Is Installment" />
                             </columns>
                             <columnResizePolicy>
