@@ -172,7 +172,7 @@ public class loginController {
                             case "admin" ->
                                     FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/adminDashboard.fxml")));
                             case "manager" ->
-                                    FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/ManagerDashboard.fxml")));
+                                    FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/managerDashboard.fxml")));
                             case "staff" ->
                                     FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/StaffDashboard.fxml")));
                             default ->

@@ -1,7 +1,6 @@
 package Controllers;
 
 import Database.Porsche_DB;
-import MainUI.login;
 import Utils.Session;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -11,14 +10,15 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -28,36 +28,28 @@ import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class adminDashboardController {
-
-    private int adminid;
-
-    private double xOffset = 0;
-    private double yOffset = 0;
+public class managerDashboardController {
 
     @FXML
-    private Label nameLbl;
+    private Button Inventroybtn;
 
     @FXML
-    private Button revenuebtn;
+    private AnchorPane admin_anc;
 
     @FXML
-    private Button accountbtn;
-
-    @FXML
-    private Button ordersbtn;
+    private Button homebtn;
 
     @FXML
     private ImageView img;
 
     @FXML
-    private Button settingbtn;
+    private Button logoutbtn;
 
     @FXML
-    private Button overviewbtn;
+    private Label nameLbl;
 
     @FXML
-    private AnchorPane admin_anc;
+    private Button ordersbtn;
 
     @FXML
     private Pane overlayPane;
@@ -69,38 +61,38 @@ public class adminDashboardController {
     private AnchorPane settingPane;
 
     @FXML
-    private Button logoutbtn;
-
-    private Button activeButton;
+    private Button staffbtn;
 
     @FXML
-    void clickAccount(ActionEvent event) throws IOException {
-        loadView("/View/adminAccounts.fxml");
-        setActiveButton(accountbtn);
+    void clickInventory(ActionEvent event) {
+//        loadView("/View/adminAccounts.fxml");
+//        setActiveButton(accountbtn);
     }
 
     @FXML
-    void clickOrders(ActionEvent event) throws IOException {
-        loadView("/View/adminOrders.fxml");
+    void clickLogout(ActionEvent event) {
+
+    }
+
+    @FXML
+    void clickOrders(ActionEvent event) {
+        loadView("/View/managerOrderManagement.fxml");
         setActiveButton(ordersbtn);
     }
 
     @FXML
-    void clickOverview(ActionEvent event) throws IOException {
-        loadView("/View/adminOverview.fxml");
-        setActiveButton(overviewbtn);
+    void clickhome(ActionEvent event) {
+        loadView("/View/managerHomepage.fxml");
+        setActiveButton(homebtn);
     }
 
     @FXML
-    void clickSetting(ActionEvent event) throws IOException {
-        setActiveButton(settingbtn);
-        openSetting();
-
-        overlayPane.setOnMouseClicked(e->{
-            closeSetting();
-        });
-
+    void clickstaff(ActionEvent event) {
+        loadView("/View/managerStaffview.fxml");
+        setActiveButton(staffbtn);
     }
+
+    private Button activeButton;
 
     public void initialize() throws IOException {
         overlayPane.setVisible(false);
@@ -112,7 +104,7 @@ public class adminDashboardController {
         Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
         img.setImage(porsche_logo);
         loadView("/View/adminOverview.fxml");
-        setActiveButton(overviewbtn);
+        setActiveButton(homebtn);
         admin_anc.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
@@ -160,26 +152,6 @@ public class adminDashboardController {
         Thread t = new Thread(task);
         t.setDaemon(true);
         t.start();
-    }
-
-    @FXML
-    void clickLogout(ActionEvent event) throws Exception {
-        Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        home.close();
-
-        Porsche_DB connect = new Porsche_DB();
-        Connection con = connect.connect();
-        CallableStatement check_out = con.prepareCall("call logout(?, ?)");
-        Session current = Session.getInstance();
-        if (current != null) {
-            adminid = current.getUserid();
-        }
-        check_out.setInt(1, adminid);
-        check_out.setString(2, String.valueOf(LocalDateTime.now()));
-        check_out.execute();
-        login log_in = new login();
-        log_in.start(new Stage());
-        Session.clearSession();
     }
 
 
