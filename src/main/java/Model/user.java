@@ -9,20 +9,25 @@ public class user {
     private String start_date, end_date;
     public user(){}
 
-    public user(int id, String username, String role, String start_date, String end_date, String is_active){
+    //admin account and manager staff view (userCard)
+    public user(int id, String name, String phone, String email, String address, LocalDate dob, String is_active){
         this.id = id;
-        this.username = username;
-        this.role = role;
-        this.start_date = start_date;
-        this.end_date = end_date;
+        this.username = name;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.dob = dob;
         this.is_active = is_active;
     }
+
+    //session
     public user(int id, String username, String role){
         this.id = id;
         this.username = username;
         this.role = role;
     }
 
+    //dao card
     public user(String username, String role, String is_active){
         this.username = username;
         this.role = role;

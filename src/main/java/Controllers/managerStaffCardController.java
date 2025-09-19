@@ -25,7 +25,7 @@ public class managerStaffCardController {
     private Polygon cardShapePolygon;
 
 
-    public void setData(int id,String name,boolean status){
+    public void setData(int id,String name,String status){
 
 
         StaffId.setText(String.valueOf(id));
@@ -37,8 +37,7 @@ public class managerStaffCardController {
 //            StaffImage.setImage(new Image(imgPath));
 //        }
 
-        if (status) {
-
+        if (status.toLowerCase().equals("active")) {
             ActiveColor.setStyle("-fx-fill: green;");
         } else {
             ActiveColor.setStyle("-fx-fill: red;");
