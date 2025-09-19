@@ -50,7 +50,10 @@
                         <Button fx:id="ordersbtn" onAction="#clickOrders" prefHeight="24.0" prefWidth="88.0" styleClass="navbtn" text="Orders" HBox.hgrow="NEVER" />
                   <Button fx:id="staffbtn" onAction="#clickstaff" prefHeight="24.0" prefWidth="88.0" styleClass="navbtn" text="Staff" />
                         <Region maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="360.0" HBox.hgrow="ALWAYS" />
-                        <StackPane minWidth="88.0" HBox.hgrow="NEVER" />
+                        <StackPane minWidth="88.0" HBox.hgrow="NEVER">
+                     <children>
+                        <Label fx:id="settingIcon" prefHeight="34.0" prefWidth="33.0" style="-fx-alignment: center; -fx-font-size: 30;" text="⚙" />
+                     </children></StackPane>
                     </children>
                 </HBox>
             </top>

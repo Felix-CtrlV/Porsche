@@ -1,6 +1,7 @@
 package Controllers;
 
 import Database.Porsche_DB;
+import MainUI.login;
 import Utils.Session;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -10,6 +11,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,11 +27,13 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class managerDashboardController {
 
+    private int managerid;
     @FXML
     private Button Inventroybtn;
 
@@ -64,15 +68,16 @@ public class managerDashboardController {
     private Button staffbtn;
 
     @FXML
+    private Label settingIcon;
+
+
+    @FXML
     void clickInventory(ActionEvent event) {
 //        loadView("/View/adminAccounts.fxml");
 //        setActiveButton(accountbtn);
     }
 
-    @FXML
-    void clickLogout(ActionEvent event) {
 
-    }
 
     @FXML
     void clickOrders(ActionEvent event) {
@@ -94,8 +99,18 @@ public class managerDashboardController {
 
     private Button activeButton;
 
+    private void clickSetting(){
+        openSetting();
+        overlayPane.setOnMouseClicked(e->{
+            closeSetting();
+        });
+
+    }
+
+
     public void initialize() throws IOException {
         overlayPane.setVisible(false);
+        settingIcon.setOnMouseClicked(e->{clickSetting();});
 
         Session current = Session.getInstance();
         String name = current.getUsername();
@@ -154,6 +169,25 @@ public class managerDashboardController {
         t.start();
     }
 
+    @FXML
+    void clickLogout(ActionEvent event) throws Exception {
+        Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        home.close();
+
+        Porsche_DB connect = new Porsche_DB();
+        Connection con = connect.connect();
+        CallableStatement check_out = con.prepareCall("call logout(?, ?)");
+        Session current = Session.getInstance();
+        if (current != null) {
+            managerid = current.getUserid();
+        }
+        check_out.setInt(1, managerid);
+        check_out.setString(2, String.valueOf(LocalDateTime.now()));
+        check_out.execute();
+        login log_in = new login();
+        log_in.start(new Stage());
+        Session.clearSession();
+    }
 
     private void setActiveButton(Button button) {
         if (activeButton != null) {

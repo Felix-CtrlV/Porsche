@@ -271,11 +271,7 @@ public class managerStaffViewController {
         for (Node node : staffListContainer.getChildren()) {
             if (node.getUserData() != null && node.getUserData() instanceof Integer) {
                 if ((int) node.getUserData() == staffId) {
-                    node.setStyle("-fx-background-color: #3A3A3A;\n" +
-                            "    -fx-background-radius: 15px;\n" +
-                            "    -fx-border-width: 0;\n" +
-                            "    -fx-padding: 5px;\n" +
-                            "    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0.3, 0, 2);");
+                    node.setStyle("-fx-background-color: #e8f0fe; -fx-border-color: #1a73e8; -fx-border-radius: 8; -fx-background-radius: 8;");
                     break;
                 }
             }
@@ -310,12 +306,12 @@ public class managerStaffViewController {
             staffInfoList.add(staff);
 
 
-            File fxmlFile = new File("src/main/resources/View/managerStaffcards.fxml");
+            File fxmlFile = new File("src/main/resources/View/userCards.fxml");
 
             FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
             Node staffCard = loader.load();
 
-            managerStaffCardController cardController = loader.getController();
+            cardController cardController = loader.getController();
 
             staffCard.setUserData(staff.getStaff_id());
 
