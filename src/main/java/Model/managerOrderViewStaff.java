@@ -8,17 +8,19 @@ public class managerOrderViewStaff {
     private Integer no,order_id;
     private String cus_name,is_installmenat,carsandparts_name,carsandparts_qty,carsandparts_perprice;
 
+
     private double total_amount,payed_amount,remain_amount;
     private Date order_date,due_date;
 
     public managerOrderViewStaff(){}
-    public managerOrderViewStaff(int no, int order_id, String cus_name, Date order_date, double total_amount, String is_installmenat, String carsandparts_name, String carsandparts_qty, double payed_amount, double remain_amount, Date due_date) {
+    public managerOrderViewStaff(int no, int order_id, String cus_name, Date order_date, double total_amount, String is_installmenat,String carsandparts_name, String  carsandparts_qty,String  carsandparts_perprice, double payed_amount, double remain_amount, Date due_date) {
         this.no = no;
         this.order_id = order_id;
         this.cus_name = cus_name;
         this.is_installmenat = is_installmenat;
         this.carsandparts_name = carsandparts_name;
         this.carsandparts_qty = carsandparts_qty;
+        this.carsandparts_perprice = carsandparts_perprice;
         this.total_amount = total_amount;
         this.payed_amount = payed_amount;
         this.remain_amount = remain_amount;
@@ -26,16 +28,20 @@ public class managerOrderViewStaff {
         this.due_date = due_date;
     }
 
+    public String[] getCarsandparts_name() {
+        String[] result = carsandparts_name.split(",");
+        return  result;
+    }
 
-
-    public Double[] getCarsandparts_perprice() {
+    public String[] getCarsandparts_perprice() {
         String []price = this.carsandparts_perprice.split(",");
-        Double[] result = new Double[price.length];
 
-        for (int i =0; i<price.length;i++){
-            result[i] = Double.parseDouble(price[i]);
-        }
-        return result;
+        return price;
+    }
+    public String[] getCarsandparts_qty() {
+        String [] qty = carsandparts_qty.split(",");
+
+        return qty;
     }
 
     public void setCarsandparts_perprice(String carsandparts_perprice) {
@@ -74,23 +80,13 @@ public class managerOrderViewStaff {
         this.is_installmenat = is_installmenat;
     }
 
-    public String[] getCarsandparts_name() {
-        String[] result = carsandparts_name.split(",");
-        return  result;
-    }
+
 
     public void setCarsandparts_name(String carsandparts_name) {
         this.carsandparts_name = carsandparts_name;
     }
 
-    public Integer[] getCarsandparts_qty() {
-        String [] qty = carsandparts_qty.split(",");
-        Integer[] result = new Integer[qty.length];
-        for(int i=0;i<qty.length;i++){
-            result[i] = Integer.parseInt(qty[i]);
-        }
-        return result;
-    }
+
 
     public void setCarsandparts_qty(String carsandparts_qty) {
         this.carsandparts_qty = carsandparts_qty;

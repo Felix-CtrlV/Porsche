@@ -126,23 +126,23 @@
                      <children>
                                 <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: #dadce0;">
                                     <children>
-                                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onMouseClicked="#prevMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
                                         <Label fx:id="Monthslabel" styleClass="topic_font" text="January ">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
+                                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" onMouseClicked="#nextMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
       
                                                     <Region prefHeight="27.0" prefWidth="38.0" HBox.hgrow="NEVER" />
       
-                                                    <Button fx:id="PreviousYearbth" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                                                    <Button fx:id="PreviousYearbth" mnemonicParsing="false" onMouseClicked="#prevYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
                                         <Label fx:id="Yearslabel" styleClass="topic_font" text="2023">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                                        <Button fx:id="NextYearbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
+                                        <Button fx:id="NextYearbtn" mnemonicParsing="false" onMouseClicked="#nextYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                                     </children>
                                 </HBox>
                         <HBox prefHeight="340.0" prefWidth="549.0" spacing="10.0" VBox.vgrow="ALWAYS">
@@ -209,7 +209,7 @@
                 </HBox>
                 <HBox prefHeight="330.0" prefWidth="928.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <TableView fx:id="ordersTable" prefHeight="245.0" prefWidth="731.0" style="-fx-border-color: #f1f3f4;" HBox.hgrow="ALWAYS">
+                        <TableView fx:id="ordersTable" onMouseClicked="#ordersTableClick" prefHeight="245.0" prefWidth="731.0" style="-fx-border-color: #f1f3f4;" HBox.hgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="NoCol" prefWidth="75.0" style="-fx-font-weight: bold;" text="No" />
                                 <TableColumn fx:id="CustomerNameCol" prefWidth="200.0" style="-fx-font-weight: bold;" text="Customer Name" />
@@ -225,7 +225,7 @@
                             <children>
 
                                 <!-- Updated visible BorderPane with consistent styling -->
-                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <padding>
                                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                     </padding>
@@ -288,7 +288,7 @@
                                         </HBox>
                                     </bottom>
                                 </BorderPane>
-                        <BorderPane fx:id="IsNotInstallBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <BorderPane fx:id="IsNotInstallBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <padding>
                               <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                            </padding>
@@ -308,7 +308,7 @@
                            <center>
                               <ScrollPane hbarPolicy="NEVER" style="-fx-background: transparent;">
                                  <content>
-                                    <VBox fx:id="NoInstallorderItemsContainer" prefHeight="282.0" prefWidth="467.0" spacing="8.0" />
+                                    <VBox fx:id="NoInstallorderItemsContainer" prefHeight="263.0" prefWidth="463.0" spacing="8.0" />
                                  </content>
                               </ScrollPane>
                            </center>
@@ -316,7 +316,7 @@
                               <HBox alignment="CENTER_RIGHT" spacing="100.0" style="-fx-border-color: #f1f3f4; -fx-border-width: 1 0 0 0; -fx-padding: 10 0 0 0;" BorderPane.alignment="CENTER">
                                  <children>
                                     <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Total Price:" />
-                                    <Label fx:id="NoInstallLabel" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="0.00">
+                                    <Label fx:id="NoInstallTotalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="0.00">
                                        <HBox.margin>
                                           <Insets right="90.0" />
                                        </HBox.margin>
