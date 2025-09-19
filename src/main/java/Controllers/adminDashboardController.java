@@ -32,14 +32,8 @@ public class adminDashboardController {
 
     private int adminid;
 
-    private double xOffset = 0;
-    private double yOffset = 0;
-
     @FXML
     private Label nameLbl;
-
-    @FXML
-    private Button revenuebtn;
 
     @FXML
     private Button accountbtn;
@@ -49,9 +43,6 @@ public class adminDashboardController {
 
     @FXML
     private ImageView img;
-
-    @FXML
-    private Button settingbtn;
 
     @FXML
     private Button overviewbtn;
@@ -67,6 +58,9 @@ public class adminDashboardController {
 
     @FXML
     private AnchorPane settingPane;
+
+    @FXML
+    private Label settingIcon;
 
     @FXML
     private Button logoutbtn;
@@ -91,11 +85,8 @@ public class adminDashboardController {
         setActiveButton(overviewbtn);
     }
 
-    @FXML
-    void clickSetting(ActionEvent event) throws IOException {
-        setActiveButton(settingbtn);
+    private void clickSetting(){
         openSetting();
-
         overlayPane.setOnMouseClicked(e->{
             closeSetting();
         });
@@ -104,6 +95,7 @@ public class adminDashboardController {
 
     public void initialize() throws IOException {
         overlayPane.setVisible(false);
+        settingIcon.setOnMouseClicked(e->{clickSetting();});
 
         Session current = Session.getInstance();
         String name = current.getUsername();

@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminAccountController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminAccountController">
     <left>
         <VBox prefHeight="700.0" prefWidth="322.0" spacing="10.0" style="-fx-background-color: #f8f9fa;">
             <padding>
@@ -46,7 +46,7 @@
                         <Insets top="20.0" />
                     </VBox.margin>
                 </HBox>
-                <Label fx:id="StaffListTitleLabel" style="-fx-font-weight: bold; -fx-font-size: 14; -fx-padding: 10 0 5 0;" text="Staff List (Active)" />
+                <Label fx:id="StaffListTitleLabel" style="-fx-font-weight: bold; -fx-font-size: 14; -fx-padding: 10 0 5 0;" text="Users (Active)" />
                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" style="-fx-background: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
                     <content>
                         <VBox fx:id="staffListContainer" prefHeight="575.0" prefWidth="235.0" spacing="10.0">
@@ -76,16 +76,16 @@
                                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                                     <children>
                                         <ImageView fx:id="StaffImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../images/usericon.png" />
-                                            </image></ImageView>
+                                 <image>
+                                    <Image url="@../Image/usericon.png" />
+                                 </image></ImageView>
                                         <Label fx:id="StaffNameLable" prefHeight="46.0" prefWidth="282.0" style="-fx-font-weight: bold; -fx-font-size: 30;" text="John Doe" />
                                     </children>
                                 </HBox>
 
                                 <VBox spacing="12.0" style="-fx-border-color: #f1f3f4; -fx-border-width: 1 0 0 0; -fx-padding: 15 0 0 0;">
                                     <HBox spacing="10.0">
-                                        <Label style="-fx-font-size: 16;" text="📞" />
+                                        <Label minWidth="24.0" style="-fx-font-size: 16;" text="📞" />
                                         <VBox spacing="2.0">
                                             <Label styleClass="manager-staffview-userdata" text="Phone" />
                                             <Label fx:id="StaffPhoneLabel" style="-fx-font-size: 14;" text="+1 (555) 123-4567" />
@@ -101,7 +101,7 @@
                                     </HBox>
 
                                     <HBox spacing="10.0">
-                                        <Label style="-fx-font-size: 16;" text="🏠" />
+                                        <Label minWidth="24.0" style="-fx-font-size: 16;" text="🏠" />
                                         <VBox spacing="2.0">
                                             <Label styleClass="manager-staffview-userdata" text="Address" />
                                             <Label fx:id="StaffAddressLabel" style="-fx-font-size: 14; -fx-wrap-text: true;" text="123 Main St, City, State 12345" />
@@ -109,7 +109,7 @@
                                     </HBox>
 
                                     <HBox spacing="10.0">
-                                        <Label style="-fx-font-size: 16;" text="🎂" />
+                                        <Label minWidth="24.0" style="-fx-font-size: 16;" text="🎂" />
                                         <VBox spacing="2.0">
                                             <Label styleClass="manager-staffview-userdata" text="Date of Birth" />
                                             <Label fx:id="StaffDOBLabel" style="-fx-font-size: 14;" text="January 15, 1985" />
@@ -137,7 +137,7 @@
                                                     <Region prefHeight="27.0" prefWidth="38.0" HBox.hgrow="NEVER" />
       
                                                     <Button fx:id="PreviousYearbth" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                                        <Label fx:id="Yearslabel" styleClass="topic_font" text="2023">
+                                        <Label fx:id="Yearslabel" styleClass="topic_font" text="2025">
                                  <font>
                                     <Font size="18.0" />
                                  </font>

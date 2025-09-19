@@ -45,11 +45,20 @@
                           </children>
                       </VBox>
                       <Region maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="35.0" prefWidth="323.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="overviewbtn" onAction="#clickOverview" prefHeight="24.0" prefWidth="88.0" styleClass="navbtn" text="Overview" HBox.hgrow="NEVER" />
+                        <Button fx:id="overviewbtn" onAction="#clickOverview" prefHeight="24.0" prefWidth="88.0" styleClass="navbtn" text="Overview" HBox.hgrow="NEVER">
+                     <HBox.margin>
+                        <Insets right="15.0" />
+                     </HBox.margin></Button>
                         <Button fx:id="accountbtn" onAction="#clickAccount" prefHeight="24.0" prefWidth="88.0" styleClass="navbtn" text="Account" HBox.hgrow="NEVER" />
-                        <Button fx:id="ordersbtn" onAction="#clickOrders" prefHeight="24.0" prefWidth="88.0" styleClass="navbtn" text="Orders" HBox.hgrow="NEVER" />
+                        <Button fx:id="ordersbtn" onAction="#clickOrders" prefHeight="24.0" prefWidth="88.0" styleClass="navbtn" text="Orders" HBox.hgrow="NEVER">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin></Button>
                   <Region maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="360.0" HBox.hgrow="ALWAYS" />
-                  <StackPane minWidth="88.0" HBox.hgrow="NEVER" />
+                  <StackPane minWidth="88.0" HBox.hgrow="NEVER">
+                     <children>
+                        <Label fx:id="settingIcon" prefHeight="34.0" prefWidth="33.0" style="-fx-font-size: 30; -fx-alignment: center;" text="⚙" />
+                     </children></StackPane>
                   </children>
               </HBox>
          </top>

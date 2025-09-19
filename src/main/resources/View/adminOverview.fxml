@@ -2,9 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
@@ -19,7 +19,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
-
 
 <HBox prefHeight="580.0" prefWidth="1188.0" spacing="10.0" stylesheets="@../CSS/DashBoard_general.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOverviewController">
    <children>
@@ -254,14 +253,14 @@
                         </HBox>
                      </children>
                   </StackPane>
-                  <LineChart fx:id="lineChart" prefHeight="302.0" prefWidth="795.0" VBox.vgrow="SOMETIMES">
+                  <AreaChart fx:id="areaChart">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis side="LEFT" />
                     </yAxis>
-                  </LineChart>
+                  </AreaChart>
                </children>
                <VBox.margin>
                   <Insets top="10.0" />

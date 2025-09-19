@@ -50,7 +50,7 @@ public class adminOverviewController {
     private Button managebtn;
 
     @FXML
-    private LineChart<String, Number> lineChart;
+    private AreaChart<String, Number> areaChart;
 
     @FXML
     private Button previous;
@@ -247,7 +247,7 @@ public class adminOverviewController {
             ChartDAO chartDAO = new ChartDAO(con);
             List<overviewLine> data = chartDAO.getOverviewLine(choice, start, end);
 
-            lineChart.getData().clear();
+            areaChart.getData().clear();
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName("Total Revenue");
@@ -256,7 +256,7 @@ public class adminOverviewController {
                 series.getData().add(new XYChart.Data<>(row.getDayLabel(), row.getTotalSales()));
             }
 
-            lineChart.getData().add(series);
+            areaChart.getData().add(series);
 
         } catch (
                 SQLException e) {
