@@ -18,11 +18,11 @@ public class cardController {
 
     private int staffId;
 
-    public void setData(int id, String name, boolean isActive) {
+    public void setData(int id, String name, String isActive) {
         this.staffId = id;
         StaffId.setText(String.valueOf(id));
         StaffName.setText(name);
-        ActiveColor.setFill(isActive ? Color.LIME : Color.RED);
+        ActiveColor.setFill((isActive.toLowerCase().equals("active")) ? Color.LIME : Color.RED);
     }
 
     public int getStaffId() {

@@ -1,21 +1,20 @@
 package Controllers;
 
 import Database.Porsche_DB;
-import Model.Staff_info;
-import Model.order;
+import Model.user;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +36,7 @@ public class adminAccountController {
     private VBox staffListContainer;
 
     private boolean cardtype = true;
-    private List<Staff_info> staffInfoList = new ArrayList<>();
+    private List<user> staffInfoList = new ArrayList<user>();
 
     private Porsche_DB db = new Porsche_DB();
     private Connection con;
@@ -48,14 +47,14 @@ public class adminAccountController {
 
     @FXML
     private void initialize() throws SQLException, IOException {
-        StaffListTitleLabel.setText("Staff List (Active)");
+        StaffListTitleLabel.setText("Users (Active)");
         loadStaffCards(cardtype);
     }
 
     @FXML
     void SwitchMouseClick(MouseEvent event) throws SQLException, IOException {
         cardtype = !cardtype;
-        StaffListTitleLabel.setText(cardtype ? "Staff List (Active)" : "Staff List (Inactive)");
+        StaffListTitleLabel.setText(cardtype ? "Users (Active)" : "Users (Inactive)");
         loadStaffCards(cardtype);
     }
 
@@ -73,37 +72,35 @@ public class adminAccountController {
             String phone = rs.getString("user_phone");
             String email = rs.getString("user_email");
             String address = rs.getString("user_address");
-            Date dob = rs.getDate("dob");
-            boolean userStatus = rs.getBoolean("user_status");
+            String dob = rs.getString("dob");
+            String userStatus = rs.getInt("user_status") == 1 ? "Active" : "Inactive";
 
-            Staff_info staff = new Staff_info(id, name, phone, email, address, dob, userStatus);
+            user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), userStatus);
             staffInfoList.add(staff);
 
             Node card = createStaffCard(staff);
             staffListContainer.getChildren().add(card);
         }
-
         rs.close();
         generate.close();
-
         if (!staffInfoList.isEmpty()) {
             showStaffDetails(staffInfoList.get(0));
-            highlightSelectedCard(staffInfoList.get(0).getStaff_id());
+            highlightSelectedCard(staffInfoList.get(0).getId());
         }
     }
 
-    private Node createStaffCard(Staff_info staff) throws IOException {
+    private Node createStaffCard(user staff) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/View/userCards.fxml")));
         Node staffCard = loader.load();
 
         cardController cardCtrl = loader.getController();
         cardCtrl.setData(
-                staff.getStaff_id(),
-                staff.getStaff_name(),
-                staff.isStatus()
+                staff.getId(),
+                staff.getUsername(),
+                staff.getIs_active()
         );
 
-        staffCard.setUserData(staff.getStaff_id());
+        staffCard.setUserData(staff.getId());
         staffCard.setOnMouseClicked(event -> {
             showStaffDetails(staff);
         });
@@ -111,14 +108,14 @@ public class adminAccountController {
         return staffCard;
     }
 
-    private void showStaffDetails(Staff_info staff) {
-        StaffNameLable.setText(staff.getStaff_name());
-        StaffPhoneLabel.setText(staff.getStaff_phone());
-        StaffEmailLabel.setText(staff.getStaff_email());
-        StaffAddressLabel.setText(staff.getStaff_address());
-        StaffDOBLabel.setText(staff.getStaff_dob() != null ? staff.getStaff_dob().toString() : "");
+    private void showStaffDetails(user staff) {
+        StaffNameLable.setText(staff.getUsername());
+        StaffPhoneLabel.setText(staff.getPhone());
+        StaffEmailLabel.setText(staff.getEmail());
+        StaffAddressLabel.setText(staff.getAddress());
+        StaffDOBLabel.setText(staff.getDob() != null ? staff.getDob().toString() : "");
 
-        highlightSelectedCard(staff.getStaff_id());
+        highlightSelectedCard(staff.getId());
     }
 
     private void highlightSelectedCard(int staffId) {

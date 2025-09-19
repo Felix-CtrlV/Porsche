@@ -1,8 +1,8 @@
 package Controllers;
 
 import Database.Porsche_DB;
-import Model.Staff_info;
 import Model.manager_orders;
+import Model.user;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -22,6 +22,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -148,9 +150,9 @@ public class managerStaffViewController {
                 StaffListTitleLabel.setText("Staff List (InActive)");
                 addStaffCard(cardtype);
 
-                int first_id = staffInfoList.getFirst().getStaff_id();
-                for (Staff_info staffInfo : staffInfoList) {
-                    if (staffInfo.getStaff_id() == first_id){
+                int first_id = staffInfoList.getFirst().getId();
+                for (user staffInfo : staffInfoList) {
+                    if (staffInfo.getId() == first_id){
                         showStaffDetails(staffInfo);
                     }
                 }
@@ -160,9 +162,9 @@ public class managerStaffViewController {
                 StaffListTitleLabel.setText("Staff List (Active)");
                 addStaffCard(cardtype);
 
-                int first_id = staffInfoList.getFirst().getStaff_id();
-                for (Staff_info staffInfo : staffInfoList) {
-                    if (staffInfo.getStaff_id() == first_id){
+                int first_id = staffInfoList.getFirst().getId();
+                for (user staffInfo : staffInfoList) {
+                    if (staffInfo.getId() == first_id){
                         showStaffDetails(staffInfo);
                     }
                 }
@@ -172,7 +174,7 @@ public class managerStaffViewController {
 
 
 
-    private List<Staff_info> staffInfoList = new ArrayList<>();
+    private List<user> staffInfoList = new ArrayList<user>();
 
     public managerStaffViewController() throws SQLException, ClassNotFoundException, IOException {
 
@@ -189,9 +191,9 @@ public class managerStaffViewController {
         StaffListTitleLabel.setText("Staff List (Active)");
         addStaffCard(cardtype);
 
-        int first_id = staffInfoList.getFirst().getStaff_id();
-       for (Staff_info staffInfo : staffInfoList) {
-            if (staffInfo.getStaff_id() == first_id){
+        int first_id = staffInfoList.getFirst().getId();
+       for (user staffInfo : staffInfoList) {
+            if (staffInfo.getId() == first_id){
                 showStaffDetails(staffInfo);
             }
        }
@@ -210,17 +212,17 @@ public class managerStaffViewController {
     }
 
 
-    private void showStaffDetails(Staff_info staff) {
-        StaffNameLable.setText(staff.getStaff_name());
-        StaffPhoneLabel.setText(staff.getStaff_phone());
-        StaffEmailLabel.setText(staff.getStaff_email());
-        StaffAddressLabel.setText(staff.getStaff_address());
-        StaffDOBLabel.setText(staff.getStaff_dob().toString());
+    private void showStaffDetails(user staff) {
+        StaffNameLable.setText(staff.getUsername());
+        StaffPhoneLabel.setText(staff.getPhone());
+        StaffEmailLabel.setText(staff.getEmail());
+        StaffAddressLabel.setText(staff.getAddress());
+        StaffDOBLabel.setText(staff.getDob().toString());
 
 //        StaffImage.setImage(new Image(staff.getImagePath()));
 
 
-        highlightSelectedCard(staff.getStaff_id());
+        highlightSelectedCard(staff.getId());
 
 //        ordersTable.getSelectionModel().selectedItemProperty().addListener(
 //                (obs, oldSelection, newSelection) -> {
@@ -298,11 +300,10 @@ public class managerStaffViewController {
             String phone = rs.getString("user_phone");
             String email = rs.getString("user_email");
             String address = rs.getString("user_address");
-            Date dob = rs.getDate("dob");
-            boolean status = rs.getBoolean("user_status");
+            String dob = rs.getString("dob");
+            String status = rs.getInt("user_status") == 1 ? "Active" : "Inactive";
 
-
-            Staff_info staff = new Staff_info(id, name, phone, email, address, dob, status);
+            user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status);
             staffInfoList.add(staff);
 
 
@@ -313,29 +314,21 @@ public class managerStaffViewController {
 
             cardController cardController = loader.getController();
 
-            staffCard.setUserData(staff.getStaff_id());
+            staffCard.setUserData(staff.getId());
 
 
             cardController.setData(
-                    staff.getStaff_id(),
-                    staff.getStaff_name(),
-                    staff.isStatus()
+                    staff.getId(),
+                    staff.getUsername(),
+                    staff.getIs_active()
             );
 
             staffCard.setOnMouseClicked(event -> {
                 showStaffDetails(staff);
-
-
             });
-
             staffListContainer.getChildren().add(staffCard);
-
-
         }
         rs.close();
         cs.close();
     }
-
-
-
 }
