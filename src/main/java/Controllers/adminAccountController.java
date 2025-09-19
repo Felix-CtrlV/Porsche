@@ -1,21 +1,25 @@
 package Controllers;
 
+import DAO.ChartDAO;
+import DAO.userDAO;
 import Database.Porsche_DB;
 import Model.user;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +45,7 @@ public class adminAccountController {
     private Label carTarget, partTarget;
 
     @FXML
-    private ImageView StaffImage;
+    private ImageView userImage, plusImage;
 
     @FXML
     private VBox staffListContainer;
@@ -60,6 +64,20 @@ public class adminAccountController {
     private void initialize() throws SQLException, IOException {
         StaffListTitleLabel.setText("Users (Active)");
         loadStaffCards(cardtype);
+
+        plusImage.setOnMouseClicked(e-> {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/adminUserRegister.fxml"));
+            Stage stage = new Stage();
+            Scene scene;
+            try {
+                scene = new Scene(loader.load());
+            } catch (
+                    IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.UNDECORATED);
+        });
     }
 
     @FXML
@@ -73,27 +91,15 @@ public class adminAccountController {
         staffListContainer.getChildren().clear();
         staffInfoList.clear();
 
-        String status = active ? "active" : "inactive";
-        PreparedStatement generate = con.prepareStatement("select user_id, user_name, user_phone, user_email, user_address, dob, user_status from user_info order by user_status desc");
-        ResultSet rs = generate.executeQuery();
+        userDAO dao = new userDAO(con);
 
-        while (rs.next()) {
-            int id = rs.getInt("user_id");
-            String name = rs.getString("user_name");
-            String phone = rs.getString("user_phone");
-            String email = rs.getString("user_email");
-            String address = rs.getString("user_address");
-            String dob = rs.getString("dob");
-            String userStatus = rs.getInt("user_status") == 1 ? "Active" : "Inactive";
+        staffInfoList = dao.accountData();
 
-            user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), userStatus);
-            staffInfoList.add(staff);
-
-            Node card = createStaffCard(staff);
+        for (user u : staffInfoList) {
+            Node card = createStaffCard(u);
             staffListContainer.getChildren().add(card);
         }
-        rs.close();
-        generate.close();
+
         if (!staffInfoList.isEmpty()) {
             showStaffDetails(staffInfoList.get(0));
             highlightSelectedCard(staffInfoList.get(0).getId());

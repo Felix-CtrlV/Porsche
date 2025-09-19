@@ -218,12 +218,12 @@
                            </VBox.margin>
                         </Label>
                         <ScrollPane hbarPolicy="NEVER" prefHeight="120.0" prefWidth="270.0" VBox.vgrow="SOMETIMES">
-                           <content>
-                              <HBox prefHeight="129.0" prefWidth="273.0" />
-                           </content>
                            <VBox.margin>
                               <Insets bottom="25.0" right="5.0" />
                            </VBox.margin>
+                           <content>
+                              <VBox fx:id="notiPanel" prefHeight="109.0" prefWidth="355.0" />
+                           </content>
                         </ScrollPane>
                      </children>
                   </VBox>
