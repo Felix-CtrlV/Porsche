@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="246.0" prefWidth="356.0" stylesheets="@../CSS/setting.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminSettingController">
+
+    <children>
+        <HBox alignment="CENTER" layoutX="50" layoutY="30" spacing="5">
+
+            <!-- Hidden password field -->
+            <PasswordField fx:id="passwordField" prefWidth="200" promptText="Enter Password" styleClass="input-field" />
+
+            <!-- Visible password field (starts hidden) -->
+            <TextField fx:id="textField" managed="false" prefWidth="200" promptText="Enter Password" styleClass="input-field" visible="false" />
+
+            <!-- Eye toggl  e button -->
+            <Button fx:id="toggleEyeButton" onAction="#togglePasswordVisibility" styleClass="eye-button" text="👁" />
+        </HBox>
+        <HBox alignment="CENTER" layoutX="50" layoutY="80" spacing="5">
+   
+            <!-- Hidden password field -->
+            <PasswordField fx:id="newpasswordField" prefWidth="200" promptText="Enter NewPassword" styleClass="input-field" />
+
+            <!-- Visible password field (starts hidden) -->
+            <TextField fx:id="newtextField" managed="false" prefWidth="200" promptText="Enter NewPassword" styleClass="input-field" visible="false" />
+
+            <!-- Eye toggle button -->
+            <Button fx:id="newtoggleEyeButton" onAction="#toggleNewPasswordVisibility" styleClass="eye-button" text="👁" />
+        </HBox>
+        <HBox alignment="CENTER" layoutX="50" layoutY="130" spacing="5">
+
+            <!-- Hidden password field -->
+            <PasswordField fx:id="com_passwordField" prefWidth="200" promptText="Enter ComfirmPassword" styleClass="input-field" />
+
+            <!-- Visible password field (starts hidden) -->
+            <TextField fx:id="com_textField" managed="false" prefWidth="200" promptText="Enter ComfirmPassword" styleClass="input-field" visible="false" />
+
+            <!-- Eye toggle button -->
+            <Button fx:id="com_toggleEyeButton" onAction="#toggleComPasswordVisibility" styleClass="eye-button" text="👁" />
+        </HBox>
+      <Button fx:id="comfirmbtn" layoutX="50.0" layoutY="189.0" mnemonicParsing="false" onAction="#clickComfirm" prefWidth="88.0" styleClass="confirm_btn" stylesheets="@../CSS/setting.css" text="Confirm" />
+      <Button fx:id="deketebtn" layoutX="219.0" layoutY="189.0" mnemonicParsing="false" onAction="#clickDelete" prefHeight="34.0" prefWidth="88.0" styleClass="goback_btn" stylesheets="@../CSS/setting.css" text="Clear" />
+    </children>
+</AnchorPane>
