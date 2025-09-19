@@ -310,7 +310,7 @@ public class managerStaffViewController {
             staffInfoList.add(staff);
 
 
-            File fxmlFile = new File("src/main/resources/manager_dashboard/managerStaffcards.fxml");
+            File fxmlFile = new File("src/main/resources/View/managerStaffcards.fxml");
 
             FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
             Node staffCard = loader.load();
