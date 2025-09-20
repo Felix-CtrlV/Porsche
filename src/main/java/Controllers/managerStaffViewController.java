@@ -13,7 +13,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
 
 import java.io.File;
@@ -147,6 +150,33 @@ public class managerStaffViewController {
     private Label DueDateLabel;
 
     @FXML
+    private Circle achieveCarColor;
+
+    @FXML
+    private Circle achievePartColor;
+
+    @FXML
+    private Text targetCar;
+
+    @FXML
+    private Circle targetCarColor;
+
+    @FXML
+    private Label targetCarMessagelbl;
+
+    @FXML
+    private Text targetPart;
+
+    @FXML
+    private Circle targetPartColor;
+
+    @FXML
+    private Label targetPartMessagelbl;
+
+    @FXML
+    private HBox targetlayer;
+
+    @FXML
     void SwitchMouseClick(MouseEvent event) throws SQLException, IOException {
             if (cardtype){
                 cardtype = false;
@@ -199,6 +229,32 @@ public class managerStaffViewController {
             orderDetails(selectorder);
     }
 
+    @FXML
+    private void  initialize() throws SQLException, IOException {
+
+
+
+        //for creating the month  and year of this month
+        currentDateSelect();
+
+        //for inserting staff cards
+        StaffListTitleLabel.setText("Staff List (Active)");
+        addStaffCard(cardtype);
+
+
+
+
+        // for inserting orders
+        NoCol.setCellValueFactory(d ->new ReadOnlyObjectWrapper<>(d.getValue().getNo()));
+        CustomerNameCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getCus_name()));
+        DateCol.setCellValueFactory(d->new ReadOnlyObjectWrapper<>(d.getValue().getOrder_date()));
+        TotalAmountCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
+        IsInstallmentCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getIs_installmenat()));
+
+    }
+
+
+
     private boolean cardtype = true;
 
     private LocalDate today = LocalDate.now();
@@ -221,30 +277,6 @@ public class managerStaffViewController {
     Porsche_DB db = new Porsche_DB();
     Connection con = db.connect();
 
-
-    @FXML
-    private void  initialize() throws SQLException, IOException {
-
-
-
-        //for creating the month  and year of this month
-        currentDateSelect();
-
-        //for inserting staff cards
-        StaffListTitleLabel.setText("Staff List (Active)");
-        addStaffCard(cardtype);
-
-
-
-
-       // for inserting orders
-        NoCol.setCellValueFactory(d ->new ReadOnlyObjectWrapper<>(d.getValue().getNo()));
-        CustomerNameCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getCus_name()));
-        DateCol.setCellValueFactory(d->new ReadOnlyObjectWrapper<>(d.getValue().getOrder_date()));
-        TotalAmountCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
-        IsInstallmentCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getIs_installmenat()));
-
-    }
 
     private void showStaffDetails(user staff)  {
         StaffNameLable.setText(staff.getUsername());
