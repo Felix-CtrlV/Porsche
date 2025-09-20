@@ -450,9 +450,8 @@ public class managerStaffViewController {
 
     private void orderDetails(managerOrderViewStaff orders) throws IOException {
 
-
-        IsNotInstallBorderPane.getChildren().clear();
-        IsInstallmentBorderPane.getChildren().clear();
+        NoInstallorderItemsContainer.getChildren().clear();
+        IsInstallorderItemsContainer.getChildren().clear();
 
         //to load the orders detail in the page like slip
         String [] names = orders.getCarsandparts_name();
