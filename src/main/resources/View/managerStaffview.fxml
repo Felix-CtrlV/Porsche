@@ -209,7 +209,7 @@
                 </HBox>
                 <HBox prefHeight="330.0" prefWidth="928.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <TableView fx:id="ordersTable" prefHeight="245.0" prefWidth="731.0" style="-fx-border-color: #f1f3f4;" HBox.hgrow="ALWAYS">
+                        <TableView fx:id="ordersTable" prefHeight="322.0" prefWidth="448.0" style="-fx-border-color: #f1f3f4;" HBox.hgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="NoCol" prefWidth="75.0" style="-fx-font-weight: bold;" text="No" />
                                 <TableColumn fx:id="CustomerNameCol" prefWidth="200.0" style="-fx-font-weight: bold;" text="Customer Name" />
@@ -225,7 +225,7 @@
                             <children>
 
                                 <!-- Updated visible BorderPane with consistent styling -->
-                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="289.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <padding>
                                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                     </padding>
@@ -288,7 +288,7 @@
                                         </HBox>
                                     </bottom>
                                 </BorderPane>
-                        <BorderPane fx:id="IsNotInstallBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <BorderPane fx:id="IsNotInstallBorderPane" prefHeight="289.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <padding>
                               <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                            </padding>
