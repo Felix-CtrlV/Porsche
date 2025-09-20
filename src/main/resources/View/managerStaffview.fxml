@@ -440,7 +440,7 @@
                                              <children>
                                                 <Circle fill="transparent" radius="79.0" stroke="#e16136" strokeWidth="15" />
                                                 <Circle fx:id="partCircle" fill="transparent" radius="79.0" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
-                                                <Text fx:id="targetPart" layoutX="-86.0" layoutY="-96.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0/0" x="70" y="105" />
+                                                <Text fx:id="targetPart" layoutX="-102.0" layoutY="-97.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0/0" x="70" y="105" />
                                              </children>
                                           </Group>
                                        </children>
