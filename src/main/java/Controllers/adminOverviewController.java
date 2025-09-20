@@ -9,6 +9,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
@@ -18,6 +20,8 @@ import javafx.scene.shape.Circle;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class adminOverviewController {
@@ -42,6 +46,9 @@ public class adminOverviewController {
 
     @FXML
     private StackPane customizePane;
+
+    @FXML
+    private VBox notiPanel;
 
     @FXML
     private ComboBox lineCombo;
@@ -260,6 +267,41 @@ public class adminOverviewController {
 
         } catch (
                 SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private LocalDate lastLoginDate = null;
+
+    public void addNotification(String username, boolean isLogin) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/NotificationCard.fxml"));
+            Node card = loader.load();
+
+            NotificationCardController cardController = loader.getController();
+
+            String message = "";
+            LocalDateTime now = LocalDateTime.now();
+            String time = now.format(DateTimeFormatter.ofPattern("hh:mm a"));
+
+            if (isLogin) {
+                if (lastLoginDate == null || !lastLoginDate.equals(LocalDate.now())) {
+                    message = "Welcome";
+                    lastLoginDate = LocalDate.now();
+                }
+            } else {
+                int hour = now.getHour();
+                if (hour >= 12 && hour < 13) {
+                    message = "Lunch Time";
+                } else if (hour == 17) {
+                    message = "Completed";
+                }
+            }
+
+            cardController.setData(username, message, time, isLogin);
+
+            notiPanel.getChildren().add(0, card); // insert on top
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

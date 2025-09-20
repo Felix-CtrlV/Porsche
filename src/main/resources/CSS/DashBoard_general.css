@@ -411,3 +411,9 @@
      -fx-scale-y: 3;
     -fx-fill : #d6d3c2;
 }
+.slipFont{
+         -fx-font-family: "Arial";
+         -fx-font-size: 15 ;
+         -fx-font-weight: bold;
+         -fx-text-fill : #34252F;
+}

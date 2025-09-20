@@ -3,6 +3,7 @@ package Model;
 public class orderDetail {
     private int detailid, orderid, customizeid, carid, partid, quantity, price;
     public orderDetail(){}
+
     public orderDetail(int detailid, int orderid, int customizeid, int carid, int partid, int quantity, int price){
         this.detailid = detailid;
         this.orderid = orderid;
@@ -12,6 +13,7 @@ public class orderDetail {
         this.quantity = quantity;
         this.price = price;
     }
+
 
     public int getDetailid() {
         return detailid;

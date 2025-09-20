@@ -257,7 +257,7 @@ public class managerHomeController {
         ObservableList<PieChart.Data> piechartdata = FXCollections.observableArrayList();
         String rating ="0 %";
 
-        CallableStatement cs = con.prepareCall("call attendancepercentage_managerview();");
+        CallableStatement cs = con.prepareCall("call todayattendancechart();");
         ResultSet rs = cs.executeQuery();
 
         while(rs.next()){
