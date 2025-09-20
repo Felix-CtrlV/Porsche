@@ -306,21 +306,23 @@ public class managerStaffViewController {
         currentDateSelect();
         System.out.println(selectedStaffId);
         try {
-
-            showOrdersDetails(selectedStaffId, currentMonth, currentYear);
+            refreshOrdersTable();
+            monthlyOrdersStatus(selectedStaffId,currentMonth,currentYear);
             carsAndPartsTarget();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         };
     }
 
-    private void showOrdersDetails( int staffId, int month ,int year) throws SQLException {
+    private void showOrdersTable( int staffId, int month ,int year) throws SQLException {
         List<managerOrderViewStaff> managerordersList = new ArrayList<>();
         CallableStatement cs = con.prepareCall("CALL getordersbyuserid(?,?,?)");
         cs.setInt(1,staffId);
         cs.setInt(2,month);
         cs.setInt(3,year);
         ResultSet rs = cs.executeQuery();
+
+        ordersTable.getItems().clear();
 
         while(rs.next()){
             int no = rs.getInt(1);
@@ -478,7 +480,7 @@ public class managerStaffViewController {
 
         try {
             refreshOrdersTable();
-            monthlyOrdersStatus();
+            monthlyOrdersStatus(selectedStaffId,currentMonth,currentYear);
             carsAndPartsTarget();
         } catch ( SQLException e) {
             throw new RuntimeException(e);
@@ -488,7 +490,7 @@ public class managerStaffViewController {
     private void refreshOrdersTable() throws SQLException {
         if (selectedStaffId != 0) {
             ordersTable.getItems().clear();
-            showOrdersDetails(selectedStaffId, currentMonth, currentYear);
+            showOrdersTable(selectedStaffId, currentMonth, currentYear);
         }
     }
 
@@ -501,11 +503,7 @@ public class managerStaffViewController {
         Yearslabel.setText(today.format(fyear));
         NextYearbtn.setDisable(true);
         NextYearbtn.setVisible(false);
-        try {
-            monthlyOrdersStatus();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     private void orderDetails(managerOrderViewStaff orders) throws IOException {
@@ -565,12 +563,12 @@ public class managerStaffViewController {
 
     }
 
-    private void monthlyOrdersStatus() throws SQLException {
+    private void monthlyOrdersStatus(int staffid ,int month,int year) throws SQLException {
 
         CallableStatement cs = con.prepareCall("CALL monthlyorderstatus(?,?,?)");
-        cs.setInt(1,selectedStaffId);
-        cs.setInt(2,currentMonth);
-        cs.setInt(3,currentYear);
+        cs.setInt(1,staffid);
+        cs.setInt(2,month);
+        cs.setInt(3,year);
 
         ResultSet rs = cs.executeQuery();
 
@@ -611,7 +609,15 @@ public class managerStaffViewController {
 
 
         int targetOverC = 0;
-        if(achieve>=target){
+        if(achieve == 0 && target ==0){
+            targetOverCar.setText("0");
+            double progressCar = (target > 0) ? (double) achieve / target : 0;
+            double circulerCar = 2 * Math.PI * carCircle.getRadius();
+            carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
+            carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
+            targetCarMessagelbl.setText("No Target");
+
+        }else if(achieve>=target){
             targetOverC = achieve - target;
             targetOverCar.setText("+"+String.valueOf(targetOverC));
 
@@ -652,7 +658,14 @@ public class managerStaffViewController {
 
 
         int targetOverP = 0;
-        if(achieve>=target){
+        if(target ==0 && achieve ==0){
+            targetOverPart.setText("0");
+            double progressPart = (target > 0) ? (double) achieve / target : 0;
+            double circulerPart = 2 * Math.PI * partCircle.getRadius();
+            partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
+            partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
+            targetPartMessagelbl.setText("No target");
+        }else if(achieve>=target){
             targetOverP = achieve - target;
             targetOverPart.setText("+"+String.valueOf(targetOverP));
 
