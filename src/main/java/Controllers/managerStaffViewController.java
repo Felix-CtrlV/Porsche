@@ -414,15 +414,22 @@ public class managerStaffViewController {
         Monthslabel.setText(formattedMonth);
 
         if(currentYear>= curyear){
+
             NextYearbtn.setDisable(true);
+            NextYearbtn.setVisible(false);
             if(currentMonth >= curmonth){
                 NextMonthbtn.setDisable(true);
+                NextMonthbtn.setVisible(false);
+
             }else{
                 NextMonthbtn.setDisable(false);
+                NextMonthbtn.setVisible(true);
             }
         }else{
             NextYearbtn.setDisable(false);
+            NextYearbtn.setVisible(true);
             NextMonthbtn.setDisable(false);
+            NextMonthbtn.setVisible(true);
         }
 
         try {
@@ -445,8 +452,10 @@ public class managerStaffViewController {
         currentYear = today.getYear();
         Monthslabel.setText(today.format(fmonth));
         NextMonthbtn.setDisable(true);
+        NextMonthbtn.setVisible(false);
         Yearslabel.setText(today.format(fyear));
         NextYearbtn.setDisable(true);
+        NextYearbtn.setVisible(false);
         try {
             monthlyOrdersStatus();
         } catch (SQLException e) {
