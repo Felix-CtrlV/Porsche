@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import jdk.jshell.EvalException;
 
 
 import java.io.File;
@@ -80,8 +81,6 @@ public class managerStaffViewController {
     @FXML
     private BorderPane IsNotInstallBorderPane;
 
-    @FXML
-    private PieChart MonthlyAttendancePieChart;
 
     @FXML
     private Label Monthslabel;
@@ -149,32 +148,39 @@ public class managerStaffViewController {
     @FXML
     private Label DueDateLabel;
 
-    @FXML
-    private Circle achieveCarColor;
 
     @FXML
-    private Circle achievePartColor;
+    private Circle partCircle;
 
     @FXML
     private Text targetCar;
 
     @FXML
-    private Circle targetCarColor;
-
-    @FXML
     private Label targetCarMessagelbl;
 
     @FXML
-    private Text targetPart;
+    private Label targetOverCar;
 
     @FXML
-    private Circle targetPartColor;
+    private Label targetOverPart;
+
+    @FXML
+    private Text targetPart;
 
     @FXML
     private Label targetPartMessagelbl;
 
     @FXML
     private HBox targetlayer;
+
+    @FXML
+    private Circle attendanceCircle;
+
+    @FXML
+    private Text attendancePercent;
+
+    @FXML
+    private Circle carCircle;
 
     @FXML
     void SwitchMouseClick(MouseEvent event) throws SQLException, IOException {
@@ -251,6 +257,11 @@ public class managerStaffViewController {
         TotalAmountCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
         IsInstallmentCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getIs_installmenat()));
 
+        IsInstallmentBorderPane.setVisible(false);
+        IsNotInstallBorderPane.setVisible(false);
+        targetlayer.setVisible(true);
+        carsAndPartsTarget();
+
     }
 
 
@@ -297,6 +308,7 @@ public class managerStaffViewController {
         try {
 
             showOrdersDetails(selectedStaffId, currentMonth, currentYear);
+            carsAndPartsTarget();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         };
@@ -367,15 +379,15 @@ public class managerStaffViewController {
         staffListContainer.getChildren().clear();
         staffInfoList.clear();
 
-        CallableStatement cs = con.prepareCall("CALL createcards(?,?,?,?)");
+        CallableStatement cs = con.prepareCall("CALL createcards(?,?)");
         if(check) {
             cs.setString(1, "active");
         }else{
             cs.setString(1,"inactive");
         }
+
         cs.setString(2,"manager");
-        cs.setInt(3,currentMonth);
-        cs.setInt(4,currentYear);
+
         ResultSet rs = cs.executeQuery();
 
         while(rs.next()){
@@ -467,6 +479,7 @@ public class managerStaffViewController {
         try {
             refreshOrdersTable();
             monthlyOrdersStatus();
+            carsAndPartsTarget();
         } catch ( SQLException e) {
             throw new RuntimeException(e);
         }
@@ -499,7 +512,7 @@ public class managerStaffViewController {
 
         NoInstallorderItemsContainer.getChildren().clear();
         IsInstallorderItemsContainer.getChildren().clear();
-
+        targetlayer.setVisible(false);
         //to load the orders detail in the page like slip
         String [] names = orders.getCarsandparts_name();
         String  [] qty = orders.getCarsandparts_qty();
@@ -570,5 +583,108 @@ public class managerStaffViewController {
         }
         rs.close();
         cs.close();
+    }
+
+    private void carsAndPartsTarget() throws SQLException {
+        IsNotInstallBorderPane.setVisible(false);
+        IsInstallmentBorderPane.setVisible(false);
+        targetlayer.setVisible(true);
+        CallableStatement cs = con.prepareCall("CALL targetviewchart(?,?,?)");
+        cs.setInt(1, selectedStaffId);
+        cs.setInt(2, currentMonth);
+        cs.setInt(3, currentYear);
+        ResultSet rs = cs.executeQuery();
+        if (rs.next()) {
+            int target_car = rs.getInt(1);
+            int target_part = rs.getInt(2);
+            int achieve_car = rs.getInt(3);
+            int achieve_part = rs.getInt(4);
+
+            generate_carCircle(target_car,achieve_car);
+            generate_partCircle(target_part,achieve_part);
+
+        }
+    }
+
+    private void generate_carCircle(int target , int achieve){
+        targetCar.setText(String.valueOf(achieve)+"/"+String.valueOf(target));
+
+
+        int targetOverC = 0;
+        if(achieve>=target){
+            targetOverC = achieve - target;
+            targetOverCar.setText("+"+String.valueOf(targetOverC));
+
+            if(achieve >target){
+                double progressCar = (target > 0) ? (double) achieve / achieve : 0;
+                double circulerCar = 2 * Math.PI * carCircle.getRadius();
+                carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
+                carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
+                targetCarMessagelbl.setText("Extra Bonous ");
+
+            }else{
+                double progressCar = (target > 0) ? (double) achieve / target : 0;
+                double circulerCar = 2 * Math.PI * carCircle.getRadius();
+                carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
+                carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
+                targetCarMessagelbl.setText("Hit the target");
+            }
+
+
+        }else{
+            targetOverC = target - achieve;
+            targetOverCar.setText("-"+String.valueOf(targetOverC));
+
+            double progressCar = (target > 0) ? (double) achieve / target : 0;
+            double circulerCar = 2 * Math.PI * carCircle.getRadius();
+            carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
+            carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
+            targetCarMessagelbl.setText("Need to hit target");
+        }
+
+
+
+
+    }
+
+    private void generate_partCircle(int target , int achieve){
+        targetPart.setText(String.valueOf(achieve)+"/"+String.valueOf(target));
+
+
+        int targetOverP = 0;
+        if(achieve>=target){
+            targetOverP = achieve - target;
+            targetOverPart.setText("+"+String.valueOf(targetOverP));
+
+            if(achieve >target){
+                double progressPart = (target > 0) ? (double) achieve / achieve : 0;
+                double circulerPart = 2 * Math.PI * partCircle.getRadius();
+                partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
+                partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
+                targetPartMessagelbl.setText("Extra Bonous ");
+
+            }else{
+                double progressPart = (target > 0) ? (double) achieve / target : 0;
+                double circulerPart = 2 * Math.PI * partCircle.getRadius();
+                partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
+                partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
+                targetPartMessagelbl.setText("Hit the target");
+            }
+
+
+        }else{
+            targetOverP = target - achieve;
+            targetOverPart.setText("-"+String.valueOf(targetOverP));
+
+            double progressPart = (target > 0) ? (double) achieve / target : 0;
+            double circulerPart = 2 * Math.PI * partCircle.getRadius();
+            partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
+            partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
+            targetPartMessagelbl.setText("Need to hit target");
+        }
+
+
+
+
     }
 }

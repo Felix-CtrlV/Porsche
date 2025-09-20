@@ -158,11 +158,11 @@
                                         <children>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
                                        <children>
-                                          <Group fx:id="progressGroup">
+                                          <Group>
                                              <children>
-                                                <Circle fx:id="backgroundCircle" fill="transparent" radius="100" stroke="#e16136" strokeWidth="15" />
-                                                <Circle fx:id="progressCircle" fill="transparent" radius="100" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
-                                                <Text fx:id="progressText" layoutX="-86.0" layoutY="-96.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0%" x="70" y="105" />
+                                                <Circle fill="transparent" radius="100" stroke="#e16136" strokeWidth="15" />
+                                                <Circle fx:id="attendanceCircle" fill="transparent" radius="100" stroke="#3498db" strokeWidth="15" />
+                                                <Text fx:id="attendancePercent" layoutX="-86.0" layoutY="-96.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0%" x="70" y="105" />
                                              </children>
                                           </Group>
                                        </children>
@@ -316,7 +316,7 @@
                                         </HBox>
                                     </bottom>
                                 </BorderPane>
-                        <BorderPane fx:id="IsNotInstallBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <BorderPane fx:id="IsNotInstallBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <padding>
                               <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                            </padding>
@@ -359,7 +359,7 @@
                               </HBox>
                            </bottom>
                         </BorderPane>
-                        <HBox fx:id="targetlayer" layoutX="175.0" layoutY="132.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox fx:id="targetlayer" layoutX="175.0" layoutY="132.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <VBox prefHeight="100.0" prefWidth="255.2" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8;">
                                  <children>
@@ -374,10 +374,10 @@
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <Group fx:id="progressGroup1">
+                                          <Group>
                                              <children>
-                                                <Circle fx:id="backgroundCircle1" fill="transparent" radius="79.0" stroke="#e16136" strokeWidth="15" />
-                                                <Circle fx:id="progressCircle1" fill="transparent" radius="79.0" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
+                                                <Circle fill="transparent" radius="79.0" stroke="#e16136" strokeWidth="15" />
+                                                <Circle fx:id="carCircle" fill="transparent" radius="79.0" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
                                                 <Text fx:id="targetCar" layoutX="-86.0" layoutY="-96.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0/0" x="70" y="105" />
                                              </children>
                                           </Group>
@@ -385,14 +385,14 @@
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="33.0" prefWidth="255.0">
                                        <children>
-                                          <Label text="+0" />
+                                          <Label fx:id="targetOverCar" text="+0" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="24.0" prefWidth="255.0">
                                        <children>
                                           <HBox alignment="CENTER" spacing="10">
                                              <children>
-                                                <Circle fx:id="targetCarColor" fill="#3498db" radius="8" />
+                                                <Circle fill="#3498db" radius="8" />
                                                 <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Target" />
                                              </children>
                                           </HBox>
@@ -402,7 +402,7 @@
                                        <children>
                                           <HBox alignment="CENTER" spacing="10">
                                              <children>
-                                                <Circle fx:id="achieveCarColor" fill="#e16136" radius="8" />
+                                                <Circle fill="#e16136" radius="8" />
                                                 <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Achieved" />
                                              </children>
                                           </HBox>
@@ -436,10 +436,10 @@
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <Group fx:id="progressGroup11">
+                                          <Group>
                                              <children>
-                                                <Circle fx:id="backgroundCircle11" fill="transparent" radius="79.0" stroke="#e16136" strokeWidth="15" />
-                                                <Circle fx:id="progressCircle11" fill="transparent" radius="79.0" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
+                                                <Circle fill="transparent" radius="79.0" stroke="#e16136" strokeWidth="15" />
+                                                <Circle fx:id="partCircle" fill="transparent" radius="79.0" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
                                                 <Text fx:id="targetPart" layoutX="-86.0" layoutY="-96.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0/0" x="70" y="105" />
                                              </children>
                                           </Group>
@@ -447,14 +447,14 @@
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="33.0" prefWidth="255.0">
                                        <children>
-                                          <Label text="+0" />
+                                          <Label fx:id="targetOverPart" text="+0" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="24.0" prefWidth="255.0">
                                        <children>
                                           <HBox alignment="CENTER" spacing="10">
                                              <children>
-                                                <Circle fx:id="targetPartColor" fill="#3498db" radius="8" />
+                                                <Circle fill="#3498db" radius="8" />
                                                 <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Target" />
                                              </children>
                                           </HBox>
@@ -464,7 +464,7 @@
                                        <children>
                                           <HBox alignment="CENTER" spacing="10">
                                              <children>
-                                                <Circle fx:id="achievePartColor" fill="#e16136" radius="8" />
+                                                <Circle fill="#e16136" radius="8" />
                                                 <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Achieved" />
                                              </children>
                                           </HBox>
