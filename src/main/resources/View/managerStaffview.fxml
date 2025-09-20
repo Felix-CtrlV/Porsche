@@ -172,7 +172,7 @@
                   
                                             <VBox alignment="CENTER" prefHeight="97.0" prefWidth="115.0" spacing="15.0">
                                                 <VBox alignment="CENTER" spacing="5.0">
-                                                    <Label fx:id="TotalOrdersAmountLabel" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="125" />
+                                                    <Label fx:id="TotalOrderlbl" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="125" />
                                                     <Label style="-fx-text-fill: #5f6368;" text="Total Orders" />
                                           <VBox.margin>
                                              <Insets top="61.0" />
@@ -186,17 +186,17 @@
                                                 <HBox>
                                                     <Label style="-fx-font-weight: bold; -fx-opacity: 0.65;" text="Completed:" />
                                                     <Region HBox.hgrow="ALWAYS" />
-                                                    <Label fx:id="CompleAmountLabel" style="-fx-text-fill: #34a853; -fx-font-weight: bold;" text="110" />
+                                                    <Label fx:id="CompleOrderlbl" style="-fx-text-fill: #34a853; -fx-font-weight: bold;" text="110" />
                                                 </HBox>
                                                 <HBox>
                                                     <Label style="-fx-font-weight: bold; -fx-opacity: 0.65;" text="Pending:" />
                                                     <Region HBox.hgrow="ALWAYS" />
-                                                    <Label fx:id="PendAmountLabel" style="-fx-text-fill: #fbbc04; -fx-font-weight: bold;" text="15" />
+                                                    <Label fx:id="PendOrderlbl" style="-fx-text-fill: #fbbc04; -fx-font-weight: bold;" text="15" />
                                                 </HBox>
                                                 <HBox>
                                                     <Label style="-fx-font-weight: bold; -fx-opacity: 0.65;" text="Cancelled:" />
                                                     <Region HBox.hgrow="ALWAYS" />
-                                                    <Label fx:id="CancelAmountLabel" style="-fx-text-fill: #ea4335; -fx-font-weight: bold;" text="0" />
+                                                    <Label fx:id="CancelOrderlbl" style="-fx-text-fill: #ea4335; -fx-font-weight: bold;" text="0" />
                                                 </HBox>
                                             </VBox>
                                         </children>

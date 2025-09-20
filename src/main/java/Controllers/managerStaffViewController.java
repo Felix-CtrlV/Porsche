@@ -45,10 +45,10 @@ public class managerStaffViewController {
     private TableColumn<managerOrderViewStaff, Double> TotalAmountCol;
 
     @FXML
-    private Label CancelAmountLabel;
+    private Label CancelOrderlbl;
 
     @FXML
-    private Label CompleAmountLabel;
+    private Label CompleOrderlbl;
 
     @FXML
     private TableColumn<managerOrderViewStaff, String > CustomerNameCol;
@@ -99,7 +99,7 @@ public class managerStaffViewController {
     private VBox NoInstallorderItemsContainer;
 
     @FXML
-    private Label PendAmountLabel;
+    private Label PendOrderlbl;
 
     @FXML
     private Button PreviousMonthbtn;
@@ -132,7 +132,7 @@ public class managerStaffViewController {
     private TextField StaffSearchText;
 
     @FXML
-    private Label TotalOrdersAmountLabel;
+    private Label TotalOrderlbl;
 
     @FXML
     private Label Yearslabel;
@@ -505,4 +505,13 @@ public class managerStaffViewController {
 
     }
 
+    private void monthlyOrdersStatus(int staffId) throws SQLException {
+
+        CallableStatement cs = con.prepareCall("");
+        ResultSet rs = cs.executeQuery();
+
+        if (rs.next()){
+
+        }
+    }
 }
