@@ -255,12 +255,12 @@ public class managerStaffViewController {
 
 //        StaffImage.setImage(new Image(staff.getImagePath()));
 
-        currentDateSelect();
+
 
 
         highlightSelectedCard(staff.getId());
         selectedStaffId = staff.getId();
-
+        currentDateSelect();
         System.out.println(selectedStaffId);
         try {
 
@@ -427,6 +427,7 @@ public class managerStaffViewController {
 
         try {
             refreshOrdersTable();
+            monthlyOrdersStatus();
         } catch ( SQLException e) {
             throw new RuntimeException(e);
         }
@@ -446,6 +447,11 @@ public class managerStaffViewController {
         NextMonthbtn.setDisable(true);
         Yearslabel.setText(today.format(fyear));
         NextYearbtn.setDisable(true);
+        try {
+            monthlyOrdersStatus();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void orderDetails(managerOrderViewStaff orders) throws IOException {
@@ -505,13 +511,23 @@ public class managerStaffViewController {
 
     }
 
-    private void monthlyOrdersStatus(int staffId) throws SQLException {
+    private void monthlyOrdersStatus() throws SQLException {
 
-        CallableStatement cs = con.prepareCall("");
+        CallableStatement cs = con.prepareCall("CALL monthlyorderstatus(?,?,?)");
+        cs.setInt(1,selectedStaffId);
+        cs.setInt(2,currentMonth);
+        cs.setInt(3,currentYear);
+
         ResultSet rs = cs.executeQuery();
 
-        if (rs.next()){
 
+        if (rs.next()){
+                TotalOrderlbl.setText(String.valueOf(rs.getInt(1)));
+                CompleOrderlbl.setText(String.valueOf(rs.getInt(2)));
+                PendOrderlbl.setText(String.valueOf(rs.getInt(3)));
+                CancelOrderlbl.setText(String.valueOf(rs.getInt(4)));
         }
+        rs.close();
+        cs.close();
     }
 }
