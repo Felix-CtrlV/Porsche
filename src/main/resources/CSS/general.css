@@ -44,3 +44,6 @@
     -fx-background-color: #cfcbcb;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.2, 0, 2);
 }
+.choice-box .arrow-button {
+    -fx-opacity: 0;
+}
