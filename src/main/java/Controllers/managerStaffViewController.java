@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Node;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -19,13 +18,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import jdk.jshell.EvalException;
 
 
-import javax.xml.transform.Result;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -187,6 +183,12 @@ public class managerStaffViewController {
     private Circle carCircle;
 
     @FXML
+    private ChoiceBox<String> monthBox;
+
+    @FXML
+    private ChoiceBox<Integer> yearBox;
+
+    @FXML
     void SwitchMouseClick(MouseEvent event) throws SQLException, IOException {
             if (cardtype){
                 cardtype = false;
@@ -263,6 +265,21 @@ public class managerStaffViewController {
         TotalAmountCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
         IsInstallmentCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getIs_installmenat()));
 
+        //for selecting the date box
+        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                currentMonth = Month.valueOf(newVal.toUpperCase(Locale.ENGLISH)).getValue();
+                updateYearMonthLabel();
+            }
+        });
+
+        yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                currentYear = newVal;
+                updateYearMonthLabel();
+            }
+        });
+
         //for car and parts of the show circle
         IsInstallmentBorderPane.setVisible(false);
         IsNotInstallBorderPane.setVisible(false);
@@ -320,6 +337,8 @@ public class managerStaffViewController {
             monthlyOrdersStatus(selectedStaffId,currentMonth,currentYear);
             carsAndPartsTarget();
             monthlyAttendance();
+            insertMonthYearChoiceBox(staff);
+            updateChoiceBoxes();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         };
@@ -485,7 +504,7 @@ public class managerStaffViewController {
         staffListContainer.getChildren().clear();
         staffInfoList.clear();
 
-        CallableStatement cs = con.prepareCall("CALL createcards(?,?,?,?)");
+        CallableStatement cs = con.prepareCall("CALL createcards(?,?)");
         if(check) {
             cs.setString(1, "active");
         }else{
@@ -493,8 +512,6 @@ public class managerStaffViewController {
         }
 
         cs.setString(2,"manager");
-        cs.setInt(3,currentMonth);
-        cs.setInt(4,currentYear);
 
         ResultSet rs = cs.executeQuery();
 
@@ -507,8 +524,10 @@ public class managerStaffViewController {
             String address = rs.getString("user_address");
             String dob = rs.getString("dob");
             String status = rs.getInt("user_status") == 1 ? "Active" : "Inactive";
+            Date str = rs.getDate("start_date");
+            Date end = rs.getDate("end_date");
 
-            user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status);
+            user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status,str,end);
             staffInfoList.add(staff);
 
 
@@ -578,64 +597,6 @@ public class managerStaffViewController {
 
     }
 
-
-    // for month and year box
-    private void updateYearMonthLabel(){
-        Year nyear = Year.of(currentYear);
-        int curyear = Integer.parseInt(today.format(fyear));
-
-//        Yearslabel.setText(nyear.format(fyear));
-
-        Month nmonth = Month.of(currentMonth);
-        String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH); // "Sep"
-
-        int curmonth = today.getMonthValue();
-//        Monthslabel.setText(formattedMonth);
-
-        if(currentYear>= curyear){
-
-            NextYearbtn.setDisable(true);
-            NextYearbtn.setVisible(false);
-            if(currentMonth >= curmonth){
-                NextMonthbtn.setDisable(true);
-                NextMonthbtn.setVisible(false);
-
-            }else{
-                NextMonthbtn.setDisable(false);
-                NextMonthbtn.setVisible(true);
-            }
-        }else{
-            NextYearbtn.setDisable(false);
-            NextYearbtn.setVisible(true);
-            NextMonthbtn.setDisable(false);
-            NextMonthbtn.setVisible(true);
-        }
-
-
-        try {
-            refreshOrdersTable();
-            monthlyOrdersStatus(selectedStaffId,currentMonth,currentYear);
-            carsAndPartsTarget();
-            monthlyAttendance();
-
-        } catch ( SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void currentDateSelect(){
-        currentMonth = today.getMonthValue();
-        currentYear = today.getYear();
-//        Monthslabel.setText(today.format(fmonth));
-        NextMonthbtn.setDisable(true);
-        NextMonthbtn.setVisible(false);
-//        Yearslabel.setText(today.format(fyear));
-        NextYearbtn.setDisable(true);
-        NextYearbtn.setVisible(false);
-
-    }
-
-
     // for car and part of target  circle
     private void carsAndPartsTarget() throws SQLException {
         IsNotInstallBorderPane.setVisible(false);
@@ -659,48 +620,37 @@ public class managerStaffViewController {
     }
 
     private void generate_carCircle(int target , int achieve){
+        carCircle.setVisible(true);
         targetCar.setText(String.valueOf(achieve)+"/"+String.valueOf(target));
-
-
         int targetOverC = 0;
+        double progressCar =0;
         if(achieve == 0 && target ==0){
             targetOverCar.setText("0");
-            double progressCar = (target > 0) ? (double) achieve / target : 0;
-            double circulerCar = 2 * Math.PI * carCircle.getRadius();
-            carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
-            carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
+           carCircle.setVisible(false);
             targetCarMessagelbl.setText("No Target");
 
         }else if(achieve>=target){
             targetOverC = achieve - target;
+            progressCar = (target > 0) ? (double) achieve / achieve : 0;
             targetOverCar.setText("+"+String.valueOf(targetOverC));
 
             if(achieve >target){
-                double progressCar = (target > 0) ? (double) achieve / achieve : 0;
-                double circulerCar = 2 * Math.PI * carCircle.getRadius();
-                carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
-                carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
                 targetCarMessagelbl.setText("Extra Bonous ");
-
             }else{
-                double progressCar = (target > 0) ? (double) achieve / target : 0;
-                double circulerCar = 2 * Math.PI * carCircle.getRadius();
-                carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
-                carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
                 targetCarMessagelbl.setText("Hit the target");
             }
 
 
         }else{
             targetOverC = target - achieve;
+            progressCar = (target > 0) ? (double) achieve / target : 0;
             targetOverCar.setText("-"+String.valueOf(targetOverC));
-
-            double progressCar = (target > 0) ? (double) achieve / target : 0;
-            double circulerCar = 2 * Math.PI * carCircle.getRadius();
-            carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
-            carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
             targetCarMessagelbl.setText("Need to hit target");
         }
+
+        double circulerCar = 2 * Math.PI * carCircle.getRadius();
+        carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
+        carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
 
 
 
@@ -709,32 +659,21 @@ public class managerStaffViewController {
 
     private void generate_partCircle(int target , int achieve){
         targetPart.setText(String.valueOf(achieve)+"/"+String.valueOf(target));
-
-
+        partCircle.setVisible(true);
         int targetOverP = 0;
+        double progressPart =0;
         if(target ==0 && achieve ==0){
             targetOverPart.setText("0");
-            double progressPart = (target > 0) ? (double) achieve / target : 0;
-            double circulerPart = 2 * Math.PI * partCircle.getRadius();
-            partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
-            partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
+            partCircle.setVisible(false);
             targetPartMessagelbl.setText("No target");
+
         }else if(achieve>=target){
             targetOverP = achieve - target;
             targetOverPart.setText("+"+String.valueOf(targetOverP));
-
+            progressPart = (target>0) ? (double) achieve/achieve :0;
             if(achieve >target){
-                double progressPart = (target > 0) ? (double) achieve / achieve : 0;
-                double circulerPart = 2 * Math.PI * partCircle.getRadius();
-                partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
-                partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
                 targetPartMessagelbl.setText("Extra Bonous ");
-
             }else{
-                double progressPart = (target > 0) ? (double) achieve / target : 0;
-                double circulerPart = 2 * Math.PI * partCircle.getRadius();
-                partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
-                partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
                 targetPartMessagelbl.setText("Hit the target");
             }
 
@@ -742,21 +681,21 @@ public class managerStaffViewController {
         }else{
             targetOverP = target - achieve;
             targetOverPart.setText("-"+String.valueOf(targetOverP));
-
-            double progressPart = (target > 0) ? (double) achieve / target : 0;
-            double circulerPart = 2 * Math.PI * partCircle.getRadius();
-            partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
-            partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
+            progressPart = (target > 0) ? (double) achieve / target : 0;
             targetPartMessagelbl.setText("Need to hit target");
         }
 
-
+        double circulerPart = 2 * Math.PI * partCircle.getRadius();
+        partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
+        partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
 
 
     }
 
     // for monthly attendance circle
     private void monthlyAttendance() throws SQLException {
+        attendanceBackCircle.setVisible(true);
+        attendanceCircle.setVisible(true);
             CallableStatement cs = con.prepareCall("CALL getMonthlyAttendance(?,?,?)");
             cs.setInt(1,selectedStaffId);
             cs.setInt(2,currentMonth);
@@ -772,12 +711,18 @@ public class managerStaffViewController {
                 double attendCircle = 2 * Math.PI * partCircle.getRadius();
                 double progress = attendance_perentage/100;
                 attendanceCircle.getStrokeDashArray().setAll(attendCircle, attendCircle);
-                attendanceCircle.setStrokeDashOffset(attendCircle * (1-progress));
-                attendancePercent.setText(String.valueOf(attendance_perentage)+"%");
+                attendanceCircle.setStrokeDashOffset(attendCircle * (1 - progress));
 
-                if(absent_day ==0){
-                    attendanceBackCircle.setStrokeDashOffset(0);
+                if(present_day ==0){
+                    attendanceCircle.setVisible(false);
+
                 }
+                if(absent_day ==0){
+                    attendanceBackCircle.setVisible(false);
+                }
+
+                attendancePercent.setText(String.valueOf(attendance_perentage) + "%");
+
             }
 
     }
@@ -872,7 +817,130 @@ public class managerStaffViewController {
 
     }
 
+    // for month and year box
+    private void updateYearMonthLabel(){
+        Year nyear = Year.of(currentYear);
+        int curyear = Integer.parseInt(today.format(fyear));
 
+//        Yearslabel.setText(nyear.format(fyear));
+
+        Month nmonth = Month.of(currentMonth);
+        String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH); // "Sep"
+
+        int curmonth = today.getMonthValue();
+//        Monthslabel.setText(formattedMonth);
+
+        if(currentYear>= curyear){
+
+            NextYearbtn.setDisable(true);
+            NextYearbtn.setVisible(false);
+            if(currentMonth >= curmonth){
+                NextMonthbtn.setDisable(true);
+                NextMonthbtn.setVisible(false);
+
+            }else{
+                NextMonthbtn.setDisable(false);
+                NextMonthbtn.setVisible(true);
+            }
+        }else{
+            NextYearbtn.setDisable(false);
+            NextYearbtn.setVisible(true);
+            NextMonthbtn.setDisable(false);
+            NextMonthbtn.setVisible(true);
+        }
+
+
+        try {
+            refreshOrdersTable();
+            monthlyOrdersStatus(selectedStaffId,currentMonth,currentYear);
+            carsAndPartsTarget();
+            monthlyAttendance();
+
+        } catch ( SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void currentDateSelect(){
+        currentMonth = today.getMonthValue();
+        currentYear = today.getYear();
+//        Monthslabel.setText(today.format(fmonth));
+        NextMonthbtn.setDisable(true);
+        NextMonthbtn.setVisible(false);
+//        Yearslabel.setText(today.format(fyear));
+        NextYearbtn.setDisable(true);
+        NextYearbtn.setVisible(false);
+
+    }
+
+    //for date box
+    private void insertMonthYearChoiceBox(user staff) {
+        yearBox.getItems().clear();
+        monthBox.getItems().clear();
+
+        int startYear = staff.getStart_date().getYear();   // LocalDate always ISO
+        int endYear = (staff.getEnd_date() != null)
+                ? staff.getEnd_date().getYear()
+                : today.getYear();
+
+        for (int year = startYear; year <= endYear; year++) {
+            if (!yearBox.getItems().contains(year)) {
+                yearBox.getItems().add(year);
+            }
+        }
+
+        if (currentYear < startYear) currentYear = startYear;
+        if (currentYear > endYear) currentYear = endYear;
+
+        yearBox.setValue(currentYear);
+
+        updateMonthBoxForYear(currentYear, staff);
+
+
+        Month curMonth = Month.of(currentMonth);
+        String monthName = curMonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+
+        if (monthBox.getItems().contains(monthName)) {
+            monthBox.setValue(monthName);
+        } else {
+            if (!monthBox.getItems().isEmpty()) {
+                monthBox.setValue(monthBox.getItems().get(0));
+                currentMonth = Month.valueOf(monthBox.getItems().get(0).toUpperCase(Locale.ENGLISH)).getValue();
+            }
+        }
+    }
+
+    private void updateMonthBoxForYear(int year, user staff) {
+        monthBox.getItems().clear();
+
+        int startMonth = 1;
+        int endMonth = 12;
+
+        if (year == staff.getStart_date().getYear()) {
+            startMonth = staff.getStart_date().getMonth();
+        }
+        if (staff.getEnd_date() != null && year == staff.getEnd_date().getYear()) {
+            endMonth = staff.getEnd_date().getMonth();
+        }
+        if (year == today.getYear() && staff.getEnd_date() == null) {
+
+            endMonth = today.getMonthValue();
+        }
+
+        for (int m = startMonth; m <= endMonth; m++) {
+            monthBox.getItems().add(Month.of(m).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+        }
+    }
+
+    private void updateChoiceBoxes() {
+        String monthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        if (!monthBox.getItems().contains(monthName) && !monthBox.getItems().isEmpty()) {
+            monthName = monthBox.getItems().get(0);
+            currentMonth = Month.valueOf(monthName.toUpperCase(Locale.ENGLISH)).getValue();
+        }
+        monthBox.setValue(monthName);
+        yearBox.setValue(currentYear);
+    }
 
 
 

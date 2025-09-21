@@ -1,16 +1,17 @@
 package Model;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class user {
     private int id;
     private String username, email, password, address, phone, role, nrc, is_active;
     private LocalDate dob;
-    private String start_date, end_date;
+    private Date start_date, end_date;
     public user(){}
 
     //admin account and manager staff view (userCard)
-    public user(int id, String name, String phone, String email, String address, LocalDate dob, String is_active){
+    public user(int id, String name, String phone, String email, String address, LocalDate dob, String is_active,Date start_date ,Date end_date){
         this.id = id;
         this.username = name;
         this.phone = phone;
@@ -18,6 +19,8 @@ public class user {
         this.address = address;
         this.dob = dob;
         this.is_active = is_active;
+        this.start_date = start_date;
+        this.end_date = end_date;
     }
 
     //session
@@ -28,9 +31,13 @@ public class user {
     }
 
     //dao card
-    public user(String username, String role, String is_active){
+    public user(int id, String username, String phone, String email, String address, LocalDate dob, String is_active) {
+        this.id = id;
         this.username = username;
-        this.role = role;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.dob = dob;
         this.is_active = is_active;
     }
 
@@ -106,21 +113,21 @@ public class user {
         this.dob = dob;
     }
 
-    public String getStart_date() {
+    public Date getStart_date() {
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
         return start_date;
     }
 
-    public String getEnd_date() {
+    public Date getEnd_date() {
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
         return end_date;
     }
 
-    public void setEnd_date(String end_date) {
+    public void setEnd_date(Date end_date) {
         this.end_date = end_date;
     }
 
-    public void setStart_date(String start_date) {
+    public void setStart_date(Date start_date) {
         this.start_date = start_date;
     }
 

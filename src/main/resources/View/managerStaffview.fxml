@@ -130,13 +130,13 @@
                                 <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;">
                                     <children>
                                         <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onMouseClicked="#prevMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                              <ChoiceBox prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
+                              <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
                                         <Button fx:id="NextMonthbtn" mnemonicParsing="false" onMouseClicked="#nextMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
       
                                                     <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
       
                                                     <Button fx:id="PreviousYearbth" mnemonicParsing="false" onMouseClicked="#prevYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                              <ChoiceBox prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
+                              <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
                                         <Button fx:id="NextYearbtn" mnemonicParsing="false" onMouseClicked="#nextYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                                     </children>
                                 </HBox>
@@ -402,7 +402,7 @@
                                           <HBox alignment="CENTER" spacing="10">
                                              <children>
                                                 <Circle fill="#3498db" radius="8" />
-                                                <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Target" />
+                                                <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Achieved" />
                                              </children>
                                           </HBox>
                                        </children>
@@ -412,7 +412,7 @@
                                           <HBox alignment="CENTER" spacing="10">
                                              <children>
                                                 <Circle fill="#e16136" radius="8" />
-                                                <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Achieved" />
+                                                <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Target" />
                                              </children>
                                           </HBox>
                                        </children>
@@ -472,7 +472,7 @@
                                           <HBox alignment="CENTER" spacing="10">
                                              <children>
                                                 <Circle fill="#3498db" radius="8" />
-                                                <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Target" />
+                                                <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Achieved" />
                                              </children>
                                           </HBox>
                                        </children>
@@ -482,7 +482,7 @@
                                           <HBox alignment="CENTER" spacing="10">
                                              <children>
                                                 <Circle fill="#e16136" radius="8" />
-                                                <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Achieved" />
+                                                <Label style="-fx-text-fill: #2c3e50; -fx-opacity: 0.65; -fx-font-weight: bold;" text="Target" />
                                              </children>
                                           </HBox>
                                        </children>
