@@ -134,6 +134,9 @@ public class managerStaffViewController {
     private TextField StaffSearchText;
 
     @FXML
+    private Circle attendanceBackCircle;
+
+    @FXML
     private Label TotalOrderlbl;
 
     @FXML
@@ -747,6 +750,11 @@ public class managerStaffViewController {
 
 
 
+
+    }
+
+    // for monthly attendance circle
+    private void mothlyattendance(){
 
     }
 }
