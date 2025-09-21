@@ -306,7 +306,7 @@ public class managerStaffViewController {
 
         highlightSelectedCard(staff.getId());
         selectedStaffId = staff.getId();
-        currentDateSelect();
+
         System.out.println(selectedStaffId);
         try {
             refreshOrdersTable();
@@ -429,25 +429,50 @@ public class managerStaffViewController {
             );
 
 
+            final user currentStaff = staff;
             staffCard.setOnMouseClicked(event -> {
 
-                    showStaffDetails(staff);
+                    showStaffDetails(currentStaff);
 
 
             });
             staffListContainer.getChildren().add(staffCard);
         }
 
-        if(selectedStaffId ==0){
-            selectedStaffId = staffInfoList.getFirst().getId();
-        }
-        for (user staffInfo : staffInfoList) {
-            if (staffInfo.getId() == selectedStaffId){
-                showStaffDetails(staffInfo);
+        boolean selectedExists = false;
+        for (user u : staffInfoList) {
+            if (u.getId() == selectedStaffId) {
+                selectedExists = true;
+                break;
             }
         }
-        highlightSelectedCard(selectedStaffId);
+        if (!selectedExists) {
+            if (!staffInfoList.isEmpty()) {
+                selectedStaffId = staffInfoList.get(0).getId();
+            } else {
+                selectedStaffId = 0; // nothing to select
+            }
+        }
 
+        // If we now have a valid selectedStaffId, show its details.
+        if (selectedStaffId != 0) {
+            for (user staffInfo : staffInfoList) {
+                if (staffInfo.getId() == selectedStaffId) {
+                    showStaffDetails(staffInfo);
+                    break;
+                }
+            }
+        } else {
+            // no staff: clear details and orders
+            StaffNameLable.setText("");
+            StaffPhoneLabel.setText("");
+            StaffEmailLabel.setText("");
+            StaffAddressLabel.setText("");
+            StaffDOBLabel.setText("");
+            ordersTable.getItems().clear();
+        }
+
+        highlightSelectedCard(selectedStaffId);
 
         rs.close();
         cs.close();
@@ -502,6 +527,9 @@ public class managerStaffViewController {
         if (selectedStaffId != 0) {
             ordersTable.getItems().clear();
             showOrdersTable(selectedStaffId, currentMonth, currentYear);
+
+            ordersTable.getSelectionModel().clearSelection();
+            ordersTable.refresh();
         }
     }
 
