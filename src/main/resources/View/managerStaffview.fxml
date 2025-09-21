@@ -365,17 +365,25 @@
                                           </Label>
                                        </children>
                                     </HBox>
-                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                    <AnchorPane>
                                        <children>
-                                          <Group>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                              <children>
-                                                <Circle fill="transparent" radius="79.0" stroke="#e16136" strokeWidth="15" />
-                                                <Circle fx:id="carCircle" fill="transparent" radius="79.0" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
-                                                <Text fx:id="targetCar" layoutX="-86.0" layoutY="-96.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0/0" x="70" y="105" />
+                                                <Group>
+                                                   <children>
+                                                      <Circle fill="transparent" radius="79.0" stroke="#e16136" strokeWidth="15" />
+                                                      <Circle fx:id="carCircle" fill="transparent" radius="79.0" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
+                                                   </children>
+                                                </Group>
                                              </children>
-                                          </Group>
+                                          </HBox>
+                                          <HBox alignment="CENTER" layoutX="14.0" prefHeight="174.0" prefWidth="174.0">
+                                             <children>
+                                                <Text fx:id="targetCar" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0/0" x="70" y="105" />
+                                             </children>
+                                          </HBox>
                                        </children>
-                                    </HBox>
+                                    </AnchorPane>
                                     <HBox alignment="CENTER" prefHeight="33.0" prefWidth="255.0">
                                        <children>
                                           <Label fx:id="targetOverCar" text="+0" />
@@ -427,17 +435,25 @@
                                           </Label>
                                        </children>
                                     </HBox>
-                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                    <AnchorPane>
                                        <children>
-                                          <Group>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                              <children>
-                                                <Circle fill="transparent" radius="79.0" stroke="#e16136" strokeWidth="15" />
-                                                <Circle fx:id="partCircle" fill="transparent" radius="79.0" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
-                                                <Text fx:id="targetPart" layoutX="-86.0" layoutY="-97.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0/0" x="70" y="105" />
+                                                <Group>
+                                                   <children>
+                                                      <Circle fill="transparent" radius="79.0" stroke="#e16136" strokeWidth="15" />
+                                                      <Circle fx:id="partCircle" fill="transparent" radius="79.0" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
+                                                   </children>
+                                                </Group>
                                              </children>
-                                          </Group>
+                                          </HBox>
+                                          <HBox alignment="CENTER" layoutX="14.0" prefHeight="172.0" prefWidth="174.0">
+                                             <children>
+                                                <Text fx:id="targetPart" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="10/10" x="70" y="105" />
+                                             </children>
+                                          </HBox>
                                        </children>
-                                    </HBox>
+                                    </AnchorPane>
                                     <HBox alignment="CENTER" prefHeight="33.0" prefWidth="255.0">
                                        <children>
                                           <Label fx:id="targetOverPart" text="+0" />
