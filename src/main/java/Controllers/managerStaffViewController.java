@@ -781,7 +781,43 @@ public class managerStaffViewController {
     }
 
     // for search bar
-    private void searchBar(){
-        TextFields.bindAutoCompletion(StaffSearchText, staffInfoList);
+    private void searchBar() {
+        List<String> staffList = new ArrayList<>();
+
+        for (user s : staffInfoList) {
+            String search = s.getId() + " - " + s.getUsername();
+            staffList.add(search);
+        }
+
+        // Keep the binding so we can listen for selection
+        var binding = TextFields.bindAutoCompletion(StaffSearchText, staffList);
+
+        // When user picks a suggestion
+        binding.setOnAutoCompleted(event -> {
+            String selectedValue = event.getCompletion();  // e.g. "5 - John Doe"
+            int staffId = Integer.parseInt(selectedValue.split(" - ")[0]); // extract ID
+
+            // Find staff object
+            for (user u : staffInfoList) {
+                if (u.getId() == staffId) {
+                    showStaffDetails(u);  // show their details
+                    break;
+                }
+            }
+        });
+
+        // Also handle when user presses ENTER after typing
+        StaffSearchText.setOnAction(e -> {
+            String typedText = StaffSearchText.getText();
+            for (user u : staffInfoList) {
+                // Check by ID or name match
+                if (typedText.contains(String.valueOf(u.getId())) || typedText.contains(u.getUsername())) {
+                    showStaffDetails(u);
+                    break;
+                }
+            }
+        });
     }
+
+
 }
