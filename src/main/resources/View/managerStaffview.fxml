@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -129,21 +130,13 @@
                                 <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: #dadce0;">
                                     <children>
                                         <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onMouseClicked="#prevMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                                        <Label fx:id="Monthslabel" styleClass="topic_font" text="January ">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                              </Label>
+                              <DatePicker />
                                         <Button fx:id="NextMonthbtn" mnemonicParsing="false" onMouseClicked="#nextMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
       
                                                     <Region prefHeight="27.0" prefWidth="38.0" HBox.hgrow="NEVER" />
       
                                                     <Button fx:id="PreviousYearbth" mnemonicParsing="false" onMouseClicked="#prevYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                                        <Label fx:id="Yearslabel" styleClass="topic_font" text="2023">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                              </Label>
+                              <DatePicker prefHeight="26.0" prefWidth="94.0" />
                                         <Button fx:id="NextYearbtn" mnemonicParsing="false" onMouseClicked="#nextYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                                     </children>
                                 </HBox>
@@ -440,7 +433,7 @@
                                              <children>
                                                 <Circle fill="transparent" radius="79.0" stroke="#e16136" strokeWidth="15" />
                                                 <Circle fx:id="partCircle" fill="transparent" radius="79.0" stroke="#3498db" strokeLineCap="ROUND" strokeWidth="15" />
-                                                <Text fx:id="targetPart" layoutX="-102.0" layoutY="-97.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0/0" x="70" y="105" />
+                                                <Text fx:id="targetPart" layoutX="-86.0" layoutY="-97.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0/0" x="70" y="105" />
                                              </children>
                                           </Group>
                                        </children>
