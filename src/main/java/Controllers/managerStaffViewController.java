@@ -7,10 +7,12 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -267,6 +269,7 @@ public class managerStaffViewController {
         IsNotInstallBorderPane.setVisible(false);
         targetlayer.setVisible(true);
         carsAndPartsTarget();
+        setupSearchBar();
 
     }
 
@@ -781,43 +784,97 @@ public class managerStaffViewController {
     }
 
     // for search bar
-    private void searchBar() {
-        List<String> staffList = new ArrayList<>();
+    private ContextMenu searchSuggestions = new ContextMenu();
 
-        for (user s : staffInfoList) {
-            String search = s.getId() + " - " + s.getUsername();
-            staffList.add(search);
-        }
-
-        // Keep the binding so we can listen for selection
-        var binding = TextFields.bindAutoCompletion(StaffSearchText, staffList);
-
-        // When user picks a suggestion
-        binding.setOnAutoCompleted(event -> {
-            String selectedValue = event.getCompletion();  // e.g. "5 - John Doe"
-            int staffId = Integer.parseInt(selectedValue.split(" - ")[0]); // extract ID
-
-            // Find staff object
-            for (user u : staffInfoList) {
-                if (u.getId() == staffId) {
-                    showStaffDetails(u);  // show their details
-                    break;
+    private void setupSearchBar() {
+            // Set up key listener for Enter key
+            StaffSearchText.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    handleSearch();
                 }
-            }
-        });
+            });
 
-        // Also handle when user presses ENTER after typing
-        StaffSearchText.setOnAction(e -> {
-            String typedText = StaffSearchText.getText();
-            for (user u : staffInfoList) {
-                // Check by ID or name match
-                if (typedText.contains(String.valueOf(u.getId())) || typedText.contains(u.getUsername())) {
-                    showStaffDetails(u);
-                    break;
+            // Set up search button click handler
+            SearchNamebtn.setOnMouseClicked(event -> {
+                handleSearch();
+            });
+
+            // Set up text change listener for suggestions
+            StaffSearchText.textProperty().addListener((obs, oldText, newText) -> {
+                if (newText.isEmpty()) {
+                    searchSuggestions.hide();
+                    return;
                 }
-            }
-        });
+
+                // Clear previous suggestions
+                searchSuggestions.getItems().clear();
+
+                // Find matching staff
+                List<MenuItem> matches = new ArrayList<>();
+                for (user staff : staffInfoList) {
+                    String searchText = newText.toLowerCase();
+                    String staffId = String.valueOf(staff.getId()).toLowerCase();
+                    String staffName = staff.getUsername().toLowerCase();
+
+                    if (staffId.contains(searchText) || staffName.contains(searchText)) {
+                        String suggestionText = staff.getId() + " - " + staff.getUsername();
+                        MenuItem item = new MenuItem(suggestionText);
+
+                        // Set action for when suggestion is clicked
+                        item.setOnAction(e -> {
+                            StaffSearchText.setText(suggestionText);
+                            searchSuggestions.hide();
+                            showStaffDetails(staff);
+                        });
+
+                        matches.add(item);
+                    }
+                }
+
+                // Show suggestions if matches found
+                if (!matches.isEmpty()) {
+                    searchSuggestions.getItems().addAll(matches);
+                    searchSuggestions.show(StaffSearchText, Side.BOTTOM, 0, 0);
+                } else {
+                    searchSuggestions.hide();
+                }
+            });
+
+            // Hide suggestions when text field loses focus
+            StaffSearchText.focusedProperty().addListener((obs, oldVal, newVal) -> {
+                if (!newVal) {
+                    searchSuggestions.hide();
+                }
+            });
     }
+
+    private void handleSearch() {
+            String searchText = StaffSearchText.getText().trim();
+            if (searchText.isEmpty()) {
+                return;
+            }
+
+            // Try to find a matching staff member
+            for (user staff : staffInfoList) {
+                String staffId = String.valueOf(staff.getId());
+                String staffName = staff.getUsername();
+
+                // Check if search text matches ID or name
+                if (searchText.equalsIgnoreCase(staffId) ||
+                        searchText.equalsIgnoreCase(staffName) ||
+                        searchText.equalsIgnoreCase(staffId + " - " + staffName)) {
+
+                    // Show staff details
+                    showStaffDetails(staff);
+                    return;
+                }
+            }
+
+
+    }
+
+
+
 
 
 }
