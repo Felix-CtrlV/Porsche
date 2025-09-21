@@ -292,6 +292,7 @@ public class managerStaffViewController {
     Connection con = db.connect();
 
 
+    // for staff of information like email phone address etc
     private void showStaffDetails(user staff)  {
         StaffNameLable.setText(staff.getUsername());
         StaffPhoneLabel.setText(staff.getPhone());
@@ -315,6 +316,18 @@ public class managerStaffViewController {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         };
+    }
+
+
+    //for the staff of monthly sold out the order table
+    private void refreshOrdersTable() throws SQLException {
+        if (selectedStaffId != 0) {
+            ordersTable.getItems().clear();
+            showOrdersTable(selectedStaffId, currentMonth, currentYear);
+
+            ordersTable.getSelectionModel().clearSelection();
+            ordersTable.refresh();
+        }
     }
 
     private void showOrdersTable( int staffId, int month ,int year) throws SQLException {
@@ -363,6 +376,86 @@ public class managerStaffViewController {
 //        }
     }
 
+    //to see like a slip of the order table
+    private void orderDetails(managerOrderViewStaff orders) throws IOException {
+
+        NoInstallorderItemsContainer.getChildren().clear();
+        IsInstallorderItemsContainer.getChildren().clear();
+        targetlayer.setVisible(false);
+        //to load the orders detail in the page like slip
+        String [] names = orders.getCarsandparts_name();
+        String  [] qty = orders.getCarsandparts_qty();
+        String [] price = orders.getCarsandparts_perprice();
+
+        if (orders.getIs_installmenat().equalsIgnoreCase("yes")){
+
+
+            IsNotInstallBorderPane.setVisible(false);
+            IsInstallmentBorderPane.setVisible(true);
+            IsInstalltotalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
+            DueDateLabel.setText(String.valueOf(orders.getDue_date()));
+            IsInstallRemainAmountLabel.setText(String.valueOf(orders.getRemain_amount()));
+            IsInstallPaidAmountLabel.setText(String.valueOf(orders.getPayed_amount()));
+
+            for (int i =0; i<names.length;i++){
+                File fxmlFile = new File("src/main/resources/View/managerStaffInstallment.fxml");
+                FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
+                Node orderItem = loader.load();
+
+                managerStaffInstallmentController controller = loader.getController();
+                controller.setData(names[i], qty[i], price[i]);
+
+                System.out.println(names[i] + " "+qty[i] +" "+ price[i]);
+                IsInstallorderItemsContainer.getChildren().add(orderItem);
+
+            }
+
+        }else{
+
+
+            IsNotInstallBorderPane.setVisible(true);
+            IsInstallmentBorderPane.setVisible(false);
+            NoInstallTotalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
+
+            for (int i =0; i<names.length;i++){
+                File fxmlFile = new File("src/main/resources/View/managerStaffInstallment.fxml");
+                FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
+                Node orderItem = loader.load();
+
+                managerStaffInstallmentController controller = loader.getController();
+                controller.setData(names[i], qty[i], price[i]);
+
+                System.out.println(names[i] + " "+qty[i] +" "+ price[i]);
+                NoInstallorderItemsContainer.getChildren().add(orderItem);
+
+            }
+        }
+
+
+    }
+
+    // for monthly order status box
+    private void monthlyOrdersStatus(int staffid ,int month,int year) throws SQLException {
+
+        CallableStatement cs = con.prepareCall("CALL monthlyorderstatus(?,?,?)");
+        cs.setInt(1,staffid);
+        cs.setInt(2,month);
+        cs.setInt(3,year);
+
+        ResultSet rs = cs.executeQuery();
+
+
+        if (rs.next()){
+            TotalOrderlbl.setText(String.valueOf(rs.getInt(1)));
+            CompleOrderlbl.setText(String.valueOf(rs.getInt(2)));
+            PendOrderlbl.setText(String.valueOf(rs.getInt(3)));
+            CancelOrderlbl.setText(String.valueOf(rs.getInt(4)));
+        }
+        rs.close();
+        cs.close();
+    }
+
+    // for staff card add and highlight the select card
     private void highlightSelectedCard(int staffId) {
         // Reset all cards to default style
         for (Node node : staffListContainer.getChildren()) {
@@ -479,6 +572,8 @@ public class managerStaffViewController {
 
     }
 
+
+    // for month and year box
     private void updateYearMonthLabel(){
         Year nyear = Year.of(currentYear);
         int curyear = Integer.parseInt(today.format(fyear));
@@ -523,16 +618,6 @@ public class managerStaffViewController {
         }
     }
 
-    private void refreshOrdersTable() throws SQLException {
-        if (selectedStaffId != 0) {
-            ordersTable.getItems().clear();
-            showOrdersTable(selectedStaffId, currentMonth, currentYear);
-
-            ordersTable.getSelectionModel().clearSelection();
-            ordersTable.refresh();
-        }
-    }
-
     private void currentDateSelect(){
         currentMonth = today.getMonthValue();
         currentYear = today.getYear();
@@ -545,83 +630,8 @@ public class managerStaffViewController {
 
     }
 
-    private void orderDetails(managerOrderViewStaff orders) throws IOException {
 
-        NoInstallorderItemsContainer.getChildren().clear();
-        IsInstallorderItemsContainer.getChildren().clear();
-        targetlayer.setVisible(false);
-        //to load the orders detail in the page like slip
-        String [] names = orders.getCarsandparts_name();
-        String  [] qty = orders.getCarsandparts_qty();
-        String [] price = orders.getCarsandparts_perprice();
-
-        if (orders.getIs_installmenat().equalsIgnoreCase("yes")){
-
-
-            IsNotInstallBorderPane.setVisible(false);
-            IsInstallmentBorderPane.setVisible(true);
-            IsInstalltotalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
-            DueDateLabel.setText(String.valueOf(orders.getDue_date()));
-            IsInstallRemainAmountLabel.setText(String.valueOf(orders.getRemain_amount()));
-            IsInstallPaidAmountLabel.setText(String.valueOf(orders.getPayed_amount()));
-
-            for (int i =0; i<names.length;i++){
-                File fxmlFile = new File("src/main/resources/View/managerStaffInstallment.fxml");
-                FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-                Node orderItem = loader.load();
-
-                managerStaffInstallmentController controller = loader.getController();
-                controller.setData(names[i], qty[i], price[i]);
-
-                System.out.println(names[i] + " "+qty[i] +" "+ price[i]);
-                IsInstallorderItemsContainer.getChildren().add(orderItem);
-
-            }
-
-        }else{
-
-
-            IsNotInstallBorderPane.setVisible(true);
-            IsInstallmentBorderPane.setVisible(false);
-            NoInstallTotalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
-
-            for (int i =0; i<names.length;i++){
-                File fxmlFile = new File("src/main/resources/View/managerStaffInstallment.fxml");
-                FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-                Node orderItem = loader.load();
-
-                managerStaffInstallmentController controller = loader.getController();
-                controller.setData(names[i], qty[i], price[i]);
-
-                System.out.println(names[i] + " "+qty[i] +" "+ price[i]);
-                NoInstallorderItemsContainer.getChildren().add(orderItem);
-
-            }
-        }
-
-
-    }
-
-    private void monthlyOrdersStatus(int staffid ,int month,int year) throws SQLException {
-
-        CallableStatement cs = con.prepareCall("CALL monthlyorderstatus(?,?,?)");
-        cs.setInt(1,staffid);
-        cs.setInt(2,month);
-        cs.setInt(3,year);
-
-        ResultSet rs = cs.executeQuery();
-
-
-        if (rs.next()){
-                TotalOrderlbl.setText(String.valueOf(rs.getInt(1)));
-                CompleOrderlbl.setText(String.valueOf(rs.getInt(2)));
-                PendOrderlbl.setText(String.valueOf(rs.getInt(3)));
-                CancelOrderlbl.setText(String.valueOf(rs.getInt(4)));
-        }
-        rs.close();
-        cs.close();
-    }
-
+    // for car and part of target  circle
     private void carsAndPartsTarget() throws SQLException {
         IsNotInstallBorderPane.setVisible(false);
         IsInstallmentBorderPane.setVisible(false);
