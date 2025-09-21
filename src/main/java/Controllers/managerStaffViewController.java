@@ -214,6 +214,7 @@ public class managerStaffViewController {
             }
         }
         updateYearMonthLabel();
+
     }
 
     @FXML
@@ -221,12 +222,14 @@ public class managerStaffViewController {
         currentMonth--;
         if (currentMonth<1){currentMonth =12 ; currentYear--;};
         updateYearMonthLabel();
+
     }
 
     @FXML
     void prevYearClick(MouseEvent event) {
         currentYear--;
         updateYearMonthLabel();
+
     }
 
     @FXML
@@ -246,7 +249,7 @@ public class managerStaffViewController {
         //for inserting staff cards
         StaffListTitleLabel.setText("Staff List (Active)");
         addStaffCard(cardtype);
-
+        //first auto select the one of the top of the card
 
 
 
@@ -323,6 +326,7 @@ public class managerStaffViewController {
         ResultSet rs = cs.executeQuery();
 
         ordersTable.getItems().clear();
+        managerordersList.clear();
 
         while(rs.next()){
             int no = rs.getInt(1);
@@ -351,7 +355,7 @@ public class managerStaffViewController {
 
         }
 
-        ordersTable.getItems().clear();
+
         ordersTable.getItems().addAll(managerordersList);
 
 //        if (!managerordersList.isEmpty()) {
@@ -381,7 +385,7 @@ public class managerStaffViewController {
         staffListContainer.getChildren().clear();
         staffInfoList.clear();
 
-        CallableStatement cs = con.prepareCall("CALL createcards(?,?)");
+        CallableStatement cs = con.prepareCall("CALL createcards(?,?,?,?)");
         if(check) {
             cs.setString(1, "active");
         }else{
@@ -389,6 +393,8 @@ public class managerStaffViewController {
         }
 
         cs.setString(2,"manager");
+        cs.setInt(3,currentMonth);
+        cs.setInt(4,currentYear);
 
         ResultSet rs = cs.executeQuery();
 
@@ -432,15 +438,16 @@ public class managerStaffViewController {
             staffListContainer.getChildren().add(staffCard);
         }
 
-        //first auto select the one of the top of the card
-        int first_id = staffInfoList.getFirst().getId();
-        selectedStaffId = first_id;
+        if(selectedStaffId ==0){
+            selectedStaffId = staffInfoList.getFirst().getId();
+        }
         for (user staffInfo : staffInfoList) {
-            if (staffInfo.getId() == first_id){
+            if (staffInfo.getId() == selectedStaffId){
                 showStaffDetails(staffInfo);
             }
         }
-        highlightSelectedCard(first_id);
+        highlightSelectedCard(selectedStaffId);
+
 
         rs.close();
         cs.close();
@@ -482,7 +489,11 @@ public class managerStaffViewController {
             refreshOrdersTable();
             monthlyOrdersStatus(selectedStaffId,currentMonth,currentYear);
             carsAndPartsTarget();
+            addStaffCard(cardtype);
+
         } catch ( SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
