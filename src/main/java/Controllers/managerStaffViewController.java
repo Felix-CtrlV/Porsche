@@ -20,6 +20,7 @@ import javafx.scene.text.Text;
 import jdk.jshell.EvalException;
 
 
+import javax.xml.transform.Result;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import org.controlsfx.control.textfield.TextFields;
 
 public class managerStaffViewController {
 
@@ -82,8 +84,7 @@ public class managerStaffViewController {
     private BorderPane IsNotInstallBorderPane;
 
 
-    @FXML
-    private Label Monthslabel;
+
 
     @FXML
     private Button NextMonthbtn;
@@ -139,8 +140,7 @@ public class managerStaffViewController {
     @FXML
     private Label TotalOrderlbl;
 
-    @FXML
-    private Label Yearslabel;
+
 
     @FXML
     private TableView<managerOrderViewStaff> ordersTable;
@@ -252,7 +252,6 @@ public class managerStaffViewController {
         //for inserting staff cards
         StaffListTitleLabel.setText("Staff List (Active)");
         addStaffCard(cardtype);
-        //first auto select the one of the top of the card
 
 
 
@@ -263,6 +262,7 @@ public class managerStaffViewController {
         TotalAmountCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
         IsInstallmentCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getIs_installmenat()));
 
+        //for car and parts of the show circle
         IsInstallmentBorderPane.setVisible(false);
         IsNotInstallBorderPane.setVisible(false);
         targetlayer.setVisible(true);
@@ -312,10 +312,12 @@ public class managerStaffViewController {
         selectedStaffId = staff.getId();
 
         System.out.println(selectedStaffId);
+        currentDateSelect();
         try {
             refreshOrdersTable();
             monthlyOrdersStatus(selectedStaffId,currentMonth,currentYear);
             carsAndPartsTarget();
+            monthlyAttendance();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         };
@@ -568,7 +570,6 @@ public class managerStaffViewController {
             ordersTable.getItems().clear();
         }
 
-        highlightSelectedCard(selectedStaffId);
 
         rs.close();
         cs.close();
@@ -581,13 +582,13 @@ public class managerStaffViewController {
         Year nyear = Year.of(currentYear);
         int curyear = Integer.parseInt(today.format(fyear));
 
-        Yearslabel.setText(nyear.format(fyear));
+//        Yearslabel.setText(nyear.format(fyear));
 
         Month nmonth = Month.of(currentMonth);
         String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH); // "Sep"
 
         int curmonth = today.getMonthValue();
-        Monthslabel.setText(formattedMonth);
+//        Monthslabel.setText(formattedMonth);
 
         if(currentYear>= curyear){
 
@@ -608,15 +609,14 @@ public class managerStaffViewController {
             NextMonthbtn.setVisible(true);
         }
 
+
         try {
             refreshOrdersTable();
             monthlyOrdersStatus(selectedStaffId,currentMonth,currentYear);
             carsAndPartsTarget();
-            addStaffCard(cardtype);
+            monthlyAttendance();
 
         } catch ( SQLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -624,10 +624,10 @@ public class managerStaffViewController {
     private void currentDateSelect(){
         currentMonth = today.getMonthValue();
         currentYear = today.getYear();
-        Monthslabel.setText(today.format(fmonth));
+//        Monthslabel.setText(today.format(fmonth));
         NextMonthbtn.setDisable(true);
         NextMonthbtn.setVisible(false);
-        Yearslabel.setText(today.format(fyear));
+//        Yearslabel.setText(today.format(fyear));
         NextYearbtn.setDisable(true);
         NextYearbtn.setVisible(false);
 
@@ -754,7 +754,34 @@ public class managerStaffViewController {
     }
 
     // for monthly attendance circle
-    private void mothlyattendance(){
+    private void monthlyAttendance() throws SQLException {
+            CallableStatement cs = con.prepareCall("CALL getMonthlyAttendance(?,?,?)");
+            cs.setInt(1,selectedStaffId);
+            cs.setInt(2,currentMonth);
+            cs.setInt(3,currentYear);
 
+            ResultSet rs = cs.executeQuery();
+
+            if(rs.next()){
+                int present_day = rs.getInt(1);
+                int absent_day = rs.getInt(2);
+                double attendance_perentage = rs.getDouble(4);
+
+                double attendCircle = 2 * Math.PI * partCircle.getRadius();
+                double progress = attendance_perentage/100;
+                attendanceCircle.getStrokeDashArray().setAll(attendCircle, attendCircle);
+                attendanceCircle.setStrokeDashOffset(attendCircle * (1-progress));
+                attendancePercent.setText(String.valueOf(attendance_perentage)+"%");
+
+                if(absent_day ==0){
+                    attendanceBackCircle.setStrokeDashOffset(0);
+                }
+            }
+
+    }
+
+    // for search bar
+    private void searchBar(){
+        TextFields.bindAutoCompletion(StaffSearchText, staffInfoList);
     }
 }
