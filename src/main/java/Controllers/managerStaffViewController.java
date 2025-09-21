@@ -84,8 +84,7 @@ public class managerStaffViewController {
     private BorderPane IsNotInstallBorderPane;
 
 
-    @FXML
-    private Label Monthslabel;
+
 
     @FXML
     private Button NextMonthbtn;
@@ -141,8 +140,7 @@ public class managerStaffViewController {
     @FXML
     private Label TotalOrderlbl;
 
-    @FXML
-    private Label Yearslabel;
+
 
     @FXML
     private TableView<managerOrderViewStaff> ordersTable;
@@ -584,13 +582,13 @@ public class managerStaffViewController {
         Year nyear = Year.of(currentYear);
         int curyear = Integer.parseInt(today.format(fyear));
 
-        Yearslabel.setText(nyear.format(fyear));
+//        Yearslabel.setText(nyear.format(fyear));
 
         Month nmonth = Month.of(currentMonth);
         String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH); // "Sep"
 
         int curmonth = today.getMonthValue();
-        Monthslabel.setText(formattedMonth);
+//        Monthslabel.setText(formattedMonth);
 
         if(currentYear>= curyear){
 
@@ -626,10 +624,10 @@ public class managerStaffViewController {
     private void currentDateSelect(){
         currentMonth = today.getMonthValue();
         currentYear = today.getYear();
-        Monthslabel.setText(today.format(fmonth));
+//        Monthslabel.setText(today.format(fmonth));
         NextMonthbtn.setDisable(true);
         NextMonthbtn.setVisible(false);
-        Yearslabel.setText(today.format(fyear));
+//        Yearslabel.setText(today.format(fyear));
         NextYearbtn.setDisable(true);
         NextYearbtn.setVisible(false);
 
