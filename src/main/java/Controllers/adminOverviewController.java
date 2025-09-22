@@ -22,7 +22,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class adminOverviewController {
 
@@ -267,41 +269,6 @@ public class adminOverviewController {
 
         } catch (
                 SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private LocalDate lastLoginDate = null;
-
-    public void addNotification(String username, boolean isLogin) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/NotificationCard.fxml"));
-            Node card = loader.load();
-
-            NotificationCardController cardController = loader.getController();
-
-            String message = "";
-            LocalDateTime now = LocalDateTime.now();
-            String time = now.format(DateTimeFormatter.ofPattern("hh:mm a"));
-
-            if (isLogin) {
-                if (lastLoginDate == null || !lastLoginDate.equals(LocalDate.now())) {
-                    message = "Welcome";
-                    lastLoginDate = LocalDate.now();
-                }
-            } else {
-                int hour = now.getHour();
-                if (hour >= 12 && hour < 13) {
-                    message = "Lunch Time";
-                } else if (hour == 17) {
-                    message = "Completed";
-                }
-            }
-
-            cardController.setData(username, message, time, isLogin);
-
-            notiPanel.getChildren().add(0, card); // insert on top
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }

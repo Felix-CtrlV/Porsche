@@ -41,7 +41,7 @@ public class managerDashboardController {
     private AnchorPane admin_anc;
 
     @FXML
-    private Button homebtn;
+    private Button overViewbtn;
 
     @FXML
     private ImageView img;
@@ -86,9 +86,9 @@ public class managerDashboardController {
     }
 
     @FXML
-    void clickhome(ActionEvent event) {
-        loadView("/View/managerHomepage.fxml");
-        setActiveButton(homebtn);
+    void clickOverView(ActionEvent event) {
+        loadView("");
+        setActiveButton(overViewbtn);
     }
 
     @FXML
@@ -118,8 +118,8 @@ public class managerDashboardController {
 
         Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
         img.setImage(porsche_logo);
-        loadView("/View/managerHomepage.fxml");
-        setActiveButton(homebtn);
+        loadView("");
+        setActiveButton(overViewbtn);
         admin_anc.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {

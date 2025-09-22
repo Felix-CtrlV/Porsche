@@ -18,34 +18,26 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="700.0" prefWidth="1280.0" spacing="15.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOrderManagementController">
+<VBox prefHeight="700.0" prefWidth="1280.0" spacing="15.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOrderManagementController">
     <children>
-        <HBox alignment="CENTER" prefHeight="58.0" prefWidth="1280.0">
+        <HBox prefHeight="58.0" prefWidth="1280.0">
          <children>
-            <HBox alignment="CENTER_RIGHT" prefHeight="58.0" prefWidth="1286.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: #dadce0;" HBox.hgrow="ALWAYS">
+            <TextField fx:id="lblsearch" prefHeight="31.0" prefWidth="212.0" promptText="Search">
+               <HBox.margin>
+                  <Insets left="20.0" top="15.0" />
+               </HBox.margin>
+            </TextField>
+            <Button fx:id="btnclick" mnemonicParsing="false" onAction="#clickClick" text="Click" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="10.0" top="15.0" />
+               </HBox.margin>
+            </Button>
+            <Region prefHeight="58.0" prefWidth="486.0" HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: #dadce0;">
                <children>
-                  <StackPane prefHeight="56.0" prefWidth="237.0">
-                     <children>
-                        <TextField fx:id="StaffSearchText" prefHeight="32.0" prefWidth="246.0" promptText="Search order..." style="-fx-background-radius: 20; -fx-border-radius: 20;" StackPane.alignment="CENTER">
-                           <StackPane.margin>
-                              <Insets left="5.0" />
-                           </StackPane.margin>
-                        </TextField>
-                        <Button fx:id="SearchNamebtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="42.0" style="-fx-background-color: transparent;" text="🔍" StackPane.alignment="CENTER_RIGHT">
-                           <StackPane.margin>
-                              <Insets />
-                           </StackPane.margin>
-                           <padding>
-                              <Insets left="9.0" />
-                           </padding>
-                        </Button>
-                     </children>
-                  </StackPane>
-                  <Region prefHeight="56.0" prefWidth="551.0" HBox.hgrow="ALWAYS" />
                   <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
                   <Label fx:id="Monthslabel" styleClass="topic_font" text="January ">
                      <font>
@@ -65,7 +57,7 @@
             </HBox>
          </children>
         </HBox>
-        <HBox prefHeight="139.0" prefWidth="1280.0" spacing="20">
+        <HBox prefHeight="203.0" prefWidth="1280.0" spacing="20">
             <children>
                 <VBox alignment="CENTER" prefHeight="100.0" prefWidth="300" style="-fx-background-color: #e8f5e9; -fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 10; -fx-spacing: 20;" HBox.hgrow="ALWAYS">
                     <children>
@@ -73,9 +65,6 @@
                         <Label style="-fx-text-fill: #388e3c; -fx-font-size: 20; -fx-font-weight: bold;" text="142 Orders" />
                         <Label style="-fx-text-fill: #666;" text="+12% from last week" />
                     </children>
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="100.0" prefWidth="300" style="-fx-background-color: #fff3e0; -fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 10; -fx-spacing: 20;" HBox.hgrow="ALWAYS">
                     <children>
@@ -98,7 +87,7 @@
               <!-- Table and Details Section -->
         <HBox prefHeight="350.0" prefWidth="1280.0" spacing="10.0" VBox.vgrow="ALWAYS">
             <children>
-                <VBox prefHeight="452.0" prefWidth="922.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                <VBox prefHeight="452.0" prefWidth="922.0" HBox.hgrow="ALWAYS">
                     <children>
                         <HBox prefHeight="325.0" prefWidth="789.0" VBox.vgrow="ALWAYS">
                             <children>
