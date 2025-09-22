@@ -18,87 +18,94 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="700.0" prefWidth="1280.0" spacing="15.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOrderManagementController">
+<VBox prefHeight="700.0" prefWidth="1280.0" spacing="15.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOrderManagementController">
     <children>
         <HBox prefHeight="58.0" prefWidth="1280.0">
-         <children>
-            <TextField fx:id="lblsearch" prefHeight="31.0" prefWidth="212.0" promptText="Search">
-               <HBox.margin>
-                  <Insets left="20.0" top="15.0" />
-               </HBox.margin>
-            </TextField>
-            <Button fx:id="btnclick" mnemonicParsing="false" onAction="#clickClick" text="Click" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets left="10.0" top="15.0" />
-               </HBox.margin>
-            </Button>
-            <Region prefHeight="58.0" prefWidth="486.0" HBox.hgrow="ALWAYS" />
-            <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: #dadce0;">
-               <children>
-                  <Button fx:id="PrevMonthbtn" mnemonicParsing="false" onAction="#clickPrevMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                  <Label fx:id="Monthslabel" styleClass="topic_font" text="January ">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="NextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
-                  <Region prefHeight="27.0" prefWidth="38.0" HBox.hgrow="NEVER" />
-                  <Button fx:id="PrevYearbtn" mnemonicParsing="false" onAction="#clickPrevYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                  <Label fx:id="Yearslabel" styleClass="topic_font" text="2023">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
-               </children>
-            </HBox>
-         </children>
+            <children>
+                <HBox alignment="CENTER" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: #dadce0;" HBox.hgrow="ALWAYS">
+                    <children>
+                        <StackPane prefHeight="56.0" prefWidth="258.0">
+                            <children>
+                                <TextField fx:id="StaffSearchText" prefHeight="32.0" prefWidth="169.0" promptText="Search staff..." style="-fx-background-radius: 20; -fx-border-radius: 20;" StackPane.alignment="CENTER" />
+                                <Button fx:id="SearchNamebtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="42.0" style="-fx-background-color: transparent;" text="🔍" StackPane.alignment="CENTER_RIGHT">
+                                    <StackPane.margin>
+                                        <Insets />
+                                    </StackPane.margin>
+                                    <padding>
+                                        <Insets left="9.0" />
+                                    </padding>
+                                </Button>
+                            </children>
+                            <padding>
+                                <Insets left="10.0" />
+                            </padding>
+                        </StackPane>
+                        <Region prefHeight="56.0" prefWidth="612.0" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                        <Label fx:id="Monthslabel" styleClass="topic_font" text="January ">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                        </Label>
+                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
+                        <Region prefHeight="27.0" prefWidth="38.0" HBox.hgrow="NEVER" />
+                        <Button fx:id="PreviousYearbth" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                        <Label fx:id="Yearslabel" styleClass="topic_font" text="2023">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                        </Label>
+                        <Button fx:id="NextYearbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
+                    </children>
+                </HBox>
+            </children>
         </HBox>
-        <HBox prefHeight="203.0" prefWidth="1280.0" spacing="20">
+        <HBox prefHeight="160.0" prefWidth="1280.0" spacing="20">
             <children>
                 <VBox alignment="CENTER" prefHeight="100.0" prefWidth="300" style="-fx-background-color: #e8f5e9; -fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 10; -fx-spacing: 20;" HBox.hgrow="ALWAYS">
                     <children>
                         <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Order Confirm" />
-                        <Label fx:id="confirmOrderlbl" style="-fx-text-fill: #388e3c; -fx-font-size: 20; -fx-font-weight: bold;" text="142 Orders" />
-                        <Label fx:id="confirmOrderMessage" style="-fx-text-fill: #666;" text="+12% from last week" />
+                        <Label style="-fx-text-fill: #388e3c; -fx-font-size: 20; -fx-font-weight: bold;" text="142 Orders" />
+                        <Label style="-fx-text-fill: #666;" text="+12% from last week" />
                     </children>
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="100.0" prefWidth="300" style="-fx-background-color: #fff3e0; -fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 10; -fx-spacing: 20;" HBox.hgrow="ALWAYS">
                     <children>
                         <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Order Pending" />
-                        <Label fx:id="pendingOrderlbl" style="-fx-text-fill: #f57c00; -fx-font-size: 20; -fx-font-weight: bold;" text="87 Orders" />
-                        <Label fx:id="pendingOrderMessage" style="-fx-text-fill: #666;" text="+5% from last week" />
+                        <Label style="-fx-text-fill: #f57c00; -fx-font-size: 20; -fx-font-weight: bold;" text="87 Orders" />
+                        <Label style="-fx-text-fill: #666;" text="+5% from last week" />
                     </children>
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="100.0" prefWidth="300" style="-fx-background-color: #ffebee; -fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 10; -fx-spacing: 20;" HBox.hgrow="ALWAYS">
                     <children>
                         <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Order Cancel" />
-                        <Label fx:id="cancelOrderlbl" style="-fx-text-fill: #d32f2f; -fx-font-size: 20; -fx-font-weight: bold;" text="23 Orders" />
-                        <Label fx:id="cancelOrderMessage" style="-fx-text-fill: #666;" text="-3% from last week" />
+                        <Label style="-fx-text-fill: #d32f2f; -fx-font-size: 20; -fx-font-weight: bold;" text="23 Orders" />
+                        <Label style="-fx-text-fill: #666;" text="-3% from last week" />
                     </children>
                 </VBox>
-            <PieChart fx:id="orderPieChart" prefHeight="100.0" prefWidth="300.0" title="Oreder Distribution Status" HBox.hgrow="ALWAYS" />
+                <PieChart prefHeight="100.0" prefWidth="300.0" title="Oreder Distribution Status" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>
 
-              <!-- Table and Details Section -->
+        <!-- Table and Details Section -->
         <HBox prefHeight="350.0" prefWidth="1280.0" spacing="10.0" VBox.vgrow="ALWAYS">
             <children>
                 <VBox prefHeight="452.0" prefWidth="922.0" HBox.hgrow="ALWAYS">
                     <children>
                         <HBox prefHeight="325.0" prefWidth="789.0" VBox.vgrow="ALWAYS">
                             <children>
-                                <TableView fx:id="orderViewTabel" minWidth="400" prefHeight="196.0" prefWidth="790.0" HBox.hgrow="ALWAYS">
+                                <TableView fx:id="tblordermanagement" minWidth="400" prefHeight="196.0" prefWidth="790.0" HBox.hgrow="ALWAYS">
                                     <columns>
-                                        <TableColumn fx:id="orderIdCol" minWidth="80" prefWidth="100" text="Order ID" />
-                                        <TableColumn fx:id="orderDateCol" minWidth="80" prefWidth="100" text="Order Date" />
-                                        <TableColumn fx:id="orderStatusCol" minWidth="80" prefWidth="100" text="Status" />
-                                        <TableColumn fx:id="orderInstallmentCol" minWidth="100" prefWidth="120" text="Is Installment" />
-                                        <TableColumn fx:id="orderStaffNameCol" minWidth="100" prefWidth="120" text="Staff Name" />
-                                        <TableColumn fx:id="orderCustomerCol" minWidth="100" prefWidth="120" text="Customer Name" />
+                                        <TableColumn fx:id="rollorderid" minWidth="80" prefWidth="100" text="Order ID" />
+                                        <TableColumn fx:id="rollorderdate" minWidth="80" prefWidth="100" text="Order Date" />
+                                        <TableColumn fx:id="rollstatus" minWidth="80" prefWidth="100" text="Status" />
+                                        <TableColumn fx:id="rollisinstallmant" minWidth="100" prefWidth="120" text="Is Installment" />
+                                        <TableColumn fx:id="rollsellername" minWidth="100" prefWidth="120" text="Seller Name" />
+                                        <TableColumn fx:id="rollcustomername" minWidth="100" prefWidth="120" text="Customer Name" />
                                     </columns>
                                     <columnResizePolicy>
                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -110,14 +117,14 @@
                             <children>
                                 <VBox prefHeight="175.0" prefWidth="769.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #dadce0; -fx-padding: 15;" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <HBox alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="792.0">
+                                        <HBox alignment="CENTER_LEFT">
                                             <children>
                                                 <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Monthly Order Trends" />
-                                                <Region prefHeight="72.0" prefWidth="558.0" HBox.hgrow="ALWAYS" />
-                                                <Label fx:id="orderTrendYear" style="-fx-text-fill: #5f6368; -fx-font-size: 14;" text="2023" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label style="-fx-text-fill: #5f6368; -fx-font-size: 14;" text="2023" />
                                             </children>
                                         </HBox>
-                                        <LineChart fx:id="orderTrendChart" legendVisible="false" prefHeight="214.0" prefWidth="757.0" style="-fx-padding: 10 0 0 0;">
+                                        <LineChart fx:id="orderTrendChart" legendVisible="false" prefHeight="150.0" prefWidth="1088.0" style="-fx-padding: 10 0 0 0;">
                                             <xAxis>
                                                 <CategoryAxis label="Months" />
                                             </xAxis>
