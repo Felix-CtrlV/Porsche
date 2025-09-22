@@ -5,6 +5,7 @@ import Model.managerOrderViewStaff;
 import Model.user;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
@@ -246,8 +247,16 @@ public class managerStaffViewController {
         orderDetails(selectorder);
     }
 
+
     @FXML
     private void initialize() throws SQLException, IOException {
+
+        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (!updatingMonthBox && newVal != null) {
+                currentMonth = Month.valueOf(newVal.toUpperCase(Locale.ENGLISH)).getValue();
+                updateYearMonthLabel();
+            }
+        });
 
 
         //for creating the month  and year of this month
@@ -264,14 +273,6 @@ public class managerStaffViewController {
         DateCol.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().getOrder_date()));
         TotalAmountCol.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
         IsInstallmentCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getIs_installmenat()));
-
-        //for selecting the date box
-        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                currentMonth = Month.valueOf(newVal.toUpperCase(Locale.ENGLISH)).getValue();
-                updateYearMonthLabel();
-            }
-        });
 
         yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
@@ -869,65 +870,57 @@ public class managerStaffViewController {
 
     }
 
-    //for date box
     private void insertMonthYearChoiceBox(user staff) {
         yearBox.getItems().clear();
-
-        // Populate years from staff start → current year or staff end
         LocalDate end = (staff.getEnd_date() != null) ? staff.getEnd_date() : today;
-        for (int year = staff.getStart_date().getYear(); year <= end.getYear(); year++) {
-            yearBox.getItems().add(year);
+
+        for (int y = staff.getStart_date().getYear(); y <= end.getYear(); y++) {
+            yearBox.getItems().add(y);
         }
 
-        // Ensure currentYear is within staff range
-        if (currentYear < staff.getStart_date().getYear()) currentYear = staff.getStart_date().getYear();
-        if (currentYear > end.getYear()) currentYear = end.getYear();
-
         yearBox.setValue(currentYear);
-
-        // Update months for the selected year
         updateMonthBoxForYear(currentYear, staff);
 
-        // Listener: update months whenever year changes
+        // Add year listener only once
         yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 currentYear = newVal;
                 updateMonthBoxForYear(currentYear, staff);
+                updateYearMonthLabel();
             }
         });
     }
 
 
+    private boolean updatingMonthBox = false;
 
     private void updateMonthBoxForYear(int year, user staff) {
-        monthBox.getItems().clear();
-
         int startMonth = 1;
         int endMonth = 12;
 
-        // Staff start/end constraints
-        if (year == staff.getStart_date().getYear()) {
-            startMonth = staff.getStart_date().getMonthValue();
-        }
+        if (year == staff.getStart_date().getYear()) startMonth = staff.getStart_date().getMonthValue();
         if (staff.getEnd_date() != null && year == staff.getEnd_date().getYear()) {
             endMonth = staff.getEnd_date().getMonthValue();
-        } else if (year == today.getYear() && (staff.getEnd_date() == null || staff.getEnd_date().isAfter(today))) {
-            // Only cap months if it's the current year and staff is still active
+        } else if (year == today.getYear() && staff.getEnd_date() == null) {
             endMonth = today.getMonthValue();
         }
 
+        List<String> months = new ArrayList<>();
         for (int m = startMonth; m <= endMonth; m++) {
-            monthBox.getItems().add(Month.of(m).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+            months.add(Month.of(m).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
         }
 
-        // Adjust currentMonth to stay within range
-        if (currentMonth < startMonth) currentMonth = startMonth;
-        if (currentMonth > endMonth) currentMonth = endMonth;
+        updatingMonthBox = true;
+        monthBox.setItems(FXCollections.observableArrayList(months));
+
+        // Make sure currentMonth is valid
+        if (!months.contains(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH))) {
+            currentMonth = startMonth; // default to first available month
+        }
 
         monthBox.setValue(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+        updatingMonthBox = false;
     }
-
-
 
 
     private void updateChoiceBoxes() {
