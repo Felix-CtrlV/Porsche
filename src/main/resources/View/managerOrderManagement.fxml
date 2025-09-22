@@ -18,46 +18,53 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <VBox prefHeight="700.0" prefWidth="1280.0" spacing="15.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOrderManagementController">
     <children>
         <HBox prefHeight="58.0" prefWidth="1280.0">
-         <children>
-            <TextField fx:id="lblsearch" prefHeight="31.0" prefWidth="212.0" promptText="Search">
-               <HBox.margin>
-                  <Insets left="20.0" top="15.0" />
-               </HBox.margin>
-            </TextField>
-            <Button fx:id="btnclick" mnemonicParsing="false" onAction="#clickClick" text="Click" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets left="10.0" top="15.0" />
-               </HBox.margin>
-            </Button>
-            <Region prefHeight="58.0" prefWidth="486.0" HBox.hgrow="ALWAYS" />
-            <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: #dadce0;">
-               <children>
-                  <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                  <Label fx:id="Monthslabel" styleClass="topic_font" text="January ">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="NextMonthbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
-                  <Region prefHeight="27.0" prefWidth="38.0" HBox.hgrow="NEVER" />
-                  <Button fx:id="PreviousYearbth" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                  <Label fx:id="Yearslabel" styleClass="topic_font" text="2023">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="NextYearbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
-               </children>
-            </HBox>
-         </children>
+            <children>
+                <HBox alignment="CENTER" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: #dadce0;" HBox.hgrow="ALWAYS">
+                    <children>
+                        <StackPane prefHeight="56.0" prefWidth="258.0">
+                            <children>
+                                <TextField fx:id="StaffSearchText" prefHeight="32.0" prefWidth="169.0" promptText="Search staff..." style="-fx-background-radius: 20; -fx-border-radius: 20;" StackPane.alignment="CENTER" />
+                                <Button fx:id="SearchNamebtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="42.0" style="-fx-background-color: transparent;" text="🔍" StackPane.alignment="CENTER_RIGHT">
+                                    <StackPane.margin>
+                                        <Insets />
+                                    </StackPane.margin>
+                                    <padding>
+                                        <Insets left="9.0" />
+                                    </padding>
+                                </Button>
+                            </children>
+                            <padding>
+                                <Insets left="10.0" />
+                            </padding>
+                        </StackPane>
+                        <Region prefHeight="56.0" prefWidth="612.0" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                        <Label fx:id="Monthslabel" styleClass="topic_font" text="January ">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                        </Label>
+                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
+                        <Region prefHeight="27.0" prefWidth="38.0" HBox.hgrow="NEVER" />
+                        <Button fx:id="PreviousYearbth" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                        <Label fx:id="Yearslabel" styleClass="topic_font" text="2023">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                        </Label>
+                        <Button fx:id="NextYearbtn" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
+                    </children>
+                </HBox>
+            </children>
         </HBox>
-        <HBox prefHeight="203.0" prefWidth="1280.0" spacing="20">
+        <HBox prefHeight="160.0" prefWidth="1280.0" spacing="20">
             <children>
                 <VBox alignment="CENTER" prefHeight="100.0" prefWidth="300" style="-fx-background-color: #e8f5e9; -fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 10; -fx-spacing: 20;" HBox.hgrow="ALWAYS">
                     <children>
@@ -80,11 +87,11 @@
                         <Label style="-fx-text-fill: #666;" text="-3% from last week" />
                     </children>
                 </VBox>
-            <PieChart prefHeight="100.0" prefWidth="300.0" title="Oreder Distribution Status" HBox.hgrow="ALWAYS" />
+                <PieChart prefHeight="100.0" prefWidth="300.0" title="Oreder Distribution Status" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>
 
-              <!-- Table and Details Section -->
+        <!-- Table and Details Section -->
         <HBox prefHeight="350.0" prefWidth="1280.0" spacing="10.0" VBox.vgrow="ALWAYS">
             <children>
                 <VBox prefHeight="452.0" prefWidth="922.0" HBox.hgrow="ALWAYS">
