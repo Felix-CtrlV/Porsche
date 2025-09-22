@@ -7,11 +7,11 @@ public class user {
     private int id;
     private String username, email, password, address, phone, role, nrc, is_active;
     private LocalDate dob;
-    private Date start_date, end_date;
+    private LocalDate start_date, end_date;
     public user(){}
 
     //admin account and manager staff view (userCard)
-    public user(int id, String name, String phone, String email, String address, LocalDate dob, String is_active,Date start_date ,Date end_date){
+    public user(int id, String name, String phone, String email, String address, LocalDate dob, String is_active,LocalDate start_date ,LocalDate end_date){
         this.id = id;
         this.username = name;
         this.phone = phone;
@@ -113,21 +113,21 @@ public class user {
         this.dob = dob;
     }
 
-    public Date getStart_date() {
+    public LocalDate getStart_date() {
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
         return start_date;
     }
 
-    public Date getEnd_date() {
+    public LocalDate getEnd_date() {
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
         return end_date;
     }
 
-    public void setEnd_date(Date end_date) {
+    public void setEnd_date(LocalDate end_date) {
         this.end_date = end_date;
     }
 
-    public void setStart_date(Date start_date) {
+    public void setStart_date(LocalDate start_date) {
         this.start_date = start_date;
     }
 

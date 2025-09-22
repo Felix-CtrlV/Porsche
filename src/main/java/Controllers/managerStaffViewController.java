@@ -324,9 +324,6 @@ public class managerStaffViewController {
 
 //        StaffImage.setImage(new Image(staff.getImagePath()));
 
-
-
-
         highlightSelectedCard(staff.getId());
         selectedStaffId = staff.getId();
 
@@ -343,7 +340,6 @@ public class managerStaffViewController {
             throw new RuntimeException(e);
         };
     }
-
 
     //for the staff of monthly sold out the order table
     private void refreshOrdersTable() throws SQLException {
@@ -394,7 +390,6 @@ public class managerStaffViewController {
 
         }
 
-
         ordersTable.getItems().addAll(managerordersList);
 
 //        if (!managerordersList.isEmpty()) {
@@ -433,11 +428,9 @@ public class managerStaffViewController {
 
                 System.out.println(names[i] + " "+qty[i] +" "+ price[i]);
                 IsInstallorderItemsContainer.getChildren().add(orderItem);
-
             }
 
         }else{
-
 
             IsNotInstallBorderPane.setVisible(true);
             IsInstallmentBorderPane.setVisible(false);
@@ -524,8 +517,11 @@ public class managerStaffViewController {
             String address = rs.getString("user_address");
             String dob = rs.getString("dob");
             String status = rs.getInt("user_status") == 1 ? "Active" : "Inactive";
-            Date str = rs.getDate("start_date");
-            Date end = rs.getDate("end_date");
+            java.sql.Date sqlStart = rs.getDate("start_date");
+            java.sql.Date sqlEnd = rs.getDate("end_date");
+
+            LocalDate str = (sqlStart != null) ? sqlStart.toLocalDate() : null;
+            LocalDate end = (sqlEnd != null) ? sqlEnd.toLocalDate() : null;
 
             user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status,str,end);
             staffInfoList.add(staff);
@@ -878,10 +874,11 @@ public class managerStaffViewController {
         yearBox.getItems().clear();
         monthBox.getItems().clear();
 
-        int startYear = staff.getStart_date().getYear();   // LocalDate always ISO
-        int endYear = (staff.getEnd_date() != null)
-                ? staff.getEnd_date().getYear()
-                : today.getYear();
+        LocalDate start = staff.getStart_date();
+        LocalDate end = (staff.getEnd_date() != null) ? staff.getEnd_date() : LocalDate.now();
+
+        int startYear = start.getYear();   // LocalDate.getYear() returns correct year
+        int endYear = end.getYear();
 
         for (int year = startYear; year <= endYear; year++) {
             if (!yearBox.getItems().contains(year)) {
@@ -889,13 +886,12 @@ public class managerStaffViewController {
             }
         }
 
-        if (currentYear < startYear) currentYear = startYear;
-        if (currentYear > endYear) currentYear = endYear;
+        if (currentYear < startYear) {currentYear = startYear;}
+        if (currentYear > endYear) {currentYear = endYear;}
 
         yearBox.setValue(currentYear);
 
         updateMonthBoxForYear(currentYear, staff);
-
 
         Month curMonth = Month.of(currentMonth);
         String monthName = curMonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
@@ -917,10 +913,10 @@ public class managerStaffViewController {
         int endMonth = 12;
 
         if (year == staff.getStart_date().getYear()) {
-            startMonth = staff.getStart_date().getMonth();
+            startMonth = staff.getStart_date().getMonthValue();
         }
         if (staff.getEnd_date() != null && year == staff.getEnd_date().getYear()) {
-            endMonth = staff.getEnd_date().getMonth();
+            endMonth = staff.getEnd_date().getMonthValue();
         }
         if (year == today.getYear() && staff.getEnd_date() == null) {
 
