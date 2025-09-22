@@ -56,10 +56,10 @@ public class managerOrderManagementController {
     private Label monthlbl;
 
     @FXML
-    private TableColumn<?, ?> orderDateCol;
+    private TableColumn<?, ?> noCol;
 
     @FXML
-    private TableColumn<?, ?> orderIdCol;
+    private TableColumn<?, ?> orderDateCol;
 
     @FXML
     private VBox orderItemsContainer;

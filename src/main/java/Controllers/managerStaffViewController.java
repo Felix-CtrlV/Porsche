@@ -1,7 +1,7 @@
 package Controllers;
 
 import Database.Porsche_DB;
-import Model.managerOrderViewStaff;
+import Model.managerOrderView;
 import Model.user;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -46,7 +46,7 @@ public class managerStaffViewController {
     private Button ActiveInactiveSwitchbtn;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, Double> TotalAmountCol;
+    private TableColumn<managerOrderView, Double> TotalAmountCol;
 
     @FXML
     private Label CancelOrderlbl;
@@ -55,10 +55,10 @@ public class managerStaffViewController {
     private Label CompleOrderlbl;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, String> CustomerNameCol;
+    private TableColumn<managerOrderView, String> CustomerNameCol;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, Date> DateCol;
+    private TableColumn<managerOrderView, Date> DateCol;
 
     @FXML
     private Label IsInstallPaidAmountLabel;
@@ -70,7 +70,7 @@ public class managerStaffViewController {
     private BorderPane IsInstallmentBorderPane;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, String> IsInstallmentCol;
+    private TableColumn<managerOrderView, String> IsInstallmentCol;
 
     @FXML
     private VBox IsInstallorderItemsContainer;
@@ -88,7 +88,7 @@ public class managerStaffViewController {
     private Button NextYearbtn;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, Integer> NoCol;
+    private TableColumn<managerOrderView, Integer> NoCol;
 
     @FXML
     private Label NoInstallTotalPriceLabel;
@@ -137,7 +137,7 @@ public class managerStaffViewController {
 
 
     @FXML
-    private TableView<managerOrderViewStaff> ordersTable;
+    private TableView<managerOrderView> ordersTable;
 
     @FXML
     private VBox staffListContainer;
@@ -242,7 +242,7 @@ public class managerStaffViewController {
 
     @FXML
     void ordersTableClick(MouseEvent event) throws IOException {
-        managerOrderViewStaff selectorder = ordersTable.getSelectionModel().getSelectedItem();
+        managerOrderView selectorder = ordersTable.getSelectionModel().getSelectedItem();
         orderDetails(selectorder);
     }
 
@@ -355,7 +355,7 @@ public class managerStaffViewController {
     }
 
     private void showOrdersTable(int staffId, int month, int year) throws SQLException {
-        List<managerOrderViewStaff> managerordersList = new ArrayList<>();
+        List<managerOrderView> managerordersList = new ArrayList<>();
         CallableStatement cs = con.prepareCall("CALL getordersbyuserid(?,?,?)");
         cs.setInt(1, staffId);
         cs.setInt(2, month);
@@ -386,7 +386,7 @@ public class managerStaffViewController {
                 is_installment = "No";
             }
 
-            managerOrderViewStaff od = new managerOrderViewStaff(no, order_id, cus_name, date, total_amount, is_installment, carsandparts_name, carsandparts_qty, carsandparts_price, payed_amount, remain_amount, due_date);
+            managerOrderView od = new managerOrderView(no, order_id, cus_name, date, total_amount, is_installment, carsandparts_name, carsandparts_qty, carsandparts_price, payed_amount, remain_amount, due_date);
 
             managerordersList.add(od);
 
@@ -400,7 +400,7 @@ public class managerStaffViewController {
     }
 
     //to see like a slip of the order table
-    private void orderDetails(managerOrderViewStaff orders) throws IOException {
+    private void orderDetails(managerOrderView orders) throws IOException {
 
         NoInstallorderItemsContainer.getChildren().clear();
         IsInstallorderItemsContainer.getChildren().clear();
