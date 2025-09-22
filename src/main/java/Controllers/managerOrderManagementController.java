@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 public class managerOrderManagementController {
 
     @FXML
-    private Label Monthslabel;
+    private VBox InstallmentPane;
 
     @FXML
     private Button NextMonthbtn;
@@ -23,16 +23,16 @@ public class managerOrderManagementController {
     private Button NextYearbtn;
 
     @FXML
-    private Button PrevMonthbtn;
+    private Button PreviousMonthbtn;
 
     @FXML
-    private Button PrevYearbtn;
+    private Button PreviousYearbth;
 
     @FXML
-    private Label Yearslabel;
+    private TextField SearchText;
 
     @FXML
-    private Button btnclick;
+    private Button Searchbtn;
 
     @FXML
     private Label cancelOrderMessage;
@@ -47,10 +47,13 @@ public class managerOrderManagementController {
     private Label confirmOrderlbl;
 
     @FXML
-    private TextField lblsearch;
+    private Label customerNamelabel;
 
     @FXML
-    private TableColumn<?, ?> orderCustomerCol;
+    private TableColumn<?, ?> installmentCol;
+
+    @FXML
+    private Label monthlbl;
 
     @FXML
     private TableColumn<?, ?> orderDateCol;
@@ -59,34 +62,22 @@ public class managerOrderManagementController {
     private TableColumn<?, ?> orderIdCol;
 
     @FXML
-    private TableColumn<?, ?> orderInstallmentCol;
-
-    @FXML
     private VBox orderItemsContainer;
-
-    @FXML
-    private VBox orderItemsContainer1;
 
     @FXML
     private PieChart orderPieChart;
 
     @FXML
-    private TableColumn<?, ?> orderStaffNameCol;
+    private TableColumn<?, ?> orderStatusCol;
 
     @FXML
-    private TableColumn<?, ?> orderStatusCol;
+    private TableView<?> orderTable;
 
     @FXML
     private LineChart<?, ?> orderTrendChart;
 
     @FXML
-    private Label orderTrendYear;
-
-    @FXML
-    private TableView<?> orderViewTabel;
-
-    @FXML
-    private Label paidAmountLabel;
+    private Label paidAmountlbl;
 
     @FXML
     private Label pendingOrderMessage;
@@ -95,22 +86,22 @@ public class managerOrderManagementController {
     private Label pendingOrderlbl;
 
     @FXML
-    private Label remainAmountLabel;
+    private Label remainAmountlbl;
 
     @FXML
-    private Label totalPriceLabel;
-
-    @FXML
-    private Label totalPriceLabel1;
-
-    @FXML
-    private Label totalPriceLabel11;
+    private Label staffNamelbl;
 
     @FXML
     private Label totalPriceLabel12;
 
     @FXML
-    void clickClick(ActionEvent event) {
+    private Label totalPricelbl;
+
+    @FXML
+    private Label yearlbl;
+
+    @FXML
+    void ClickPrevMonth(ActionEvent event) {
 
     }
 
@@ -121,11 +112,6 @@ public class managerOrderManagementController {
 
     @FXML
     void clickNextYear(ActionEvent event) {
-
-    }
-
-    @FXML
-    void clickPrevMonth(ActionEvent event) {
 
     }
 
