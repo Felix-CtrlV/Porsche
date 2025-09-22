@@ -228,8 +228,7 @@ public class managerStaffViewController {
         if (currentMonth < 1) {
             currentMonth = 12;
             currentYear--;
-        }
-        ;
+        };
         updateYearMonthLabel();
 
     }
@@ -251,14 +250,6 @@ public class managerStaffViewController {
     @FXML
     private void initialize() throws SQLException, IOException {
 
-        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (!updatingMonthBox && newVal != null) {
-                currentMonth = Month.valueOf(newVal.toUpperCase(Locale.ENGLISH)).getValue();
-                updateYearMonthLabel();
-            }
-        });
-
-
         //for creating the month  and year of this month
         currentDateSelect();
 
@@ -277,6 +268,15 @@ public class managerStaffViewController {
         yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 currentYear = newVal;
+                updateYearMonthLabel();
+            }
+        });
+
+        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (!updatingMonthBox && newVal != null) {
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
+                Month parsedMonth = Month.from(fmt.parse(newVal));
+                currentMonth = parsedMonth.getValue();
                 updateYearMonthLabel();
             }
         });
@@ -837,6 +837,38 @@ public class managerStaffViewController {
             NextMonthbtn.setVisible(true);
         }
 
+        if (!staffInfoList.isEmpty()) {
+            user selected = staffInfoList.stream()
+                    .filter(s -> s.getId() == selectedStaffId)
+                    .findFirst()
+                    .orElse(null);
+
+            if (selected != null && selected.getStart_date() != null) {
+                LocalDate start = selected.getStart_date();
+
+
+                if (currentYear <= start.getYear()) {
+                    PreviousYearbth.setDisable(true);
+                    PreviousYearbth.setVisible(false);
+
+
+                    if (currentYear == start.getYear() && currentMonth <= start.getMonthValue()) {
+                        PreviousMonthbtn.setDisable(true);
+                        PreviousMonthbtn.setVisible(false);
+                    } else {
+                        PreviousMonthbtn.setDisable(false);
+                        PreviousMonthbtn.setVisible(true);
+                    }
+                } else {
+                    PreviousYearbth.setDisable(false);
+                    PreviousYearbth.setVisible(true);
+                    PreviousMonthbtn.setDisable(false);
+                    PreviousMonthbtn.setVisible(true);
+                }
+            }
+        }
+
+
         // 🔹 Sync ComboBoxes with updated currentMonth/currentYear
         String monthName = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
         if (monthBox.getItems().contains(monthName)) {
@@ -921,7 +953,6 @@ public class managerStaffViewController {
         monthBox.setValue(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
         updatingMonthBox = false;
     }
-
 
     private void updateChoiceBoxes() {
         String monthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
