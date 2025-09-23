@@ -23,7 +23,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerStaffViewController">
     <left>
-        <VBox prefHeight="700.0" prefWidth="301.0" spacing="10.0" style="-fx-background-color: #f8f9fa;">
+        <VBox minWidth="301.0" prefHeight="700.0" prefWidth="301.0" spacing="10.0" style="-fx-background-color: #f8f9fa;">
             <padding>
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
@@ -62,7 +62,7 @@
         </VBox>
     </left>
     <center>
-        <VBox spacing="10.0">
+        <VBox prefHeight="700.0" prefWidth="1057.0" spacing="10.0">
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
@@ -236,25 +236,28 @@
                   </VBox>
                     </children>
                 </HBox>
-                <HBox prefHeight="330.0" prefWidth="928.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                <HBox alignment="CENTER" prefHeight="330.0" prefWidth="928.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <TableView fx:id="ordersTable" onMouseClicked="#ordersTableClick" prefHeight="322.0" prefWidth="250.0" style="-fx-border-color: #f1f3f4;" HBox.hgrow="ALWAYS">
+                        <TableView fx:id="ordersTable" maxWidth="550.0" minWidth="550.0" onMouseClicked="#ordersTableClick" prefHeight="322.0" prefWidth="450.0" style="-fx-border-color: #f1f3f4;" HBox.hgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="NoCol" maxWidth="-1.0" minWidth="50.0" prefWidth="60.0" style="-fx-font-weight: bold;" text="No" />
+                                <TableColumn fx:id="NoCol" maxWidth="-1.0" minWidth="50.0" prefWidth="500.0" style="-fx-font-weight: bold;" text="No" />
                                 <TableColumn fx:id="CustomerNameCol" maxWidth="-1.0" minWidth="110.0" prefWidth="150.0" style="-fx-font-weight: bold;" text="Customer Name" />
-                                <TableColumn fx:id="DateCol" maxWidth="107.20004272460938" minWidth="93.60000610351562" prefWidth="107.20004272460938" style="-fx-font-weight: bold;" text="Date" />
-                                <TableColumn fx:id="TotalAmountCol" maxWidth="116.800048828125" minWidth="104.0" prefWidth="104.0" style="-fx-font-weight: bold;" text="Total Amount" />
-                                <TableColumn fx:id="IsInstallmentCol" maxWidth="-1.0" minWidth="80.0" style="-fx-font-weight: bold;" text="Installment" />
+                                <TableColumn fx:id="DateCol" maxWidth="167.2000274658203" minWidth="93.60000610351562" prefWidth="165.59999084472656" style="-fx-font-weight: bold;" text="Date" />
+                                <TableColumn fx:id="TotalAmountCol" maxWidth="157.5999755859375" minWidth="85.5999755859375" prefWidth="143.20001220703125" style="-fx-font-weight: bold;" text="Total Amount" />
+                                <TableColumn fx:id="IsInstallmentCol" maxWidth="76.0" minWidth="51.199951171875" prefWidth="76.0" style="-fx-font-weight: bold;" text="Installment" />
                             </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                         </TableView>
-                        <AnchorPane prefHeight="203.0" prefWidth="331.0" HBox.hgrow="ALWAYS">
-                            <children>
+                  <StackPane prefHeight="322.0" prefWidth="161.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <children>
 
-                                <!-- Updated visible BorderPane with consistent styling -->
-                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <!-- Updated visible BorderPane with consistent styling -->
+                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="322.0" prefWidth="382.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false">
                                     <padding>
                                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                     </padding>
@@ -306,7 +309,8 @@
                                                 <Label fx:id="IsInstalltotalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="0.00">
                                        <HBox.margin>
                                           <Insets right="90.0" />
-                                       </HBox.margin></Label>
+                                       </HBox.margin>
+                                    </Label>
                                             </children>
                                  <padding>
                                     <Insets bottom="15.0" left="60.0" right="100.0" top="15.0" />
@@ -317,7 +321,7 @@
                                         </HBox>
                                     </bottom>
                                 </BorderPane>
-                        <BorderPane fx:id="IsNotInstallBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <BorderPane fx:id="IsNotInstallBorderPane" prefHeight="322.0" prefWidth="512.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false">
                            <padding>
                               <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                            </padding>
@@ -360,9 +364,9 @@
                               </HBox>
                            </bottom>
                         </BorderPane>
-                        <HBox fx:id="targetlayer" layoutX="175.0" layoutY="132.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox fx:id="targetlayer" prefHeight="322.0" prefWidth="422.0" spacing="10.0">
                            <children>
-                              <VBox prefHeight="322.0" prefWidth="213.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8;" HBox.hgrow="ALWAYS">
+                              <VBox prefHeight="322.0" prefWidth="259.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8;" HBox.hgrow="ALWAYS">
                                  <children>
                                     <HBox prefHeight="33.0" prefWidth="255.0">
                                        <children>
@@ -432,7 +436,7 @@
                                     </HBox>
                                  </children>
                               </VBox>
-                              <VBox prefHeight="100.0" prefWidth="255.2" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8;" HBox.hgrow="ALWAYS">
+                              <VBox prefHeight="322.0" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8;" HBox.hgrow="ALWAYS">
                                  <children>
                                     <HBox prefHeight="33.0" prefWidth="255.0">
                                        <children>
@@ -504,11 +508,8 @@
                               </VBox>
                            </children>
                         </HBox>
-                            </children>
-                            <HBox.margin>
-                                <Insets />
-                            </HBox.margin>
-                        </AnchorPane>
+                     </children>
+                  </StackPane>
                     </children>
                 </HBox>
             </children>
