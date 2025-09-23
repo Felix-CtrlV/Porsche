@@ -94,7 +94,7 @@
         <!-- Table and Details Section -->
         <HBox prefHeight="350.0" prefWidth="1280.0" spacing="10.0" VBox.vgrow="ALWAYS">
             <children>
-                <VBox prefHeight="452.0" prefWidth="922.0" HBox.hgrow="ALWAYS">
+                <VBox prefHeight="452.0" prefWidth="922.0" spacing="10.0" HBox.hgrow="ALWAYS">
                     <children>
                         <HBox prefHeight="325.0" prefWidth="789.0" VBox.vgrow="ALWAYS">
                             <children>
