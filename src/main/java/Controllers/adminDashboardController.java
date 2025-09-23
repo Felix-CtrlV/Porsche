@@ -94,6 +94,7 @@ public class adminDashboardController {
     }
 
     public void initialize() throws IOException {
+        settingPane.setTranslateX(350);
         overlayPane.setVisible(false);
         settingIcon.setOnMouseClicked(e->{clickSetting();});
 
