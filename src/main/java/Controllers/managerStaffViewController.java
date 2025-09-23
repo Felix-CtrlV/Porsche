@@ -963,6 +963,4 @@ public class managerStaffViewController {
         monthBox.setValue(monthName);
         yearBox.setValue(currentYear);
     }
-
-
 }

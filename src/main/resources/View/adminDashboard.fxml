@@ -64,7 +64,7 @@
             </top>
         </BorderPane>
         <Pane fx:id="overlayPane" opacity="0.5" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
-        <AnchorPane fx:id="settingPane" maxWidth="350.0" prefHeight="580.0" prefWidth="1060.0" style="-fx-background-radius: 30 0 0 30;" styleClass="black-pane" translateX="350.0" StackPane.alignment="CENTER_RIGHT">
+        <AnchorPane fx:id="settingPane" maxWidth="350.0" prefHeight="580.0" prefWidth="1060.0" style="-fx-background-radius: 30 0 0 30;" styleClass="black-pane" StackPane.alignment="CENTER_RIGHT">
             <stylesheets>
                 <URL value="@../CSS/DashBoard_general.css" />
                 <URL value="@../CSS/login.css" />
