@@ -238,13 +238,13 @@
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="330.0" prefWidth="928.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <TableView fx:id="ordersTable" maxWidth="550.0" minWidth="550.0" onMouseClicked="#ordersTableClick" prefHeight="322.0" prefWidth="450.0" style="-fx-border-color: #f1f3f4;" HBox.hgrow="ALWAYS">
+                        <TableView fx:id="ordersTable" maxWidth="550.0" minWidth="560.0" onMouseClicked="#ordersTableClick" prefHeight="322.0" style="-fx-border-color: #f1f3f4;" HBox.hgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="NoCol" maxWidth="-1.0" minWidth="50.0" prefWidth="500.0" style="-fx-font-weight: bold;" text="No" />
                                 <TableColumn fx:id="CustomerNameCol" maxWidth="-1.0" minWidth="110.0" prefWidth="150.0" style="-fx-font-weight: bold;" text="Customer Name" />
                                 <TableColumn fx:id="DateCol" maxWidth="167.2000274658203" minWidth="93.60000610351562" prefWidth="165.59999084472656" style="-fx-font-weight: bold;" text="Date" />
                                 <TableColumn fx:id="TotalAmountCol" maxWidth="157.5999755859375" minWidth="85.5999755859375" prefWidth="143.20001220703125" style="-fx-font-weight: bold;" text="Total Amount" />
-                                <TableColumn fx:id="IsInstallmentCol" maxWidth="76.0" minWidth="51.199951171875" prefWidth="76.0" style="-fx-font-weight: bold;" text="Installment" />
+                                <TableColumn fx:id="IsInstallmentCol" maxWidth="76.0" minWidth="51.199951171875" prefWidth="-1.0" style="-fx-font-weight: bold;" text="Installment" />
                             </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
