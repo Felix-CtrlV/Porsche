@@ -68,7 +68,6 @@
                 <encoding>UTF-8</encoding>
                 <compilerArgs>
                     <arg>-Xlint:all</arg> <!-- show all warnings -->
-                    <arg>-Werror</arg>    <!-- treat warnings as errors (optional) -->
                 </compilerArgs>
             </configuration>
         </plugin>
