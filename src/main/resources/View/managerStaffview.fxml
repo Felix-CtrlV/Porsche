@@ -238,23 +238,23 @@
                 </HBox>
                 <HBox prefHeight="330.0" prefWidth="928.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <TableView fx:id="ordersTable" onMouseClicked="#ordersTableClick" prefHeight="322.0" prefWidth="495.0" style="-fx-border-color: #f1f3f4;" HBox.hgrow="ALWAYS">
+                        <TableView fx:id="ordersTable" onMouseClicked="#ordersTableClick" prefHeight="322.0" prefWidth="250.0" style="-fx-border-color: #f1f3f4;" HBox.hgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="NoCol" prefWidth="35.0" style="-fx-font-weight: bold;" text="No" />
-                                <TableColumn fx:id="CustomerNameCol" prefWidth="107.0" style="-fx-font-weight: bold;" text="Customer Name" />
-                                <TableColumn fx:id="DateCol" minWidth="5.0" prefWidth="96.0" style="-fx-font-weight: bold;" text="Date" />
-                                <TableColumn fx:id="TotalAmountCol" prefWidth="116.0" style="-fx-font-weight: bold;" text="Total Amount" />
-                                <TableColumn fx:id="IsInstallmentCol" minWidth="50.0" prefWidth="-1.0" style="-fx-font-weight: bold;" text="Installment" />
+                                <TableColumn fx:id="NoCol" maxWidth="-1.0" minWidth="50.0" prefWidth="60.0" style="-fx-font-weight: bold;" text="No" />
+                                <TableColumn fx:id="CustomerNameCol" maxWidth="-1.0" minWidth="110.0" prefWidth="150.0" style="-fx-font-weight: bold;" text="Customer Name" />
+                                <TableColumn fx:id="DateCol" maxWidth="107.20004272460938" minWidth="93.60000610351562" prefWidth="107.20004272460938" style="-fx-font-weight: bold;" text="Date" />
+                                <TableColumn fx:id="TotalAmountCol" maxWidth="116.800048828125" minWidth="104.0" prefWidth="104.0" style="-fx-font-weight: bold;" text="Total Amount" />
+                                <TableColumn fx:id="IsInstallmentCol" maxWidth="-1.0" minWidth="80.0" style="-fx-font-weight: bold;" text="Installment" />
                             </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                         </TableView>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                        <AnchorPane prefHeight="203.0" prefWidth="331.0" HBox.hgrow="ALWAYS">
                             <children>
 
                                 <!-- Updated visible BorderPane with consistent styling -->
-                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <padding>
                                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                     </padding>
@@ -317,7 +317,7 @@
                                         </HBox>
                                     </bottom>
                                 </BorderPane>
-                        <BorderPane fx:id="IsNotInstallBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <BorderPane fx:id="IsNotInstallBorderPane" prefHeight="289.0" prefWidth="510.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <padding>
                               <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                            </padding>
@@ -362,7 +362,7 @@
                         </BorderPane>
                         <HBox fx:id="targetlayer" layoutX="175.0" layoutY="132.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <VBox prefHeight="100.0" prefWidth="255.2" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8;" HBox.hgrow="ALWAYS">
+                              <VBox prefHeight="322.0" prefWidth="213.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8;" HBox.hgrow="ALWAYS">
                                  <children>
                                     <HBox prefHeight="33.0" prefWidth="255.0">
                                        <children>
