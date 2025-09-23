@@ -1,32 +1,18 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
 public class managerOrderManagementController {
-
-    @FXML
-    private VBox InstallmentPane;
-
-    @FXML
-    private Button NextMonthbtn;
-
-    @FXML
-    private Button NextYearbtn;
-
-    @FXML
-    private Button PreviousMonthbtn;
-
-    @FXML
-    private Button PreviousYearbth;
 
     @FXML
     private TextField SearchText;
@@ -35,25 +21,25 @@ public class managerOrderManagementController {
     private Button Searchbtn;
 
     @FXML
-    private Label cancelOrderMessage;
-
-    @FXML
-    private Label cancelOrderlbl;
+    private Label confirmOrderlbl;
 
     @FXML
     private Label confirmOrderMessage;
 
     @FXML
-    private Label confirmOrderlbl;
+    private Label pendingOrderlbl;
 
     @FXML
-    private Label customerNamelabel;
+    private Label pendingOrderMessage;
 
     @FXML
-    private TableColumn<?, ?> installmentCol;
+    private Label cancelOrderlbl;
 
     @FXML
-    private Label monthlbl;
+    private Label cancelOrderMessage;
+
+    @FXML
+    private TableView<?> orderTable;
 
     @FXML
     private TableColumn<?, ?> noCol;
@@ -62,61 +48,76 @@ public class managerOrderManagementController {
     private TableColumn<?, ?> orderDateCol;
 
     @FXML
-    private VBox orderItemsContainer;
-
-    @FXML
-    private PieChart orderPieChart;
+    private TableColumn<?, ?> installmentCol;
 
     @FXML
     private TableColumn<?, ?> orderStatusCol;
 
     @FXML
-    private TableView<?> orderTable;
+    private Button PreviousMonthbtn;
 
     @FXML
-    private LineChart<?, ?> orderTrendChart;
+    private ChoiceBox<?> monthBox;
+
+    @FXML
+    private Button NextMonthbtn;
+
+    @FXML
+    private Button PreviousYearbth;
+
+    @FXML
+    private ChoiceBox<?> yearBox;
+
+    @FXML
+    private Button NextYearbtn;
 
     @FXML
     private Label paidAmountlbl;
 
     @FXML
-    private Label pendingOrderMessage;
-
-    @FXML
-    private Label pendingOrderlbl;
-
-    @FXML
     private Label remainAmountlbl;
 
     @FXML
-    private Label staffNamelbl;
-
-    @FXML
-    private Label totalPriceLabel12;
+    private VBox orderItemsContainer;
 
     @FXML
     private Label totalPricelbl;
 
     @FXML
-    private Label yearlbl;
+    private VBox InstallmentPane;
 
     @FXML
-    void ClickPrevMonth(ActionEvent event) {
+    private Label totalPriceLabel12;
+
+    @FXML
+    private Label staffNamelbl;
+
+    @FXML
+    private Label customerNamelabel;
+
+    @FXML
+    private PieChart orderPieChart;
+
+    @FXML
+    private LineChart<?, ?> orderTrendChart;
+
+    @FXML
+    void nextMonthClick(MouseEvent event) {
 
     }
 
     @FXML
-    void clickNextMonth(ActionEvent event) {
+    void nextYearClick(MouseEvent event) {
 
     }
 
     @FXML
-    void clickNextYear(ActionEvent event) {
+    void prevMonthClick(MouseEvent event) {
 
     }
 
     @FXML
-    void clickPrevYear(ActionEvent event) {
+    void prevYearClick(MouseEvent event) {
 
     }
 
