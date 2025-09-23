@@ -1,7 +1,7 @@
 package Controllers;
 
 import Database.Porsche_DB;
-import Model.managerOrderViewStaff;
+import Model.managerOrderView;
 import Model.user;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -46,7 +46,7 @@ public class managerStaffViewController {
     private Button ActiveInactiveSwitchbtn;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, Double> TotalAmountCol;
+    private TableColumn<managerOrderView, Double> TotalAmountCol;
 
     @FXML
     private Label CancelOrderlbl;
@@ -55,10 +55,10 @@ public class managerStaffViewController {
     private Label CompleOrderlbl;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, String> CustomerNameCol;
+    private TableColumn<managerOrderView, String> CustomerNameCol;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, Date> DateCol;
+    private TableColumn<managerOrderView, Date> DateCol;
 
     @FXML
     private Label IsInstallPaidAmountLabel;
@@ -70,7 +70,7 @@ public class managerStaffViewController {
     private BorderPane IsInstallmentBorderPane;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, String> IsInstallmentCol;
+    private TableColumn<managerOrderView, String> IsInstallmentCol;
 
     @FXML
     private VBox IsInstallorderItemsContainer;
@@ -88,7 +88,7 @@ public class managerStaffViewController {
     private Button NextYearbtn;
 
     @FXML
-    private TableColumn<managerOrderViewStaff, Integer> NoCol;
+    private TableColumn<managerOrderView, Integer> NoCol;
 
     @FXML
     private Label NoInstallTotalPriceLabel;
@@ -137,7 +137,7 @@ public class managerStaffViewController {
 
 
     @FXML
-    private TableView<managerOrderViewStaff> ordersTable;
+    private TableView<managerOrderView> ordersTable;
 
     @FXML
     private VBox staffListContainer;
@@ -228,8 +228,7 @@ public class managerStaffViewController {
         if (currentMonth < 1) {
             currentMonth = 12;
             currentYear--;
-        }
-        ;
+        };
         updateYearMonthLabel();
 
     }
@@ -243,21 +242,13 @@ public class managerStaffViewController {
 
     @FXML
     void ordersTableClick(MouseEvent event) throws IOException {
-        managerOrderViewStaff selectorder = ordersTable.getSelectionModel().getSelectedItem();
+        managerOrderView selectorder = ordersTable.getSelectionModel().getSelectedItem();
         orderDetails(selectorder);
     }
 
 
     @FXML
     private void initialize() throws SQLException, IOException {
-
-        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (!updatingMonthBox && newVal != null) {
-                currentMonth = Month.valueOf(newVal.toUpperCase(Locale.ENGLISH)).getValue();
-                updateYearMonthLabel();
-            }
-        });
-
 
         //for creating the month  and year of this month
         currentDateSelect();
@@ -277,6 +268,15 @@ public class managerStaffViewController {
         yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 currentYear = newVal;
+                updateYearMonthLabel();
+            }
+        });
+
+        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (!updatingMonthBox && newVal != null) {
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
+                Month parsedMonth = Month.from(fmt.parse(newVal));
+                currentMonth = parsedMonth.getValue();
                 updateYearMonthLabel();
             }
         });
@@ -355,7 +355,7 @@ public class managerStaffViewController {
     }
 
     private void showOrdersTable(int staffId, int month, int year) throws SQLException {
-        List<managerOrderViewStaff> managerordersList = new ArrayList<>();
+        List<managerOrderView> managerordersList = new ArrayList<>();
         CallableStatement cs = con.prepareCall("CALL getordersbyuserid(?,?,?)");
         cs.setInt(1, staffId);
         cs.setInt(2, month);
@@ -386,7 +386,7 @@ public class managerStaffViewController {
                 is_installment = "No";
             }
 
-            managerOrderViewStaff od = new managerOrderViewStaff(no, order_id, cus_name, date, total_amount, is_installment, carsandparts_name, carsandparts_qty, carsandparts_price, payed_amount, remain_amount, due_date);
+            managerOrderView od = new managerOrderView(no, order_id, cus_name, date, total_amount, is_installment, carsandparts_name, carsandparts_qty, carsandparts_price, payed_amount, remain_amount, due_date);
 
             managerordersList.add(od);
 
@@ -400,7 +400,7 @@ public class managerStaffViewController {
     }
 
     //to see like a slip of the order table
-    private void orderDetails(managerOrderViewStaff orders) throws IOException {
+    private void orderDetails(managerOrderView orders) throws IOException {
 
         NoInstallorderItemsContainer.getChildren().clear();
         IsInstallorderItemsContainer.getChildren().clear();
@@ -837,6 +837,38 @@ public class managerStaffViewController {
             NextMonthbtn.setVisible(true);
         }
 
+        if (!staffInfoList.isEmpty()) {
+            user selected = staffInfoList.stream()
+                    .filter(s -> s.getId() == selectedStaffId)
+                    .findFirst()
+                    .orElse(null);
+
+            if (selected != null && selected.getStart_date() != null) {
+                LocalDate start = selected.getStart_date();
+
+
+                if (currentYear <= start.getYear()) {
+                    PreviousYearbth.setDisable(true);
+                    PreviousYearbth.setVisible(false);
+
+
+                    if (currentYear == start.getYear() && currentMonth <= start.getMonthValue()) {
+                        PreviousMonthbtn.setDisable(true);
+                        PreviousMonthbtn.setVisible(false);
+                    } else {
+                        PreviousMonthbtn.setDisable(false);
+                        PreviousMonthbtn.setVisible(true);
+                    }
+                } else {
+                    PreviousYearbth.setDisable(false);
+                    PreviousYearbth.setVisible(true);
+                    PreviousMonthbtn.setDisable(false);
+                    PreviousMonthbtn.setVisible(true);
+                }
+            }
+        }
+
+
         // 🔹 Sync ComboBoxes with updated currentMonth/currentYear
         String monthName = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
         if (monthBox.getItems().contains(monthName)) {
@@ -921,7 +953,6 @@ public class managerStaffViewController {
         monthBox.setValue(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
         updatingMonthBox = false;
     }
-
 
     private void updateChoiceBoxes() {
         String monthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);

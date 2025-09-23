@@ -1,10 +1,8 @@
 package Model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
-public class managerOrderViewStaff {
+public class managerOrderView {
     private Integer no,order_id;
     private String cus_name,is_installmenat,carsandparts_name,carsandparts_qty,carsandparts_perprice;
 
@@ -12,8 +10,8 @@ public class managerOrderViewStaff {
     private double total_amount,payed_amount,remain_amount;
     private Date order_date,due_date;
 
-    public managerOrderViewStaff(){}
-    public managerOrderViewStaff(int no, int order_id, String cus_name, Date order_date, double total_amount, String is_installmenat,String carsandparts_name, String  carsandparts_qty,String  carsandparts_perprice, double payed_amount, double remain_amount, Date due_date) {
+    public managerOrderView(){}
+    public managerOrderView(int no, int order_id, String cus_name, Date order_date, double total_amount, String is_installmenat, String carsandparts_name, String  carsandparts_qty, String  carsandparts_perprice, double payed_amount, double remain_amount, Date due_date) {
         this.no = no;
         this.order_id = order_id;
         this.cus_name = cus_name;
