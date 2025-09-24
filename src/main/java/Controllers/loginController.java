@@ -176,7 +176,6 @@ public class loginController {
                     pwtxt.clear();
                     nametxt.requestFocus();
                 } else {
-                    System.out.println(id + username + role + password + email + address + dob);
                     Session.startSession(id, username, role, password, email, address, dob);
                     try {
                         Parent root = switch (u.getRole().toLowerCase()) {
