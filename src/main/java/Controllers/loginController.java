@@ -26,6 +26,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -143,8 +144,13 @@ public class loginController {
                     user u = null;
                     if (rs.next()) {
                         int id = rs.getInt(1);
-                        String role = rs.getString(2);
-                        u = new user(id, name, role);
+                        String role = rs.getString(7);
+                        String pw = rs.getString(3);
+                        String email = rs.getString(4);
+                        String address = rs.getString(5);
+                        String dob = rs.getString(6);
+
+                        u = new user(id, name, role, pw, email, address, LocalDate.parse(dob));
                     }
                     connect.disconnect();
                     return u;
@@ -155,6 +161,10 @@ public class loginController {
                 String role = u.getRole();
                 int id = u.getId();
                 String username = u.getUsername();
+                String password = u.getPassword();
+                String email = u.getEmail();
+                String address = u.getAddress();
+                LocalDate dob = u.getDob();
 
                 if (role == null) {
                     login.setDisable(false);
@@ -166,7 +176,8 @@ public class loginController {
                     pwtxt.clear();
                     nametxt.requestFocus();
                 } else {
-                    Session.startSession(id, username, role);
+                    System.out.println(id + username + role + password + email + address + dob);
+                    Session.startSession(id, username, role, password, email, address, dob);
                     try {
                         Parent root = switch (u.getRole().toLowerCase()) {
                             case "admin" ->

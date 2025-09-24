@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
@@ -20,7 +21,9 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -30,6 +33,15 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class adminDashboardController {
+
+    @FXML
+    private HBox optionProfile, optionTarget, optionChange;
+
+    @FXML
+    private Label profileName, profileEmail, profileDOB, profileAddress, backButton;
+
+    @FXML
+    private ImageView pfImage;
 
     private int adminid;
 
@@ -64,7 +76,7 @@ public class adminDashboardController {
     private BorderPane root;
 
     @FXML
-    private AnchorPane settingPane;
+    private AnchorPane settingPane, profilePane;
 
     @FXML
     private Label settingIcon;
@@ -101,6 +113,45 @@ public class adminDashboardController {
     }
 
     public void initialize() throws IOException {
+
+        optionChange.setOnMouseClicked(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Authentication.fxml"));
+                Parent root = loader.load();
+                authenticationController controller = loader.getController();
+                controller.setStep("factor");
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.initStyle(StageStyle.UNDECORATED);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
+        backButton.setOnMouseClicked(e->{
+            profilePane.setVisible(false);
+        });
+
+        optionProfile.setOnMouseClicked(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Authentication.fxml"));
+                Parent root = loader.load();
+                authenticationController controller = loader.getController();
+                controller.setStep("password");
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.initStyle(StageStyle.UNDECORATED);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
         settingPane.setTranslateX(350);
         overlayPane.setVisible(false);
         settingIcon.setOnMouseClicked(e->{clickSetting();});
@@ -108,6 +159,10 @@ public class adminDashboardController {
         Session current = Session.getInstance();
         String name = current.getUsername();
         nameLbl.setText(name);
+        profileName.setText(name);
+        profileAddress.setText(current.getAddress());
+        profileEmail.setText(current.getEmail());
+        profileDOB.setText(current.getDob().toString());
 
         Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
         img.setImage(porsche_logo);
