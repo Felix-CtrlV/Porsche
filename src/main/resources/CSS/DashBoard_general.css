@@ -417,3 +417,36 @@
          -fx-font-weight: bold;
          -fx-text-fill : #34252F;
 }
+
+.toggle-switch {
+    -fx-background-color: #ccc;       /* track color */
+    -fx-background-radius: 20;
+    -fx-pref-width: 50;
+    -fx-pref-height: 25;
+    -fx-padding: 0;
+}
+
+.toggle-switch:selected {
+    -fx-background-color: grey;    /* track color when ON */
+}
+
+.toggle-switch .thumb {
+    -fx-background-color: white;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 21;
+    -fx-pref-height: 21;
+    -fx-translate-x: 2;
+    -fx-transition: translateX 0.2s;
+}
+
+.toggle-switch:selected .thumb {
+    -fx-translate-x: 27;
+}
+
+.hoversmth:hover {
+    -fx-background-color : rgb(109, 109, 109);
+}
+
+.hoversmth:pressed{
+    -fx-background-color : rgb(141, 141, 141);
+}

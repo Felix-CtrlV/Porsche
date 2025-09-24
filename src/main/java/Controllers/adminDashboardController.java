@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,6 +47,12 @@ public class adminDashboardController {
 
     @FXML
     private Button overviewbtn;
+
+    @FXML
+    private ImageView profileImage;
+
+    @FXML
+    private ToggleButton Mode;
 
     @FXML
     private AnchorPane admin_anc;
