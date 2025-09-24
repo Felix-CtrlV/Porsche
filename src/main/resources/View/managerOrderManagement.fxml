@@ -21,91 +21,105 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Text?>
 
-<VBox prefHeight="700.0" prefWidth="1280.0" spacing="15.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOrderManagementController">
+<VBox maxWidth="1280.0" minWidth="1280.0" prefHeight="700.0" prefWidth="1484.0" spacing="15.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOrderManagementController">
     <children>
-        <HBox prefHeight="60.0" prefWidth="1280.0">
+        <HBox prefHeight="695.0" prefWidth="1248.0" spacing="10.0" VBox.vgrow="ALWAYS">
             <children>
-                <StackPane prefHeight="56.0" prefWidth="258.0">
+                <VBox minWidth="780.0" prefHeight="695.0" prefWidth="990.0" spacing="10.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <TextField fx:id="SearchText" prefHeight="32.0" prefWidth="169.0" promptText="Search Orders....." style="-fx-background-radius: 20; -fx-border-radius: 20;" StackPane.alignment="CENTER" />
-                        <Button fx:id="Searchbtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="42.0" style="-fx-background-color: transparent;" text="🔍" StackPane.alignment="CENTER_RIGHT">
-                            <StackPane.margin>
-                                <Insets />
-                            </StackPane.margin>
-                            <padding>
-                                <Insets left="9.0" />
-                            </padding>
-                        </Button>
-                    </children>
-                    <padding>
-                        <Insets left="10.0" />
-                    </padding>
-                </StackPane>
-            </children>
-        </HBox>
-        <HBox prefHeight="400.0" prefWidth="1280.0" spacing="10.0" VBox.vgrow="ALWAYS">
-            <children>
-                <VBox prefHeight="400.0" prefWidth="1594.0" spacing="10.0" HBox.hgrow="ALWAYS">
-                    <children>
-                        <HBox prefHeight="164.0" prefWidth="809.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="261.0" prefHeight="169.0" prefWidth="875.0" spacing="10.0">
                             <children>
-                                <VBox alignment="CENTER" minHeight="144.0" minWidth="150.0" prefHeight="163.0" prefWidth="273.0" style="-fx-background-color: #e8f5e9; -fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 10; -fx-spacing: 20;" HBox.hgrow="ALWAYS">
+                                <PieChart legendSide="RIGHT" minWidth="276.0" prefHeight="234.0" prefWidth="276.0" titleSide="RIGHT" HBox.hgrow="ALWAYS" />
+                                <HBox alignment="CENTER" prefHeight="234.0" prefWidth="484.0" spacing="20.0">
                                     <children>
-                                        <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Order Confirm" />
-                                        <Label fx:id="confirmOrderlbl" style="-fx-font-size: 16; -fx-text-fill: green; -fx-font-weight: bold;" text="142 Orders" />
-                                        <Label fx:id="confirmOrderMessage" style="-fx-font-size: 16;" text="+12% from last week" />
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35; -fx-font-weight: bold;" text="800" />
+                                                <Text fill="#34a82b" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="Confirm" />
+                                            </children>
+                                        </VBox>
+                                        <VBox alignment="CENTER" prefHeight="169.0" prefWidth="34.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Line endX="100.0" startX="57.0" startY="-57.0" />
+                                                <Line endX="100.0" startX="57.0" startY="57.0" />
+                                            </children>
+                                        </VBox>
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35; -fx-font-weight: bold;" text="87" />
+                                                <Text fill="#1f17b5" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="Pending" />
+                                            </children>
+                                        </VBox>
                                     </children>
-                                </VBox>
-                                <VBox alignment="CENTER" minHeight="99.0" minWidth="150.0" prefHeight="207.0" prefWidth="268.0" style="-fx-background-color: #fff3e0; -fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 10; -fx-spacing: 20;" HBox.hgrow="ALWAYS">
-                                    <children>
-                                        <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Order Pending" />
-                                        <Label fx:id="pendingOrderlbl" style="-fx-font-size: 16; -fx-text-fill: orange; -fx-font-weight: bold;" text="87 Orders" />
-                                        <Label fx:id="pendingOrderMessage" style="-fx-font-size: 16;" text="+5% from last week" />
-                                    </children>
-                                </VBox>
-                                <VBox alignment="CENTER" minHeight="118.0" minWidth="150.0" prefHeight="195.0" prefWidth="258.0" style="-fx-background-color: #ffebee; -fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 10; -fx-spacing: 20;" HBox.hgrow="ALWAYS">
-                                    <children>
-                                        <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Order Cancel" />
-                                        <Label fx:id="cancelOrderlbl" style="-fx-font-size: 16; -fx-text-fill: red; -fx-font-weight: bold;" text="23 Orders" />
-                                        <Label fx:id="cancelOrderMessage" style="-fx-font-size: 16;" text="-3% from last week" />
-                                    </children>
-                                </VBox>
+                                </HBox>
                             </children>
                         </HBox>
-                        <TableView fx:id="orderTable" minWidth="400" prefHeight="264.0" prefWidth="809.0" VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="noCol" maxWidth="-Infinity" minWidth="133.16" prefWidth="-1.0" resizable="false" text="No" />
-                                <TableColumn fx:id="staffNameCol" maxWidth="-Infinity" minWidth="133.16" prefWidth="-1.0" text="Staff Name" />
-                                <TableColumn fx:id="customerNameCol" maxWidth="-Infinity" minWidth="133.16" prefWidth="-1.0" text="Customer Name" />
-                                <TableColumn fx:id="orderDateCol" maxWidth="-Infinity" minWidth="133.16" prefWidth="-1.0" text="Order Date" />
-                                <TableColumn fx:id="installmentCol" maxWidth="-Infinity" minWidth="133.16" prefWidth="-1.0" text="Installment" />
-                                <TableColumn fx:id="orderStatusCol" maxWidth="-Infinity" minWidth="133.16" prefWidth="-1.0" text="Status" />
-                            </columns>
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                            </columnResizePolicy>
-                        </TableView>
+                        <LineChart prefHeight="224.0" prefWidth="780.0">
+                            <xAxis>
+                                <CategoryAxis side="BOTTOM" />
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis side="LEFT" />
+                            </yAxis>
+                        </LineChart>
+                        <AnchorPane VBox.vgrow="ALWAYS">
+                            <children>
+                                <TableView fx:id="orderTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <columns>
+                                        <TableColumn fx:id="orderDateCol" minWidth="130.0" prefWidth="110.0" text="Order Date" />
+                                        <TableColumn fx:id="staffNameCol" minWidth="130.0" prefWidth="218.0" text="Staff Name" />
+                                        <TableColumn fx:id="customerNameCol" minWidth="130.0" prefWidth="75.0" text="Customer Name" />
+                                        <TableColumn fx:id="installmentCol" minWidth="130.0" prefWidth="216.0" text="Installment" />
+                                        <TableColumn fx:id="noCol" maxWidth="100.0" minWidth="130.0" prefWidth="100.0" resizable="false" text="Price" />
+                                        <TableColumn fx:id="orderStatusCol" minWidth="130.0" prefWidth="96.0" text="Status" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
                     </children>
                 </VBox>
-                <VBox prefHeight="400.0" prefWidth="935.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                <VBox minWidth="480.0" prefHeight="695.0" prefWidth="458.0" spacing="10.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;">
+                        <HBox alignment="CENTER_RIGHT" minWidth="480.0" prefHeight="66.0" prefWidth="461.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;">
                             <children>
+                                <StackPane prefHeight="56.0" prefWidth="258.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <TextField fx:id="SearchText" prefHeight="32.0" prefWidth="205.0" promptText="Search Orders....." style="-fx-background-radius: 20; -fx-border-radius: 20;" StackPane.alignment="CENTER">
+                                            <StackPane.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                            </StackPane.margin>
+                                        </TextField>
+                                        <Button fx:id="Searchbtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" style="-fx-background-color: transparent;" text="🔍" StackPane.alignment="CENTER_RIGHT">
+                                            <StackPane.margin>
+                                                <Insets right="20.0" />
+                                            </StackPane.margin>
+                                            <padding>
+                                                <Insets left="9.0" />
+                                            </padding>
+                                        </Button>
+                                    </children>
+                                </StackPane>
+                                <Region prefHeight="64.0" prefWidth="97.0" HBox.hgrow="ALWAYS" />
                                 <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onMouseClicked="#prevMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                                <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
+                                <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" HBox.hgrow="ALWAYS" />
                                 <Button fx:id="NextMonthbtn" mnemonicParsing="false" onMouseClicked="#nextMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                                 <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
                                 <Button fx:id="PreviousYearbth" mnemonicParsing="false" onMouseClicked="#prevYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                                <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
+                                <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" HBox.hgrow="ALWAYS" />
                                 <Button fx:id="NextYearbtn" mnemonicParsing="false" onMouseClicked="#nextYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                             </children>
                         </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                        <HBox minWidth="480.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                             <children>
-                                <AnchorPane prefHeight="92.0" prefWidth="1280.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
+                                <AnchorPane minWidth="480.0" prefHeight="92.0" prefWidth="1280.0" style="-fx-background-color: white;">
                                     <children>
-                                        <BorderPane prefHeight="357.0" prefWidth="461.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <BorderPane minWidth="480.0" prefHeight="357.0" prefWidth="461.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <padding>
                                                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                             </padding>
@@ -143,37 +157,37 @@
                                                     </content>
                                                 </ScrollPane>
                                             </center>
-                                 <bottom>
-                                    <GridPane prefHeight="120.0" prefWidth="429.0" BorderPane.alignment="CENTER">
-                                       <columnConstraints>
-                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="279.0" minWidth="10.0" prefWidth="279.0" />
-                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="208.0" minWidth="10.0" prefWidth="150.0" />
-                                       </columnConstraints>
-                                       <rowConstraints>
-                                          <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="65.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="42.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                       </rowConstraints>
-                                       <children>
-                                          <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Total Price:" />
-                                          <Label fx:id="totalPriceLabel121" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="0.00" GridPane.columnIndex="1" />
-                                          <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1">
-                                             <children>
-                                                <Label prefHeight="21.0" prefWidth="56.0" style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="From:" />
-                                                <Label fx:id="staffNamelbl1" prefHeight="44.0" prefWidth="235.0" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="label" wrapText="true" />
-                                             </children>
-                                          </HBox>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="2">
-                                             <children>
-                                                <Label prefHeight="21.0" prefWidth="145.0" style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Customer Name:" />
-                                                <Label fx:id="customerNamelabel1" prefHeight="44.0" prefWidth="173.0" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="label" wrapText="true" />
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </GridPane>
-                                 </bottom>
+                                            <bottom>
+                                                <GridPane prefHeight="120.0" prefWidth="429.0" BorderPane.alignment="CENTER">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="279.0" minWidth="10.0" prefWidth="279.0" />
+                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="208.0" minWidth="10.0" prefWidth="150.0" />
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
+                                                        <RowConstraints maxHeight="65.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                                        <RowConstraints maxHeight="42.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                    </rowConstraints>
+                                                    <children>
+                                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Total Price:" />
+                                                        <Label fx:id="totalPriceLabel121" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="0.00" GridPane.columnIndex="1" />
+                                                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1">
+                                                            <children>
+                                                                <Label prefHeight="21.0" prefWidth="56.0" style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="From:" />
+                                                                <Label fx:id="staffNamelbl1" prefHeight="44.0" prefWidth="235.0" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="label" wrapText="true" />
+                                                            </children>
+                                                        </HBox>
+                                                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="2">
+                                                            <children>
+                                                                <Label prefHeight="21.0" prefWidth="145.0" style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Customer Name:" />
+                                                                <Label fx:id="customerNamelabel1" prefHeight="44.0" prefWidth="173.0" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="label" wrapText="true" />
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </GridPane>
+                                            </bottom>
                                         </BorderPane>
-                                        <BorderPane prefHeight="357.0" prefWidth="461.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <BorderPane minWidth="480.0" prefHeight="357.0" prefWidth="461.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <padding>
                                                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                             </padding>
@@ -227,7 +241,6 @@
                                                 </GridPane>
                                             </bottom>
                                         </BorderPane>
-                                        <PieChart fx:id="orderPieChart" layoutX="-2.0" layoutY="-1.0" prefHeight="357.0" prefWidth="461.0" title="Oreder Distribution Status" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                     </children>
                                 </AnchorPane>
                             </children>
@@ -235,29 +248,9 @@
                     </children>
                 </VBox>
             </children>
-        </HBox>
-        <HBox prefHeight="100.0" prefWidth="200.0">
-            <children>
-                <VBox prefHeight="154.0" prefWidth="769.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #dadce0; -fx-padding: 15;" HBox.hgrow="ALWAYS">
-                    <children>
-                        <HBox alignment="CENTER_LEFT">
-                            <children>
-                                <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Monthly Order Trends" />
-                                <Region HBox.hgrow="ALWAYS" />
-                                <Label style="-fx-text-fill: #5f6368; -fx-font-size: 14;" text="2023" />
-                            </children>
-                        </HBox>
-                        <LineChart fx:id="orderTrendChart" legendVisible="false" prefHeight="150.0" prefWidth="1088.0" style="-fx-padding: 10 0 0 0;">
-                            <xAxis>
-                                <CategoryAxis label="Months" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis label="Orders" />
-                            </yAxis>
-                        </LineChart>
-                    </children>
-                </VBox>
-            </children>
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
         </HBox>
     </children>
     <padding>
