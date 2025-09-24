@@ -153,8 +153,7 @@
                               </HBox>
                               <StackPane VBox.vgrow="SOMETIMES">
                                  <children>
-                                    <PieChart fx:id="pieChart" labelsVisible="false" legendVisible="false" prefHeight="210.0" prefWidth="334.0" />
-                                    <Circle fill="#f8eaea" radius="78.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                                    <PieChart fx:id="pieChart" labelsVisible="false" prefHeight="210.0" prefWidth="334.0" />
                                  </children>
                               </StackPane>
                            </children>
@@ -178,7 +177,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="40.0" prefWidth="780.0" spacing="10.0" style="-fx-background-radius: 20; -fx-border-radius: 20;" styleClass="glass_main" VBox.vgrow="NEVER">
                <VBox.margin>
-                  <Insets top="10.0" />
+                  <Insets />
                </VBox.margin>
                <children>
                   <Label fx:id="averageLbl" styleClass="topic_font" text="Average Sale (Quantity)">
@@ -245,7 +244,6 @@
                               </Label>
                               <Region prefHeight="49.0" prefWidth="320.0" HBox.hgrow="SOMETIMES" />
                               <ComboBox fx:id="lineCombo" prefHeight="28.0" prefWidth="191.0" styleClass="combobox" />
-                              <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="81.0" styleClass="glassy-button" text="Switch" />
                            </children>
                            <padding>
                               <Insets left="5.0" right="10.0" />
