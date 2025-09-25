@@ -77,8 +77,8 @@ public class loginController {
 
     private SequentialTransition currentAnimation;
 
-    private void slideError(String errormsg){
-        if(currentAnimation!=null){
+    private void slideError(String errormsg) {
+        if (currentAnimation != null) {
             currentAnimation.stop();
             errorPane.setTranslateY(42);
             errorPane.setTranslateY(4);
@@ -121,13 +121,13 @@ public class loginController {
             login.setText("Login");
             clear.setDisable(false);
             nametxt.requestFocus();
-        }else if(pwtxt.getText().isBlank()){
+        } else if (pwtxt.getText().isBlank()) {
             slideError("ERROR : Please Fill the Password");
             login.setDisable(false);
             login.setText("Login");
             clear.setDisable(false);
             pwtxt.requestFocus();
-        }else{
+        } else {
             Task<user> task = new Task<user>() {
                 @Override
                 protected user call() throws Exception {
@@ -144,63 +144,66 @@ public class loginController {
                     user u = null;
                     if (rs.next()) {
                         int id = rs.getInt(1);
-                        String role = rs.getString(7);
                         String pw = rs.getString(3);
                         String email = rs.getString(4);
-                        String address = rs.getString(5);
-                        String dob = rs.getString(6);
+                        String phone = rs.getString(5);
+                        String address = rs.getString(6);
+                        String dobStr = rs.getString(7);
+                        String role = rs.getString(8);
+                        LocalDate dob = (dobStr != null) ? LocalDate.parse(dobStr) : null;
 
-                        u = new user(id, name, role, pw, email, address, LocalDate.parse(dob));
+                        if (id != 0 && role != null) {
+                            u = new user(id, name, role, password, email, phone, address, dob);
+                        }
                     }
+
                     connect.disconnect();
                     return u;
                 }
             };
             task.setOnSucceeded(e1 -> {
                 user u = task.getValue();
+
+                if (u == null) {
+                    slideError("ERROR : Username or Password is INCORRECT!");
+                    login.setDisable(false);
+                    login.setText("Login");
+                    clear.setDisable(false);
+                    nametxt.clear();
+                    pwtxt.clear();
+                    nametxt.requestFocus();
+                    return;
+                }
+
                 String role = u.getRole();
                 int id = u.getId();
                 String username = u.getUsername();
                 String password = u.getPassword();
                 String email = u.getEmail();
+                String phone = u.getPhone();
                 String address = u.getAddress();
                 LocalDate dob = u.getDob();
+                Session.startSession(id, username, role, password, email, phone, address, dob);
 
-                if (role == null) {
-                    login.setDisable(false);
-                    login.setText("Login");
-                    clear.setDisable(false);
-
-                    slideError("ERROR : Username or Password is INCORRECT!");
-                    nametxt.clear();
-                    pwtxt.clear();
-                    nametxt.requestFocus();
-                } else {
-                    Session.startSession(id, username, role, password, email, address, dob);
-                    try {
-                        Parent root = switch (u.getRole().toLowerCase()) {
-                            case "admin" ->
-                                    FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/adminDashboard.fxml")));
-                            case "manager" ->
-                                    FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/managerDashboard.fxml")));
-                            case "staff" ->
-                                    FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/StaffDashboard.fxml")));
-                            default ->
-                                    throw new IllegalStateException("Unknown role: " + u.getRole());
-                        };
-                        Stage stage = new Stage();
-                        stage.setScene(new Scene(root));
-                        defaultStage DStage = new defaultStage();
-                        DStage.setStage(stage);
-                        stage.show();
-                        Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                        home.close();
-                    } catch (
-                            IOException ex) {
-                        ex.printStackTrace();
-                    }
+                try {
+                    Parent root = switch (u.getRole().toLowerCase()) {
+                        case "admin" -> FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/adminDashboard.fxml")));
+                        case "manager" -> FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/managerDashboard.fxml")));
+                        case "staff" -> FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/StaffDashboard.fxml")));
+                        default -> throw new IllegalStateException("Unknown role: " + role);
+                    };
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root));
+                    defaultStage DStage = new defaultStage();
+                    DStage.setStage(stage);
+                    stage.show();
+                    Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    home.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             });
+
             task.setOnFailed(e -> {
                 slideError("No Connection. Please TRY AGAIN...");
                 login.setDisable(false);
@@ -246,7 +249,7 @@ public class loginController {
             }
         });
 
-        closeimg.setOnMouseClicked(e->{
+        closeimg.setOnMouseClicked(e -> {
             System.exit(0);
         });
     }

@@ -38,7 +38,7 @@ public class adminDashboardController {
     private HBox optionProfile, optionTarget, optionChange;
 
     @FXML
-    private Label profileName, profileEmail, profileDOB, profileAddress, backButton;
+    private Label profileName, profileEmail, profileDOB, profilePhone, profileAddress, backButton;
 
     @FXML
     private ImageView pfImage;
@@ -104,9 +104,9 @@ public class adminDashboardController {
         setActiveButton(overviewbtn);
     }
 
-    private void clickSetting(){
+    private void clickSetting() {
         openSetting();
-        overlayPane.setOnMouseClicked(e->{
+        overlayPane.setOnMouseClicked(e -> {
             closeSetting();
         });
 
@@ -125,13 +125,14 @@ public class adminDashboardController {
                 stage.initStyle(StageStyle.UNDECORATED);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
-            } catch (IOException ex) {
+            } catch (
+                    IOException ex) {
                 ex.printStackTrace();
             }
         });
 
 
-        backButton.setOnMouseClicked(e->{
+        backButton.setOnMouseClicked(e -> {
             profilePane.setVisible(false);
         });
 
@@ -140,13 +141,15 @@ public class adminDashboardController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Authentication.fxml"));
                 Parent root = loader.load();
                 authenticationController controller = loader.getController();
+                controller.init(this);
                 controller.setStep("password");
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.initStyle(StageStyle.UNDECORATED);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
-            } catch (IOException ex) {
+            } catch (
+                    IOException ex) {
                 ex.printStackTrace();
             }
         });
@@ -154,7 +157,9 @@ public class adminDashboardController {
 
         settingPane.setTranslateX(350);
         overlayPane.setVisible(false);
-        settingIcon.setOnMouseClicked(e->{clickSetting();});
+        settingIcon.setOnMouseClicked(e -> {
+            clickSetting();
+        });
 
         Session current = Session.getInstance();
         String name = current.getUsername();
@@ -163,6 +168,7 @@ public class adminDashboardController {
         profileAddress.setText(current.getAddress());
         profileEmail.setText(current.getEmail());
         profileDOB.setText(current.getDob().toString());
+        profilePhone.setText(current.getPhone());
 
         Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
         img.setImage(porsche_logo);
@@ -250,7 +256,7 @@ public class adminDashboardController {
 
     private SequentialTransition animation;
 
-    private void openSetting(){
+    private void openSetting() {
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), settingPane);
         slideIn.setFromX(350);
         slideIn.setToX(0);
@@ -271,7 +277,8 @@ public class adminDashboardController {
         root.setDisable(true);
         overlayPane.setVisible(true);
     }
-    private void closeSetting(){
+
+    private void closeSetting() {
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), settingPane);
         slideOut.setFromX(0);
         slideOut.setToX(350);
@@ -291,6 +298,10 @@ public class adminDashboardController {
         root.setEffect(null);
         root.setDisable(false);
         overlayPane.setVisible(false);
+    }
+
+    public void setProfile() {
+        profilePane.setVisible(true);
     }
 
 }

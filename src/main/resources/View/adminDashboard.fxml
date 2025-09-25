@@ -226,6 +226,31 @@
                         </Line>
                         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="141.0" prefHeight="49.0" prefWidth="340.0">
                            <children>
+                              <Label style="-fx-font-size: 25;" text="☎">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="profilePhone" styleClass="selected_dash_font" text="Phone">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <Line endX="232.2928924560547" endY="-0.9142136573791504" startX="-100.0">
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </Line>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="193.0" prefHeight="49.0" prefWidth="340.0">
+                           <children>
                               <Label style="-fx-font-size: 25;" text="🏠">
                                  <HBox.margin>
                                     <Insets left="10.0" />
@@ -240,9 +265,6 @@
                                  </HBox.margin>
                               </Label>
                            </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
                         </HBox>
                         <Line endX="232.2928924560547" endY="-0.9142136573791504" layoutX="121.0" layoutY="192.0" startX="-100.0">
                            <VBox.margin>

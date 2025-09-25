@@ -13,21 +13,22 @@ public class Session {
     private static Session instance;
 
     private int userid;
-    private String username, role, password, email, address;
+    private String username, role, password, email, phone, address;
     private LocalDate dob;
 
-    private Session(int id, String name, String role, String password, String email, String address, LocalDate dob){
+    private Session(int id, String name, String role, String password, String email, String phone, String address, LocalDate dob){
         this.userid = id;
         this.username = name;
         this.role = role;
         this.password = password;
         this.email = email;
+        this.phone = phone;
         this.address = address;
         this.dob = dob;
     }
 
-    public static void startSession(int id, String name, String role, String password, String email, String address, LocalDate dob){
-        instance = new Session(id, name, role, password, email, address, dob);
+    public static void startSession(int id, String name, String role, String password, String email, String phone, String address, LocalDate dob){
+        instance = new Session(id, name, role, password, email, phone, address, dob);
     }
 
     public static Session getInstance(){
@@ -85,5 +86,9 @@ public class Session {
 
     public LocalDate getDob() {
         return dob;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 }

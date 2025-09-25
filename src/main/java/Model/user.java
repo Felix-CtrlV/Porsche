@@ -24,12 +24,13 @@ public class user {
     }
 
     //session
-    public user(int id, String username, String role, String password, String email, String address, LocalDate dob){
+    public user(int id, String username, String role, String password, String email, String phone, String address, LocalDate dob){
         this.id = id;
         this.username = username;
         this.role = role;
         this.password = password;
         this.email = email;
+        this.phone = phone;
         this.address = address;
         this.dob = dob;
     }
