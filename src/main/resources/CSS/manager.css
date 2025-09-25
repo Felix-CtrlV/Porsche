@@ -1,4 +1,4 @@
- /* manager.css */
+/* manager.css */
  .root {
      -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
  }
@@ -47,4 +47,175 @@
 
  #contentPane {
      -fx-background-color: #ecf0f1;
+ }
+
+
+
+
+
+ .root {
+     -fx-background-color: #f8f9fa;
+ }
+
+ .card {
+     -fx-background-color: white;
+     -fx-background-radius: 10;
+     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+ }
+
+ .stats-card {
+     -fx-padding: 10 15 10 15;
+ }
+
+
+ .title-label {
+     -fx-text-fill: #2c3e50;
+     -fx-font-weight: bold;
+     -fx-font-size: 24px;
+ }
+
+ .subtitle-label {
+     -fx-text-fill: #7f8c8d;
+     -fx-font-size: 14px;
+ }
+
+ .value-label {
+     -fx-text-fill: #2c3e50;
+     -fx-font-weight: bold;
+     -fx-font-size: 20px;
+ }
+
+ .percentage-positive {
+     -fx-text-fill: #27ae60;
+     -fx-font-size: 12px;
+ }
+
+ .percentage-negative {
+     -fx-text-fill: #e74c3c;
+     -fx-font-size: 12px;
+ }
+
+
+ .chart-container {
+     -fx-background-color: white;
+     -fx-background-radius: 10;
+     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+     -fx-padding: 15;
+ }
+
+ .bar-chart {
+     -fx-background-color: transparent;
+ }
+
+ .chart-vertical-grid-lines {
+     -fx-stroke: transparent;
+ }
+
+ .chart-horizontal-grid-lines {
+     -fx-stroke: #ecf0f1;
+ }
+
+ .axis {
+     -fx-tick-label-fill: #7f8c8d;
+     -fx-tick-label-font-size: 12px;
+ }
+
+ .chart-bar {
+     -fx-bar-fill: #3498db;
+ }
+
+ .chart-bar:hover {
+     -fx-bar-fill: #2980b9;
+ }
+
+
+ .table-view {
+     -fx-background-color: white;
+     -fx-background-radius: 8;
+     -fx-border-radius: 8;
+     -fx-border-color: #dadce0;
+ }
+
+ .table-view .column-header {
+     -fx-background-color: #f1f3f4;
+     -fx-text-fill: #5f6368;
+     -fx-font-weight: bold;
+ }
+
+ .table-view .table-row-cell {
+     -fx-border-color: #f1f3f4;
+ }
+
+ .table-view .table-row-cell:even {
+     -fx-background-color: #fafafa;
+ }
+
+ .table-view .table-row-cell:odd {
+     -fx-background-color: white;
+ }
+
+ .table-view .table-row-cell:selected {
+     -fx-background-color: #e3f2fd;
+ }
+
+ .search-container {
+     -fx-background-color: white;
+     -fx-border-radius: 20;
+     -fx-background-radius: 20;
+     -fx-border-color: #dadce0;
+ }
+
+ .search-field {
+     -fx-background-color: transparent;
+     -fx-border-color: transparent;
+     -fx-prompt-text-fill: #9aa0a6;
+ }
+
+ .search-button {
+     -fx-background-color: transparent;
+     -fx-text-fill: #5f6368;
+ }
+
+ .transparent-button {
+     -fx-background-color: transparent;
+     -fx-text-fill: #5f6368;
+ }
+
+ .transparent-button:hover {
+     -fx-text-fill: #1a73e8;
+ }
+
+ .choice-box {
+     -fx-background-color: white;
+     -fx-border-color: #dadce0;
+     -fx-border-radius: 8;
+     -fx-background-radius: 8;
+ }
+
+ .paid-amount {
+     -fx-text-fill: #34a853;
+     -fx-font-weight: bold;
+ }
+
+ .remain-amount {
+     -fx-text-fill: #ea4335;
+     -fx-font-weight: bold;
+ }
+
+ .total-price {
+     -fx-text-fill: #1a73e8;
+     -fx-font-weight: bold;
+ }
+
+ .day-label {
+     -fx-text-fill: #7f8c8d;
+     -fx-font-size: 12px;
+ }
+
+ .pie-chart {
+     -fx-background-color: transparent;
+ }
+
+ .pie-chart-legend {
+     -fx-background-color: transparent;
  }
