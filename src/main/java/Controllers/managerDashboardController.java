@@ -124,7 +124,7 @@ public class managerDashboardController {
 
     @FXML
     void clickOverview(ActionEvent event) {
-        loadView("");
+        loadView("/View/managerOverview.fxml");
         setActiveButton(overviewbtn);
     }
 
@@ -197,7 +197,7 @@ public class managerDashboardController {
 
         Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
         img.setImage(porsche_logo);
-        loadView("");
+        loadView("/View/managerOverview.fxml");
         setActiveButton(overviewbtn);
         admin_anc.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
