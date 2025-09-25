@@ -167,7 +167,7 @@ public class managerHomeController {
         while(rs.next()) {
             String name = rs.getString(1);
             Time in_time = rs.getTime(2);
-            ManagerOfAttendanceView managerOfAttendanceView = new ManagerOfAttendanceView(name, in_time);
+            ManagerOfAttendanceView managerOfAttendanceView = new ManagerOfAttendanceView(name, in_time,"");
 
             temporylist.add(managerOfAttendanceView);
         }

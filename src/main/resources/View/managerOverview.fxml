@@ -74,7 +74,7 @@
 
                                 <StackPane fx:id="carouselStackPane" style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 4);" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <VBox fx:id="attendanceBox" style="-fx-background-radius: 12;" visible="false" StackPane.alignment="CENTER">
+                                        <VBox fx:id="attendanceBox" style="-fx-background-radius: 16;" StackPane.alignment="CENTER">
                                             <children>
                                                 <Label style="-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Detailed Attendance List">
                                                     <VBox.margin>
@@ -104,8 +104,8 @@
                                                                         </Label>
                                                                     </children>
                                                                 </HBox>
-                                                                <PieChart fx:id="attendancePieChart" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS" />
-                                                                <VBox alignment="CENTER_RIGHT" prefHeight="60.0" spacing="3">
+                                                                <PieChart fx:id="attendancePieChart" labelsVisible="false" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS" />
+                                                                <VBox alignment="TOP_CENTER" prefHeight="60.0" spacing="3" visible="false">
                                                                     <children>
                                                                         <HBox alignment="CENTER_LEFT" spacing="8">
                                                                             <children>
@@ -129,6 +129,9 @@
                                                                     <VBox.margin>
                                                                         <Insets top="5.0" />
                                                                     </VBox.margin>
+                                                   <padding>
+                                                      <Insets bottom="5.0" />
+                                                   </padding>
                                                                 </VBox>
                                                             </children>
                                                         </VBox>
@@ -140,7 +143,7 @@
                                             </children>
                                         </VBox>
 
-                                        <VBox fx:id="targetBox" style="-fx-background-radius: 16;" StackPane.alignment="CENTER">
+                                        <VBox fx:id="targetBox" style="-fx-background-radius: 16;" visible="false" StackPane.alignment="CENTER">
                                             <children>
                                                 <Label style="-fx-font-family: 'Segoe UI'; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="TARGET OVERVIEW">
                                                     <VBox.margin>
@@ -172,8 +175,8 @@
                                                                                 </Group>
                                                                                 <VBox alignment="CENTER">
                                                                                     <children>
-                                                                                        <Text fx:id="targetCar" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #1e293b;" text="0/0" />
-                                                                                        <Label fx:id="targetOverCar" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 15;" text="+0" />
+                                                                                        <Text fx:id="targetCar" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #6d8196;" text="0/0" />
+                                                                                        <Label fx:id="targetOverCar" style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 15;" text="-1" />
                                                                                     </children>
                                                                                 </VBox>
                                                                             </children>
@@ -219,7 +222,7 @@
                                                                                 </Group>
                                                                                 <VBox alignment="CENTER">
                                                                                     <children>
-                                                                                        <Text fx:id="targetPart" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #1e293b;" text="10/10" />
+                                                                                        <Text fx:id="targetPart" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #ffa500;" text="10/10" />
                                                                                         <Label fx:id="targetOverPart" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 15;" text="+0" />
                                                                                     </children>
                                                                                 </VBox>

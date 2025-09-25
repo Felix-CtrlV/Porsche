@@ -1,9 +1,13 @@
 package Controllers;
 
 import Database.Porsche_DB;
+import Model.ManagerOfAttendanceView;
 import Model.user;
 import Utils.Session;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
@@ -18,10 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
@@ -60,7 +61,7 @@ public class managerOverviewController {
     private PieChart attendancePieChart;
 
     @FXML
-    private TableView<?> attendanceTable;
+    private TableView<ManagerOfAttendanceView> attendanceTable;
 
     @FXML
     private Circle carCircle;
@@ -87,10 +88,10 @@ public class managerOverviewController {
     private VBox scrollPaneStaff;
 
     @FXML
-    private TableColumn<?, ?> signInTimeCol;
+    private TableColumn<ManagerOfAttendanceView, Time> signInTimeCol;
 
     @FXML
-    private TableColumn<?, ?> statusCol;
+    private TableColumn<ManagerOfAttendanceView, String> statusCol;
 
     @FXML
     private VBox targetBox;
@@ -117,7 +118,7 @@ public class managerOverviewController {
     private HBox targetlayer;
 
     @FXML
-    private TableColumn<?, ?> workerCol;
+    private TableColumn<ManagerOfAttendanceView, String> workerCol;
 
     @FXML
     private ChoiceBox<Integer> yearBox;
@@ -127,12 +128,18 @@ public class managerOverviewController {
 
     @FXML
     void clickArrowLeftbtn(ActionEvent event) {
-
+        attendanceBox.setVisible(true);
+        targetBox.setVisible(false);
+        arrowLeftbtn.setDisable(true);
+        arrowRightbtn.setDisable(false);
     }
 
     @FXML
     void clickArrowRightbtn(ActionEvent event) {
-
+        attendanceBox.setVisible(false);
+        targetBox.setVisible(true);
+        arrowRightbtn.setDisable(true);
+        arrowLeftbtn.setDisable(false);
     }
 
     @FXML
@@ -184,7 +191,7 @@ public class managerOverviewController {
     }
 
     @FXML
-    private void initialize(){
+    private void initialize() throws SQLException {
         //to get the manager id
         Session current = Session.getInstance();
         if (current != null) {
@@ -210,6 +217,24 @@ public class managerOverviewController {
             }
         });
 
+        //for attendance table
+        workerCol.setCellValueFactory(e->
+                new SimpleStringProperty(e.getValue().getWorkers()));
+        signInTimeCol.setCellValueFactory(e->
+                new ReadOnlyObjectWrapper<Time>(e.getValue().getSign_in_time()));
+        statusCol.setCellValueFactory(e->
+                new SimpleStringProperty(e.getValue().getStatus()));
+
+        attendanceTable.setItems(setAttendanceTable());
+
+        //for first show the attendance talbe path
+        attendanceBox.setVisible(true);
+        targetBox.setVisible(false);
+        arrowLeftbtn.setDisable(true);
+        arrowRightbtn.setDisable(false);
+
+        //for adding the piechart of the attendance
+        setAttendancePieChart();
     }
 
     //to connect with the database
@@ -324,6 +349,7 @@ public class managerOverviewController {
             int achieve_part = rs.getInt(4);
 
             setCarCircle(target_car,achieve_car);
+            setPartCircle(target_part,achieve_part);
         }
         cs.close();
         rs.close();
@@ -339,23 +365,36 @@ public class managerOverviewController {
             carCircle.setVisible(false);
             targetCarMessagelbl.setText("No Target");
 
+
         } else if (achieve >= target) {
             targetOverC = achieve - target;
             progressCar = (target > 0) ? (double) achieve / achieve : 0;
+
             targetOverCar.setText("+" + String.valueOf(targetOverC));
+            targetOverCar.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill:#10b981;");
+
+
+            targetCar.setText(String.valueOf(achieve) + "/" + String.valueOf(achieve));
+
 
             targetCarMessagelbl.setText("Target Achieved! \uD83C\uDF89");
-
-            targetOverCar.setStyle("-fx-text-fill:");
-
             targetCarMessagelbl.setStyle("-fx-text-fill: #10b981; -fx-font-weight:bold; -fx-font-size:18;");
 
         } else {
             targetOverC = target - achieve;
             progressCar = (target > 0) ? (double) achieve / target : 0;
             targetOverCar.setText("-" + String.valueOf(targetOverC));
-            targetCarMessagelbl.setText("Need to hit target");
+
+            targetOverCar.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill: #ef4444;");
+
+            if(yearBox.getSelectionModel().getSelectedItem().equals(today.getYear())){
+                targetCarMessagelbl.setText("Need to hit target");
+            }else{
+                targetCarMessagelbl.setText("Missed the target");
+            }
+            targetCarMessagelbl.setStyle("-fx-text-fill: #ef4444; -fx-font-weight:bold; -fx-font-size:18;");
         }
+        targetCar.setStyle("-fx-font-size:18;-fx-font-weight:bold; -fx-text-fill:  #6d8196;");
 
         double circulerCar = 2 * Math.PI * carCircle.getRadius();
         carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
@@ -363,4 +402,93 @@ public class managerOverviewController {
 
 
     }
+
+    private void setPartCircle(int target, int achieve) {
+        targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
+        partCircle.setVisible(true);
+        int targetOverP = 0;
+        double progressPart = 0;
+        if (target == 0 && achieve == 0) {
+            targetOverPart.setText("0");
+            partCircle.setVisible(false);
+            targetPartMessagelbl.setText("No target");
+
+        } else if (achieve >= target) {
+            targetOverP = achieve - target;
+            progressPart = (target > 0) ? (double) achieve / achieve : 0;
+            targetOverPart.setText("+" + String.valueOf(targetOverP));
+            targetOverPart.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill:#10981;");
+
+            targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(achieve));
+
+            targetPartMessagelbl.setText("Target Achieved! \uD83C\uDF89");
+            targetPartMessagelbl.setStyle("-fx-text-fill: #ffa500; -fx-font-weight:bold; -fx-font-size:18;");
+
+
+        } else {
+            targetOverP = target - achieve;
+            progressPart = (target > 0) ? (double) achieve / target : 0;
+
+            targetOverPart.setText("-" + String.valueOf(targetOverP));
+            targetOverPart.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill: #ef4444;");
+
+            if(yearBox.getSelectionModel().getSelectedItem().equals(today.getYear())){
+                targetPartMessagelbl.setText("Need to hit target");
+            }else{
+                targetPartMessagelbl.setText("Missed the target");
+            }
+            targetPartMessagelbl.setStyle("-fx-text-fill: #ef4444; -fx-font-weight:bold; -fx-font-size:18;");
+        }
+        targetCar.setStyle("-fx-font-size:18;-fx-font-weight:bold; -fx-text-fill:  #ffa500;");
+
+        double circulerPart = 2 * Math.PI * partCircle.getRadius();
+        partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
+        partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
+    }
+
+
+    //attendance table side
+    private ObservableList<ManagerOfAttendanceView> setAttendanceTable() throws SQLException {
+        ObservableList<ManagerOfAttendanceView> temporylist = FXCollections.observableArrayList();
+
+        CallableStatement cs =con.prepareCall("CALL managerattendanceview()");
+        ResultSet rs = cs.executeQuery();
+
+        while(rs.next()) {
+            String name = rs.getString(1);
+            Time in_time = rs.getTime(2);
+            String status = rs.getString(3);
+            ManagerOfAttendanceView managerOfAttendanceView = new ManagerOfAttendanceView(name, in_time,status);
+
+            temporylist.add(managerOfAttendanceView);
+        }
+
+        rs.close();
+        cs.close();
+        return temporylist;
+    }
+
+    //for attendacne piechart side
+    private  void setAttendancePieChart() throws SQLException {
+        ObservableList<PieChart.Data> piechartdata = FXCollections.observableArrayList();
+        String rating ="0 %";
+
+        CallableStatement cs = con.prepareCall("call attendancepercentage_managerview();");
+        ResultSet rs = cs.executeQuery();
+
+        while(rs.next()){
+            Integer attendedUsers = rs.getInt(1);
+            Integer workingUsers = rs.getInt(2);
+            rating = rs.getString(3);
+            piechartdata.add(new PieChart.Data("Attendance Workers",attendedUsers));
+            piechartdata.add(new PieChart.Data("Total Workers",workingUsers));
+        }
+        rs.close();
+        cs.close();
+
+        attendancePieChart.setData(piechartdata);
+//        percentagelbl.setText(rating);
+    }
+
+
 }
