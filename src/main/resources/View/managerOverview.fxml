@@ -27,7 +27,7 @@
         <VBox spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10;" BorderPane.alignment="CENTER">
             <children>
                 <!-- Top Section: CAR/PART Buttons and Carousel -->
-                <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                <HBox prefHeight="761.0" prefWidth="664.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
                         <!-- Left Side: CAR/PART Content Area -->
                         <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e1e5e9;" HBox.hgrow="ALWAYS">
@@ -273,7 +273,7 @@
                 </HBox>
 
                 <!-- Bottom Section: Charts and Best Sellers -->
-                <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                <HBox prefHeight="663.0" prefWidth="664.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
                         <StackPane style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
                             <children>
