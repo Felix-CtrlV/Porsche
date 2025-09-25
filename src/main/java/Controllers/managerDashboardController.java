@@ -13,38 +13,44 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class managerDashboardController {
 
-    private int managerid;
     @FXML
-    private Button Inventroybtn;
+    private ToggleButton Mode;
 
     @FXML
     private AnchorPane admin_anc;
 
     @FXML
-    private Button overViewbtn;
+    private Label backButton;
 
     @FXML
     private ImageView img;
+
+    @FXML
+    private Button inventorybtn;
 
     @FXML
     private Button logoutbtn;
@@ -53,13 +59,46 @@ public class managerDashboardController {
     private Label nameLbl;
 
     @FXML
-    private Button ordersbtn;
+    private HBox optionChange;
+
+    @FXML
+    private HBox optionProfile;
+
+    @FXML
+    private HBox optionTarget;
+
+    @FXML
+    private Button orderbtn;
 
     @FXML
     private Pane overlayPane;
 
     @FXML
+    private Button overviewbtn;
+
+    @FXML
+    private ImageView pfImage;
+
+    @FXML
+    private Label profileAddress;
+
+    @FXML
+    private Label profileDOB;
+
+    @FXML
+    private Label profileEmail;
+
+    @FXML
+    private Label profileName;
+
+    @FXML
+    private AnchorPane profilePane;
+
+    @FXML
     private BorderPane root;
+
+    @FXML
+    private Label settingIcon;
 
     @FXML
     private AnchorPane settingPane;
@@ -67,37 +106,33 @@ public class managerDashboardController {
     @FXML
     private Button staffbtn;
 
-    @FXML
-    private Label settingIcon;
+    private Button activeButton;
 
+    private int adminid;
 
     @FXML
     void clickInventory(ActionEvent event) {
-//        loadView("/View/adminAccounts.fxml");
-//        setActiveButton(accountbtn);
+        loadView("");
+        setActiveButton(inventorybtn);
     }
-
-
 
     @FXML
     void clickOrders(ActionEvent event) {
         loadView("/View/managerOrderManagement.fxml");
-        setActiveButton(ordersbtn);
+        setActiveButton(orderbtn);
     }
 
     @FXML
-    void clickOverView(ActionEvent event) {
+    void clickOverview(ActionEvent event) {
         loadView("");
-        setActiveButton(overViewbtn);
+        setActiveButton(overviewbtn);
     }
 
     @FXML
-    void clickstaff(ActionEvent event) {
+    void clickStaffs(ActionEvent event) {
         loadView("/View/managerStaffview.fxml");
         setActiveButton(staffbtn);
     }
-
-    private Button activeButton;
 
     private void clickSetting(){
         openSetting();
@@ -109,17 +144,61 @@ public class managerDashboardController {
 
 
     public void initialize() throws IOException {
+
+        optionChange.setOnMouseClicked(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Authentication.fxml"));
+                Parent root = loader.load();
+                authenticationController controller = loader.getController();
+                controller.setStep("factor");
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.initStyle(StageStyle.UNDECORATED);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
+        backButton.setOnMouseClicked(e->{
+            profilePane.setVisible(false);
+        });
+
+        optionProfile.setOnMouseClicked(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Authentication.fxml"));
+                Parent root = loader.load();
+                authenticationController controller = loader.getController();
+                controller.setStep("password");
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.initStyle(StageStyle.UNDECORATED);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
+        settingPane.setTranslateX(350);
         overlayPane.setVisible(false);
         settingIcon.setOnMouseClicked(e->{clickSetting();});
 
         Session current = Session.getInstance();
         String name = current.getUsername();
         nameLbl.setText(name);
+        profileName.setText(name);
+        profileAddress.setText(current.getAddress());
+        profileEmail.setText(current.getEmail());
+        profileDOB.setText(current.getDob().toString());
 
         Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
         img.setImage(porsche_logo);
         loadView("");
-        setActiveButton(overViewbtn);
+        setActiveButton(overviewbtn);
         admin_anc.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
@@ -179,15 +258,16 @@ public class managerDashboardController {
         CallableStatement check_out = con.prepareCall("call logout(?, ?)");
         Session current = Session.getInstance();
         if (current != null) {
-            managerid = current.getUserid();
+            adminid = current.getUserid();
         }
-        check_out.setInt(1, managerid);
+        check_out.setInt(1, adminid);
         check_out.setString(2, String.valueOf(LocalDateTime.now()));
         check_out.execute();
         login log_in = new login();
         log_in.start(new Stage());
         Session.clearSession();
     }
+
 
     private void setActiveButton(Button button) {
         if (activeButton != null) {

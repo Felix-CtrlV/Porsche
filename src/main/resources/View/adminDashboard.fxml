@@ -129,76 +129,181 @@
                   <Insets top="20.0" />
                </padding>
             </VBox>
-            <AnchorPane fx:id="profilePane" layoutY="44.0" prefHeight="496.0" prefWidth="350.0" style="-fx-background-color: red;" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0">
+            <AnchorPane fx:id="profilePane" layoutY="44.0" prefHeight="496.0" prefWidth="350.0" style="-fx-background-color: rgb(71, 71, 71);" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0">
                <children>
-                  <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="125.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="pfImage" fitHeight="100.0" fitWidth="100.0" layoutX="125.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../Image/usericon.png" />
                      </image>
                   </ImageView>
                   <VBox layoutY="98.0" prefHeight="397.0" prefWidth="350.0">
                      <children>
-                        <Label styleClass="slipFont" text="Account Details" />
+                        <Label styleClass="slipFont" text="Account Details">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
                         <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="340.0">
                            <children>
-                              <Label style="-fx-font-size: 25;" text="👤" />
-                              <Label styleClass="selected_dash_font" text="Name">
+                              <Label style="-fx-font-size: 25;" text="👤">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <Label fx:id="profileName" styleClass="selected_dash_font" text="Name">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>
                               </Label>
                            </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
                         </HBox>
-                        <Line endX="232.2928924560547" endY="-0.9142136573791504" startX="-100.0" />
+                        <Line endX="232.2928924560547" endY="-0.9142136573791504" startX="-100.0">
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </Line>
                         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="37.0" prefHeight="49.0" prefWidth="340.0">
                            <children>
-                              <Label style="-fx-font-size: 25;" text="📩" />
-                              <Label styleClass="selected_dash_font" text="Email">
+                              <Label style="-fx-font-size: 25;" text="📩">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="profileEmail" styleClass="selected_dash_font" text="Email">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>
                               </Label>
                            </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
                         </HBox>
-                        <Line endX="232.2928924560547" endY="-0.9142136573791504" layoutX="121.0" layoutY="88.0" startX="-100.0" />
+                        <Line endX="232.2928924560547" endY="-0.9142136573791504" layoutX="121.0" layoutY="88.0" startX="-100.0">
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </Line>
                         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="89.0" prefHeight="49.0" prefWidth="340.0">
                            <children>
-                              <Label style="-fx-font-size: 25;" text="🎂" />
-                              <Label styleClass="selected_dash_font" text="Date of Birth">
+                              <Label style="-fx-font-size: 25;" text="🎂">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="profileDOB" styleClass="selected_dash_font" text="Date of Birth">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>
                               </Label>
                            </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
                         </HBox>
-                        <Line endX="232.2928924560547" endY="-0.9142136573791504" layoutX="121.0" layoutY="140.0" startX="-100.0" />
+                        <Line endX="232.2928924560547" endY="-0.9142136573791504" layoutX="121.0" layoutY="140.0" startX="-100.0">
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </Line>
                         <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="141.0" prefHeight="49.0" prefWidth="340.0">
                            <children>
-                              <Label style="-fx-font-size: 25;" text="🏠" />
-                              <Label styleClass="selected_dash_font" text="Address">
+                              <Label style="-fx-font-size: 25;" text="☎">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="profilePhone" styleClass="selected_dash_font" text="Phone">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <Line endX="232.2928924560547" endY="-0.9142136573791504" startX="-100.0">
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </Line>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="193.0" prefHeight="49.0" prefWidth="340.0">
+                           <children>
+                              <Label style="-fx-font-size: 25;" text="🏠">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="profileAddress" styleClass="selected_dash_font" text="Address">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>
                               </Label>
                            </children>
                         </HBox>
-                        <Line endX="232.2928924560547" endY="-0.9142136573791504" layoutX="121.0" layoutY="192.0" startX="-100.0" />
-                        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="193.0" prefHeight="49.0" prefWidth="340.0">
+                        <Line endX="232.2928924560547" endY="-0.9142136573791504" layoutX="121.0" layoutY="192.0" startX="-100.0">
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </Line>
+                        <HBox fx:id="optionChange" alignment="CENTER_LEFT" layoutX="20.0" layoutY="193.0" prefHeight="49.0" prefWidth="340.0">
                            <children>
-                              <Label style="-fx-font-size: 25;" text="🔏" />
+                              <Label style="-fx-font-size: 25;" text="🔏">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </Label>
                               <Label styleClass="selected_dash_font" text="Change Password">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>
                               </Label>
                            </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </HBox>
                      </children>
                      <padding>
-                        <Insets left="10.0" top="10.0" />
+                        <Insets top="10.0" />
                      </padding>
                   </VBox>
-                  <Label fx:id="backButton" layoutX="14.0" layoutY="8.0" style="-fx-font-size: 25;" text="◀" />
+                  <Label fx:id="backButton" layoutX="4.0" layoutY="8.0" prefHeight="30.0" prefWidth="35.0" style="-fx-font-size: 25; -fx-alignment: center;" text="◀">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Label>
                </children>
             </AnchorPane>
             </children>
