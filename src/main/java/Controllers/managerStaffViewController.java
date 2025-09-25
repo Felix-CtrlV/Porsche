@@ -49,9 +49,6 @@ public class managerStaffViewController {
     private TableColumn<managerOrderView, Double> TotalAmountCol;
 
     @FXML
-    private Label CancelOrderlbl;
-
-    @FXML
     private Label CompleOrderlbl;
 
     @FXML
@@ -470,7 +467,6 @@ public class managerStaffViewController {
             TotalOrderlbl.setText(String.valueOf(rs.getInt(1)));
             CompleOrderlbl.setText(String.valueOf(rs.getInt(2)));
             PendOrderlbl.setText(String.valueOf(rs.getInt(3)));
-            CancelOrderlbl.setText(String.valueOf(rs.getInt(4)));
         }
         rs.close();
         cs.close();
