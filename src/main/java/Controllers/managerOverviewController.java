@@ -4,6 +4,9 @@ import Database.Porsche_DB;
 import Model.ManagerOfAttendanceView;
 import Model.user;
 import Utils.Session;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -20,7 +23,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -128,20 +133,107 @@ public class managerOverviewController {
 
     @FXML
     void clickArrowLeftbtn(ActionEvent event) {
-        attendanceBox.setVisible(true);
-        targetBox.setVisible(false);
+        if (currentCarouselScreenIndex == 0) return;
+
         arrowLeftbtn.setDisable(true);
-        arrowRightbtn.setDisable(false);
+        arrowRightbtn.setDisable(true);
+
+        VBox currentScreen = carouselScreens[currentCarouselScreenIndex];
+
+        // Fade out current screen while sliding
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), currentScreen);
+        fadeOut.setToValue(0.3); // Partially fade when moving through
+
+        // Slide current screen
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(400), currentScreen);
+        slideOut.setToX(750);
+
+        // Move to previous screen
+        currentCarouselScreenIndex--;
+        VBox nextScreen = carouselScreens[currentCarouselScreenIndex];
+        nextScreen.setTranslateX(-800);
+        nextScreen.setVisible(true);
+
+        // Fade in next screen
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), nextScreen);
+        fadeIn.setFromValue(0.3);
+        fadeIn.setToValue(1.0);
+
+        // Slide new screen in from the left
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), nextScreen);
+        slideIn.setToX(0);
+
+        // Play animations in parallel
+        ParallelTransition outTransition = new ParallelTransition(fadeOut, slideOut);
+        ParallelTransition inTransition = new ParallelTransition(fadeIn, slideIn);
+
+        outTransition.play();
+        inTransition.play();
+        outTransition.setOnFinished(e -> {
+            currentScreen.setVisible(false);
+            currentScreen.setOpacity(1.0); // Reset opacity for next time
+
+
+            inTransition.setOnFinished(e2 -> {
+                arrowLeftbtn.setDisable(currentCarouselScreenIndex == 0);
+                arrowRightbtn.setDisable(currentCarouselScreenIndex == carouselScreens.length - 1);
+                arrowLeftbtn.setVisible(false);
+                arrowRightbtn.setVisible(true);
+            });
+        });
     }
 
     @FXML
     void clickArrowRightbtn(ActionEvent event) {
-        attendanceBox.setVisible(false);
-        targetBox.setVisible(true);
-        arrowRightbtn.setDisable(true);
-        arrowLeftbtn.setDisable(false);
-    }
+        if (currentCarouselScreenIndex == carouselScreens.length - 1) return;
 
+        arrowLeftbtn.setDisable(true);
+        arrowRightbtn.setDisable(true);
+
+        VBox currentScreen = carouselScreens[currentCarouselScreenIndex];
+
+        // Fade out current screen while sliding
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), currentScreen);
+        fadeOut.setToValue(0.3);
+
+        // Slide current screen
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(400), currentScreen);
+        slideOut.setToX(-750);
+
+        // Move to next screen
+        currentCarouselScreenIndex++;
+        VBox nextScreen = carouselScreens[currentCarouselScreenIndex];
+        nextScreen.setTranslateX(800);
+        nextScreen.setVisible(true);
+
+        // Fade in next screen
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), nextScreen);
+        fadeIn.setFromValue(0.3);
+        fadeIn.setToValue(1.0);
+
+        // Slide new screen in from the right
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), nextScreen);
+        slideIn.setToX(0);
+
+        // Play animations in parallel
+        ParallelTransition outTransition = new ParallelTransition(fadeOut, slideOut);
+        ParallelTransition inTransition = new ParallelTransition(fadeIn, slideIn);
+
+        outTransition.play();
+        inTransition.play();
+        outTransition.setOnFinished(e -> {
+            currentScreen.setVisible(false);
+            currentScreen.setOpacity(1.0); // Reset opacity for next time
+
+
+            inTransition.setOnFinished(e2 -> {
+                arrowLeftbtn.setDisable(currentCarouselScreenIndex == 0);
+                arrowRightbtn.setDisable(currentCarouselScreenIndex == carouselScreens.length - 1);
+                arrowRightbtn.setVisible(false);
+                arrowLeftbtn.setVisible(true);
+            });
+        });
+    }
     @FXML
     void clickCarbtn(ActionEvent event) {
 
@@ -235,6 +327,32 @@ public class managerOverviewController {
 
         //for adding the piechart of the attendance
         setAttendancePieChart();
+
+        //for slide pane of attendance and target
+        carouselScreens = new VBox[]{attendanceBox, targetBox};
+
+        for (int i = 0; i < carouselScreens.length; i++) {
+            if (i == 0) {
+                carouselScreens[i].setVisible(true);
+                carouselScreens[i].setTranslateX(0);
+            } else {
+                carouselScreens[i].setVisible(false);
+                carouselScreens[i].setTranslateX(500);
+            }
+        }
+
+        // Set initial button states
+        arrowLeftbtn.setDisable(true);
+        arrowRightbtn.setDisable(carouselScreens.length <= 1);
+        arrowLeftbtn.setVisible(false);
+        arrowRightbtn.setVisible(true);
+
+        Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(carouselStackPane.widthProperty());
+        clip.heightProperty().bind(carouselStackPane.heightProperty());
+        clip.setArcWidth(16); // Match your border radius
+        clip.setArcHeight(16); // Match your border radius
+        carouselStackPane.setClip(clip);
     }
 
     //to connect with the database
@@ -489,6 +607,10 @@ public class managerOverviewController {
         attendancePieChart.setData(piechartdata);
 //        percentagelbl.setText(rating);
     }
+
+    //for slid pane of target and attendance
+    private VBox[] carouselScreens;
+    private int currentCarouselScreenIndex = 0;
 
 
 }
