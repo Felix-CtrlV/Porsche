@@ -450,3 +450,15 @@
 .hoversmth:pressed{
     -fx-background-color : rgb(141, 141, 141);
 }
+
+.carousel-stackpane {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #e2e8f0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 4);
+}
+
+.carousel-vbox {
+    -fx-background-radius: 16;
+}

@@ -27,7 +27,7 @@
         <VBox spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10;" BorderPane.alignment="CENTER">
             <children>
                 <!-- Top Section: CAR/PART Buttons and Carousel -->
-                <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                <HBox prefHeight="601.0" prefWidth="691.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
                         <!-- Left Side: CAR/PART Content Area -->
                         <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e1e5e9;" HBox.hgrow="ALWAYS">
@@ -57,13 +57,13 @@
                                 <HBox alignment="CENTER_RIGHT" prefHeight="40.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);" VBox.vgrow="NEVER">
                                     <children>
                                         <Region HBox.hgrow="ALWAYS" />
-                                        <Button fx:id="PreviousMonthbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="◀" />
+                                        <Button fx:id="PreviousMonthbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="◀" />
                                         <ChoiceBox fx:id="monthBox" minHeight="25.0" minWidth="60.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-font-size: 12;" />
-                                        <Button fx:id="NextMonthbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="▶" />
+                                        <Button fx:id="NextMonthbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="▶" />
                                         <Region prefWidth="5.0" HBox.hgrow="NEVER" />
-                                        <Button fx:id="PreviousYearbth" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="◀" />
+                                        <Button fx:id="PreviousYearbth" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="◀" />
                                         <ChoiceBox fx:id="yearBox" minHeight="25.0" minWidth="60.0" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 12;" />
-                                        <Button fx:id="NextYearbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="▶" />
+                                        <Button fx:id="NextYearbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="▶" />
                                     </children>
                                     <padding>
                                         <Insets left="10.0" right="10.0" />
@@ -72,9 +72,9 @@
 
                                 <Region minHeight="10.0" prefHeight="10.0" VBox.vgrow="NEVER" />
 
-                                <StackPane fx:id="carouselStackPane" style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 4);" VBox.vgrow="ALWAYS">
+                                <StackPane id="carousel-stackpane" fx:id="carouselStackPane" style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 4);" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <VBox fx:id="attendanceBox" style="-fx-background-radius: 12;" visible="false" StackPane.alignment="CENTER">
+                                        <VBox fx:id="attendanceBox" style="-fx-background-radius: 16;" visible="false" StackPane.alignment="CENTER">
                                             <children>
                                                 <Label style="-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Detailed Attendance List">
                                                     <VBox.margin>
@@ -104,8 +104,8 @@
                                                                         </Label>
                                                                     </children>
                                                                 </HBox>
-                                                                <PieChart fx:id="attendancePieChart" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS" />
-                                                                <VBox alignment="CENTER_RIGHT" prefHeight="60.0" spacing="3">
+                                                                <PieChart fx:id="attendancePieChart" labelsVisible="false" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS" />
+                                                                <VBox alignment="TOP_CENTER" prefHeight="60.0" spacing="3" visible="false">
                                                                     <children>
                                                                         <HBox alignment="CENTER_LEFT" spacing="8">
                                                                             <children>
@@ -129,6 +129,9 @@
                                                                     <VBox.margin>
                                                                         <Insets top="5.0" />
                                                                     </VBox.margin>
+                                                                    <padding>
+                                                                        <Insets bottom="5.0" />
+                                                                    </padding>
                                                                 </VBox>
                                                             </children>
                                                         </VBox>
@@ -151,7 +154,7 @@
                                                     <children>
                                                         <VBox style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 12; -fx-border-radius: 12;" HBox.hgrow="ALWAYS">
                                                             <children>
-                                                                <HBox prefHeight="35.0" style="-fx-background-color: #3b82f6; -fx-background-radius: 12 12 0 0;">
+                                                                <HBox prefHeight="35.0" style="-fx-background-color: #6D8196; -fx-background-radius: 12 12 0 0;">
                                                                     <children>
                                                                         <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;" text="🚗 CARS">
                                                                             <padding>
@@ -166,14 +169,14 @@
                                                                             <children>
                                                                                 <Group>
                                                                                     <children>
-                                                                                        <Circle fill="transparent" radius="50.0" stroke="#f1f5f9" strokeLineJoin="ROUND" strokeWidth="6.0" />
-                                                                                        <Circle fx:id="carCircle" fill="transparent" radius="50.0" stroke="#3b82f6" strokeLineCap="ROUND" strokeWidth="6.0" />
+                                                                                        <Circle fill="transparent" radius="60.0" stroke="#f1f5f9" strokeLineJoin="ROUND" strokeWidth="6.0" />
+                                                                                        <Circle fx:id="carCircle" fill="transparent" radius="60.0" stroke="#6d8196" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="9.0" />
                                                                                     </children>
                                                                                 </Group>
                                                                                 <VBox alignment="CENTER">
                                                                                     <children>
-                                                                                        <Text fx:id="targetCar" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-fill: #1e293b;" text="0/0" />
-                                                                                        <Label fx:id="targetOverCar" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 11;" text="+0" />
+                                                                                        <Text fx:id="targetCar" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #6d8196;" text="0/0" />
+                                                                                        <Label fx:id="targetOverCar" style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 15;" text="-1" />
                                                                                     </children>
                                                                                 </VBox>
                                                                             </children>
@@ -198,7 +201,7 @@
 
                                                         <VBox style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 12; -fx-border-radius: 12;" HBox.hgrow="ALWAYS">
                                                             <children>
-                                                                <HBox prefHeight="35.0" style="-fx-background-color: #10b981; -fx-background-radius: 12 12 0 0;">
+                                                                <HBox prefHeight="35.0" style="-fx-background-color: #FFA500; -fx-background-radius: 12 12 0 0;">
                                                                     <children>
                                                                         <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;" text="🔧 PARTS">
                                                                             <padding>
@@ -213,14 +216,14 @@
                                                                             <children>
                                                                                 <Group>
                                                                                     <children>
-                                                                                        <Circle fill="transparent" radius="50.0" stroke="#f1f5f9" strokeWidth="6.0" />
-                                                                                        <Circle fx:id="partCircle" fill="transparent" radius="50.0" stroke="#10b981" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="6.0" />
+                                                                                        <Circle fill="transparent" radius="60.0" stroke="#f1f5f9" strokeWidth="6.0" />
+                                                                                        <Circle fx:id="partCircle" fill="transparent" radius="60.0" stroke="ORANGE" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="9.0" />
                                                                                     </children>
                                                                                 </Group>
                                                                                 <VBox alignment="CENTER">
                                                                                     <children>
-                                                                                        <Text fx:id="targetPart" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-fill: #1e293b;" text="10/10" />
-                                                                                        <Label fx:id="targetOverPart" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 11;" text="+0" />
+                                                                                        <Text fx:id="targetPart" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #ffa500;" text="10/10" />
+                                                                                        <Label fx:id="targetOverPart" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 15;" text="+0" />
                                                                                     </children>
                                                                                 </VBox>
                                                                             </children>
@@ -273,28 +276,52 @@
                 </HBox>
 
                 <!-- Bottom Section: Charts and Best Sellers -->
-                <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                <HBox maxHeight="1.7976931348623157E308" prefHeight="562.0" prefWidth="691.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <StackPane style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <!-- Combined Chart Container -->
+                        <VBox style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
                             <children>
-                                <LineChart alternativeRowFillVisible="false" horizontalGridLinesVisible="false" style="-fx-background-color: transparent;" verticalGridLinesVisible="false">
-                                    <xAxis>
-                                        <CategoryAxis side="BOTTOM" />
-                                    </xAxis>
-                                    <yAxis>
-                                        <NumberAxis side="LEFT" />
-                                    </yAxis>
-                                </LineChart>
-                                <BarChart alternativeColumnFillVisible="true" alternativeRowFillVisible="false" barGap="0.0" categoryGap="5.0" horizontalGridLinesVisible="false" nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: transparent;" verticalGridLinesVisible="false">
-                                    <xAxis>
-                                        <CategoryAxis label="Months" />
-                                    </xAxis>
-                                    <yAxis>
-                                        <NumberAxis label="Quantity" side="LEFT" />
-                                    </yAxis>
-                                </BarChart>
+                                <HBox alignment="CENTER_LEFT" prefHeight="35.0" style="-fx-background-color: #3498db; -fx-background-radius: 12 12 0 0;">
+                                    <children>
+                                        <Label style="-fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;" text="SALES PERFORMANCE">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                            <HBox.margin>
+                                                <Insets left="15.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                    </children>
+                                </HBox>
+
+                                <StackPane style="-fx-padding: 15; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <!-- Bar Chart (Primary) -->
+                                        <BarChart fx:id="salesBarChart" alternativeRowFillVisible="false" barGap="2.0" categoryGap="10.0" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendVisible="false" style="-fx-background-color: transparent;" verticalGridLinesVisible="false" StackPane.alignment="CENTER">
+                                            <xAxis>
+                                                <CategoryAxis fx:id="barXAxis" label="Months" />
+                                            </xAxis>
+                                            <yAxis>
+                                                <NumberAxis fx:id="barYAxis" label="Quantity" side="LEFT" />
+                                            </yAxis>
+                                        </BarChart>
+
+                                        <!-- Line Chart (Overlay) -->
+                                        <LineChart fx:id="salesLineChart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" legendVisible="false" prefHeight="436.0" prefWidth="500.0" style="-fx-background-color: transparent;" verticalGridLinesVisible="false" StackPane.alignment="CENTER">
+                                            <xAxis>
+                                                <CategoryAxis fx:id="lineXAxis" side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                                <NumberAxis fx:id="lineYAxis" label="Revenue ($)" side="RIGHT" />
+                                            </yAxis>
+                                        </LineChart>
+                                    </children>
+                                </StackPane>
                             </children>
-                        </StackPane>
+                            <HBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </HBox.margin>
+                        </VBox>
 
                         <!-- Best Sellers Panel -->
                         <VBox style="-fx-border-color: #e1e5e9; -fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
