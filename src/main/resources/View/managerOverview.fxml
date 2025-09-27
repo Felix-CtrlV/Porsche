@@ -295,39 +295,18 @@
                                     </children>
                                 </HBox>
 
-                                <StackPane style="-fx-padding: 15; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
-                                    <children>
-                                        <!-- Combined Bar and Line Chart -->
-                                        <BarChart fx:id="combinedBarChart" alternativeRowFillVisible="false"
-                                                  horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
-                                                  legendVisible="true" prefHeight="488.0" prefWidth="500.0"
-                                                  style="-fx-background-color: transparent;" StackPane.alignment="CENTER">
-                                            <xAxis>
-                                                <CategoryAxis fx:id="combinedXAxis" side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                                <!-- Primary Y-axis for Quantity (Bars) -->
-                                                <NumberAxis fx:id="quantityYAxis" label="Quantity" side="LEFT" />
-                                                <!-- Secondary Y-axis for Revenue (Line) -->
-                                                <NumberAxis fx:id="revenueYAxis" label="Revenue ($)" side="RIGHT" />
-                                            </yAxis>
-                                        </BarChart>
-
-                                        <!-- Line chart that will overlay the bar chart -->
-                                        <LineChart fx:id="overlayLineChart" alternativeRowFillVisible="false"
-                                                   horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
-                                                   legendVisible="false" prefHeight="488.0" prefWidth="500.0"
-                                                   style="-fx-background-color: transparent; -fx-chart-vertical-grid-lines-visible: false; -fx-chart-horizontal-grid-lines-visible: false;"
-                                                   StackPane.alignment="CENTER">
-                                            <xAxis>
-                                                <CategoryAxis side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                                <NumberAxis side="RIGHT" />
-                                            </yAxis>
-                                        </LineChart>
-                                    </children>
+                                <!-- Remove the overlayLineChart completely -->
+                                <StackPane fx:id="combinedChartPane" prefHeight="400" prefWidth="600">
+                                    <BarChart fx:id="combinedBarChart" animated="false" legendVisible="true">
+                                        <xAxis>
+                                            <CategoryAxis fx:id="combinedXAxis"/>
+                                        </xAxis>
+                                        <yAxis>
+                                            <NumberAxis fx:id="quantityYAxis" label="Quantity"/>
+                                        </yAxis>
+                                    </BarChart>
                                 </StackPane>
+
                             </children>
                             <HBox.margin>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
