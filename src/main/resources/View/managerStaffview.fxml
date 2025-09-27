@@ -150,21 +150,13 @@
                                         <children>
                                     <StackPane>
                                        <children>
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                          <Group>
                                              <children>
-                                                <Group>
-                                                   <children>
-                                                      <Circle fx:id="attendanceBackCircle" fill="transparent" radius="100" stroke="#e16136" strokeWidth="15" />
-                                                      <Circle fx:id="attendanceCircle" fill="transparent" radius="100" stroke="#3498db" strokeWidth="15" />
-                                                   </children>
-                                                </Group>
+                                                <Circle fx:id="attendanceBackCircle" fill="transparent" radius="100" stroke="#e16136" strokeWidth="15" />
+                                                <Circle fx:id="attendanceCircle" fill="transparent" radius="100" stroke="#3498db" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="15" visible="false" />
                                              </children>
-                                          </HBox>
-                                          <HBox alignment="CENTER" prefHeight="214.0" prefWidth="215.0">
-                                             <children>
-                                                <Text fx:id="attendancePercent" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="0%" x="70" y="105" />
-                                             </children>
-                                          </HBox>
+                                          </Group>
+                                          <Text fx:id="attendancePercent" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-fill: #2c3e50;" text="10%" x="70" y="105" />
                                        </children>
                                     </StackPane>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
@@ -251,7 +243,7 @@
                      <children>
 
                                       <!-- Updated visible BorderPane with consistent styling -->
-                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="322.0" prefWidth="382.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false">
+                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="322.0" prefWidth="382.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;">
                                     <padding>
                                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                     </padding>
