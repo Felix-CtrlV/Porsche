@@ -133,15 +133,6 @@ public class managerOverviewController {
     @FXML
     private ChoiceBox<Integer> yearBox;
 
-    @FXML private StackPane combinedChartPane;
-    @FXML private BarChart<String, Number> combinedBarChart;
-    @FXML private CategoryAxis combinedXAxis;
-    @FXML private NumberAxis quantityYAxis;
-
-    private LineChart<String, Number> overlayLineChart;
-    private NumberAxis revenueYAxis;
-
-
 
     public managerOverviewController() throws SQLException, ClassNotFoundException {
     }
@@ -284,8 +275,6 @@ public class managerOverviewController {
         carouselStackPane.setClip(clip);
 
         //for line and bar chart
-        setCombinedBarChart();
-        CombineBarChart();
     }
 
     //to connect with the database
@@ -346,7 +335,6 @@ public class managerOverviewController {
         //to set target
         try {
             setTarget();
-            CombineBarChart();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -584,138 +572,6 @@ public class managerOverviewController {
                 }
             });
         });
-    }
-
-    //for line and bar chart
-    private void CombineBarChart() throws SQLException {
-        // Safety null checks
-        if (combinedBarChart == null || overlayLineChart == null) {
-            System.out.println("Charts not initialized, calling setCombinedBarChart()");
-            setCombinedBarChart();
-        }
-
-        // Clear previous data safely
-        if (combinedBarChart.getData() != null) {
-            combinedBarChart.getData().clear();
-        }
-        if (overlayLineChart.getData() != null) {
-            overlayLineChart.getData().clear();
-        }
-
-        XYChart.Series<String, Number> carSeries = new XYChart.Series<>();
-        carSeries.setName("Cars Sold");
-
-        XYChart.Series<String, Number> partSeries = new XYChart.Series<>();
-        partSeries.setName("Parts Sold");
-
-        XYChart.Series<String, Number> revenueSeries = new XYChart.Series<>();
-        revenueSeries.setName("Revenue");
-
-        CallableStatement cs = con.prepareCall("CALL getMonthlySales(?, ?)");
-        cs.setInt(1, currentMonth);
-        cs.setInt(2, currentYear);
-
-        ResultSet rs = cs.executeQuery();
-        managerOverview overview = new managerOverview();
-
-        while (rs.next()) {
-            overview.setMonthDate(rs.getDate(1));
-            int carQty = rs.getInt(2);
-            int partQty = rs.getInt(3);
-            double revenue = rs.getDouble(4);
-
-            String saleDate = overview.getMonthDate();
-
-            carSeries.getData().add(new XYChart.Data<>(saleDate, carQty));
-            partSeries.getData().add(new XYChart.Data<>(saleDate, partQty));
-            revenueSeries.getData().add(new XYChart.Data<>(saleDate, revenue));
-        }
-
-        // Add bar series to bar chart
-        combinedBarChart.getData().addAll(carSeries, partSeries);
-
-        // Add revenue series to line chart
-        overlayLineChart.getData().add(revenueSeries);
-
-        rs.close();
-        cs.close();
-
-        // Adjust axes ranges for better visibility
-        adjustAxisRanges();
-    }
-
-    private void adjustAxisRanges() {
-        if (quantityYAxis != null) {
-            quantityYAxis.setAutoRanging(false);
-            quantityYAxis.setLowerBound(0);
-            quantityYAxis.setUpperBound(10);
-            quantityYAxis.setTickUnit(1);
-        }
-
-        if (revenueYAxis != null) {
-            revenueYAxis.setAutoRanging(true);
-        }
-    }
-    private void setCombinedBarChart(){
-        // Clear the pane first
-        combinedChartPane.getChildren().clear();
-
-        // Initialize the axes if they're null
-        if (combinedXAxis == null) {
-            combinedXAxis = new CategoryAxis();
-            combinedXAxis.setLabel("Date");
-        }
-
-        if (quantityYAxis == null) {
-            quantityYAxis = new NumberAxis();
-            quantityYAxis.setLabel("Quantity");
-        }
-
-        // Initialize the bar chart
-        if (combinedBarChart == null) {
-            combinedBarChart = new BarChart<>(combinedXAxis, quantityYAxis);
-            combinedBarChart.setLegendVisible(true);
-            combinedBarChart.setAnimated(false);
-        }
-
-        // Initialize revenue Y-axis
-        if (revenueYAxis == null) {
-            revenueYAxis = new NumberAxis();
-            revenueYAxis.setLabel("Revenue ($)");
-            revenueYAxis.setSide(Side.RIGHT);
-        }
-
-        // Initialize the line chart
-        if (overlayLineChart == null) {
-            overlayLineChart = new LineChart<>(combinedXAxis, revenueYAxis);
-            overlayLineChart.setLegendVisible(false);
-            overlayLineChart.setCreateSymbols(true);
-            overlayLineChart.setAnimated(false);
-
-            // Make line chart transparent
-            overlayLineChart.setStyle("-fx-background-color: transparent;");
-        }
-
-        // Clear any existing data
-        combinedBarChart.getData().clear();
-        if (overlayLineChart.getData() != null) {
-            overlayLineChart.getData().clear();
-        }
-
-        // Add charts to pane
-        combinedChartPane.getChildren().addAll(combinedBarChart, overlayLineChart);
-
-        // Bring bar chart to front so it's visible
-        combinedBarChart.toFront();
-
-        // Load CSS styling
-        try {
-            combinedChartPane.getStylesheets().add(
-                    getClass().getResource("/CSS/charts.css").toExternalForm()
-            );
-        } catch (Exception e) {
-            System.out.println("CSS file not found, but continuing without styles");
-        }
     }
 
 

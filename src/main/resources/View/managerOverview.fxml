@@ -2,8 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
+<?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
@@ -21,7 +21,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.chart.BarChart?>
 <BorderPane stylesheets="@../../../../../Porsche/src/main/resources/CSS/general.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
     <center>
         <VBox spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10;" BorderPane.alignment="CENTER">
@@ -36,6 +35,7 @@
                                     <children>
                                         <Button fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-radius: 6;" text="CAR" />
                                         <Button fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-radius: 6;" text="PART" />
+                              <Button mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-radius: 6;" text="Staff" />
                                     </children>
                                     <VBox.margin>
                                         <Insets left="10.0" right="10.0" top="10.0" />
@@ -299,10 +299,10 @@
                                 <StackPane fx:id="combinedChartPane" prefHeight="400" prefWidth="600">
                                     <BarChart fx:id="combinedBarChart" animated="false" legendVisible="true">
                                         <xAxis>
-                                            <CategoryAxis fx:id="combinedXAxis"/>
+                                            <CategoryAxis fx:id="combinedXAxis" />
                                         </xAxis>
                                         <yAxis>
-                                            <NumberAxis fx:id="quantityYAxis" label="Quantity"/>
+                                            <NumberAxis fx:id="quantityYAxis" label="Quantity" />
                                         </yAxis>
                                     </BarChart>
                                 </StackPane>
