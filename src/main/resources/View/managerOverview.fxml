@@ -297,7 +297,7 @@
                                 <StackPane style="-fx-padding: 15; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
                                     <children>
                                         <!-- Bar Chart (Primary) -->
-                                        <BarChart fx:id="salesBarChart" alternativeRowFillVisible="false" barGap="2.0" categoryGap="10.0" horizontalGridLinesVisible="true" style="-fx-background-color: transparent;" verticalGridLinesVisible="true" StackPane.alignment="CENTER">
+                                        <BarChart fx:id="salesBarChart" alternativeRowFillVisible="false" barGap="2.0" categoryGap="10.0" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendVisible="false" style="-fx-background-color: transparent;" verticalGridLinesVisible="false" StackPane.alignment="CENTER">
                                             <xAxis>
                                                 <CategoryAxis fx:id="barXAxis" label="Months" />
                                             </xAxis>
@@ -307,7 +307,7 @@
                                         </BarChart>
 
                                         <!-- Line Chart (Overlay) -->
-                                        <LineChart fx:id="salesLineChart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" style="-fx-background-color: transparent;" verticalGridLinesVisible="false" StackPane.alignment="CENTER">
+                                        <LineChart fx:id="salesLineChart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" legendVisible="false" prefHeight="436.0" prefWidth="500.0" style="-fx-background-color: transparent;" verticalGridLinesVisible="false" StackPane.alignment="CENTER">
                                             <xAxis>
                                                 <CategoryAxis fx:id="lineXAxis" side="BOTTOM" />
                                             </xAxis>
