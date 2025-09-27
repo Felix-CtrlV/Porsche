@@ -7,12 +7,14 @@ import Utils.Session;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -129,19 +131,145 @@ public class managerOverviewController {
     @FXML
     private ChoiceBox<Integer> yearBox;
 
-    // New FXML elements for combined chart
+    // Add these FXML declarations to your controller
     @FXML
-    private BarChart<String, Number> salesBarChart;
+    private BarChart<String, Number> combinedBarChart;
     @FXML
-    private LineChart<String, Number> salesLineChart;
+    private LineChart<String, Number> overlayLineChart;
     @FXML
-    private CategoryAxis barXAxis;
+    private CategoryAxis combinedXAxis;
     @FXML
-    private NumberAxis barYAxis;
+    private NumberAxis quantityYAxis;
     @FXML
-    private CategoryAxis lineXAxis;
-    @FXML
-    private NumberAxis lineYAxis;
+    private NumberAxis revenueYAxis;
+
+    // Method to initialize the combined chart
+    private void initializeCombinedChart() {
+        // Style the bar chart
+        combinedBarChart.setLegendVisible(true);
+        combinedBarChart.setAnimated(false);
+        combinedBarChart.setTitle("Sales Performance: Quantity (Bars) vs Revenue (Line)");
+
+        // Style the overlay line chart
+        overlayLineChart.setLegendVisible(false);
+        overlayLineChart.setAnimated(false);
+        overlayLineChart.setCreateSymbols(true);
+
+        // Remove axes from line chart since we'll use the bar chart's axes
+        overlayLineChart.getXAxis().setVisible(false);
+        overlayLineChart.getYAxis().setVisible(false);
+
+        // Style the axes
+        quantityYAxis.setLabel("Quantity");
+        revenueYAxis.setLabel("Revenue ($)");
+    }
+
+    // Method to update the combined chart with data
+    private void updateCombinedChart() throws SQLException {
+        // Clear existing data
+        combinedBarChart.getData().clear();
+        overlayLineChart.getData().clear();
+
+        // Create series for bar chart (quantities)
+        XYChart.Series<String, Number> carSeries = new XYChart.Series<>();
+        carSeries.setName("Cars Sold");
+
+        XYChart.Series<String, Number> partSeries = new XYChart.Series<>();
+        partSeries.setName("Parts Sold");
+
+        // Create series for line chart (revenue)
+        XYChart.Series<String, Number> revenueSeries = new XYChart.Series<>();
+        revenueSeries.setName("Revenue");
+
+        // Fetch data from database
+        CallableStatement cs = con.prepareCall("CALL monthlySalesData( ?, ?)");
+        cs.setInt(2, currentMonth);
+        cs.setInt(3, currentYear);
+
+        ResultSet rs = cs.executeQuery();
+
+        while (rs.next()) {
+            String date = rs.getString("sale_date");
+            int carQty = rs.getInt("car_quantity");
+            int partQty = rs.getInt("part_quantity");
+            double revenue = rs.getDouble("daily_revenue");
+
+            // Add data to respective series
+            carSeries.getData().add(new XYChart.Data<>(date, carQty));
+            partSeries.getData().add(new XYChart.Data<>(date, partQty));
+            revenueSeries.getData().add(new XYChart.Data<>(date, revenue));
+        }
+
+        // Add bar series to bar chart
+        combinedBarChart.getData().addAll(carSeries, partSeries);
+
+        // Add line series to line chart
+        overlayLineChart.getData().add(revenueSeries);
+
+        // Apply styling
+        applyCombinedChartStyles();
+
+        rs.close();
+        cs.close();
+    }
+
+    // Method to style the combined chart
+    private void applyCombinedChartStyles() {
+        // Apply CSS styles
+        combinedBarChart.setStyle("""
+        .chart-bar {
+            -fx-bar-fill: #3498db;
+            -fx-background-insets: 0;
+        }
+        .default-color0.chart-bar { -fx-bar-fill: #3498db; } /* Cars - Blue */
+        .default-color1.chart-bar { -fx-bar-fill: #2ecc71; } /* Parts - Green */
+        .chart-legend-item {
+            -fx-text-fill: #2c3e50;
+        }
+    """);
+
+        overlayLineChart.setStyle("""
+        .chart-series-line {
+            -fx-stroke-width: 3px;
+            -fx-stroke: #e74c3c;
+        }
+        .chart-line-symbol {
+            -fx-background-color: #e74c3c, white;
+            -fx-background-insets: 0, 2;
+            -fx-background-radius: 5px;
+            -fx-padding: 5px;
+        }
+    """);
+
+        // Manually update legend to include both bar and line series
+        updateChartLegend();
+    }
+
+    // Method to create a custom legend that includes both bar and line series
+    private void updateChartLegend() {
+        // This will be applied after the chart is rendered
+        Platform.runLater(() -> {
+            try {
+                // Find the legend and add custom items if needed
+                Node legend = combinedBarChart.lookup(".chart-legend");
+                if (legend instanceof HBox) {
+                    HBox legendBox = (HBox) legend;
+
+                    // Add revenue legend item manually if needed
+                    // JavaFX should handle this automatically, but this is a fallback
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    // Alternative approach: Use StackPane with separate charts (more control)
+    private void setupChartStackPane() {
+        // Ensure line chart is transparent and properly aligned
+        overlayLineChart.setStyle("-fx-background-color: transparent;");
+        overlayLineChart.setMouseTransparent(true); // Allow clicks to pass through to bar chart
+    }
 
     public managerOverviewController() throws SQLException, ClassNotFoundException {
     }
@@ -178,7 +306,6 @@ public class managerOverviewController {
             currentYear++;
         }
         updateYearMonthLabel();
-        updateChartData(); // Update chart when month changes
     }
 
     @FXML
@@ -190,7 +317,7 @@ public class managerOverviewController {
             }
         }
         updateYearMonthLabel();
-        updateChartData(); // Update chart when year changes
+
     }
 
     @FXML
@@ -206,14 +333,14 @@ public class managerOverviewController {
             currentYear--;
         };
         updateYearMonthLabel();
-        updateChartData(); // Update chart when month changes
+
     }
 
     @FXML
     void clickPreviousYear(ActionEvent event) {
         currentYear--;
         updateYearMonthLabel();
-        updateChartData(); // Update chart when year changes
+
     }
 
     @FXML
@@ -231,7 +358,7 @@ public class managerOverviewController {
             if (newVal != null) {
                 currentYear = newVal;
                 updateYearMonthLabel();
-                updateChartData(); // Update chart when year changes
+                 // Update chart when year changes
             }
         });
 
@@ -241,7 +368,7 @@ public class managerOverviewController {
                 Month parsedMonth = Month.from(fmt.parse(newVal));
                 currentMonth = parsedMonth.getValue();
                 updateYearMonthLabel();
-                updateChartData(); // Update chart when month changes
+
             }
         });
 
@@ -290,9 +417,9 @@ public class managerOverviewController {
         clip.setArcHeight(16); // Match your border radius
         carouselStackPane.setClip(clip);
 
-        // Initialize the combined chart
         initializeCombinedChart();
-        loadChartData(); // Load initial chart data
+        setupChartStackPane();
+        updateCombinedChart();
     }
 
     //to connect with the database
@@ -353,6 +480,7 @@ public class managerOverviewController {
         //to set target
         try {
             setTarget();
+            updateCombinedChart();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -592,167 +720,7 @@ public class managerOverviewController {
         });
     }
 
-    // Helper class for sales data
-    private class SalesData {
-        private String month;
-        private int quantity;
-        private double revenue;
 
-        public SalesData(String month, int quantity, double revenue) {
-            this.month = month;
-            this.quantity = quantity;
-            this.revenue = revenue;
-        }
 
-        public String getMonth() { return month; }
-        public int getQuantity() { return quantity; }
-        public double getRevenue() { return revenue; }
-    }
-
-    private XYChart.Series<String, Number> quantitySeries;
-    private XYChart.Series<String, Number> revenueSeries;
-    // Initialize combined bar and line chart
-    private void initializeCombinedChart() {
-        // Configure bar chart
-        salesBarChart.setTitle("");
-        salesBarChart.setLegendVisible(true);
-        salesBarChart.setAnimated(false);
-
-        // Configure line chart (make it transparent for overlay)
-        salesLineChart.setTitle("");
-        salesLineChart.setLegendVisible(false);
-        salesLineChart.setAnimated(false);
-        salesLineChart.setStyle("-fx-background-color: transparent;");
-
-        // Configure axes
-        barYAxis.setAutoRanging(true);
-        lineYAxis.setAutoRanging(true);
-
-        // Initialize series
-        quantitySeries = new XYChart.Series<>();
-        quantitySeries.setName("Quantity Sold");
-
-        revenueSeries = new XYChart.Series<>();
-        revenueSeries.setName("Revenue ($)");
-
-        // Add series to charts
-        salesBarChart.getData().add(quantitySeries);
-        salesLineChart.getData().add(revenueSeries);
-
-//        // Style the charts
-//        styleCharts();
-    }
-    // Load chart data from database
-    private void loadChartData() {
-        try {
-            // Get sales data from database based on current month and year
-            ObservableList<SalesData> salesData = getSalesDataFromDatabase(currentMonth, currentYear);
-
-            // Clear existing data
-            quantitySeries.getData().clear();
-            revenueSeries.getData().clear();
-
-            // Prepare months list for x-axis
-            ObservableList<String> months = FXCollections.observableArrayList();
-
-            // Add data points
-            for (SalesData data : salesData) {
-                XYChart.Data<String, Number> quantityData = new XYChart.Data<>(data.getMonth(), data.getQuantity());
-                XYChart.Data<String, Number> revenueData = new XYChart.Data<>(data.getMonth(), data.getRevenue());
-
-                quantitySeries.getData().add(quantityData);
-                revenueSeries.getData().add(revenueData);
-                months.add(data.getMonth());
-
-                // Add tooltips
-                addTooltipToDataPoint(quantityData, "Quantity", data.getQuantity());
-                addTooltipToDataPoint(revenueData, "Revenue", data.getRevenue());
-            }
-
-            // Set the months to x-axis
-            barXAxis.setCategories(months);
-            lineXAxis.setCategories(months);
-
-        } catch (SQLException e) {
-            System.out.println("Error loading chart data: " + e.getMessage());
-            // Load sample data if database fails
-            loadSampleData();
-        }
-    }
-    // Update chart data when month/year changes
-    private void updateChartData() {
-        loadChartData();
-    }
-    // Get sales data from database
-    private ObservableList<SalesData> getSalesDataFromDatabase(int month, int year) throws SQLException {
-        ObservableList<SalesData> salesData = FXCollections.observableArrayList();
-
-        // Replace this with your actual stored procedure or query
-        String query = "CALL GetMonthlySalesData(?, ?)"; // Example stored procedure
-        CallableStatement cs = con.prepareCall(query);
-        cs.setInt(1, month);
-        cs.setInt(2, year);
-
-        ResultSet rs = cs.executeQuery();
-
-        while (rs.next()) {
-            String monthName = rs.getString("month_name");
-            int quantity = rs.getInt("quantity");
-            double revenue = rs.getDouble("revenue");
-
-            salesData.add(new SalesData(monthName, quantity, revenue));
-        }
-
-        rs.close();
-        cs.close();
-
-        return salesData;
-    }
-    // Load sample data if database is not available
-    private void loadSampleData() {
-        // Sample data - replace with your actual data structure
-        String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"};
-        int[] quantities = {120, 190, 150, 210, 180, 230, 200, 250};
-        double[] revenues = {12000, 19000, 15000, 25000, 22000, 30000, 28000, 32000};
-
-        // Clear existing data
-        quantitySeries.getData().clear();
-        revenueSeries.getData().clear();
-
-        // Add data points
-        for (int i = 0; i < months.length; i++) {
-            XYChart.Data<String, Number> quantityData = new XYChart.Data<>(months[i], quantities[i]);
-            XYChart.Data<String, Number> revenueData = new XYChart.Data<>(months[i], revenues[i]);
-
-            quantitySeries.getData().add(quantityData);
-            revenueSeries.getData().add(revenueData);
-
-            // Add tooltips
-            addTooltipToDataPoint(quantityData, "Quantity", quantities[i]);
-            addTooltipToDataPoint(revenueData, "Revenue", revenues[i]);
-        }
-
-        // Set the months to x-axis
-        barXAxis.setCategories(FXCollections.observableArrayList(months));
-        lineXAxis.setCategories(FXCollections.observableArrayList(months));
-    }
-
-    private void addTooltipToDataPoint(XYChart.Data<String, Number> dataPoint, String type, Number value) {
-        Tooltip tooltip = new Tooltip();
-
-        if (type.equals("Revenue")) {
-            tooltip.setText(String.format("Month: %s\n%s: $%,.0f", dataPoint.getXValue(), type, value.doubleValue()));
-        } else {
-            tooltip.setText(String.format("Month: %s\n%s: %d units", dataPoint.getXValue(), type, value.intValue()));
-        }
-
-        tooltip.setShowDelay(Duration.ZERO);
-
-        dataPoint.nodeProperty().addListener((obs, oldNode, newNode) -> {
-            if (newNode != null) {
-                Tooltip.install(newNode, tooltip);
-            }
-        });
-    }
 
 }
