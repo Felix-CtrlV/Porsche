@@ -7,6 +7,9 @@ import javafx.scene.control.ProgressBar;
 public class managerCarPartProgressBarController {
 
     @FXML
+    private Label Name;
+
+    @FXML
     private Label message;
 
     @FXML
