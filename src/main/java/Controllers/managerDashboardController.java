@@ -198,6 +198,7 @@ public class managerDashboardController {
         Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
         img.setImage(porsche_logo);
         loadView("/View/managerOverview.fxml");
+
         setActiveButton(overviewbtn);
         admin_anc.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {

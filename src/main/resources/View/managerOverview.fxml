@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane stylesheets="@../../../../../Porsche/src/main/resources/CSS/general.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
+<BorderPane stylesheets="@../CSS/general.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
     <center>
         <VBox spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10;" BorderPane.alignment="CENTER">
             <children>
