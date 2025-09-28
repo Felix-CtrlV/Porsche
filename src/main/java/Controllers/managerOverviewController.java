@@ -133,6 +133,9 @@ public class managerOverviewController {
     @FXML
     private ChoiceBox<Integer> yearBox;
 
+    @FXML
+    private Button staffbtn;
+
 
     public managerOverviewController() throws SQLException, ClassNotFoundException {
     }
@@ -185,6 +188,11 @@ public class managerOverviewController {
 
     @FXML
     void clickPartbtn(ActionEvent event) {
+
+    }
+
+    @FXML
+    void clickStaffbtn(ActionEvent event) {
 
     }
 
@@ -274,7 +282,6 @@ public class managerOverviewController {
         clip.setArcHeight(16); // Match your border radius
         carouselStackPane.setClip(clip);
 
-        //for line and bar chart
     }
 
     //to connect with the database
