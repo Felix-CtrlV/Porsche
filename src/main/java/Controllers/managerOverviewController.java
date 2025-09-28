@@ -2,7 +2,7 @@ package Controllers;
 
 import Database.Porsche_DB;
 import Model.ManagerOfAttendanceView;
-import Model.managerOverview;
+
 import Utils.Session;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;

@@ -14,9 +14,9 @@ public class managerOverview {
     private String inventoryName;
 
     //for best_Seller
-    private int staffId,workHour;
+    private int staffId,workHour,prevWorkHour;
     private String staffPhoto,staffName;
-    private Double totalSale;
+    private Double totalSale,prevTotalSale;
 
     public managerOverview(){}
 
@@ -37,13 +37,31 @@ public class managerOverview {
     }
 
     //for best_seller
-    public managerOverview(int rank ,int staffId, int workHour, String staffPhoto, String staffName, Double totalSale) {
+    public managerOverview(int rank ,int staffId, int workHour,int prevWorkHour, String staffPhoto, String staffName, Double totalSale,Double prevTotalSale) {
         this.rank = rank;
         this.staffId = staffId;
         this.workHour = workHour;
         this.staffPhoto = staffPhoto;
         this.staffName = staffName;
         this.totalSale = totalSale;
+        this.prevWorkHour =prevWorkHour;
+        this.prevTotalSale = prevTotalSale;
+    }
+
+    public int getPrevWorkHour() {
+        return prevWorkHour;
+    }
+
+    public void setPrevWorkHour(int prevWorkHour) {
+        this.prevWorkHour = prevWorkHour;
+    }
+
+    public Double getPrevTotalSale() {
+        return prevTotalSale;
+    }
+
+    public void setPrevTotalSale(Double prevTotalSale) {
+        this.prevTotalSale = prevTotalSale;
     }
 
     public Double getTotalSale() {
@@ -94,8 +112,10 @@ public class managerOverview {
         this.inventoryName = inventoryName;
     }
 
-    public int getRank() {
-        return rank;
+    public String getRank() {
+        String result ="";
+        result = "#"+String.valueOf(this.rank);
+        return result;
     }
 
     public void setRank(int rank) {
