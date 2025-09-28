@@ -37,15 +37,18 @@
                                     <children>
                                         <Button id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-radius: 6;" text="CAR" />
                                         <Button id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-radius: 6;" text="PART" />
-                              <Button id="staff" fx:id="staffbtn" mnemonicParsing="false" onAction="#clickStaffbtn" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-radius: 6;" text="Staff" />
+                              <Button id="staff" fx:id="staffbtn" mnemonicParsing="false" onAction="#clickStaffbtn" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-radius: 6;" text="STAFF" />
                                     </children>
                                     <VBox.margin>
                                         <Insets left="10.0" right="10.0" top="10.0" />
                                     </VBox.margin>
                                 </HBox>
-                                <ScrollPane hbarPolicy="NEVER" style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
+                                <ScrollPane hbarPolicy="NEVER" style="-fx-background-color: white; -fx-border-color: white;" VBox.vgrow="ALWAYS">
                                     <content>
-                                        <VBox fx:id="scrollPaneCarPart" style="-fx-background-color: white; -fx-border-color: white;" />
+                                        <VBox fx:id="scrollPane" alignment="CENTER" prefHeight="542.0" prefWidth="203.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: white;">
+                                 <padding>
+                                    <Insets right="10.0" top="20.0" />
+                                 </padding></VBox>
                                     </content>
                                     <VBox.margin>
                                         <Insets bottom="10.0" left="10.0" right="10.0" />
@@ -152,7 +155,7 @@
                                                         <Insets bottom="8.0" left="20.0" top="20.0" />
                                                     </VBox.margin>
                                                 </Label>
-                                                <HBox fx:id="targetlayer" spacing="10.0" VBox.vgrow="ALWAYS">
+                                                <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                                                     <children>
                                                         <VBox style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 12; -fx-border-radius: 12;" HBox.hgrow="ALWAYS">
                                                             <children>
@@ -286,18 +289,18 @@
                              <children>
                                  <HBox alignment="CENTER_LEFT" spacing="15">
                                      <children>
-                                         <Circle radius="8" fill="#3498db" />
+                                         <Circle fill="#3498db" radius="8" />
                                          <Label style="-fx-font-family: 'Segoe UI'; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Sales Performance" />
                                      </children>
                                  </HBox>
                                  <Region HBox.hgrow="ALWAYS" />
-                                 <ComboBox prefWidth="150.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-padding: 6 12; -fx-font-weight: 500;" />
+                                 <ComboBox fx:id="saleComboBox" onAction="#ClickSaleComboBox" prefWidth="150.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-padding: 6 12; -fx-font-weight: 500;" />
                              </children>
                              <padding>
                                  <Insets left="20.0" right="20.0" />
                              </padding>
                              <VBox.margin>
-                                 <Insets top="15.0" left="20.0" right="20.0" />
+                                 <Insets left="20.0" right="20.0" top="15.0" />
                              </VBox.margin>
                          </HBox>
                         <HBox prefHeight="547.0" prefWidth="692.0" spacing="20.0" VBox.vgrow="ALWAYS">
@@ -318,26 +321,17 @@
                                                     </Label>
                                                 </children>
                                             </HBox>
-            
-                                                  <!-- Remove the overlayLineChart completely -->
-                                            <StackPane fx:id="combinedChartPane" prefHeight="400" prefWidth="600">
-                                       <children>
-                                          <BarChart>
-                                            <xAxis>
-                                              <CategoryAxis label="Month" side="BOTTOM" fx:id="xMonthBar" />
-                                            </xAxis>
-                                            <yAxis>
-                                              <NumberAxis fx:id="yRevenueBar" label="Quantity" side="LEFT" />
-                                            </yAxis>
-                                             <StackPane.margin>
-                                                <Insets right="80.0" />
-                                             </StackPane.margin>
-                                             <padding>
-                                                <Insets top="5.0" />
-                                             </padding>
-                                          </BarChart>
-                                       </children>
-                                            </StackPane>
+                                    <BarChart fx:id="qtyBarChart" legendSide="RIGHT" prefHeight="400.0" prefWidth="356.0">
+                                      <xAxis>
+                                        <CategoryAxis label="Month" side="BOTTOM" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis label="Quantity" side="LEFT" />
+                                      </yAxis>
+                                       <padding>
+                                          <Insets top="5.0" />
+                                       </padding>
+                                    </BarChart>
             
                                               </children>
                                         <HBox.margin>
@@ -358,18 +352,14 @@
                                           </Label>
                                        </children>
                                     </HBox>
-                                    <StackPane fx:id="combinedChartPane1" prefHeight="400" prefWidth="600">
-                                       <children>
-                                          <AreaChart>
-                                            <xAxis>
-                                              <CategoryAxis label="Month" side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                              <NumberAxis label="Revenue $" side="LEFT" />
-                                            </yAxis>
-                                          </AreaChart>
-                                       </children>
-                                    </StackPane>
+                                    <AreaChart fx:id="revenueAreaChart">
+                                      <xAxis>
+                                        <CategoryAxis label="Month" side="BOTTOM" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis label="Revenue $" side="LEFT" />
+                                      </yAxis>
+                                    </AreaChart>
                                  </children>
                                  <HBox.margin>
                                     <Insets bottom="20.0" />

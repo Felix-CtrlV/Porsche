@@ -3,6 +3,7 @@ package Controllers;
 import Database.Porsche_DB;
 import Model.ManagerOfAttendanceView;
 
+import Model.managerOverview;
 import Utils.Session;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -14,16 +15,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -33,6 +31,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import javax.xml.crypto.Data;
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.Month;
@@ -93,11 +92,10 @@ public class managerOverviewController {
     private Button partbtn;
 
     @FXML
-    private VBox scrollPaneCarPart;
+    private ComboBox<String> saleComboBox;
 
     @FXML
-    private VBox scrollPaneStaff;
-
+    private VBox scrollPane;
     @FXML
     private TableColumn<ManagerOfAttendanceView, Time> signInTimeCol;
 
@@ -126,9 +124,6 @@ public class managerOverviewController {
     private Label targetPartMessagelbl;
 
     @FXML
-    private HBox targetlayer;
-
-    @FXML
     private TableColumn<ManagerOfAttendanceView, String> workerCol;
 
     @FXML
@@ -137,8 +132,22 @@ public class managerOverviewController {
     @FXML
     private Button staffbtn;
 
+    @FXML
+    private BarChart<String, Integer> qtyBarChart;
+
+    @FXML
+    private AreaChart<String, Double> revenueAreaChart;
 
     public managerOverviewController() throws SQLException, ClassNotFoundException {
+    }
+
+    @FXML
+    void ClickSaleComboBox(ActionEvent event) {
+        try {
+            setCharts();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
@@ -161,8 +170,9 @@ public class managerOverviewController {
     }
 
     @FXML
-    void clickCarbtn(ActionEvent event) {
-
+    void clickCarbtn(ActionEvent event) throws SQLException, IOException {
+        besti = "car";
+        setBesti();
     }
 
     @FXML
@@ -188,13 +198,15 @@ public class managerOverviewController {
     }
 
     @FXML
-    void clickPartbtn(ActionEvent event) {
-
+    void clickPartbtn(ActionEvent event) throws SQLException, IOException {
+        besti = "part";
+        setBesti();
     }
 
     @FXML
-    void clickStaffbtn(ActionEvent event) {
-
+    void clickStaffbtn(ActionEvent event) throws SQLException, IOException {
+        besti = "staff";
+        setBesti();
     }
 
     @FXML
@@ -223,26 +235,25 @@ public class managerOverviewController {
             managerId = current.getUserid();
         }
 
-        //for creating month and year firstly
-        currentDateSelect();
-        yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                currentYear = newVal;
-                updateYearMonthLabel();
-                 // Update chart when year changes
-            }
-        });
-        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (!updatingMonthBox && newVal != null) {
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
-                Month parsedMonth = Month.from(fmt.parse(newVal));
-                currentMonth = parsedMonth.getValue();
-                updateYearMonthLabel();
+        //for bar chart and area chart of the sale performance
+        saleComboBox.getItems().addAll("Daily", "Weekly", "Monthly");
+        saleComboBox.setValue("Monthly");
+        carSeries = new XYChart.Series<>();
+        carSeries.setName("Cars Sold");
+        partSeries = new XYChart.Series<>();
+        partSeries.setName("Parts Sold");
+        revenueSeries = new XYChart.Series<>();
+        revenueSeries.setName("Revenue");
+        qtyBarChart.getData().addAll(carSeries, partSeries);
+        revenueAreaChart.getData().add(revenueSeries);
+        styleCharts();
 
-            }
-        });
+        //for besti of cars and parts and staff
+        besti = "car";
+        bestSellerList = FXCollections.observableArrayList();
+        bestCarPartList = FXCollections.observableArrayList();
 
-        //for attendance table
+         //for attendance table
         workerCol.setCellValueFactory(e->
                 new SimpleStringProperty(e.getValue().getWorkers()));
         signInTimeCol.setCellValueFactory(e->
@@ -256,9 +267,6 @@ public class managerOverviewController {
         targetBox.setVisible(false);
         arrowLeftbtn.setDisable(true);
         arrowRightbtn.setDisable(false);
-
-        //for adding the piechart of the attendance
-        setAttendancePieChart();
 
         //for slide pane of attendance and target
         carouselScreens = new VBox[]{attendanceBox, targetBox};
@@ -283,6 +291,8 @@ public class managerOverviewController {
         clip.setArcHeight(16); // Match your border radius
         carouselStackPane.setClip(clip);
 
+        //for creating month and year firstly
+        currentDateSelect();
     }
 
     //to connect with the database
@@ -305,7 +315,30 @@ public class managerOverviewController {
         for (int y = 2000; y <= currentYear ; y++) {
             yearBox.getItems().add(y);
         }
+        yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                currentYear = newVal;
+                updateYearMonthLabel();
+                // Update chart when year changes
+            }
+        });
+        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (!updatingMonthBox && newVal != null) {
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
+                Month parsedMonth = Month.from(fmt.parse(newVal));
+                currentMonth = parsedMonth.getValue();
+                updateYearMonthLabel();
+
+            }
+        });
+
         updateYearMonthLabel();
+        try {
+            setAttendancePieChart();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     private void updateYearMonthLabel() {
         int curyear = today.getYear();
@@ -343,7 +376,9 @@ public class managerOverviewController {
         //to set target
         try {
             setTarget();
-        } catch (SQLException e) {
+            setCharts();
+            setBesti();
+        } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -582,5 +617,159 @@ public class managerOverviewController {
         });
     }
 
+    //for bar chart and area chart of the sale performance
+    private ObservableList<managerOverview> chartData;
+    private XYChart.Series<String, Integer> carSeries;
+    private XYChart.Series<String, Integer> partSeries;
+    private XYChart.Series<String, Double> revenueSeries;
+    private void setCharts() throws SQLException {
+        carSeries.getData().clear();
+        partSeries.getData().clear();
+        revenueSeries.getData().clear();
 
+        String selectedPart = saleComboBox.getValue();
+        CallableStatement cs = con.prepareCall("CALL getSalesChartData(?,?,?)");
+        {
+            cs.setInt(1, currentMonth);
+            cs.setInt(2, currentYear);
+            cs.setString(3, selectedPart);
+
+            ResultSet rs = cs.executeQuery();
+            while (rs.next()){
+
+                String monthDate = rs.getString(1);
+                int carSoldQty = rs.getInt(2);
+                int partSoldQty = rs.getInt(3);
+                double revenue = rs.getDouble(4);
+
+                carSeries.getData().add(new XYChart.Data<>(monthDate, carSoldQty));
+                partSeries.getData().add(new XYChart.Data<>(monthDate, partSoldQty));
+                revenueSeries.getData().add(new XYChart.Data<>(monthDate, revenue));
+            }
+            rs.close();
+            cs.close();
+        }
+    }
+    private void styleCharts() {
+        // Style bar chart
+        qtyBarChart.setLegendVisible(true);
+        qtyBarChart.setAnimated(false);
+        qtyBarChart.setCategoryGap(20);
+
+        // Style area chart
+        revenueAreaChart.setLegendVisible(true);
+        revenueAreaChart.setAnimated(false);
+
+        // Set colors for series (optional)
+        String carColor = "-fx-bar-fill:  #6D8196;";
+        String partColor = "-fx-bar-fill: #ffa500;";
+        String revenueColor = "-fx-background-color: #3498db, linear-gradient(to bottom, #3498db 0%, #2980b9 100%);";
+    }
+
+    //for besti of cars,parts and staff
+    private ObservableList<managerOverview> bestSellerList;
+    private ObservableList<managerOverview> bestCarPartList;
+    private String besti ;
+    //for besti of cars,parts and staff
+    private void setBesti() throws SQLException, IOException {
+        // Initialize the lists if they are null
+        if (bestSellerList == null) {
+            bestSellerList = FXCollections.observableArrayList();
+        }
+        if (bestCarPartList == null) {
+            bestCarPartList = FXCollections.observableArrayList();
+        }
+
+        // Clear previous data
+        bestSellerList.clear();
+        bestCarPartList.clear();
+
+        CallableStatement cs = null;
+        boolean check = true;
+
+        switch (besti){
+            case "car":
+                cs = con.prepareCall("CALL getBestSellingCars(?,?,?)");
+                break;
+            case "part":
+                cs = con.prepareCall("CALL getBestSellingParts(?,?,?)");
+                break;
+            case "staff":
+                cs = con.prepareCall("CALL getBestStaff(?,?,?)");
+                break;
+            default:
+                check = false;
+                break;
+        }
+
+        if(check) {
+            cs.setInt(1, managerId);
+            cs.setInt(2, currentMonth);
+            cs.setInt(3, currentYear);
+            ResultSet rs = cs.executeQuery();
+
+            // FIXED: Use OR condition instead of AND
+            if (besti.equals("car") || besti.equals("part")) {
+                while (rs.next()) {
+                    int rank = rs.getInt(1);
+                    int targetQty = rs.getInt(2);
+                    int soldQty = rs.getInt(3);
+                    String inventoryName = rs.getString(4);
+                    managerOverview item = new managerOverview(
+                            rank, targetQty, soldQty, inventoryName
+                    );
+                    bestCarPartList.add(item);
+                }
+            } else {
+                while (rs.next()) {
+                    int rank = rs.getInt(1);
+                    int staffId = rs.getInt(2);
+                    int workHour = rs.getInt(3);
+                    int prevWorkHour = rs.getInt(4);
+                    String staffPhoto = rs.getString(5);
+                    String staffName = rs.getString(6);
+                    Double totalSale = rs.getDouble(7);
+                    Double prevTotalSale = rs.getDouble(8);
+
+                    managerOverview seller = new managerOverview(
+                            rank, staffId, workHour, prevWorkHour,
+                            staffPhoto, staffName, totalSale, prevTotalSale
+                    );
+                    bestSellerList.add(seller);
+                }
+            }
+
+            rs.close();
+            cs.close();
+
+
+            scrollPane.getChildren().clear();
+            // FIXED: Use OR condition instead of AND
+            if (besti.equals("car") || besti.equals("part")) {
+
+                for (managerOverview item : bestCarPartList) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/managerCarPartProgressBar.fxml"));
+                    HBox progressCard = loader.load();
+
+                    managerCarPartProgressBarController controller = loader.getController();
+                    controller.setDate(item);
+
+                    scrollPane.getChildren().add(progressCard);
+                }
+            } else {
+
+                for (managerOverview seller : bestSellerList) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/bestSeller.fxml"));
+                    HBox sellerCard = loader.load();
+
+                    bestSellerController controller = loader.getController();
+                    controller.setData(seller, currentMonth, currentYear);
+
+                    scrollPane.getChildren().add(sellerCard);
+                }
+            }
+
+
+        }
+    }
 }

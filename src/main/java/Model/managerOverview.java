@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class managerOverview {
+    //bar chart (qty ) and area chart(revenue)
     private double revenue;
     private int carSoldQty,partSoldQty;
     private String monthDate; //Jun 1
