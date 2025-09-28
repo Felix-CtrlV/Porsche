@@ -165,7 +165,7 @@ public class managerStaffViewController {
     private Label targetPartMessagelbl;
 
     @FXML
-    private HBox targetlayer;
+    private VBox targetlayer;
 
     @FXML
     private Circle attendanceCircle;
@@ -337,7 +337,10 @@ public class managerStaffViewController {
                 SQLException e) {
             throw new RuntimeException(e);
         }
-        ;
+
+        targetlayer.setVisible(true);
+        IsInstallmentBorderPane.setVisible(false);
+        IsNotInstallBorderPane.setVisible(false);
     }
 
     //for the staff of monthly sold out the order table
@@ -709,27 +712,35 @@ public class managerStaffViewController {
         if (rs.next()) {
             int present_day = rs.getInt(1);
             int absent_day = rs.getInt(2);
-            double attendance_perentage = rs.getDouble(4);
+            double attendance_percentage = rs.getDouble(4);
 
-            double attendCircle = 2 * Math.PI * partCircle.getRadius();
-            double progress = attendance_perentage / 100;
+            // FIX: Use attendanceCircle's radius instead of partCircle's radius
+            double attendCircle = 2 * Math.PI * attendanceCircle.getRadius();
+            double progress = attendance_percentage / 100;
+
+            // Set up the dash array for smooth circular progress
             attendanceCircle.getStrokeDashArray().setAll(attendCircle, attendCircle);
             attendanceCircle.setStrokeDashOffset(attendCircle * (1 - progress));
 
+            // Show/hide circles based on data
             if (present_day == 0) {
                 attendanceCircle.setVisible(false);
-
+            } else {
+                attendanceCircle.setVisible(true);
             }
+
             if (absent_day == 0) {
                 attendanceBackCircle.setVisible(false);
+            } else {
+                attendanceBackCircle.setVisible(true);
             }
 
-            attendancePercent.setText(String.valueOf(attendance_perentage) + "%");
-
+            attendancePercent.setText(String.format("%.1f%%", attendance_percentage));
         }
 
+        rs.close();
+        cs.close();
     }
-
     // for search bar
     private ContextMenu searchSuggestions = new ContextMenu();
 
@@ -821,6 +832,9 @@ public class managerStaffViewController {
     private void updateYearMonthLabel() {
         Year nyear = Year.of(currentYear);
         int curyear = today.getYear();
+        targetlayer.setVisible(true);
+        IsNotInstallBorderPane.setVisible(false);
+        IsInstallmentBorderPane.setVisible(false);
 
         Month nmonth = Month.of(currentMonth);
         String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
@@ -852,6 +866,7 @@ public class managerStaffViewController {
 
             if (selected != null && selected.getStart_date() != null) {
                 LocalDate start = selected.getStart_date();
+
 
 
                 if (currentYear <= start.getYear()) {

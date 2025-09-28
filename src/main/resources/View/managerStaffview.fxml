@@ -229,8 +229,8 @@
                                 <TableColumn fx:id="NoCol" maxWidth="45.59997606277466" minWidth="40.79998826980591" prefWidth="40.79998826980591" style="-fx-font-weight: bold;" text="No" />
                                 <TableColumn fx:id="CustomerNameCol" maxWidth="156.79998779296875" minWidth="101.60003662109375" prefWidth="112.79998779296875" style="-fx-font-weight: bold;" text="Customer Name" />
                                 <TableColumn fx:id="DateCol" maxWidth="112.79998779296875" minWidth="57.60003662109375" prefWidth="101.60003662109375" style="-fx-font-weight: bold;" text="Date" />
-                                <TableColumn fx:id="TotalAmountCol" maxWidth="-1.0" minWidth="85.5999755859375" prefWidth="143.20001220703125" style="-fx-font-weight: bold;" text="Total Amount" />
-                                <TableColumn fx:id="IsInstallmentCol" maxWidth="90.0" minWidth="51.199951171875" style="-fx-font-weight: bold;" text="Installment" />
+                                <TableColumn fx:id="TotalAmountCol" maxWidth="93.0" minWidth="85.5999755859375" prefWidth="93.0" style="-fx-font-weight: bold;" text="Total Amount" />
+                                <TableColumn fx:id="IsInstallmentCol" maxWidth="90.0" minWidth="51.199951171875" prefWidth="83.0" style="-fx-font-weight: bold;" text="Installment" />
                             </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -350,7 +350,7 @@
                               </HBox>
                            </bottom>
                         </BorderPane>
-                        <VBox prefHeight="335.0" prefWidth="450.0" spacing="5.0" style="-fx-background-radius: 16; -fx-border-color: #dadce0; -fx-background-color: white; -fx-border-radius: 8;">
+                        <VBox fx:id="targetlayer" prefHeight="335.0" prefWidth="450.0" spacing="5.0" style="-fx-background-radius: 16; -fx-border-color: #dadce0; -fx-background-color: white; -fx-border-radius: 8;">
                            <children>
                               <Label prefHeight="21.0" prefWidth="199.0" style="-fx-font-family: 'Segoe UI'; -fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="TARGET OVERVIEW">
                                  <padding>
@@ -360,7 +360,7 @@
                                     <Insets bottom="5.0" left="25.0" top="5.0" />
                                  </VBox.margin>
                               </Label>
-                              <HBox fx:id="targetlayer" prefHeight="255.0" prefWidth="417.0" spacing="15.0" VBox.vgrow="ALWAYS">
+                              <HBox prefHeight="255.0" prefWidth="417.0" spacing="15.0" VBox.vgrow="ALWAYS">
                                  <children>
                                     <VBox prefHeight="250.0" prefWidth="210.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 12; -fx-border-radius: 12;" HBox.hgrow="ALWAYS">
                                        <children>
