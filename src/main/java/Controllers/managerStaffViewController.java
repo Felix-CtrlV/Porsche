@@ -282,7 +282,7 @@ public class managerStaffViewController {
         IsInstallmentBorderPane.setVisible(false);
         IsNotInstallBorderPane.setVisible(false);
         targetlayer.setVisible(true);
-        carsAndPartsTarget();
+        setTarget();
         setupSearchBar();
 
     }
@@ -329,7 +329,7 @@ public class managerStaffViewController {
         try {
             refreshOrdersTable();
             monthlyOrdersStatus(selectedStaffId, currentMonth, currentYear);
-            carsAndPartsTarget();
+            setTarget();
             monthlyAttendance();
             insertMonthYearChoiceBox(staff);
             updateChoiceBoxes();
@@ -591,29 +591,27 @@ public class managerStaffViewController {
 
     }
 
-    // for car and part of target  circle
-    private void carsAndPartsTarget() throws SQLException {
-        IsNotInstallBorderPane.setVisible(false);
-        IsInstallmentBorderPane.setVisible(false);
-        targetlayer.setVisible(true);
+    //target side
+    private void setTarget() throws SQLException {
         CallableStatement cs = con.prepareCall("CALL targetviewchart(?,?,?)");
-        cs.setInt(1, selectedStaffId);
-        cs.setInt(2, currentMonth);
-        cs.setInt(3, currentYear);
+        cs.setInt(1,selectedStaffId);
+        cs.setInt(2,currentMonth);
+        cs.setInt(3,currentYear);
+
         ResultSet rs = cs.executeQuery();
-        if (rs.next()) {
+        if(rs.next()){
             int target_car = rs.getInt(1);
             int target_part = rs.getInt(2);
             int achieve_car = rs.getInt(3);
             int achieve_part = rs.getInt(4);
 
-            generate_carCircle(target_car, achieve_car);
-            generate_partCircle(target_part, achieve_part);
-
+            setCarCircle(target_car,achieve_car);
+            setPartCircle(target_part,achieve_part);
         }
+        cs.close();
+        rs.close();
     }
-
-    private void generate_carCircle(int target, int achieve) {
+    private void setCarCircle(int target,int achieve){
         carCircle.setVisible(true);
         targetCar.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
         int targetOverC = 0;
@@ -626,30 +624,36 @@ public class managerStaffViewController {
         } else if (achieve >= target) {
             targetOverC = achieve - target;
             progressCar = (target > 0) ? (double) achieve / achieve : 0;
+
             targetOverCar.setText("+" + String.valueOf(targetOverC));
+            targetOverCar.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill:#10b981;");
 
-            if (achieve > target) {
-                targetCarMessagelbl.setText("Extra Bonous ");
-            } else {
-                targetCarMessagelbl.setText("Hit the target");
-            }
+            targetCar.setText(String.valueOf(achieve) + "/" + String.valueOf(achieve));
 
+            targetCarMessagelbl.setText("Target Achieved! \uD83C\uDF89");
+            targetCarMessagelbl.setStyle("-fx-text-fill: #10b981; -fx-font-weight:bold; -fx-font-size:18;");
 
         } else {
             targetOverC = target - achieve;
             progressCar = (target > 0) ? (double) achieve / target : 0;
             targetOverCar.setText("-" + String.valueOf(targetOverC));
-            targetCarMessagelbl.setText("Need to hit target");
+
+            targetOverCar.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill: #ef4444;");
+
+            if(yearBox.getSelectionModel().getSelectedItem().equals(today.getYear())){
+                targetCarMessagelbl.setText("Need to hit target");
+            }else{
+                targetCarMessagelbl.setText("Missed the target");
+            }
+            targetCarMessagelbl.setStyle("-fx-text-fill: #ef4444; -fx-font-weight:bold; -fx-font-size:18;");
         }
+        targetCar.setStyle("-fx-font-size:18;-fx-font-weight:bold; -fx-text-fill:  #6d8196;");
 
         double circulerCar = 2 * Math.PI * carCircle.getRadius();
         carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
         carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
-
-
     }
-
-    private void generate_partCircle(int target, int achieve) {
+    private void setPartCircle(int target, int achieve) {
         targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
         partCircle.setVisible(true);
         int targetOverP = 0;
@@ -661,27 +665,34 @@ public class managerStaffViewController {
 
         } else if (achieve >= target) {
             targetOverP = achieve - target;
-            targetOverPart.setText("+" + String.valueOf(targetOverP));
             progressPart = (target > 0) ? (double) achieve / achieve : 0;
-            if (achieve > target) {
-                targetPartMessagelbl.setText("Extra Bonous ");
-            } else {
-                targetPartMessagelbl.setText("Hit the target");
-            }
+            targetOverPart.setText("+" + String.valueOf(targetOverP));
+            targetOverPart.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill:#10b981;");
 
+            targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(achieve));
+
+            targetPartMessagelbl.setText("Target Achieved! \uD83C\uDF89");
+            targetPartMessagelbl.setStyle("-fx-text-fill: #ffa500; -fx-font-weight:bold; -fx-font-size:18;");
 
         } else {
             targetOverP = target - achieve;
-            targetOverPart.setText("-" + String.valueOf(targetOverP));
             progressPart = (target > 0) ? (double) achieve / target : 0;
-            targetPartMessagelbl.setText("Need to hit target");
+
+            targetOverPart.setText("-" + String.valueOf(targetOverP));
+            targetOverPart.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill: #ef4444;");
+
+            if(yearBox.getSelectionModel().getSelectedItem().equals(today.getYear())){
+                targetPartMessagelbl.setText("Need to hit target");
+            }else{
+                targetPartMessagelbl.setText("Missed the target");
+            }
+            targetPartMessagelbl.setStyle("-fx-text-fill: #ef4444; -fx-font-weight:bold; -fx-font-size:18;");
         }
+        targetCar.setStyle("-fx-font-size:18;-fx-font-weight:bold; -fx-text-fill:  #ffa500;");
 
         double circulerPart = 2 * Math.PI * partCircle.getRadius();
         partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
         partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
-
-
     }
 
     // for monthly attendance circle
@@ -878,7 +889,7 @@ public class managerStaffViewController {
         try {
             refreshOrdersTable();
             monthlyOrdersStatus(selectedStaffId, currentMonth, currentYear);
-            carsAndPartsTarget();
+            setTarget();
             monthlyAttendance();
         } catch (SQLException e) {
             throw new RuntimeException(e);
