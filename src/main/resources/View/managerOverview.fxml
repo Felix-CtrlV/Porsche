@@ -2,8 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
-<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
@@ -297,14 +298,30 @@
 
                                 <!-- Remove the overlayLineChart completely -->
                                 <StackPane fx:id="combinedChartPane" prefHeight="400" prefWidth="600">
-                                    <BarChart fx:id="combinedBarChart" animated="false" legendVisible="true">
-                                        <xAxis>
-                                            <CategoryAxis fx:id="combinedXAxis" />
-                                        </xAxis>
-                                        <yAxis>
-                                            <NumberAxis fx:id="quantityYAxis" label="Quantity" />
-                                        </yAxis>
-                                    </BarChart>
+                           <children>
+                              <AreaChart>
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                                 <padding>
+                                    <Insets right="29.0" />
+                                 </padding>
+                              </AreaChart>
+                              <LineChart alternativeRowFillVisible="false" nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: transparent;" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                                 <padding>
+                                    <Insets right="29.0" />
+                                 </padding>
+                              </LineChart>
+                           </children>
                                 </StackPane>
 
                             </children>
