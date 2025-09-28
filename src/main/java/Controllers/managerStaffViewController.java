@@ -240,6 +240,15 @@ public class managerStaffViewController {
     @FXML
     void ordersTableClick(MouseEvent event) throws IOException {
         managerOrderView selectorder = ordersTable.getSelectionModel().getSelectedItem();
+
+
+        if (selectorder == null) {
+            // Show target overview when no order is selected or table is empty
+            IsInstallmentBorderPane.setVisible(false);
+            IsNotInstallBorderPane.setVisible(false);
+            targetlayer.setVisible(true);
+            return;
+        }
         orderDetails(selectorder);
     }
 
