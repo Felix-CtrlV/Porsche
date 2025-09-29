@@ -47,3 +47,13 @@
 .choice-box .arrow-button {
     -fx-opacity: 0;
 }
+.car:hover{
+    -fx-text-fill: #6D8196;
+
+}
+.part:hover{
+    -fx-text-fill: #FFA500;
+}
+.staff:hover{
+    -fx-text-fill:skyblue;
+}

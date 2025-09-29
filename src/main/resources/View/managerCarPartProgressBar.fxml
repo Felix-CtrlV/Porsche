@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!-- Progress Card -->
+
+<HBox maxHeight="120.0" maxWidth="500.0" minHeight="120.0" minWidth="500.0" prefHeight="120.0" prefWidth="500.0" style="-fx-background-color: linear-gradient(to right, #ffffff 0%, #fdfeff 100%); -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #f1f5f9; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerCarPartProgressBarController">
+        <padding>
+            <Insets bottom="20" left="25" right="25" top="20" />
+        </padding>
+
+              <children>
+            <!-- Left Section - Car Info -->
+            <VBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="8">
+                <children>
+                    <Label fx:id="Name" style="-fx-text-fill: #1e293b; -fx-font-weight: bold;" text="TOYOTA CAMRY" wrapText="true">
+                        <font>
+                            <Font name="System Bold" size="16" />
+                        </font>
+                    </Label>
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <VBox spacing="2">
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                                  <Label style="-fx-text-fill: #64748b; -fx-font-size: 11;" text="Sold" HBox.hgrow="ALWAYS" />
+                                  <Label fx:id="soldQty" style="-fx-text-fill: #dc2626; -fx-font-weight: bold;" text="1,250 units" wrapText="true" HBox.hgrow="ALWAYS">
+                                      <font>
+                                          <Font name="System Bold" size="14" />
+                                      </font>
+                                  </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                               <Label style="-fx-text-fill: #64748b; -fx-font-size: 12;" text="Rank" />
+                               <Label fx:id="rank" style="-fx-text-fill: #f59e0b; -fx-font-weight: bold;" text="#3">
+                                   <font>
+                                       <Font name="System Bold" size="14" />
+                                   </font>
+                               </Label>
+                     </children>
+                  </HBox>
+                        </VBox>
+                        <VBox spacing="2" />
+                    </HBox>
+                </children>
+            </VBox>
+
+                  <!-- Right Section - Progress -->
+            <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets left="30" />
+                </padding>
+                <children>
+                    <HBox alignment="CENTER_LEFT" prefHeight="21.0" prefWidth="258.0" spacing="10">
+                        <Label style="-fx-text-fill: #475569; -fx-font-weight: bold;" text="Sales Progress">
+                            <font>
+                                <Font name="System Bold" size="13" />
+                            </font>
+                        </Label>
+                        <Label fx:id="progressPercentage" style="-fx-text-fill: #3b82f6; -fx-font-weight: bold; -fx-background-color: #dbeafe; -fx-padding: 2 8 2 8; -fx-background-radius: 10;" text="84%" wrapText="true">
+                            <font>
+                                <Font name="System Bold" size="12" />
+                            </font>
+                        </Label>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+                    </HBox>
+            <ProgressBar fx:id="progressBar" prefHeight="17.0" prefWidth="350.0" progress="0.43" style="-fx-background-radius: 10; -fx-accent: #10b981; -fx-border-radius: 10; -fx-background-color: #f1f5f9; -fx-border-color: #e2e8f0; -fx-border-width: 1;" />
+
+                          <HBox alignment="CENTER_RIGHT" prefWidth="350.0">
+                        <children>
+                            <Label fx:id="message" style="-fx-text-fill: #10b981; -fx-font-size: 11; -fx-font-weight: bold; -fx-font-style: italic;" text="Excellent progress! Only 250 units to reach target" wrapText="true" />
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
+        </children>
+    </HBox>
