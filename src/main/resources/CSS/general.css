@@ -51,9 +51,26 @@
     -fx-text-fill: #6D8196;
 
 }
-.part:hover{
-    -fx-text-fill: #FFA500;
+
+.part,.car,.staff{
+    -fx-background-color:transparent;
+    -fx-background-radius:6;
+    -fx-border-radius:6;
+    -fx-text-fill: #2c3e50;
 }
-.staff:hover{
+
+.part:hover {
+    -fx-text-fill: #ffa500;
+}
+.staff:hover {
+    -fx-text-fill:skyblue;
+}
+.car.active {
+    -fx-text-fill: #6D8196;
+}
+.part.active {
+    -fx-text-fill: #ffa500;
+}
+.staff.active{
     -fx-text-fill:skyblue;
 }

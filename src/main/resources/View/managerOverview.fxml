@@ -23,6 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.ToggleButton?>
 <BorderPane stylesheets="@../CSS/general.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
     <center>
         <VBox spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10;" BorderPane.alignment="CENTER">
@@ -35,9 +36,9 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="20.0" style="-fx-background-color: white;">
                                     <children>
-                                        <Button id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-radius: 6;" text="CAR" />
-                                        <Button id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-radius: 6;" text="PART" />
-                              <Button id="staff" fx:id="staffbtn" mnemonicParsing="false" onAction="#clickStaffbtn" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-radius: 6;" text="STAFF" />
+                                        <Button  id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" styleClass="car" text="CAR" />
+                                        <Button  id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" styleClass="part" text="PART" />
+                                        <Button  id="staff" fx:id="staffbtn" mnemonicParsing="false" onAction="#clickStaffbtn" styleClass="staff" text="STAFF" />
                                     </children>
                                     <VBox.margin>
                                         <Insets left="10.0" right="10.0" top="10.0" />
@@ -45,7 +46,7 @@
                                 </HBox>
                                 <ScrollPane hbarPolicy="NEVER" style="-fx-background-color: white; -fx-border-color: white;" VBox.vgrow="ALWAYS">
                                     <content>
-                                        <VBox fx:id="scrollPane" alignment="CENTER" prefHeight="542.0" prefWidth="203.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: white;">
+                                        <VBox fx:id="scrollPane" alignment="CENTER"  spacing="10.0" style="-fx-background-color: white; -fx-border-color: white;">
                                  <padding>
                                     <Insets right="10.0" top="20.0" />
                                  </padding></VBox>

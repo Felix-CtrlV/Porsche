@@ -173,6 +173,7 @@ public class managerOverviewController {
     void clickCarbtn(ActionEvent event) throws SQLException, IOException {
         besti = "car";
         setBesti();
+        activateButton(carbtn);
     }
 
     @FXML
@@ -201,12 +202,16 @@ public class managerOverviewController {
     void clickPartbtn(ActionEvent event) throws SQLException, IOException {
         besti = "part";
         setBesti();
+        partbtn.getStyleClass().add("part_active");
+        activateButton(partbtn);
     }
 
     @FXML
     void clickStaffbtn(ActionEvent event) throws SQLException, IOException {
         besti = "staff";
         setBesti();
+        staffbtn.getStyleClass().add("staff_active");
+        activateButton(staffbtn);
     }
 
     @FXML
@@ -252,6 +257,7 @@ public class managerOverviewController {
         besti = "car";
         bestSellerList = FXCollections.observableArrayList();
         bestCarPartList = FXCollections.observableArrayList();
+        activateButton(carbtn);
 
          //for attendance table
         workerCol.setCellValueFactory(e->
@@ -295,6 +301,13 @@ public class managerOverviewController {
         currentDateSelect();
     }
 
+    private void activateButton(Button activeBtn) {
+        carbtn.getStyleClass().remove("active");
+        partbtn.getStyleClass().remove("active");
+        staffbtn.getStyleClass().remove("active");
+
+        activeBtn.getStyleClass().add("active");
+    }
     //to connect with the database
     Porsche_DB db = new Porsche_DB();
     Connection con = db.connect();
@@ -576,13 +589,7 @@ public class managerOverviewController {
 //        nextScreen.setTranslateX(800);
         nextScreen.setVisible(true);
 
-        if(!sideTransitation){
-            slideOut.setToX(-750);
-            nextScreen.setTranslateX(800);
-        }else{
-            slideOut.setToX(750);
-            nextScreen.setTranslateX(-800);
-        }
+
 
         // Fade in next screen
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), nextScreen);
@@ -592,6 +599,14 @@ public class managerOverviewController {
         // Slide new screen in from the right
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), nextScreen);
         slideIn.setToX(0);
+
+        if(!sideTransitation){
+            slideOut.setToX(-750);
+            nextScreen.setTranslateX(800);
+        }else{
+            slideOut.setToX(750);
+            nextScreen.setTranslateX(-800);
+        }
 
         // Play animations in parallel
         ParallelTransition outTransition = new ParallelTransition(fadeOut, slideOut);
