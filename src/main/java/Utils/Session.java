@@ -68,6 +68,42 @@ public class Session {
         return username;
     }
 
+    public static void setInstance(Session instance) {
+        Session.instance = instance;
+    }
+
+    public void setUserid(int userid) {
+        this.userid = userid;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
+
     public String getRole() {
         return role;
     }

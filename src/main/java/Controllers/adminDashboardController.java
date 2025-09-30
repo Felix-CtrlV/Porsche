@@ -14,14 +14,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -29,8 +28,11 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public class adminDashboardController {
 
@@ -38,7 +40,10 @@ public class adminDashboardController {
     private HBox optionProfile, optionTarget, optionChange;
 
     @FXML
-    private Label profileName, profileEmail, profileDOB, profilePhone, profileAddress, backButton;
+    private Label profileName, profileDOB, backButton, editButton, editEmail, editAddress, editPhone, editConfirm, editRevert, editBack;
+
+    @FXML
+    private TextField profileAddress, profilePhone, profileEmail;
 
     @FXML
     private ImageView pfImage;
@@ -114,6 +119,19 @@ public class adminDashboardController {
 
     public void initialize() throws IOException {
 
+        Session current = Session.getInstance();
+        String name = current.getUsername();
+        nameLbl.setText(name);
+        profileName.setText(name);
+        profileAddress.setText(current.getAddress());
+        profileEmail.setText(current.getEmail());
+        profileDOB.setText(current.getDob().toString());
+        profilePhone.setText(current.getPhone());
+
+        boolean track = false;
+
+        editButton.setText("\uD83D\uDEE0");
+
         optionChange.setOnMouseClicked(e -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Authentication.fxml"));
@@ -131,6 +149,101 @@ public class adminDashboardController {
             }
         });
 
+        editButton.setOnMouseClicked(e -> {
+            editButton.setVisible(false);
+            editBack.setVisible(true);
+            editAddress.setVisible(true);
+            editPhone.setVisible(true);
+            editEmail.setVisible(true);
+            editConfirm.setVisible(true);
+            editRevert.setVisible(true);
+        });
+
+        editBack.setOnMouseClicked(e -> {
+            editButton.setVisible(true);
+            editBack.setVisible(false);
+            editAddress.setVisible(false);
+            editPhone.setVisible(false);
+            editEmail.setVisible(false);
+            editConfirm.setVisible(false);
+            editRevert.setVisible(false);
+        });
+
+        editPhone.setOnMouseClicked(e -> {
+            profilePhone.setEditable(true);
+            profilePhone.requestFocus();
+        });
+        editEmail.setOnMouseClicked(e -> {
+            profileEmail.setEditable(true);
+            profileEmail.requestFocus();
+        });
+        editAddress.setOnMouseClicked(e -> {
+            profileAddress.setEditable(true);
+            profileAddress.requestFocus();
+        });
+
+        editConfirm.setOnMouseClicked(e -> {
+            Porsche_DB connect = new Porsche_DB();
+            try {
+                Connection con = connect.connect();
+                PreparedStatement p = con.prepareStatement("Update user_info set user_email = ?, user_phone = ?, user_address = ? where user_id = ?");
+                p.setString(1, profileEmail.getText());
+                p.setString(2, profilePhone.getText());
+                p.setString(3, profileAddress.getText());
+                p.setInt(4, current.getUserid());
+                p.execute();
+            } catch (
+                    ClassNotFoundException |
+                    SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            current.setEmail(profileEmail.getText());
+            current.setAddress(profileAddress.getText());
+            current.setPhone(profilePhone.getText());
+            Session.setInstance(current);
+
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("Success");
+            success.setContentText("Updated");
+            success.show();
+            profileEmail.setEditable(false);
+            profileAddress.setEditable(false);
+            profilePhone.setEditable(false);
+            editEmail.setVisible(false);
+            editPhone.setVisible(false);
+            editAddress.setVisible(false);
+            editBack.setVisible(false);
+            editButton.setVisible(true);
+            editRevert.setVisible(false);
+            editConfirm.setVisible(false);
+        });
+
+        editBack.setOnMouseClicked(e -> {
+            if (!profileEmail.equals(current.getEmail()) || !profilePhone.equals(current.getPhone()) || !profileAddress.equals(current.getAddress())) {
+                System.out.println("nah");
+            }
+            profileEmail.setEditable(false);
+            profileAddress.setEditable(false);
+            profilePhone.setEditable(false);
+            editEmail.setVisible(false);
+            editPhone.setVisible(false);
+            editAddress.setVisible(false);
+            editBack.setVisible(false);
+            editButton.setVisible(true);
+            editRevert.setVisible(false);
+            editConfirm.setVisible(false);
+        });
+
+
+        editRevert.setOnMouseClicked(e -> {
+            profileAddress.setText(current.getAddress());
+            profileEmail.setText(current.getEmail());
+            profilePhone.setText(current.getPhone());
+            profileEmail.setEditable(false);
+            profileAddress.setEditable(false);
+            profilePhone.setEditable(false);
+        });
 
         backButton.setOnMouseClicked(e -> {
             profilePane.setVisible(false);
@@ -160,15 +273,6 @@ public class adminDashboardController {
         settingIcon.setOnMouseClicked(e -> {
             clickSetting();
         });
-
-        Session current = Session.getInstance();
-        String name = current.getUsername();
-        nameLbl.setText(name);
-        profileName.setText(name);
-        profileAddress.setText(current.getAddress());
-        profileEmail.setText(current.getEmail());
-        profileDOB.setText(current.getDob().toString());
-        profilePhone.setText(current.getPhone());
 
         Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
         img.setImage(porsche_logo);
@@ -224,7 +328,10 @@ public class adminDashboardController {
     }
 
     @FXML
-    void clickLogout(ActionEvent event) throws Exception {
+    void clickLogout
+            (ActionEvent
+                     event) throws
+            Exception {
         Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
         home.close();
 
@@ -244,7 +351,9 @@ public class adminDashboardController {
     }
 
 
-    private void setActiveButton(Button button) {
+    private void setActiveButton
+            (Button
+                     button) {
         if (activeButton != null) {
             activeButton.getStyleClass().remove("active");
         }
@@ -256,7 +365,8 @@ public class adminDashboardController {
 
     private SequentialTransition animation;
 
-    private void openSetting() {
+    private void openSetting
+            () {
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), settingPane);
         slideIn.setFromX(350);
         slideIn.setToX(0);
@@ -278,7 +388,8 @@ public class adminDashboardController {
         overlayPane.setVisible(true);
     }
 
-    private void closeSetting() {
+    private void closeSetting
+            () {
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), settingPane);
         slideOut.setFromX(0);
         slideOut.setToX(350);
@@ -300,7 +411,8 @@ public class adminDashboardController {
         overlayPane.setVisible(false);
     }
 
-    public void setProfile() {
+    public void setProfile
+            () {
         profilePane.setVisible(true);
     }
 
