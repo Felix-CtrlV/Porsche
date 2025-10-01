@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.gluonhq.charm.glisten.control.Icon?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -16,6 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1250.0" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
@@ -51,9 +54,16 @@
                                         <Insets left="20.0" top="15.0" />
                                     </padding>
                                 </HBox>
-                                <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
+                                <HBox alignment="CENTER" prefHeight="110.0" prefWidth="290.0" spacing="18.0">
                                     <children>
-                                        <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.9;" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="🚗 " textAlignment="RIGHT" textFill="WHITE">
+                                 <font>
+                                    <Font size="80.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                              </Label>
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="totalSalesLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="17 SOLD" />
@@ -84,7 +94,7 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                                        <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.9;" />
+                              <Icon content="HELP_OUTLINE" minHeight="85.0" minWidth="85.0" />
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="partsSoldLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="42 SOLD" />
@@ -115,7 +125,7 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                                        <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.9;" />
+                              <Icon content="HELP_OUTLINE" prefHeight="85.0" prefWidth="85.0" />
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="servicesLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="36 DONE" />
@@ -209,14 +219,14 @@
                                         <Label style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-font-size: 20; -fx-padding: 18;" text="Revenue Analysis" />
                                     </children>
                                 </HBox>
-                                <BarChart style="-fx-background-color: transparent; -fx-padding: 20;">
-                                    <xAxis>
-                                        <CategoryAxis side="BOTTOM" />
-                                    </xAxis>
-                                    <yAxis>
-                                        <NumberAxis side="LEFT" />
-                                    </yAxis>
-                                </BarChart>
+                        <AreaChart>
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </AreaChart>
                             </children>
                             <HBox.margin>
                                 <Insets right="25.0" />
