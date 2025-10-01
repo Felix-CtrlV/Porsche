@@ -577,7 +577,6 @@ public class managerOverviewController {
 
         // Slide current screen
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(400), currentScreen);
-//        slideOut.setToX(-750);
 
         // Move to next screen
         if(!sideTransitation) {
@@ -586,7 +585,6 @@ public class managerOverviewController {
             currentCarouselScreenIndex--;
         }
         VBox nextScreen = carouselScreens[currentCarouselScreenIndex];
-//        nextScreen.setTranslateX(800);
         nextScreen.setVisible(true);
 
 
