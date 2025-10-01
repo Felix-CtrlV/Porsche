@@ -17,7 +17,7 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1250.0" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <center>
-        <VBox minHeight="750.0" minWidth="1250.0" spacing="20.0" BorderPane.alignment="CENTER">
+        <VBox minHeight="750.0" minWidth="1250.0" spacing="20.0" style="-fx-border-radius: 2;" BorderPane.alignment="CENTER">
             <children>
                 <!-- Enhanced Top Stats Cards with improved hierarchy -->
                 <HBox minHeight="140.0" minWidth="1150.0" spacing="20.0">
