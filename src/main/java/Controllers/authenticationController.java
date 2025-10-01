@@ -1,19 +1,29 @@
 package Controllers;
 
+
 import Utils.Session;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
-import java.sql.SQLException;
 import java.util.Objects;
 
 public class authenticationController {
+
+    @FXML
+    private StackPane errorPane;
+
+    @FXML
+    private Label errorMsg;
 
     @FXML
     private PasswordField pwtxt;
@@ -26,16 +36,23 @@ public class authenticationController {
 
     @FXML
     void clickSubmit(ActionEvent event) {
-        String pw = pwtxt.getText();
-        Session current = Session.getInstance();
+        if (pwtxt.getText().isEmpty()) {
+            slideError("Please Enter the Password");
+        } else {
+            String pw = pwtxt.getText();
+            Session current = Session.getInstance();
 
-        if (pw.equals(current.getPassword())) {
-            if (dashboardController != null) {
-                dashboardController.setProfile();
+            if (pw.equals(current.getPassword())) {
+                if (dashboardController != null) {
+                    dashboardController.setProfile();
+                }
+                Stage stage = (Stage) submit.getScene().getWindow();
+                stage.close();
+            } else {
+                slideError("Wrong Password");
+                pwtxt.clear();
+                pwtxt.requestFocus();
             }
-
-            Stage stage = (Stage) submit.getScene().getWindow();
-            stage.close();
         }
     }
 
@@ -67,6 +84,7 @@ public class authenticationController {
 
 
     public void initialize() {
+        errorPane.setTranslateY(34);
         String step = null;
         setStep(step);
 
@@ -76,6 +94,47 @@ public class authenticationController {
             Stage stage = (Stage) closeImg.getScene().getWindow();
             stage.close();
         });
+
+        pwtxt.setOnKeyPressed(pwevent -> {
+            if (pwevent.getCode() == KeyCode.ENTER) {
+                submit.fire();
+            }
+        });
+    }
+
+    private SequentialTransition currentAnimation;
+
+    private void slideError(String error) {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+            errorPane.setTranslateY(42);
+            errorPane.setTranslateY(4);
+        }
+        errorMsg.setText(error);
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), errorPane);
+        slideIn.setFromY(34);
+        slideIn.setToY(2);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), errorPane);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        ParallelTransition show = new ParallelTransition(slideIn, fadeIn);
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), errorPane);
+        slideOut.setFromY(2);
+        slideOut.setToY(34);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), errorPane);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+
+        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+
+        currentAnimation = new SequentialTransition(show, pause, hide);
+        currentAnimation.play();
     }
 
 }
