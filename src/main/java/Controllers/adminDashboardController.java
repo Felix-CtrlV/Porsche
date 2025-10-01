@@ -117,9 +117,31 @@ public class adminDashboardController {
 
     }
 
+    private void updateDatabase(){
+        Porsche_DB connect = new Porsche_DB();
+        try {
+            Connection con = connect.connect();
+            PreparedStatement p = con.prepareStatement("Update user_info set user_email = ?, user_phone = ?, user_address = ? where user_id = ?");
+            p.setString(1, profileEmail.getText());
+            p.setString(2, profilePhone.getText());
+            p.setString(3, profileAddress.getText());
+            p.setInt(4, current.getUserid());
+            p.execute();
+        } catch (
+                ClassNotFoundException |
+                SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        current.setEmail(profileEmail.getText());
+        current.setAddress(profileAddress.getText());
+        current.setPhone(profilePhone.getText());
+        Session.setInstance(current);
+    }
+
+    Session current = Session.getInstance();
+
     public void initialize() throws IOException {
 
-        Session current = Session.getInstance();
         String name = current.getUsername();
         nameLbl.setText(name);
         profileName.setText(name);
@@ -127,8 +149,6 @@ public class adminDashboardController {
         profileEmail.setText(current.getEmail());
         profileDOB.setText(current.getDob().toString());
         profilePhone.setText(current.getPhone());
-
-        boolean track = false;
 
         editButton.setText("\uD83D\uDEE0");
 
@@ -183,25 +203,7 @@ public class adminDashboardController {
         });
 
         editConfirm.setOnMouseClicked(e -> {
-            Porsche_DB connect = new Porsche_DB();
-            try {
-                Connection con = connect.connect();
-                PreparedStatement p = con.prepareStatement("Update user_info set user_email = ?, user_phone = ?, user_address = ? where user_id = ?");
-                p.setString(1, profileEmail.getText());
-                p.setString(2, profilePhone.getText());
-                p.setString(3, profileAddress.getText());
-                p.setInt(4, current.getUserid());
-                p.execute();
-            } catch (
-                    ClassNotFoundException |
-                    SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-
-            current.setEmail(profileEmail.getText());
-            current.setAddress(profileAddress.getText());
-            current.setPhone(profilePhone.getText());
-            Session.setInstance(current);
+            updateDatabase();
 
             Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("Success");
@@ -220,8 +222,57 @@ public class adminDashboardController {
         });
 
         editBack.setOnMouseClicked(e -> {
-            if (!profileEmail.equals(current.getEmail()) || !profilePhone.equals(current.getPhone()) || !profileAddress.equals(current.getAddress())) {
-                System.out.println("nah");
+            if (!profileEmail.getText().equals(current.getEmail()) || !profilePhone.getText().equals(current.getPhone()) || !profileAddress.getText().equals(current.getAddress())) {
+                AnchorPane root = new AnchorPane();
+                root.setPrefSize(482, 276);
+                root.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/CSS/DashBoard_general.css")).toExternalForm());
+
+                Label lbl1 = new Label("You Haven't Save Your Changes yet");
+                lbl1.setLayoutX(59);
+                lbl1.setLayoutY(27);
+                lbl1.getStyleClass().add("topic_font");
+
+                Label lbl2 = new Label("Do you want to Commit or Revert?");
+                lbl2.setLayoutX(59);
+                lbl2.setLayoutY(62);
+                lbl2.getStyleClass().add("topic_font");
+
+                Button btnCommit = new Button("Commit");
+                btnCommit.setLayoutX(118);
+                btnCommit.setLayoutY(181);
+                btnCommit.setPrefWidth(50);
+                btnCommit.setMaxWidth(50);
+                btnCommit.setMnemonicParsing(false);
+                btnCommit.getStyleClass().add("glassy-button");
+
+                Button btnRevert = new Button("Revert");
+                btnRevert.setLayoutX(306);
+                btnRevert.setLayoutY(181);
+                btnRevert.setPrefWidth(50);
+                btnRevert.setMaxWidth(50);
+                btnRevert.setMnemonicParsing(false);
+                btnRevert.getStyleClass().add("glassy-button");
+
+                root.getChildren().addAll(lbl1, lbl2, btnCommit, btnRevert);
+
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.initStyle(StageStyle.UNDECORATED);
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.setTitle("Confirmation");
+                stage.show();
+
+                btnCommit.setOnMouseClicked(event->{
+                    updateDatabase();
+                    stage.close();
+                });
+                btnRevert.setOnMouseClicked(event1->{
+                    profileAddress.setText(current.getAddress());
+                    profileEmail.setText(current.getEmail());
+                    profilePhone.setText(current.getPhone());
+                    stage.close();
+                });
             }
             profileEmail.setEditable(false);
             profileAddress.setEditable(false);
