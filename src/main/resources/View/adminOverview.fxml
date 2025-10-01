@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.gluonhq.charm.glisten.control.Icon?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.BarChart?>
@@ -11,7 +10,6 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -94,7 +92,11 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                              <Icon content="HELP_OUTLINE" minHeight="85.0" minWidth="85.0" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="🚗 " textAlignment="RIGHT" textFill="WHITE">
+                                 <font>
+                                    <Font size="80.0" />
+                                 </font>
+                              </Label>
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="partsSoldLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="42 SOLD" />
@@ -125,7 +127,11 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                              <Icon content="HELP_OUTLINE" prefHeight="85.0" prefWidth="85.0" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="🔧 " textAlignment="RIGHT" textFill="WHITE">
+                                 <font>
+                                    <Font size="80.0" />
+                                 </font>
+                              </Label>
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="servicesLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="36 DONE" />
@@ -156,7 +162,11 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                                        <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.9;" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="\$" textAlignment="RIGHT" textFill="WHITE">
+                                 <font>
+                                    <Font size="80.0" />
+                                 </font>
+                              </Label>
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="revenueLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="/$53,300" />
