@@ -62,10 +62,10 @@
                                                 <Insets left="3.0" />
                                             </HBox.margin>
                                         </Label>
-                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
+                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="169.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="totalSalesLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="17 SOLD" />
-                                                <Label fx:id="totalSalesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="/$28,000" />
+                                                <Label fx:id="totalSalesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="\$28,000" />
                                             </children>
                                             <padding>
                                                 <Insets left="15.0" />
@@ -90,17 +90,17 @@
                                         <Insets left="20.0" top="15.0" />
                                     </padding>
                                 </HBox>
-                                <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
+                                <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="20.0">
                                     <children>
-                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="🛠" textAlignment="RIGHT" textFill="WHITE">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="87.0" text="🛠" textAlignment="RIGHT" textFill="WHITE">
                                             <font>
                                                 <Font size="70.0" />
                                             </font>
                                         </Label>
-                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
+                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="170.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="partsSoldLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="42 SOLD" />
-                                                <Label fx:id="partsValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="/$15,500" />
+                                                <Label fx:id="partsValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="\$15,500" />
                                             </children>
                                             <padding>
                                                 <Insets left="15.0" />
@@ -132,10 +132,10 @@
                                                 <Font size="70.0" />
                                             </font>
                                         </Label>
-                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
+                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="180.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="servicesLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="36 DONE" />
-                                                <Label fx:id="servicesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="/$9,800" />
+                                                <Label fx:id="servicesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="\$9,800" />
                                             </children>
                                             <padding>
                                                 <Insets left="15.0" />
@@ -167,9 +167,9 @@
                                                 <Font size="70.0" />
                                             </font>
                                         </Label>
-                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
+                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="192.0" spacing="6.0">
                                             <children>
-                                                <Label fx:id="revenueLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="/$53,300" />
+                                                <Label fx:id="revenueLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="\$53,300" />
                                                 <Label fx:id="revenueGrowthLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="+12.5% Growth" />
                                             </children>
                                             <padding>
