@@ -302,6 +302,9 @@
                                                                             </StackPane.margin>
                                                                         </Label>
                                                                     </children>
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
                                                                 </StackPane>
                                                             </children>
                                                         </HBox>
@@ -345,7 +348,7 @@
                                                                 </HBox>
                                                             </children>
                                                         </VBox>
-                                                        <Line endX="271.79998779296875" endY="18.999980926513672" startX="271.79998779296875" startY="69.39991760253906" style="-fx-opacity: 0.3;" />
+                                                        <Line endX="241.99996948242188" endY="32.0000114440918" startX="241.99996948242188" startY="56.0000114440918" style="-fx-opacity: 0.3;" />
                                                     </children>
                                                 </AnchorPane>
                                                 <StackPane alignment="CENTER_LEFT">
