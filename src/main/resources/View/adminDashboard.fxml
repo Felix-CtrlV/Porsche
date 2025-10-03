@@ -130,7 +130,7 @@
                   <Insets top="20.0" />
                </padding>
             </VBox>
-            <AnchorPane fx:id="profilePane" layoutY="44.0" prefHeight="496.0" prefWidth="350.0" style="-fx-background-color: rgb(71, 71, 71);" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0">
+            <AnchorPane fx:id="profilePane" layoutY="44.0" prefHeight="496.0" prefWidth="350.0" style="-fx-background-color: rgb(71, 71, 71);" visible="false" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0">
                <children>
                   <ImageView fx:id="pfImage" fitHeight="100.0" fitWidth="100.0" layoutX="125.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
