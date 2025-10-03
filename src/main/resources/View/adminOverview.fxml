@@ -17,7 +17,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1250.0" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <center>
@@ -84,7 +83,7 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0">
                                     <children>
-                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="PARTS" />
+                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="TOTALPARTS" />
                                     </children>
                                     <padding>
                                         <Insets left="20.0" top="15.0" />
@@ -92,11 +91,11 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="20.0">
                                     <children>
-                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="87.0" text="🛠" textAlignment="RIGHT" textFill="WHITE">
-                                            <font>
-                                                <Font size="70.0" />
-                                            </font>
-                                        </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="🔧" textAlignment="RIGHT" textFill="WHITE">
+                                 <font>
+                                    <Font size="70.0" />
+                                 </font>
+                              </Label>
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="170.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="partsSoldLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="42 SOLD" />
@@ -119,7 +118,7 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0">
                                     <children>
-                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="CUSTOMIZATION" />
+                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="TOTAL CUSTOMIZATION" />
                                     </children>
                                     <padding>
                                         <Insets left="20.0" top="15.0" />
@@ -127,11 +126,11 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="🔧" textAlignment="RIGHT" textFill="WHITE">
-                                            <font>
-                                                <Font size="70.0" />
-                                            </font>
-                                        </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="87.0" text="🛠" textAlignment="RIGHT" textFill="WHITE">
+                                 <font>
+                                    <Font size="70.0" />
+                                 </font>
+                              </Label>
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="180.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="servicesLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="36 DONE" />
@@ -154,7 +153,7 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0">
                                     <children>
-                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="REVENUE" />
+                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="TOTAL REVENUE" />
                                     </children>
                                     <padding>
                                         <Insets left="20.0" top="15.0" />
@@ -358,4 +357,6 @@
             </children>
         </VBox>
     </center>
+
+
 </BorderPane>
