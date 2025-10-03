@@ -17,27 +17,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1250.0" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <center>
         <VBox minHeight="750.0" minWidth="1250.0" spacing="20.0" style="-fx-border-radius: 2;" BorderPane.alignment="CENTER">
             <children>
-            <HBox alignment="CENTER_RIGHT" prefHeight="40.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);" VBox.vgrow="ALWAYS">
-               <children>
-                  <Region prefHeight="62.0" prefWidth="889.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="PreviousMonthbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="◀" />
-                  <ChoiceBox fx:id="monthBox" minHeight="25.0" minWidth="60.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-font-size: 12;" />
-                  <Button fx:id="NextMonthbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="▶" />
-                  <Region prefWidth="5.0" HBox.hgrow="NEVER" />
-                  <Button fx:id="PreviousYearbth" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="◀" />
-                  <ChoiceBox fx:id="yearBox" minHeight="25.0" minWidth="60.0" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 12;" />
-                  <Button fx:id="NextYearbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="▶" />
-               </children>
-               <padding>
-                  <Insets left="10.0" right="10.0" />
-               </padding>
-            </HBox>
+                <HBox alignment="CENTER_RIGHT" prefHeight="40.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                    <children>
+                        <Region prefHeight="62.0" prefWidth="889.0" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="PreviousMonthbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="◀" />
+                        <ChoiceBox fx:id="monthBox" minHeight="25.0" minWidth="60.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-font-size: 12;" />
+                        <Button fx:id="NextMonthbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="▶" />
+                        <Region prefWidth="5.0" HBox.hgrow="NEVER" />
+                        <Button fx:id="PreviousYearbth" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="◀" />
+                        <ChoiceBox fx:id="yearBox" minHeight="25.0" minWidth="60.0" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 12;" />
+                        <Button fx:id="NextYearbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="▶" />
+                    </children>
+                    <padding>
+                        <Insets left="10.0" right="10.0" />
+                    </padding>
+                </HBox>
                 <!-- Enhanced Top Stats Cards with improved hierarchy -->
                 <HBox minHeight="160.0" minWidth="1150.0" prefHeight="241.0" prefWidth="1201.0" spacing="20.0">
                     <children>
@@ -54,18 +53,18 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="290.0" spacing="18.0">
                                     <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="🚗 " textAlignment="RIGHT" textFill="WHITE">
-                                 <font>
-                                    <Font size="80.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="20.0" />
-                                 </HBox.margin>
-                              </Label>
-                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="90.0" prefWidth="102.0" text="🚘" textAlignment="RIGHT" textFill="WHITE">
+                                            <font>
+                                                <Font size="75.0" />
+                                            </font>
+                                            <HBox.margin>
+                                                <Insets left="3.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="169.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="totalSalesLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="17 SOLD" />
-                                                <Label fx:id="totalSalesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="/$28,000" />
+                                                <Label fx:id="totalSalesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="\$28,000" />
                                             </children>
                                             <padding>
                                                 <Insets left="15.0" />
@@ -84,23 +83,23 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0">
                                     <children>
-                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="PARTS" />
+                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="TOTALPARTS" />
                                     </children>
                                     <padding>
                                         <Insets left="20.0" top="15.0" />
                                     </padding>
                                 </HBox>
-                                <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
+                                <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="20.0">
                                     <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="🚗 " textAlignment="RIGHT" textFill="WHITE">
+                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="🔧" textAlignment="RIGHT" textFill="WHITE">
                                  <font>
-                                    <Font size="80.0" />
+                                    <Font size="70.0" />
                                  </font>
                               </Label>
-                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
+                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="170.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="partsSoldLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="42 SOLD" />
-                                                <Label fx:id="partsValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="/$15,500" />
+                                                <Label fx:id="partsValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="\$15,500" />
                                             </children>
                                             <padding>
                                                 <Insets left="15.0" />
@@ -119,7 +118,7 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0">
                                     <children>
-                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="CUSTOMIZATION" />
+                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="TOTAL CUSTOMIZATION" />
                                     </children>
                                     <padding>
                                         <Insets left="20.0" top="15.0" />
@@ -127,15 +126,15 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="🔧 " textAlignment="RIGHT" textFill="WHITE">
+                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="87.0" text="🛠" textAlignment="RIGHT" textFill="WHITE">
                                  <font>
-                                    <Font size="80.0" />
+                                    <Font size="70.0" />
                                  </font>
                               </Label>
-                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
+                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="180.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="servicesLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="36 DONE" />
-                                                <Label fx:id="servicesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="/$9,800" />
+                                                <Label fx:id="servicesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="\$9,800" />
                                             </children>
                                             <padding>
                                                 <Insets left="15.0" />
@@ -154,7 +153,7 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0">
                                     <children>
-                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="REVENUE" />
+                                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="TOTAL REVENUE" />
                                     </children>
                                     <padding>
                                         <Insets left="20.0" top="15.0" />
@@ -162,14 +161,14 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="\$" textAlignment="RIGHT" textFill="WHITE">
-                                 <font>
-                                    <Font size="80.0" />
-                                 </font>
-                              </Label>
-                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" spacing="6.0">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" text="💰" textAlignment="RIGHT" textFill="WHITE">
+                                            <font>
+                                                <Font size="70.0" />
+                                            </font>
+                                        </Label>
+                                        <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="192.0" spacing="6.0">
                                             <children>
-                                                <Label fx:id="revenueLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="/$53,300" />
+                                                <Label fx:id="revenueLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="\$53,300" />
                                                 <Label fx:id="revenueGrowthLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="+12.5% Growth" />
                                             </children>
                                             <padding>
@@ -197,14 +196,14 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="200.0" spacing="20.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 14 14 0 0; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
                                     <children>
-                                        <Label style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-font-size: 20; -fx-padding: 18;" text="Monthly Sales" />
-                              <Region prefHeight="67.0" prefWidth="78.0" HBox.hgrow="ALWAYS" />
-                              <Button id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" styleClass="car" stylesheets="@../CSS/general.css" text="CAR" HBox.hgrow="ALWAYS" />
-                              <Button id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" styleClass="part" stylesheets="@../CSS/general.css" text="PART" HBox.hgrow="ALWAYS">
-                                 <HBox.margin>
-                                    <Insets right="40.0" />
-                                 </HBox.margin>
-                              </Button>
+                                        <Label style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-font-size: 20; -fx-padding: 18;" text="📊 Monthly Sales" />
+                                        <Region prefHeight="67.0" prefWidth="78.0" HBox.hgrow="ALWAYS" />
+                                        <Button id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" styleClass="car" stylesheets="@../CSS/general.css" text="🚗 CAR" HBox.hgrow="ALWAYS" />
+                                        <Button id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" styleClass="part" stylesheets="@../CSS/general.css" text="🔧 PART" HBox.hgrow="ALWAYS">
+                                            <HBox.margin>
+                                                <Insets right="40.0" />
+                                            </HBox.margin>
+                                        </Button>
                                     </children>
                                 </HBox>
                                 <BarChart style="-fx-background-color: transparent; -fx-padding: 20;">
@@ -226,17 +225,17 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="200.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 14 14 0 0; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
                                     <children>
-                                        <Label style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-font-size: 20; -fx-padding: 18;" text="Revenue Analysis" />
+                                        <Label style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-font-size: 20; -fx-padding: 18;" text="📈 Revenue Analysis" />
                                     </children>
                                 </HBox>
-                        <AreaChart>
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </AreaChart>
+                                <AreaChart>
+                                    <xAxis>
+                                        <CategoryAxis side="BOTTOM" />
+                                    </xAxis>
+                                    <yAxis>
+                                        <NumberAxis side="LEFT" />
+                                    </yAxis>
+                                </AreaChart>
                             </children>
                             <HBox.margin>
                                 <Insets right="25.0" />
@@ -253,7 +252,7 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="200.0">
                                     <children>
-                                        <Label style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-padding: 18;" text="Revenue Distribution" />
+                                        <Label style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-padding: 18;" text="📋 Revenue Distribution" />
                                     </children>
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="170.0" prefWidth="200.0">
@@ -269,14 +268,14 @@
                                                         <Label style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="/$53,300" />
                                                         <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="Total Revenue" />
                                                     </children>
-                                       <StackPane.margin>
-                                          <Insets />
-                                       </StackPane.margin>
+                                                    <StackPane.margin>
+                                                        <Insets />
+                                                    </StackPane.margin>
                                                 </VBox>
                                             </children>
-                                 <HBox.margin>
-                                    <Insets bottom="20.0" left="2.0" />
-                                 </HBox.margin>
+                                            <HBox.margin>
+                                                <Insets bottom="20.0" left="2.0" />
+                                            </HBox.margin>
                                         </StackPane>
                                         <VBox alignment="CENTER_LEFT" spacing="18" HBox.hgrow="ALWAYS">
                                             <children>
@@ -287,7 +286,7 @@
                                                                 <Circle fill="#6d8196" radius="9.0" />
                                                                 <VBox spacing="3">
                                                                     <children>
-                                                                        <Label style="-fx-font-size: 15; -fx-font-weight: 700; -fx-text-fill: #1e293b;" text="Cars Revenue" />
+                                                                        <Label style="-fx-font-size: 15; -fx-font-weight: 700; -fx-text-fill: #1e293b;" text="🚘 Cars Revenue" />
                                                                         <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="/$28,000 • 52.5%" />
                                                                     </children>
                                                                 </VBox>
@@ -298,7 +297,7 @@
                                                                 <Circle fill="#e67e22" radius="9.0" />
                                                                 <VBox spacing="3">
                                                                     <children>
-                                                                        <Label style="-fx-font-size: 15; -fx-font-weight: 700; -fx-text-fill: #1e293b;" text="Parts Revenue" />
+                                                                        <Label style="-fx-font-size: 15; -fx-font-weight: 700; -fx-text-fill: #1e293b;" text="🔧 Parts Revenue" />
                                                                         <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="/$15,500 • 29.1%" />
                                                                     </children>
                                                                 </VBox>
@@ -321,7 +320,7 @@
                             <children>
                                 <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 14 14 0 0;">
                                     <children>
-                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b;" text="Sales Distribution" />
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b;" text="📈 Sales Distribution" />
                                     </children>
                                 </HBox>
                                 <StackPane prefHeight="200.0" prefWidth="300.0" VBox.vgrow="SOMETIMES">
@@ -340,7 +339,7 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 14 14 0 0;">
                                     <children>
-                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b; -fx-padding: 18;" text="Notifications" />
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b; -fx-padding: 18;" text="🔔 Notifications" />
                                     </children>
                                 </HBox>
                                 <ScrollPane hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
@@ -358,4 +357,6 @@
             </children>
         </VBox>
     </center>
+
+
 </BorderPane>
