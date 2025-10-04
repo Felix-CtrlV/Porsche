@@ -15,15 +15,22 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.w3c.dom.Text;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 public class managerInventoryController {
 
@@ -178,7 +185,7 @@ public class managerInventoryController {
     private TextField partQtyText;
 
     @FXML
-    private ComboBox<?> partRelativeComboBox;
+    private ComboBox<String > partRelativeComboBox;
 
     @FXML
     private TableColumn<?, ?> qtyCol;
@@ -223,13 +230,31 @@ public class managerInventoryController {
     private CheckBox carTaycan;
 
     @FXML
-    void carHandlerDrop(DragEvent event) {
-
+    void carHandlerDrop(DragEvent event) throws FileNotFoundException {
+        List<File> file = event.getDragboard().getFiles();
+        Image img = new Image(new FileInputStream(file.get(0)));
+        carImage.setImage(img);
     }
 
     @FXML
     void carHandlerOver(DragEvent event) {
+        if(event.getDragboard().hasFiles()) {
+            event.acceptTransferModes(TransferMode.ANY);
+        }
+    }
 
+    @FXML
+    void partHandlerDrop(DragEvent event) throws FileNotFoundException {
+        List<File> file = event.getDragboard().getFiles();
+        Image img = new Image(new FileInputStream(file.get(0)));
+        partImage.setImage(img);
+    }
+
+    @FXML
+    void partHandlerOver(DragEvent event) {
+        if(event.getDragboard().hasFiles()) {
+            event.acceptTransferModes(TransferMode.ANY);
+        }
     }
 
     @FXML
@@ -263,6 +288,10 @@ public class managerInventoryController {
 
     @FXML
     void clickInventoryAdd(ActionEvent event) {
+            addCarbtn.setDisable(true);
+            addPartbtn.setDisable(false);
+            addCar.setVisible(true);
+            addPart.setVisible(false);
             fadeInOut(true,extraPane,inventoryPane);
     }
 
@@ -335,18 +364,6 @@ public class managerInventoryController {
     void extraPaneMouseClick(MouseEvent event) {
            fadeInOut(false,extraPane,inventoryPane);
     }
-
-
-    @FXML
-    void partHandlerDrop(DragEvent event) {
-
-    }
-
-    @FXML
-    void partHandlerOver(DragEvent event) {
-
-    }
-
 
     @FXML
     void clickInventoryBox(ActionEvent event) {
