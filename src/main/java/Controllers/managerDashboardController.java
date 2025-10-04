@@ -112,7 +112,7 @@ public class managerDashboardController {
 
     @FXML
     void clickInventory(ActionEvent event) {
-        loadView("");
+        loadView("/View/managerInventory.fxml");
         setActiveButton(inventorybtn);
     }
 
