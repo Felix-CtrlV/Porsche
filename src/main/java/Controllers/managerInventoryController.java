@@ -273,7 +273,7 @@ public class managerInventoryController {
 
     @FXML
     void clickCarCancel(ActionEvent event) {
-
+        clearCarPartForm();
     }
 
     @FXML
@@ -302,7 +302,7 @@ public class managerInventoryController {
 
     @FXML
     void clickPartCancle(ActionEvent event) {
-
+        clearCarPartForm();
     }
 
     @FXML
@@ -486,7 +486,6 @@ public class managerInventoryController {
         }
     }
 
-
     private void setupFloatingLabel(TextField field, Label label) {
 
         EventHandler<MouseEvent> onEnter = e -> translateInOut(true, label, field);
@@ -506,7 +505,6 @@ public class managerInventoryController {
         });
     }
 
-
     private void translateInOut(boolean check,Label label,TextField field){
 
         TranslateTransition translate = new TranslateTransition(Duration.millis(500),label);
@@ -522,6 +520,27 @@ public class managerInventoryController {
         }
         translate.play();
 
+    }
+
+    private void clearCarPartForm() {
+        carModelText.clear();
+        carYearText.clear();
+        carTrimText.clear();
+        carExtColorText.clear();
+        carIntColorText.clear();
+        carPriceText.clear();
+        carQtyText.clear();
+        carImage.setImage(null);
+        gasolineRadio.setSelected(true);
+        electricCheckBox.setSelected(false);
+
+        partNameText.clear();
+        partDescriptionText.clear();
+        partPriceText.clear();
+        partQtyText.clear();
+        partImage.setImage(null);
+        partRelativeComboBox.getSelectionModel().clearSelection();
+        fadeInOut(false,extraPane,inventoryPane);
     }
 
 }
