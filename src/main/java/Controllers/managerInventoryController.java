@@ -1,7 +1,11 @@
 package Controllers;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -18,6 +22,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import org.w3c.dom.Text;
 
 public class managerInventoryController {
 
@@ -118,7 +124,7 @@ public class managerInventoryController {
     private Button inventoryAdd;
 
     @FXML
-    private ComboBox<?> inventoryBox;
+    private ComboBox<String> inventoryBox;
 
     @FXML
     private TableView<?> inventoryCarTable;
@@ -199,14 +205,22 @@ public class managerInventoryController {
     private TableColumn<?, ?> statusCol;
 
     @FXML
-    void carExtColorMouseClick(MouseEvent event) {
-
-    }
+    private CheckBox car718;
 
     @FXML
-    void carExtColorMouseEnter(MouseEvent event) {
+    private CheckBox car911;
 
-    }
+    @FXML
+    private CheckBox carCayenne;
+
+    @FXML
+    private CheckBox carMacan;
+
+    @FXML
+    private CheckBox carPanamera;
+
+    @FXML
+    private CheckBox carTaycan;
 
     @FXML
     void carHandlerDrop(DragEvent event) {
@@ -219,108 +233,17 @@ public class managerInventoryController {
     }
 
     @FXML
-    void carIntColorMouseClick(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carIntColorMouseEnter(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carIntColorMouseExit(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carModelMouseClick(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carModelMouseEnter(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carModelMouseExit(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carMouseExit(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carPriceMouseClick(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carPriceMouseEnter(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carPriceMouseExit(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carQtyMouseClick(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carQtyMouseEnter(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carQtyMouseExit(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carTrimMouseClick(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carTrimMouseEnter(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carTrimMouseExit(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carYearMouseClick(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carYearMouseEnter(MouseEvent event) {
-
-    }
-
-    @FXML
-    void carYearMouseExit(MouseEvent event) {
-
-    }
-
-    @FXML
     void clickAddCarbtn(ActionEvent event) {
-
+        addCarbtn.setDisable(true);
+        addPartbtn.setDisable(false);
+        fadeInOut(true,addCar,addPart);
     }
 
     @FXML
     void clickAddPartbtn(ActionEvent event) {
-
+        addCarbtn.setDisable(false);
+        addPartbtn.setDisable(true);
+        fadeInOut(true,addPart,addCar);
     }
 
     @FXML
@@ -340,12 +263,12 @@ public class managerInventoryController {
 
     @FXML
     void clickInventoryAdd(ActionEvent event) {
-
+            fadeInOut(true,extraPane,inventoryPane);
     }
 
     @FXML
     void clickModelsSelectAll(ActionEvent event) {
-
+        selectAll(modelsSelectAll.isSelected(),modelsSelectAll);
     }
 
     @FXML
@@ -370,58 +293,49 @@ public class managerInventoryController {
 
     @FXML
     void clickSelect718(ActionEvent event) {
+        selectAll(car718.isSelected(),car718);
 
     }
 
     @FXML
     void clickSelect911(ActionEvent event) {
+        selectAll(car911.isSelected(),car911);
 
     }
 
     @FXML
     void clickSelectCayenne(ActionEvent event) {
+        selectAll(carCayenne.isSelected(),carCayenne);
 
     }
 
     @FXML
     void clickSelectMacan(ActionEvent event) {
+        selectAll(carMacan.isSelected(),carMacan);
 
     }
 
     @FXML
     void clickSelectPanamera(ActionEvent event) {
+        selectAll(carPanamera.isSelected(),carPanamera);
 
     }
 
     @FXML
     void clickSelectTaycan(ActionEvent event) {
+        selectAll(carTaycan.isSelected(),carTaycan);
 
     }
-
     @FXML
     void clickSeriesSelectAll(ActionEvent event) {
-
+        selectAll(seriesSelectAll.isSelected(),seriesSelectAll);
     }
 
     @FXML
     void extraPaneMouseClick(MouseEvent event) {
-
+           fadeInOut(false,extraPane,inventoryPane);
     }
 
-    @FXML
-    void partDescriptionMouseClick(MouseEvent event) {
-
-    }
-
-    @FXML
-    void partDescriptionMouseEnter(MouseEvent event) {
-
-    }
-
-    @FXML
-    void partDescriptionMouseExit(MouseEvent event) {
-
-    }
 
     @FXML
     void partHandlerDrop(DragEvent event) {
@@ -433,43 +347,163 @@ public class managerInventoryController {
 
     }
 
-    @FXML
-    void partMouseClick(MouseEvent event) {
 
+    @FXML
+    void clickInventoryBox(ActionEvent event) {
+        String selectedValue = inventoryBox.getValue();
+
+        if ("Cars".equals(selectedValue)) {
+            selectAll(true,seriesSelectAll);
+            fadeInOut(true,modelsPane,null);
+            fadeInOut(true, seriesPane, null);
+        } else if ("Parts".equals(selectedValue)) {
+            fadeInOut(false,modelsPane,null);
+            fadeInOut(false, seriesPane, null);
+
+        }
     }
 
-    @FXML
-    void partMouseExit(MouseEvent event) {
 
+    @FXML
+    private void initialize(){
+            extraPane.setVisible(false);
+            inventoryPane.setOpacity(1);
+            addCar.setVisible(true);
+            addPart.setVisible(false);
+            addCarbtn.setDisable(true);
+            addPartbtn.setDisable(false);
+
+            inventoryBox.getItems().addAll("Cars","Parts");
+            inventoryBox.setValue("Cars");
+            selectAll(true,seriesSelectAll);
+
+            setupFloatingLabel(partNameText, partNameLbl);
+            setupFloatingLabel(partQtyText, partQtyLbl);
+            setupFloatingLabel(partPriceText, partPriceLbl);
+            setupFloatingLabel(partDescriptionText, partDescriptionLbl);
+
+            setupFloatingLabel(carModelText, carModelLbl);
+            setupFloatingLabel(carTrimText, carTrimLbl);
+            setupFloatingLabel(carYearText, carYearLbl);
+            setupFloatingLabel(carQtyText, carQtyLbl);
+            setupFloatingLabel(carPriceText, carPriceLbl);
+            setupFloatingLabel(carExtColorText, carExtColorLbl);
+            setupFloatingLabel(carIntColorText, carIntColorLbl);
+    }
+    //true is in or select and false is out or unselect
+    private void fadeInOut(boolean check, Node cNode,Node bNode){
+
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(Duration.millis(500));
+        fade.setNode(cNode);
+        if(bNode == inventoryPane) {
+            if(check){
+                fade.setFromValue(0);
+                fade.setToValue(1);
+
+            }else{
+                fade.setFromValue(1);
+                fade.setToValue(0);
+            }
+            fade.play();
+            if (check) {
+                cNode.setVisible(true);
+                bNode.setOpacity(0.5);
+            } else {
+                cNode.setVisible(false);
+                bNode.setOpacity(1);
+            }
+        }else{
+            if(check) {
+                fade.setFromValue(0);
+                fade.setToValue(1);
+                fade.play();
+                cNode.setVisible(true);
+                if (bNode != null) {
+                    bNode.setVisible(false);
+                }
+            }else{
+                fade.setFromValue(1);
+                fade.setToValue(0);
+                cNode.setVisible(false);
+                fade.play();
+            }
+        }
     }
 
-    @FXML
-    void partNameMouseClick(MouseEvent event) {
+    private void selectAll(boolean check, CheckBox in){
 
+        if (in == seriesSelectAll) {
+            in.setSelected(check);
+            car718.setSelected(check);
+            car911.setSelected(check);
+            carCayenne.setSelected(check);
+            carMacan.setSelected(check);
+            carPanamera.setSelected(check);
+            carTaycan.setSelected(check);
+            modelsSelectAll.setSelected(check);
+        }else{
+            seriesSelectAll.setSelected(false);
+            modelsSelectAll.setSelected(true);
+            in.setSelected(check);
+
+            if(carTaycan.isSelected() && car911.isSelected() &&
+                    carCayenne.isSelected() && car718.isSelected() &&
+                    carMacan.isSelected() && carPanamera.isSelected()
+                ){
+                seriesSelectAll.setSelected(true);
+            }
+
+        }
+        if(!carTaycan.isSelected() && !car911.isSelected() &&
+                !carCayenne.isSelected() && !car718.isSelected() &&
+                !carMacan.isSelected() && !carPanamera.isSelected()
+        ){
+            if(modelsPane.isVisible()) {
+                fadeInOut(false, modelsPane, null);
+            }
+        }else {
+            if(!modelsPane.isVisible()){
+                fadeInOut(true,modelsPane,null);
+            }
+        }
     }
 
-    @FXML
-    void partNameMouseEnter(MouseEvent event) {
 
+    private void setupFloatingLabel(TextField field, Label label) {
+
+        EventHandler<MouseEvent> onEnter = e -> translateInOut(true, label, field);
+        EventHandler<MouseEvent> onExit = e -> translateInOut(false, label, field);
+
+        field.setOnMouseEntered(onEnter);
+        label.setOnMouseEntered(onEnter);
+        field.setOnMouseExited(onExit);
+        label.setOnMouseExited(onExit);
+
+        field.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                translateInOut(true, label, field);
+            } else {
+                translateInOut(false, label, field);
+            }
+        });
     }
 
-    @FXML
-    void partNameMouseExit(MouseEvent event) {
 
-    }
+    private void translateInOut(boolean check,Label label,TextField field){
 
-    @FXML
-    void partQtyMouseClick(MouseEvent event) {
+        TranslateTransition translate = new TranslateTransition(Duration.millis(500),label);
 
-    }
-
-    @FXML
-    void partQtyMouseEnter(MouseEvent event) {
-
-    }
-
-    @FXML
-    void partQtyMouseExit(MouseEvent event) {
+        if(check){
+            translate.setToY(-25);
+        }else {
+            if (!field.isFocused() && field.getText().isBlank()) {
+                translate.setToY(0);
+            } else {
+                translate.setToY(-25);
+            }
+        }
+        translate.play();
 
     }
 
