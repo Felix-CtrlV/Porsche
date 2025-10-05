@@ -170,7 +170,7 @@
                            <children>
       
                                       <!-- Table -->
-                                      <TableView fx:id="inventoryCarTable" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-border-color: #e9ecef; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-size: 12; -fx-border-width: 1.5;">
+                                      <TableView fx:id="inventoryTable" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-border-color: #e9ecef; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-size: 12; -fx-border-width: 1.5;">
                                           <columns>
                                               <TableColumn fx:id="idCol" prefWidth="70.0" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER; -fx-font-family: 'Arial';" text="ID" />
                                               <TableColumn fx:id="nameCol" prefWidth="232.0" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-font-family: 'Arial';" text="Name" />
@@ -241,7 +241,7 @@
                                                         </StackPane>
                                                         <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                                                             <children>
-                                                                <TextField fx:id="carTrimText" maxHeight="35.0"  style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                                <TextField fx:id="carTrimText" maxHeight="35.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                                 <Label fx:id="carTrimLbl" prefHeight="18.0" prefWidth="46.0" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Trim *" wrapText="true">
                                                                     <StackPane.margin>
                                                                         <Insets left="15.0" />
@@ -262,7 +262,7 @@
                                                             <children>
                                                                 <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                                                                     <children>
-                                                                        <TextField fx:id="carExtColorText" maxHeight="25.0"  style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                                        <TextField fx:id="carExtColorText" maxHeight="25.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                                         <Label fx:id="carExtColorLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Exterior Color *">
                                                                             <StackPane.margin>
                                                                                 <Insets left="15.0" />
@@ -275,7 +275,7 @@
                                                                 </StackPane>
                                                                 <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                                                                     <children>
-                                                                        <TextField fx:id="carIntColorText" maxHeight="25.0"  style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                                        <TextField fx:id="carIntColorText" maxHeight="25.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                                         <Label fx:id="carIntColorLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Interior Color *">
                                                                             <StackPane.margin>
                                                                                 <Insets left="15.0" />
@@ -393,7 +393,7 @@
                                        <children>
                                           <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                                              <children>
-                                                <TextField fx:id="partNameText"  style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                <TextField fx:id="partNameText" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                 <Label fx:id="partNameLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Name *">
                                                    <StackPane.margin>
                                                       <Insets left="15.0" />
@@ -421,7 +421,7 @@
                                        <children>
                                           <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                                              <children>
-                                                <TextField fx:id="partQtyText"  style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                <TextField fx:id="partQtyText" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                 <Label fx:id="partQtyLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="QUANTITY *">
                                                    <StackPane.margin>
                                                       <Insets left="15.0" />
@@ -431,7 +431,7 @@
                                           </StackPane>
                                           <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                                              <children>
-                                                <TextField fx:id="partPriceText"  style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                <TextField fx:id="partPriceText" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                 <Label fx:id="partPriceLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="PRICE ($) *">
                                                    <StackPane.margin>
                                                       <Insets left="15.0" />
@@ -444,7 +444,7 @@
                                     <StackPane alignment="CENTER_LEFT" maxHeight="70.0" minHeight="70.0" prefHeight="90.0" prefWidth="393.0">
                                        <children>
                                           <TextField fx:id="partDescriptionText" maxHeight="70.0" minHeight="70.0" prefHeight="90.0" prefWidth="393.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
-                                          <Label fx:id="partDescriptionLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="DESCRIPTION *" >
+                                          <Label fx:id="partDescriptionLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="DESCRIPTION *">
                                              <StackPane.margin>
                                                 <Insets left="15.0" />
                                              </StackPane.margin>
@@ -473,7 +473,7 @@
                         </VBox>
                     </center>
                     <top>
-                        <Region minHeight="105.0" onMouseClicked="#extraPaneMouseClick" BorderPane.alignment="CENTER" />
+                        <Region minHeight="102.0" onMouseClicked="#extraPaneMouseClick" BorderPane.alignment="CENTER" />
                     </top>
                     <left>
                         <Region onMouseClicked="#extraPaneMouseClick" prefHeight="626.0" prefWidth="558.0" BorderPane.alignment="CENTER" />
@@ -482,7 +482,7 @@
                         <Region onMouseClicked="#extraPaneMouseClick" prefHeight="626.0" prefWidth="353.0" BorderPane.alignment="CENTER" />
                     </right>
                     <bottom>
-                        <Region minHeight="37.0" onMouseClicked="#extraPaneMouseClick" BorderPane.alignment="CENTER" />
+                        <Region maxHeight="40.0" minHeight="40.0" onMouseClicked="#extraPaneMouseClick" BorderPane.alignment="CENTER" />
                     </bottom>
                 </BorderPane>
             </children>
