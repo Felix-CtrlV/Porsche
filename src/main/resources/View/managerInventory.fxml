@@ -750,6 +750,9 @@
                            </children>
                         </VBox>
                      </children>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </StackPane>
                     </center>
                     <top>
