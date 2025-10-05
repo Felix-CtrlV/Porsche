@@ -1,6 +1,7 @@
 package Controllers;
 
 import Database.Porsche_DB;
+import Model.inventory;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -32,10 +33,10 @@ import java.util.List;
 public class managerInventoryController {
 
     @FXML
-    private TableColumn<?, ?> PriceCol;
+    private TableColumn<inventory, Double> PriceCol;
 
     @FXML
-    private TableColumn<?, ?> actionCol;
+    private TableColumn<inventory,?> actionCol;
 
     @FXML
     private VBox addCar;
@@ -122,7 +123,7 @@ public class managerInventoryController {
     private RadioButton hybridRadio;
 
     @FXML
-    private TableColumn<?, ?> idCol;
+    private TableColumn<inventory, Integer> idCol;
 
     @FXML
     private Button inventoryAdd;
@@ -131,7 +132,7 @@ public class managerInventoryController {
     private ComboBox<String> inventoryBox;
 
     @FXML
-    private TableView<?> inventoryTable;
+    private TableView<inventory> inventoryTable;
 
     @FXML
     private HBox inventoryPane;
@@ -146,7 +147,7 @@ public class managerInventoryController {
     private GridPane modelsShowBox;
 
     @FXML
-    private TableColumn<?, ?> nameCol;
+    private TableColumn<inventory, String > nameCol;
 
     @FXML
     private Button partCancle;
@@ -185,7 +186,7 @@ public class managerInventoryController {
     private ComboBox<String > partRelativeComboBox;
 
     @FXML
-    private TableColumn<?, ?> qtyCol;
+    private TableColumn<inventory, Integer> qtyCol;
 
     @FXML
     private Button refreshTable;
@@ -206,7 +207,7 @@ public class managerInventoryController {
     private Label showTableRows;
 
     @FXML
-    private TableColumn<?, ?> statusCol;
+    private TableColumn<inventory, String > statusCol;
 
     @FXML
     private CheckBox car718;
@@ -273,8 +274,8 @@ public class managerInventoryController {
     }
 
     @FXML
-    void clickCarCancel(ActionEvent event) {
-        clearCarPartForm();
+    void clickCarCancel(ActionEvent event) throws SQLException {
+        hasData(false,"cars");
     }
 
     @FXML
@@ -302,8 +303,8 @@ public class managerInventoryController {
     }
 
     @FXML
-    void clickPartCancle(ActionEvent event) {
-        clearCarPartForm();
+    void clickPartCancle(ActionEvent event) throws SQLException {
+        hasData(false,"parts");
     }
 
     @FXML
@@ -361,8 +362,12 @@ public class managerInventoryController {
     }
 
     @FXML
-    void extraPaneMouseClick(MouseEvent event) {
-           fadeInOut(false,extraPane,inventoryPane);
+    void extraPaneMouseClick(MouseEvent event) throws SQLException {
+        if(addCarbtn.isDisable()) {
+            hasData(false,"cars" );
+        }else{
+            hasData(false,"parts");
+        }
     }
 
     @FXML
@@ -561,29 +566,46 @@ public class managerInventoryController {
             String trim = carTrimText.getText();
             String extColor = carExtColorText.getText();
             String intColor = carIntColorText.getText();
+            String fuel_type = gasolineRadio.getTypeSelector().toString();
             String qty = carQtyText.getText();
             String price = carPriceText.getText();
 
             if(img.isEmpty()&& models.isEmpty() && trim.isEmpty() &&
-                    extColor.isEmpty() &&
-                    qty.isEmpty() && price.isEmpty()
+                    extColor.isEmpty() && intColor.isEmpty() &&
+                    fuel_type.isEmpty() && qty.isEmpty() && price.isEmpty()
                 ){
                 clearCarPartForm();
             }else {
                 if (check) {
-                    CallableStatement cs = con.prepareCall("CALL set");
-                } else {
+                    CallableStatement cs = con.prepareCall("");
 
+                    clearCarPartForm();
+                } else {
+                    alertForm("addCar");
                 }
             }
 
         }else{
+            String img = String.valueOf(file.get(0));
+            String name = partNameText.getText();
+            String qty = partQtyText.getText();
+            String price = partPriceText.getText();
+            String description = partDescriptionText.getText();
+            if(img.isEmpty() && name.isEmpty() && qty.isEmpty() && price.isEmpty() && description.isEmpty()){
+                clearCarPartForm();
+            }else {
+                if (check){
+                    CallableStatement cs = con.prepareCall("");
 
+                    clearCarPartForm();
+                }else{
+                    alertForm("addPart");
+                }
+            }
         }
     }
     //for alernt there have "addCar" "addPart" "editCar" "editPart"
     private void alertForm(String check){
-        Alert alert = new Alert(Alert.AlertType.WARNING);
 
         if(check.equalsIgnoreCase("addcar")){
 
@@ -596,7 +618,7 @@ public class managerInventoryController {
         }else{
 
         }
-        alert.showAndWait();
     }
+
 
 }

@@ -1,20 +1,33 @@
 package Model;
 
 public class inventory {
-    private int id,qty;
-    private String name,status;
-    private double price;
+   private int id,qty,productYear;
+   private String name,description,intColor,extColor,fuelType,model, trim,forCar;
+   private double price ;
 
-    //for inventory of manger view
-    public inventory(int id, int qty, String name, double price) {
+   public inventory(){}
+
+    //for car
+    public inventory(int id, String model, String trim, String intColor, String extColor, String fuelType, int productYear, int qty, double price) {
         this.id = id;
+        this.model = model;
+        this.trim = trim;
+        this.intColor = intColor;
+        this.extColor = extColor;
+        this.fuelType = fuelType;
+        this.productYear = productYear;
         this.qty = qty;
+        this.price = price;
+    }
+
+    //for part
+
+    public inventory(int id, String name, String forCar, String description, int qty, double price) {
+        this.id = id;
         this.name = name;
-        if(qty >0){
-            this.status = "On";
-        }else{
-            this.status = "Out";
-        }
+        this.forCar = forCar;
+        this.description = description;
+        this.qty = qty;
         this.price = price;
     }
 
@@ -34,6 +47,14 @@ public class inventory {
         this.qty = qty;
     }
 
+    public int getProductYear() {
+        return productYear;
+    }
+
+    public void setProductYear(int productYear) {
+        this.productYear = productYear;
+    }
+
     public String getName() {
         return name;
     }
@@ -42,12 +63,60 @@ public class inventory {
         this.name = name;
     }
 
-    public String getStatus() {
-        return status;
+    public String getDescription() {
+        return description;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getIntColor() {
+        return intColor;
+    }
+
+    public void setIntColor(String intColor) {
+        this.intColor = intColor;
+    }
+
+    public String getExtColor() {
+        return extColor;
+    }
+
+    public void setExtColor(String extColor) {
+        this.extColor = extColor;
+    }
+
+    public String getFuelType() {
+        return fuelType;
+    }
+
+    public void setFuelType(String fuelType) {
+        this.fuelType = fuelType;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getTrim() {
+        return trim;
+    }
+
+    public void setTrim(String trim) {
+        this.trim = trim;
+    }
+
+    public String getForCar() {
+        return forCar;
+    }
+
+    public void setForCar(String forCar) {
+        this.forCar = forCar;
     }
 
     public double getPrice() {
