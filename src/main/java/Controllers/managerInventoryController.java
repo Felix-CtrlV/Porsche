@@ -1,20 +1,14 @@
 package Controllers;
 
+import Database.Porsche_DB;
+import Model.inventory;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
@@ -30,15 +24,19 @@ import org.w3c.dom.Text;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class managerInventoryController {
 
     @FXML
-    private TableColumn<?, ?> PriceCol;
+    private TableColumn<inventory, Double> PriceCol;
 
     @FXML
-    private TableColumn<?, ?> actionCol;
+    private TableColumn<inventory,?> actionCol;
 
     @FXML
     private VBox addCar;
@@ -125,7 +123,7 @@ public class managerInventoryController {
     private RadioButton hybridRadio;
 
     @FXML
-    private TableColumn<?, ?> idCol;
+    private TableColumn<inventory, Integer> idCol;
 
     @FXML
     private Button inventoryAdd;
@@ -134,7 +132,7 @@ public class managerInventoryController {
     private ComboBox<String> inventoryBox;
 
     @FXML
-    private TableView<?> inventoryCarTable;
+    private TableView<inventory> inventoryTable;
 
     @FXML
     private HBox inventoryPane;
@@ -149,7 +147,7 @@ public class managerInventoryController {
     private GridPane modelsShowBox;
 
     @FXML
-    private TableColumn<?, ?> nameCol;
+    private TableColumn<inventory, String > nameCol;
 
     @FXML
     private Button partCancle;
@@ -188,7 +186,7 @@ public class managerInventoryController {
     private ComboBox<String > partRelativeComboBox;
 
     @FXML
-    private TableColumn<?, ?> qtyCol;
+    private TableColumn<inventory, Integer> qtyCol;
 
     @FXML
     private Button refreshTable;
@@ -209,7 +207,7 @@ public class managerInventoryController {
     private Label showTableRows;
 
     @FXML
-    private TableColumn<?, ?> statusCol;
+    private TableColumn<inventory, String > statusCol;
 
     @FXML
     private CheckBox car718;
@@ -229,9 +227,13 @@ public class managerInventoryController {
     @FXML
     private CheckBox carTaycan;
 
+    public managerInventoryController() throws SQLException, ClassNotFoundException {
+    }
+
+
     @FXML
     void carHandlerDrop(DragEvent event) throws FileNotFoundException {
-        List<File> file = event.getDragboard().getFiles();
+        file = event.getDragboard().getFiles();
         Image img = new Image(new FileInputStream(file.get(0)));
         carImage.setImage(img);
     }
@@ -245,7 +247,7 @@ public class managerInventoryController {
 
     @FXML
     void partHandlerDrop(DragEvent event) throws FileNotFoundException {
-        List<File> file = event.getDragboard().getFiles();
+        file = event.getDragboard().getFiles();
         Image img = new Image(new FileInputStream(file.get(0)));
         partImage.setImage(img);
     }
@@ -272,8 +274,8 @@ public class managerInventoryController {
     }
 
     @FXML
-    void clickCarCancel(ActionEvent event) {
-        clearCarPartForm();
+    void clickCarCancel(ActionEvent event) throws SQLException {
+        hasData(false,"cars");
     }
 
     @FXML
@@ -301,8 +303,8 @@ public class managerInventoryController {
     }
 
     @FXML
-    void clickPartCancle(ActionEvent event) {
-        clearCarPartForm();
+    void clickPartCancle(ActionEvent event) throws SQLException {
+        hasData(false,"parts");
     }
 
     @FXML
@@ -349,7 +351,6 @@ public class managerInventoryController {
         selectAll(carPanamera.isSelected(),carPanamera);
 
     }
-
     @FXML
     void clickSelectTaycan(ActionEvent event) {
         selectAll(carTaycan.isSelected(),carTaycan);
@@ -361,8 +362,12 @@ public class managerInventoryController {
     }
 
     @FXML
-    void extraPaneMouseClick(MouseEvent event) {
-           fadeInOut(false,extraPane,inventoryPane);
+    void extraPaneMouseClick(MouseEvent event) throws SQLException {
+        if(addCarbtn.isDisable()) {
+            hasData(false,"cars" );
+        }else{
+            hasData(false,"parts");
+        }
     }
 
     @FXML
@@ -380,6 +385,7 @@ public class managerInventoryController {
         }
     }
 
+    //true is in or select and false is out or unselect
 
     @FXML
     private void initialize(){
@@ -407,7 +413,10 @@ public class managerInventoryController {
             setupFloatingLabel(carExtColorText, carExtColorLbl);
             setupFloatingLabel(carIntColorText, carIntColorLbl);
     }
-    //true is in or select and false is out or unselect
+    List<File> file = new ArrayList<>();
+    Porsche_DB db = new Porsche_DB();
+    Connection con = db.connect();
+
     private void fadeInOut(boolean check, Node cNode,Node bNode){
 
         FadeTransition fade = new FadeTransition();
@@ -507,15 +516,18 @@ public class managerInventoryController {
 
     private void translateInOut(boolean check,Label label,TextField field){
 
-        TranslateTransition translate = new TranslateTransition(Duration.millis(500),label);
+        TranslateTransition translate = new TranslateTransition(Duration.millis(250),label);
 
         if(check){
             translate.setToY(-25);
+            translate.setToX(-10);
         }else {
             if (!field.isFocused() && field.getText().isBlank()) {
                 translate.setToY(0);
+                translate.setToX(0);
             } else {
                 translate.setToY(-25);
+                translate.setToX(-10);
             }
         }
         translate.play();
@@ -523,24 +535,90 @@ public class managerInventoryController {
     }
 
     private void clearCarPartForm() {
-        carModelText.clear();
-        carYearText.clear();
-        carTrimText.clear();
-        carExtColorText.clear();
-        carIntColorText.clear();
-        carPriceText.clear();
-        carQtyText.clear();
-        carImage.setImage(null);
-        gasolineRadio.setSelected(true);
-        electricCheckBox.setSelected(false);
+        if(addCarbtn.isDisable()) {
+            carModelText.clear();
+            carYearText.clear();
+            carTrimText.clear();
+            carExtColorText.clear();
+            carIntColorText.clear();
+            carPriceText.clear();
+            carQtyText.clear();
+            carImage.setImage(null);
+            gasolineRadio.setSelected(false);
+            electricCheckBox.setSelected(false);
+        }else {
+            partNameText.clear();
+            partDescriptionText.clear();
+            partPriceText.clear();
+            partQtyText.clear();
+            partImage.setImage(null);
+            partRelativeComboBox.getSelectionModel().clearSelection();
 
-        partNameText.clear();
-        partDescriptionText.clear();
-        partPriceText.clear();
-        partQtyText.clear();
-        partImage.setImage(null);
-        partRelativeComboBox.getSelectionModel().clearSelection();
-        fadeInOut(false,extraPane,inventoryPane);
+        }
+        fadeInOut(false, extraPane, inventoryPane);
     }
+
+    private void hasData(boolean check,String path) throws SQLException {
+        if(path.equals("cars")){
+            String img = String.valueOf(file.get(0));
+            System.out.println(img);
+            String models = carModelText.getText();
+            String trim = carTrimText.getText();
+            String extColor = carExtColorText.getText();
+            String intColor = carIntColorText.getText();
+            String fuel_type = gasolineRadio.getTypeSelector().toString();
+            String qty = carQtyText.getText();
+            String price = carPriceText.getText();
+
+            if(img.isEmpty()&& models.isEmpty() && trim.isEmpty() &&
+                    extColor.isEmpty() && intColor.isEmpty() &&
+                    fuel_type.isEmpty() && qty.isEmpty() && price.isEmpty()
+                ){
+                clearCarPartForm();
+            }else {
+                if (check) {
+                    CallableStatement cs = con.prepareCall("");
+
+                    clearCarPartForm();
+                } else {
+                    alertForm("addCar");
+                }
+            }
+
+        }else{
+            String img = String.valueOf(file.get(0));
+            String name = partNameText.getText();
+            String qty = partQtyText.getText();
+            String price = partPriceText.getText();
+            String description = partDescriptionText.getText();
+            if(img.isEmpty() && name.isEmpty() && qty.isEmpty() && price.isEmpty() && description.isEmpty()){
+                clearCarPartForm();
+            }else {
+                if (check){
+                    CallableStatement cs = con.prepareCall("");
+
+                    clearCarPartForm();
+                }else{
+                    alertForm("addPart");
+                }
+            }
+        }
+    }
+    //for alernt there have "addCar" "addPart" "editCar" "editPart"
+    private void alertForm(String check){
+
+        if(check.equalsIgnoreCase("addcar")){
+
+        }else if(check.equalsIgnoreCase("addpart")){
+
+        }else if(check.equalsIgnoreCase("editCar")){
+
+        }else if(check.equalsIgnoreCase("editPart")){
+
+        }else{
+
+        }
+    }
+
 
 }
