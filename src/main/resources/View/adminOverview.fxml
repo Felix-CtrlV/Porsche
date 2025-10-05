@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -17,7 +18,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1250.0" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOverviewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1250.0" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <center>
         <VBox minHeight="750.0" minWidth="1250.0" spacing="20.0" style="-fx-border-radius: 2;" BorderPane.alignment="CENTER">
@@ -149,7 +150,7 @@
                         </VBox>
 
                         <!-- Card 4 - Revenue -->
-                        <VBox prefHeight="160.0" prefWidth="290.0" style="-fx-background-color: linear-gradient(to right, #0A0A0A, #303030); -fx-background-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0.5, 0, 3);" HBox.hgrow="ALWAYS">
+                        <VBox prefHeight="160.0" prefWidth="290.0" style="-fx-background-color: linear-gradient(to right, #27ae60, #2ecc71); -fx-background-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0.5, 0, 3);" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0">
                                     <children>
@@ -206,7 +207,7 @@
                                         </Button>
                                     </children>
                                 </HBox>
-                                <BarChart fx:id="barChart" style="-fx-background-color: transparent; -fx-padding: 20;">
+                                <BarChart style="-fx-background-color: transparent; -fx-padding: 20;">
                                     <xAxis>
                                         <CategoryAxis side="BOTTOM" />
                                     </xAxis>
@@ -228,7 +229,7 @@
                                         <Label style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-font-size: 20; -fx-padding: 18;" text="📈 Revenue Analysis" />
                                     </children>
                                 </HBox>
-                                <AreaChart fx:id="areaChart">
+                                <AreaChart>
                                     <xAxis>
                                         <CategoryAxis side="BOTTOM" />
                                     </xAxis>
@@ -320,30 +321,35 @@
                             <children>
                                 <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 14 14 0 0;">
                                     <children>
-                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b;" text="📈 Cars' Sales Distribution" />
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b;" text="📈 Sales Distribution" />
                                     </children>
                                 </HBox>
                                 <StackPane prefHeight="200.0" prefWidth="300.0" VBox.vgrow="SOMETIMES">
                                     <children>
-                                        <PieChart fx:id="pieCar" labelLineLength="15.0" legendSide="RIGHT" legendVisible="false" minHeight="185.0" minWidth="455.0" style="-fx-background-color: transparent;" titleSide="RIGHT" />
+                                        <PieChart fx:id="pieChart" labelsVisible="true" legendVisible="false" style="-fx-background-color: transparent;" />
                                     </children>
+                                    <padding>
+                                        <Insets bottom="15.0" top="15.0" />
+                                    </padding>
                                 </StackPane>
                             </children>
                         </VBox>
-                  <VBox layoutX="590.0" layoutY="10.0" prefHeight="250.0" prefWidth="620.0" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-radius: 14; -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);">
-                     <children>
-                        <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 14 14 0 0;">
-                           <children>
-                              <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b;" text="📈 Parts' Sales Distribution" />
-                           </children>
-                        </HBox>
-                        <StackPane prefHeight="200.0" prefWidth="300.0" VBox.vgrow="SOMETIMES">
-                           <children>
-                              <PieChart fx:id="piePart" legendSide="RIGHT" legendVisible="false" minHeight="185.0" minWidth="455.0" style="-fx-background-color: transparent;" titleSide="RIGHT" />
-                           </children>
-                        </StackPane>
-                     </children>
-                  </VBox>
+
+                        <!-- Notifications -->
+                        <VBox prefHeight="250.0" prefWidth="550.0" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-radius: 14; -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 14 14 0 0;">
+                                    <children>
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b; -fx-padding: 18;" text="🔔 Notifications" />
+                                    </children>
+                                </HBox>
+                                <ScrollPane hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                                    <content>
+                                        <VBox fx:id="notiPanel" spacing="12" style="-fx-padding: 18;" />
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                        </VBox>
                     </children>
                     <VBox.margin>
                         <Insets bottom="25.0" left="25.0" right="25.0" />

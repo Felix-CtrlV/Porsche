@@ -717,7 +717,7 @@ public class managerOverviewController {
             cs.setInt(3, currentYear);
             ResultSet rs = cs.executeQuery();
 
-            // FIXED: Use OR condition instead of AND
+            // FIXED: Use OR condition instead of AND   
             if (besti.equals("car") || besti.equals("part")) {
                 while (rs.next()) {
                     int rank = rs.getInt(1);
