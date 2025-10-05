@@ -9,241 +9,183 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Month;
+import java.time.format.TextStyle;
+import java.util.*;
 
 public class adminOverviewController {
-
     @FXML
-    private Label averageLbl;
-
+    private Label averageLbl, totalSalesLbl, partsSoldLbl, servicesLbl, revenueLbl;
+    @FXML
+    private Label totalSalesValueLbl, partsValueLbl, servicesValueLbl, revenueGrowthLbl;
     @FXML
     private Button averagebtn;
-
-    @FXML
-    private VBox overview_vbox;
-
-    @FXML
-    private StackPane carPane;
-
-    @FXML
-    private StackPane partPane;
-
-    @FXML
-    private StackPane totalPane;
-
-    @FXML
-    private StackPane customizePane;
-
     @FXML
     private VBox notiPanel;
-
-    @FXML
-    private ComboBox lineCombo;
-
     @FXML
     private Button managebtn;
-
     @FXML
     private AreaChart<String, Number> areaChart;
-
     @FXML
-    private Button previous;
-
-    @FXML
-    private Button next;
-
+    private Button PreviousMonthbtn, NextMonthbtn, PreviousYearbth, NextYearbtn;
     @FXML
     private BarChart<String, Number> barChart;
+    @FXML
+    private PieChart pieCar, piePart;
+    @FXML
+    private ChoiceBox monthBox, yearBox;
 
     @FXML
-    private PieChart pieChart;
-
-    @FXML
-    private Label yearlbl;
-
-    @FXML
-    private StackPane pieCars, pieAccessories, pieCustomize;
-
-    @FXML
-    private Circle circleCars, circleAccessories, circleCustomize;
-
-    private int currentYear = LocalDate.now().getYear();
-
-    public adminOverviewController() throws SQLException, ClassNotFoundException {
+    void clickCarbtn(ActionEvent event) {
     }
 
-    private void updateYearLabels() {
-        yearlbl.setText(String.valueOf(currentYear));
-    }
+    private LocalDate today = LocalDate.now();
+    private boolean updatingMonthBox = false;
+    private int currentMonth;
+    private int currentYear;
 
-
-    private void applyFilter(int range) {
-        int days = range;
-//        lineData(days);
+    @FXML
+    void clickNextMonth(ActionEvent event) {
+        currentMonth++;
+        if (currentMonth > 12) {
+            currentMonth = 1;
+            currentYear++;
+        }
+        updateYearMonthLabel();
     }
 
     @FXML
-    void clickManage(ActionEvent event) {
-
-    }
-
-    @FXML
-    void clickNext(ActionEvent event) throws SQLException {
+    void clickNextYear(ActionEvent event) {
         currentYear++;
-        updateYearLabels();
-        if (currentYear == LocalDate.now().getYear()) {
-            next.setText("");
-            next.setVisible(false);
+        if (today.getYear() == currentYear) {
+            if (currentMonth > today.getMonthValue()) {
+                currentMonth = today.getMonthValue();
+            }
         }
-        BarData();
+        updateYearMonthLabel();
     }
 
     @FXML
-    void clickPrev(ActionEvent event) throws SQLException {
+    void clickPartbtn(ActionEvent event) {
+    }
+
+    @FXML
+    void clickPreviousMonth(ActionEvent event) {
+        currentMonth--;
+        if (currentMonth < 1) {
+            currentMonth = 12;
+            currentYear--;
+        }
+        ;
+        updateYearMonthLabel();
+    }
+
+    @FXML
+    void clickPreviousYear(ActionEvent event) {
         currentYear--;
-        updateYearLabels();
-        next.setText(">");
-        next.setVisible(true);
-        BarData();
+        updateYearMonthLabel();
     }
 
-    String choice = "qty";
-    String selected, startDate, endDate;
-
-    private void getSelected() {
-        Object value = lineCombo.getValue();
-        if (value == null) {
-            selected = "7days";
-            startDate = "";
-            endDate = "";
-            return;
-        }
-        String val = value.toString();
-        switch (val) {
-            case "Last 7 Days" -> { selected = "7days"; startDate = ""; endDate = ""; }
-            case "Last 30 Days" -> { selected = "30days"; startDate = ""; endDate = ""; }
-            case "Last 365 Days" -> { selected = "365days"; startDate = ""; endDate = ""; }
-            default -> selected = "custom";
-        }
-    }
-
-    boolean current = false;
-
-    @FXML
-    void clickAverage(ActionEvent event) throws SQLException {
-        if (current) {
-            choice = "qty";
-            current = false;
-            averageLbl.setText("Average Sale (Quantity)");
-            BarData();
+    private void updateYearMonthLabel() {
+        int curyear = today.getYear();
+        Month nmonth = Month.of(currentMonth);
+        int curmonth = today.getMonthValue();
+        if (currentYear >= curyear) {
+            NextYearbtn.setDisable(true);
+            NextYearbtn.setVisible(false);
+            if (currentMonth >= curmonth) {
+                NextMonthbtn.setDisable(true);
+                NextMonthbtn.setVisible(false);
+            } else {
+                NextMonthbtn.setDisable(false);
+                NextMonthbtn.setVisible(true);
+            }
         } else {
-            choice = "price";
-            current = true;
-            averageLbl.setText("Average Sale (Price)");
-            BarData();
+            NextYearbtn.setDisable(false);
+            NextYearbtn.setVisible(true);
+            NextMonthbtn.setDisable(false);
+            NextMonthbtn.setVisible(true);
+        } // 🔹 Sync ComboBoxes with updated currentMonth/currentYear
+        String monthName = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        if (monthBox.getItems().contains(monthName)) {
+            monthBox.setValue(monthName);
         }
+        if (yearBox.getItems().contains(currentYear)) {
+            yearBox.setValue(currentYear);
+        }
+        updateMonthBoxForYear(currentYear);
+    }
+
+    private void updateMonthBoxForYear(int year) {
+        int startMonth = 1;
+        int endMonth = 12;
+        if (year == today.getYear()) {
+            endMonth = today.getMonthValue();
+        }
+        List<String> months = new ArrayList<>();
+        for (int m = startMonth; m <= endMonth; m++) {
+            months.add(Month.of(m).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+        }
+        updatingMonthBox = true;
+        monthBox.setItems(FXCollections.observableArrayList(months));
+        if (!months.contains(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH))) {
+            currentMonth = startMonth; // default to first available month
+        }
+        monthBox.setValue(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+        updatingMonthBox = false;
     }
 
     Porsche_DB connect = new Porsche_DB();
     Connection con = connect.connect();
 
-    public void initialize() throws SQLException, ClassNotFoundException {
-        lineCombo.getItems().addAll("Last 7 Days", "Last 30 Days", "Last 365 Days", "Custom");
-        lineCombo.getSelectionModel().selectFirst();
-        getSelected();
-        BarData();
-        LineData(selected, startDate, endDate);
-
-        pieCars.setOnMouseClicked(e->{
-            category = "cars";
-            try {
-                pieData();
-            } catch (
-                    SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            circleCars.setStyle("-fx-fill: #C21E2B;");
-            circleAccessories.setStyle("-fx-fill: black");
-            circleCustomize.setStyle("-fx-fill: black");
-        });
-        pieAccessories.setOnMouseClicked(e->{
-            category = "parts";
-            try {
-                pieData();
-            } catch (
-                    SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            circleCars.setStyle("-fx-fill: black;");
-            circleAccessories.setStyle("-fx-fill: #C21E2B;");
-            circleCustomize.setStyle("-fx-fill: black;");
-        });
-        pieCustomize.setOnMouseClicked(e->{
-            category = "customize";
-            try {
-                pieData();
-            } catch (
-                    SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            circleCars.setStyle("-fx-fill: black");
-            circleAccessories.setStyle("-fx-fill: black");
-            circleCustomize.setStyle("-fx-fill: #C21E2B;");
-        });
-
-        lineCombo.setOnAction(e->{
-            getSelected();
-            LineData(selected, startDate, endDate);
-        });
-        pieData();
-        updateYearLabels();
-        if (currentYear == LocalDate.now().getYear()) {
-            next.setText("");
-            next.setVisible(false);
-        }
+    public adminOverviewController() throws SQLException, ClassNotFoundException {
     }
 
-    String category = "cars";
+    public void initialize() throws SQLException, ClassNotFoundException {
+        pieCarData();
+        piePartData();
+        BarData();
+        LineData("365days", "", "");
+    }
 
-    private void pieData() throws SQLException {
-
+    private void pieCarData() throws SQLException {
         ChartDAO chartDAO = new ChartDAO(con);
-        List<overviewPie> data = chartDAO.getOverviewPie(category);
-        pieChart.getData().clear();
+        List<overviewPie> data = chartDAO.getOverviewPie("cars");
+        pieCar.getData().clear();
         ObservableList<PieChart.Data> pie = FXCollections.observableArrayList();
         for (overviewPie row : data) {
             pie.add(new PieChart.Data(row.getLabel(), row.getTotalSale()));
         }
-        pieChart.setData(pie);
+        pieCar.setData(pie);
     }
+
+    private void piePartData() throws SQLException {
+        ChartDAO chartDAO = new ChartDAO(con);
+        List<overviewPie> data = chartDAO.getOverviewPie("parts");
+        piePart.getData().clear();
+        ObservableList<PieChart.Data> pie = FXCollections.observableArrayList();
+        for (overviewPie row : data) {
+            pie.add(new PieChart.Data(row.getLabel(), row.getTotalSale()));
+        }
+        piePart.setData(pie);
+    }
+
 
     private void BarData() throws SQLException {
         ChartDAO chartDAO = new ChartDAO(con);
-        List<overviewBar> data = chartDAO.getOverviewBar(Integer.parseInt(yearlbl.getText()), choice);
-
+        List<overviewBar> data = chartDAO.getOverviewBar(2025, "qty");
         barChart.getData().clear();
-
         XYChart.Series<String, Number> seriesCars = new XYChart.Series<>();
         seriesCars.setName("Cars");
-
         XYChart.Series<String, Number> seriesParts = new XYChart.Series<>();
         seriesParts.setName("Parts");
-
         for (overviewBar row : data) {
             seriesCars.getData().add(new XYChart.Data<>(row.getMonth(), row.getCarValue()));
             seriesParts.getData().add(new XYChart.Data<>(row.getMonth(), row.getPartValue()));
@@ -255,22 +197,16 @@ public class adminOverviewController {
         try {
             ChartDAO chartDAO = new ChartDAO(con);
             List<overviewLine> data = chartDAO.getOverviewLine(choice, start, end);
-
             areaChart.getData().clear();
-
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName("Total Revenue");
-
             for (overviewLine row : data) {
                 series.getData().add(new XYChart.Data<>(row.getDayLabel(), row.getTotalSales()));
             }
-
             areaChart.getData().add(series);
-
         } catch (
                 SQLException e) {
             e.printStackTrace();
         }
     }
-
 }

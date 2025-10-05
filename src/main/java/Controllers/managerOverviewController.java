@@ -220,14 +220,12 @@ public class managerOverviewController {
             currentYear--;
         };
         updateYearMonthLabel();
-
     }
 
     @FXML
     void clickPreviousYear(ActionEvent event) {
         currentYear--;
         updateYearMonthLabel();
-
     }
 
     @FXML

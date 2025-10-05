@@ -170,6 +170,7 @@ public class adminDashboardController {
         });
 
         editButton.setOnMouseClicked(e -> {
+            backButton.setVisible(false);
             editButton.setVisible(false);
             editBack.setVisible(true);
             editAddress.setVisible(true);
@@ -177,16 +178,6 @@ public class adminDashboardController {
             editEmail.setVisible(true);
             editConfirm.setVisible(true);
             editRevert.setVisible(true);
-        });
-
-        editBack.setOnMouseClicked(e -> {
-            editButton.setVisible(true);
-            editBack.setVisible(false);
-            editAddress.setVisible(false);
-            editPhone.setVisible(false);
-            editEmail.setVisible(false);
-            editConfirm.setVisible(false);
-            editRevert.setVisible(false);
         });
 
         editPhone.setOnMouseClicked(e -> {
@@ -241,7 +232,7 @@ public class adminDashboardController {
                 btnCommit.setLayoutX(118);
                 btnCommit.setLayoutY(181);
                 btnCommit.setPrefWidth(50);
-                btnCommit.setMaxWidth(50);
+                btnCommit.setMinWidth(100);
                 btnCommit.setMnemonicParsing(false);
                 btnCommit.getStyleClass().add("glassy-button");
 
@@ -249,7 +240,7 @@ public class adminDashboardController {
                 btnRevert.setLayoutX(306);
                 btnRevert.setLayoutY(181);
                 btnRevert.setPrefWidth(50);
-                btnRevert.setMaxWidth(50);
+                btnRevert.setMinWidth(100);
                 btnRevert.setMnemonicParsing(false);
                 btnRevert.getStyleClass().add("glassy-button");
 
@@ -280,6 +271,7 @@ public class adminDashboardController {
             editEmail.setVisible(false);
             editPhone.setVisible(false);
             editAddress.setVisible(false);
+            backButton.setVisible(true);
             editBack.setVisible(false);
             editButton.setVisible(true);
             editRevert.setVisible(false);
@@ -379,10 +371,7 @@ public class adminDashboardController {
     }
 
     @FXML
-    void clickLogout
-            (ActionEvent
-                     event) throws
-            Exception {
+    void clickLogout(ActionEvent event) throws Exception {
         Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
         home.close();
 
@@ -402,9 +391,7 @@ public class adminDashboardController {
     }
 
 
-    private void setActiveButton
-            (Button
-                     button) {
+    private void setActiveButton(Button button) {
         if (activeButton != null) {
             activeButton.getStyleClass().remove("active");
         }
@@ -416,8 +403,7 @@ public class adminDashboardController {
 
     private SequentialTransition animation;
 
-    private void openSetting
-            () {
+    private void openSetting() {
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), settingPane);
         slideIn.setFromX(350);
         slideIn.setToX(0);
