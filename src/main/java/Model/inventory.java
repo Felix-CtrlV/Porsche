@@ -2,7 +2,7 @@ package Model;
 
 public class inventory {
    private int id,qty,productYear;
-   private String name,description,intColor,extColor,fuelType,model, trim,forCar;
+   private String name,description,intColor,extColor,fuelType,model, trim,forCar,status;
    private double price ;
 
    public inventory(){}
@@ -18,10 +18,10 @@ public class inventory {
         this.productYear = productYear;
         this.qty = qty;
         this.price = price;
+
     }
 
     //for part
-
     public inventory(int id, String name, String forCar, String description, int qty, double price) {
         this.id = id;
         this.name = name;
@@ -29,6 +29,23 @@ public class inventory {
         this.description = description;
         this.qty = qty;
         this.price = price;
+    }
+
+    //for table
+    public inventory(int id, String name, int qty, double price, String status) {
+        this.id = id;
+        this.name = name;
+        this.qty = qty;
+        this.price = price;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getId() {

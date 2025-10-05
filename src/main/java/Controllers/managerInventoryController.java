@@ -4,6 +4,8 @@ import Database.Porsche_DB;
 import Model.inventory;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -412,6 +414,12 @@ public class managerInventoryController {
             setupFloatingLabel(carPriceText, carPriceLbl);
             setupFloatingLabel(carExtColorText, carExtColorLbl);
             setupFloatingLabel(carIntColorText, carIntColorLbl);
+
+            idCol.setCellValueFactory(d->new ReadOnlyObjectWrapper<>(d.getValue().getId()));
+            nameCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getName()));
+            statusCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getStatus()));
+            qtyCol.setCellValueFactory(d->new ReadOnlyObjectWrapper<>(d.getValue().getQty()));
+
     }
     List<File> file = new ArrayList<>();
     Porsche_DB db = new Porsche_DB();
