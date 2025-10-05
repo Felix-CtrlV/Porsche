@@ -216,7 +216,7 @@
                                       </HBox>
                               <StackPane maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0">
                                  <children>
-                                              <VBox fx:id="addCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;" visible="false">
+                                              <VBox fx:id="addCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="15.0" style="-fx-padding: 20;">
                                                   <children>
                                                         <StackPane maxHeight="125.0" minHeight="125.0" onDragDropped="#carHandlerDrop" onDragOver="#carHandlerOver" prefHeight="120.0" prefWidth="200.0" style="-fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-border-width: 2; -fx-border-style: dashed; -fx-background-color: #f9fafb; -fx-background-radius: 6;">
                                                             <children>
@@ -374,7 +374,7 @@
                                                   </HBox>
                                                   </children>
                                               </VBox>
-                                    <VBox fx:id="addPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="20.0" style="-fx-padding: 20;">
+                                    <VBox fx:id="addPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="20.0" style="-fx-padding: 20;" visible="false">
                                        <children>
                                           <VBox prefHeight="188.0" prefWidth="393.0" spacing="8">
                                              <children>
