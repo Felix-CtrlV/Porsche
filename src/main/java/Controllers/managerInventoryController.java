@@ -233,7 +233,13 @@ public class managerInventoryController {
     private VBox addPane;
 
     @FXML
-    private VBox editCarPane;
+    private VBox editPane;
+
+    @FXML
+    private Label editTitle;
+
+    @FXML
+    private VBox editCar;
     @FXML
     private TextField editCarName;
     @FXML
@@ -250,7 +256,7 @@ public class managerInventoryController {
     private ImageView editCarImg;
 
     @FXML
-    private VBox editPartPane;
+    private VBox editPart;
     @FXML
     private TextField editPartName;
     @FXML
@@ -278,7 +284,7 @@ public class managerInventoryController {
     }
 
     @FXML
-    void clickEditCarApply(ActionEvent evnet){
+    void clickEditCarApply(ActionEvent event){
 
     }
 
@@ -334,8 +340,8 @@ public class managerInventoryController {
     }
 
     @FXML
-    void clickCarConfirm(ActionEvent event) {
-
+    void clickCarConfirm(ActionEvent event) throws SQLException {
+        hasData(true,"cars");
     }
 
     @FXML
@@ -345,6 +351,9 @@ public class managerInventoryController {
 
     @FXML
     void clickInventoryAdd(ActionEvent event) {
+            addPane.setVisible(true);
+            editPane.setVisible(false);
+
             addCarbtn.setDisable(true);
             addPartbtn.setDisable(false);
             addCar.setVisible(true);
@@ -363,8 +372,8 @@ public class managerInventoryController {
     }
 
     @FXML
-    void clickPartConfirm(ActionEvent event) {
-
+    void clickPartConfirm(ActionEvent event) throws SQLException {
+        hasData(true,"parts");
     }
 
     @FXML
@@ -446,10 +455,6 @@ public class managerInventoryController {
     private void initialize(){
             extraPane.setVisible(false);
             inventoryPane.setOpacity(1);
-            addCar.setVisible(true);
-            addPart.setVisible(false);
-            addCarbtn.setDisable(true);
-            addPartbtn.setDisable(false);
 
             inventoryBox.getItems().addAll("Cars","Parts");
             inventoryBox.setValue("Cars");
@@ -595,30 +600,6 @@ public class managerInventoryController {
 
     }
 
-    private void clearCarPartForm() {
-        if(addCarbtn.isDisable()) {
-            carModelText.clear();
-            carYearText.clear();
-            carTrimText.clear();
-            carExtColorText.clear();
-            carIntColorText.clear();
-            carPriceText.clear();
-            carQtyText.clear();
-            carImage.setImage(null);
-            gasolineRadio.setSelected(false);
-            electricCheckBox.setSelected(false);
-        }else {
-            partNameText.clear();
-            partDescriptionText.clear();
-            partPriceText.clear();
-            partQtyText.clear();
-            partImage.setImage(null);
-            partRelativeComboBox.getSelectionModel().clearSelection();
-
-        }
-        fadeInOut(false, extraPane, inventoryPane);
-    }
-
     private void hasData(boolean check,String path) throws SQLException {
         if(path.equals("cars")){
             String img = String.valueOf(file.get(0));
@@ -635,6 +616,7 @@ public class managerInventoryController {
                     extColor.isEmpty() && intColor.isEmpty() &&
                     fuel_type.isEmpty() && qty.isEmpty() && price.isEmpty()
                 ){
+                alertForm(check,"noData");
                 clearCarPartForm();
             }else {
                 if (check) {
@@ -642,7 +624,7 @@ public class managerInventoryController {
 
                     clearCarPartForm();
                 } else {
-                    alertForm("addCar");
+                    alertForm(check,"addCar");
                 }
             }
 
@@ -660,25 +642,66 @@ public class managerInventoryController {
 
                     clearCarPartForm();
                 }else{
-                    alertForm("addPart");
+                    alertForm(check,"addPart");
                 }
             }
         }
     }
-    //for alernt there have "addCar" "addPart" "editCar" "editPart"
-    private void alertForm(String check){
+    //for alernt there have "addCar" "addPart" "editCar" "editPart" and if true that will  show the information and if false that will show warning
+    private void alertForm(boolean check,String in){
 
-        if(check.equalsIgnoreCase("addcar")){
+        if(check){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Completed");
+            if(in.equalsIgnoreCase("addCar")){
+                alert.setContentText("Successfully Added The Car");
+            }else if(in.equalsIgnoreCase("addPart")){
+                alert.setContentText("Successfully Added The Part");
+            }else if(in.equalsIgnoreCase("editCar")){
+                alert.setContentText("Successfully Edited The Car");
+            }else if(in.equalsIgnoreCase("editPart")){
+                alert.setContentText("Successfully Edited The Part");
+            }else{
 
-        }else if(check.equalsIgnoreCase("addpart")){
-
-        }else if(check.equalsIgnoreCase("editCar")){
-
-        }else if(check.equalsIgnoreCase("editPart")){
-
+            }
+            alert.showAndWait();
+            clearCarPartForm();
         }else{
+            if(in.equalsIgnoreCase("addCar")){
 
+            }else if(in.equalsIgnoreCase("addPart")){
+
+            }else if(in.equalsIgnoreCase("editCar")){
+
+            }else if(in.equalsIgnoreCase("editPart")){
+
+            }
         }
+    }
+
+    private void clearCarPartForm() {
+            if (addCarbtn.isDisable()) {
+                carModelText.clear();
+                carYearText.clear();
+                carTrimText.clear();
+                carExtColorText.clear();
+                carIntColorText.clear();
+                carPriceText.clear();
+                carQtyText.clear();
+                carImage.setImage(null);
+                gasolineRadio.setSelected(false);
+                electricCheckBox.setSelected(false);
+            }
+            if(addPartbtn.isDisable()) {
+                partNameText.clear();
+                partDescriptionText.clear();
+                partPriceText.clear();
+                partQtyText.clear();
+                partImage.setImage(null);
+                partRelativeComboBox.getSelectionModel().clearSelection();
+
+            }
+        fadeInOut(false, extraPane, inventoryPane);
     }
 
 

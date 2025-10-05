@@ -478,7 +478,7 @@
                               <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                  <children>
                                     <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-padding: 15;" text="EDIT INVENTORY" />
-                                    <Label style="-fx-text-fill: white;" text="(Car)" />
+                                    <Label fx:id="editTitle" style="-fx-text-fill: white;" text="(Car)" />
                                  </children>
                               </HBox>
                               <StackPane maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0">
@@ -576,7 +576,7 @@
                                           </HBox>
                                        </children>
                                     </VBox>
-                                    <VBox maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;" visible="false">
+                                    <VBox fx:id="editCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;" visible="false">
                                        <children>
                                           <HBox prefHeight="226.0" prefWidth="408.0" spacing="12.0">
                                              <children>
