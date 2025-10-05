@@ -3,14 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -23,9 +20,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.shape.Circle?>
 
-<HBox prefHeight="695.0" prefWidth="1248.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<HBox prefHeight="695.0" prefWidth="1248.0" spacing="10.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox minHeight="695.0" minWidth="780.0" spacing="10.0" HBox.hgrow="ALWAYS">
             <children>
@@ -36,9 +33,9 @@
                                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                             </padding>
                             <children>
-                                <HBox alignment="CENTER" minHeight="90.0" minWidth="489.0" spacing="100.0">
+                                <HBox alignment="CENTER_LEFT" minHeight="90.0" minWidth="489.0" spacing="50.0">
                                     <children>
-                                        <VBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                                        <VBox alignment="CENTER_LEFT" prefHeight="90.0" prefWidth="166.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
                                             <padding>
                                                 <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                                             </padding>
@@ -51,8 +48,11 @@
                                                     </children>
                                                 </HBox>
                                             </children>
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
                                         </VBox>
-                                        <VBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                                        <VBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="166.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
                                             <padding>
                                                 <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                                             </padding>
@@ -66,6 +66,61 @@
                                                 </HBox>
                                             </children>
                                         </VBox>
+                              <VBox minHeight="90.0" prefHeight="90.0" prefWidth="265.0" style="-fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: linear-gradient(to bottom, #d4af37, #b8941f); -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(212, 175, 55, 0.15), 15, 0.5, 0, 5);">
+                                 <children>
+                                    <HBox alignment="CENTER" minHeight="90.0" prefHeight="90.0" prefWidth="253.0">
+                                       <children>
+                                          <StackPane alignment="CENTER" prefHeight="90.0" prefWidth="95.0">
+                                             <children>
+                                                <Circle fill="TRANSPARENT" radius="42.0" stroke="linear-gradient(to bottom, #2a2a2a, #1a1a1a)" strokeWidth="5.0" />
+                                                <Circle fill="transparent" radius="42.0" stroke="linear-gradient(to bottom, #d4af37, #b8941f)" strokeWidth="5.0" />
+                                                <Circle fill="transparent" radius="32.0" stroke="linear-gradient(to bottom, #2a2a2a, #1a1a1a)" strokeWidth="5.0" />
+                                                <Circle fill="transparent" radius="32.0" stroke="linear-gradient(to bottom, #c8102e, #9d0b24)" strokeLineCap="ROUND" strokeWidth="5.0" />
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets left="2.0" />
+                                             </HBox.margin>
+                                          </StackPane>
+                                          <VBox alignment="CENTER_LEFT" minHeight="90.0" prefHeight="90.0" prefWidth="193.0" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <VBox>
+                                                   <children>
+                                                      <HBox alignment="CENTER_LEFT" spacing="16">
+                                                         <children>
+                                                            <Circle fill="linear-gradient(to bottom right, #d4af37, #b8941f)" radius="10.0" style="-fx-effect: dropshadow(gaussian, rgba(212, 175, 55, 0.4), 6, 0, 0, 2);" />
+                                                            <VBox>
+                                                               <children>
+                                                                  <Label style="-fx-font-size: 16; -fx-font-weight: 800;" text="✓ Confirmed" />
+                                                                  <Label style="-fx-font-size: 14; -fx-font-weight: 600;" text="🏁 800" />
+                                                               </children>
+                                                            </VBox>
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT" spacing="16.0">
+                                                         <children>
+                                                            <Circle fill="linear-gradient(to bottom right, #c8102e, #9d0b24)" radius="10.0" style="-fx-effect: dropshadow(gaussian, rgba(200, 16, 46, 0.4), 6, 0, 0, 2);" />
+                                                            <VBox>
+                                                               <children>
+                                                                  <Label style="-fx-font-size: 16; -fx-font-weight: 800;" text="⏳ Pending" />
+                                                                  <Label style="-fx-font-size: 14; -fx-font-weight: 600;" text="⚡ 800" />
+                                                               </children>
+                                                            </VBox>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                             <padding>
+                                                <Insets left="28.0" />
+                                             </padding>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets left="230.0" />
+                                 </HBox.margin>
+                              </VBox>
                                     </children>
                                 </HBox>
                                 <HBox alignment="CENTER" minHeight="150.0" minWidth="489.0">
@@ -91,68 +146,7 @@
                                         <Label style="-fx-text-fill: #7f8c8d;" text="Sun" />
                                     </children>
                                 </HBox>
-                                <HBox alignment="CENTER" spacing="30.0">
-                                    <children>
-                                        <VBox alignment="CENTER" spacing="5.0">
-                                            <children>
-                                                <Label style="-fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 18px;" text="5363" />
-                                                <Label style="-fx-text-fill: #7f8c8d; -fx-font-size: 14px;" text="Product" />
-                                            </children>
-                                        </VBox>
-                                        <Separator orientation="VERTICAL" prefHeight="50.0" />
-                                        <VBox alignment="CENTER" spacing="5.0">
-                                            <children>
-                                                <Label style="-fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 18px;" text="200%" />
-                                                <Label style="-fx-text-fill: #7f8c8d; -fx-font-size: 14px;" text="Growth Rate" />
-                                            </children>
-                                        </VBox>
-                                    </children>
-                                </HBox>
                             </children>
-                        </VBox>
-                        <VBox maxWidth="300.0" minHeight="330.0" minWidth="100.0">
-                            <children>
-                                <PieChart maxHeight="173.0" minHeight="128.33" minWidth="164.0" VBox.vgrow="ALWAYS" />
-                                <HBox alignment="CENTER" maxHeight="128.33" minHeight="128.33" minWidth="178.0" VBox.vgrow="ALWAYS">
-                                    <children>
-                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                                            <children>
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35; -fx-font-weight: bold;" text="800" />
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="Confirm" />
-                                            </children>
-                                        </VBox>
-                                        <LineChart alternativeRowFillVisible="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" minHeight="90.0" minWidth="100.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
-                                            <xAxis>
-                                                <CategoryAxis gapStartAndEnd="false" side="BOTTOM" tickLabelGap="0.0" tickLabelsVisible="false" tickLength="0.0" />
-                                            </xAxis>
-                                            <yAxis>
-                                                <NumberAxis minorTickCount="0" minorTickLength="0.0" side="LEFT" tickLabelGap="0.0" tickLabelsVisible="false" tickLength="0.0" tickUnit="0.0" upperBound="0.0" />
-                                            </yAxis>
-                                        </LineChart>
-                                    </children>
-                                </HBox>
-                                <HBox alignment="CENTER" maxHeight="128.33" minHeight="128.33" minWidth="178.0" VBox.vgrow="ALWAYS">
-                                    <children>
-                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                                            <children>
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 35; -fx-font-weight: bold;" text="800" />
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="Pending" />
-                                            </children>
-                                        </VBox>
-                                        <LineChart alternativeRowFillVisible="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" minHeight="90.0" minWidth="100.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
-                                            <xAxis>
-                                                <CategoryAxis gapStartAndEnd="false" side="BOTTOM" tickLabelGap="0.0" tickLabelsVisible="false" tickLength="0.0" />
-                                            </xAxis>
-                                            <yAxis>
-                                                <NumberAxis minorTickCount="0" minorTickLength="0.0" side="LEFT" tickLabelGap="0.0" tickLabelsVisible="false" tickLength="0.0" tickUnit="0.0" upperBound="0.0" />
-                                            </yAxis>
-                                        </LineChart>
-                                    </children>
-                                </HBox>
-                            </children>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
                         </VBox>
                     </children>
                 </HBox>
