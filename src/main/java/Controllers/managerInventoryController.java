@@ -35,7 +35,7 @@ import java.util.List;
 public class managerInventoryController {
 
     @FXML
-    private TableColumn<inventory, Double> PriceCol;
+    private TableColumn<inventory, Double> priceCol;
 
     @FXML
     private TableColumn<inventory,?> actionCol;
@@ -229,6 +229,59 @@ public class managerInventoryController {
     @FXML
     private CheckBox carTaycan;
 
+    @FXML
+    private VBox addPane;
+
+    @FXML
+    private VBox editCarPane;
+    @FXML
+    private TextField editCarName;
+    @FXML
+    private TextField editCarUsage;
+    @FXML
+    private TextField editCarExtColor;
+    @FXML
+    private TextField editCarIntColor;
+    @FXML
+    private TextField editCarQty;
+    @FXML
+    private TextField editCarPrice;
+    @FXML
+    private ImageView editCarImg;
+
+    @FXML
+    private VBox editPartPane;
+    @FXML
+    private TextField editPartName;
+    @FXML
+    private TextField editPartForCar;
+    @FXML
+    private TextField editPartDescription;
+    @FXML
+    private TextField editPartQty;
+    @FXML
+    private TextField editPartPrice;
+
+    @FXML
+    void clickEditPartRevert(ActionEvent event){
+
+    }
+
+    @FXML
+    void clickEditPartApply(ActionEvent evnet){
+
+    }
+
+    @FXML
+    void clickEditCarRevert(ActionEvent event){
+
+    }
+
+    @FXML
+    void clickEditCarApply(ActionEvent evnet){
+
+    }
+
     public managerInventoryController() throws SQLException, ClassNotFoundException {
     }
 
@@ -419,7 +472,7 @@ public class managerInventoryController {
             nameCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getName()));
             statusCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getStatus()));
             qtyCol.setCellValueFactory(d->new ReadOnlyObjectWrapper<>(d.getValue().getQty()));
-
+            priceCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getPrice()));
     }
     List<File> file = new ArrayList<>();
     Porsche_DB db = new Porsche_DB();
