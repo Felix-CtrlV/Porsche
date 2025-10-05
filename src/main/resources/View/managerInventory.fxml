@@ -326,7 +326,7 @@
                                                         </VBox>
                                                       <StackPane alignment="CENTER_LEFT">
                                                           <children>
-                                                              <TextField fx:id="carYearText" maxHeight="25.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                              <TextField fx:id="carYearText" maxHeight="35.0" minHeight="35.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                               <Label fx:id="carYearLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="PRODUCTION YEAR *">
                                                                   <StackPane.margin>
                                                                       <Insets left="15.0" />
@@ -338,7 +338,7 @@
                                                           <children>
                                                               <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                                                                   <children>
-                                                                      <TextField fx:id="carQtyText" maxHeight="25.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                                      <TextField fx:id="carQtyText" maxHeight="35.0" minHeight="35.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                                       <Label fx:id="carQtyLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="QUANTITY *">
                                                                           <StackPane.margin>
                                                                               <Insets left="15.0" />
@@ -348,7 +348,7 @@
                                                               </StackPane>
                                                               <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                                                                   <children>
-                                                                      <TextField fx:id="carPriceText" maxHeight="25.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                                      <TextField fx:id="carPriceText" maxHeight="35.0" minHeight="35.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                                       <Label fx:id="carPriceLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="PRICE ($) *">
                                                                           <StackPane.margin>
                                                                               <Insets left="15.0" />
@@ -369,7 +369,7 @@
                                                           </Button>
                                                       </children>
                                              <VBox.margin>
-                                                <Insets top="20.0" />
+                                                <Insets />
                                              </VBox.margin>
                                                   </HBox>
                                                   </children>
@@ -473,7 +473,7 @@
                               </StackPane>
                                   </children>
                               </VBox>
-                        <VBox maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                        <VBox maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
                            <children>
                               <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                  <children>
@@ -750,6 +750,9 @@
                            </children>
                         </VBox>
                      </children>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </StackPane>
                     </center>
                     <top>
