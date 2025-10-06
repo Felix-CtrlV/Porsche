@@ -9,7 +9,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,12 +23,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -51,9 +58,6 @@ public class managerInventoryController {
 
     @FXML
     private Button addPartbtn;
-
-    @FXML
-    private Button carCancel;
 
     @FXML
     private Button carConfirm;
@@ -151,8 +155,6 @@ public class managerInventoryController {
     @FXML
     private TableColumn<inventory, String > nameCol;
 
-    @FXML
-    private Button partCancle;
 
     @FXML
     private Button partConfirm;
@@ -321,27 +323,23 @@ public class managerInventoryController {
     }
 
     @FXML
-    void clickAddCarbtn(ActionEvent event) {
-        addCarbtn.setDisable(true);
-        addPartbtn.setDisable(false);
-        fadeInOut(true,addCar,addPart);
+    void clickAddCarbtn(ActionEvent event) throws SQLException {
+        hasData(false,"partsBtn");
     }
 
     @FXML
-    void clickAddPartbtn(ActionEvent event) {
-        addCarbtn.setDisable(false);
-        addPartbtn.setDisable(true);
-        fadeInOut(true,addPart,addCar);
+    void clickAddPartbtn(ActionEvent event) throws SQLException {
+        hasData(false,"carsBtn");
     }
 
     @FXML
     void clickCarCancel(ActionEvent event) throws SQLException {
-        hasData(false,"cars");
+        hasData(false,"carsAdd");
     }
 
     @FXML
     void clickCarConfirm(ActionEvent event) throws SQLException {
-        hasData(true,"cars");
+        hasData(true,"carsAdd");
     }
 
     @FXML
@@ -367,13 +365,14 @@ public class managerInventoryController {
     }
 
     @FXML
-    void clickPartCancle(ActionEvent event) throws SQLException {
-        hasData(false,"parts");
+    void clickPartCancel(ActionEvent event) throws SQLException {
+
+        hasData(false,"partsAdd");
     }
 
     @FXML
     void clickPartConfirm(ActionEvent event) throws SQLException {
-        hasData(true,"parts");
+        hasData(true,"partsAdd");
     }
 
     @FXML
@@ -453,6 +452,7 @@ public class managerInventoryController {
 
     @FXML
     private void initialize(){
+
             extraPane.setVisible(false);
             inventoryPane.setOpacity(1);
 
@@ -600,86 +600,136 @@ public class managerInventoryController {
 
     }
 
-    private void hasData(boolean check,String path) throws SQLException {
-        if(path.equals("cars")){
-            String img = String.valueOf(file.get(0));
-            System.out.println(img);
-            String models = carModelText.getText();
-            String trim = carTrimText.getText();
-            String extColor = carExtColorText.getText();
-            String intColor = carIntColorText.getText();
-            String fuel_type = gasolineRadio.getTypeSelector().toString();
-            String qty = carQtyText.getText();
-            String price = carPriceText.getText();
+    //in the path data there is cars (extra pane) , parts (extra pane), carsBtn , parstBtn , addCars, addParts
+    private void hasData(boolean check, String path) throws SQLException {
+        if (path.contains("car")) {
+            String img = file.isEmpty() ? "" : String.valueOf(file.get(0));
+            String models = carModelText.getText().trim();
+            String trim = carTrimText.getText().trim();
+            String extColor = carExtColorText.getText().trim();
+            String intColor = carIntColorText.getText().trim();
+            RadioButton selectedFuel = (RadioButton) fuelTypeGroup.getSelectedToggle();
+            String fuel_type = (selectedFuel != null) ? selectedFuel.getText() : "";
+            String qty = carQtyText.getText().trim();
+            String price = carPriceText.getText().trim();
 
-            if(img.isEmpty()&& models.isEmpty() && trim.isEmpty() &&
+            boolean allEmpty = img.isEmpty() && models.isEmpty() && trim.isEmpty() &&
                     extColor.isEmpty() && intColor.isEmpty() &&
-                    fuel_type.isEmpty() && qty.isEmpty() && price.isEmpty()
-                ){
-                alertForm(check,"noData");
-                clearCarPartForm();
-            }else {
-                if (check) {
-                    CallableStatement cs = con.prepareCall("");
+                    fuel_type.isEmpty() && qty.isEmpty() && price.isEmpty();
 
-                    clearCarPartForm();
+
+            try {
+                if (check) {
+
+                        alertForm(true, path);
                 } else {
-                    alertForm(check,"addCar");
+
+                    if (allEmpty && (path.equals("cars") || path.equals("carsAdd")) ) {
+                        clearCarPartForm(path);
+                    } else if (allEmpty && path.equals("carsBtn")) {
+                            clearCarPartForm(path);
+                    }else {
+                        alertForm(check, path);
+                    }
                 }
+            }catch ( IOException e){
+                throw new RuntimeException(e);
             }
 
-        }else{
-            String img = String.valueOf(file.get(0));
-            String name = partNameText.getText();
-            String qty = partQtyText.getText();
-            String price = partPriceText.getText();
-            String description = partDescriptionText.getText();
-            if(img.isEmpty() && name.isEmpty() && qty.isEmpty() && price.isEmpty() && description.isEmpty()){
-                clearCarPartForm();
-            }else {
-                if (check){
-                    CallableStatement cs = con.prepareCall("");
+        } else if (path.contains("part")) {
+            String img = file.isEmpty() ? "" : String.valueOf(file.get(0));
+            String name = partNameText.getText().trim();
+            String qty = partQtyText.getText().trim();
+            String price = partPriceText.getText().trim();
+            String description = partDescriptionText.getText().trim();
 
-                    clearCarPartForm();
-                }else{
-                    alertForm(check,"addPart");
+            boolean allEmpty = img.isEmpty() && name.isEmpty() && qty.isEmpty() &&
+                    price.isEmpty() && description.isEmpty();
+
+
+            try {
+                if (check) {
+                    alertForm(true, path);
+
+                } else {
+                    if (allEmpty && (path.equals("parts") || path.equals("partsAdd") )) {
+                        clearCarPartForm(path);
+
+                    } else if (allEmpty && path.equals("partsBtn")) {
+                        clearCarPartForm(path);
+
+                    }else {
+                        alertForm(check, path);
+                    }
                 }
+            } catch (IOException e) {
+                        throw new RuntimeException(e);
             }
         }
     }
-    //for alernt there have "addCar" "addPart" "editCar" "editPart" and if true that will  show the information and if false that will show warning
-    private void alertForm(boolean check,String in){
+    //for alernt there have "carsAdd" "partsAdd" "carsEdit" "partsEdit" and if true that will  show the information and if false that will show warning
+    private void alertForm(boolean check,String in) throws IOException {
 
         if(check){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Completed");
-            if(in.equalsIgnoreCase("addCar")){
+            alert.setTitle("Finished");
+            if(in.equalsIgnoreCase("carsAdd")){
                 alert.setContentText("Successfully Added The Car");
-            }else if(in.equalsIgnoreCase("addPart")){
+            }else if(in.equalsIgnoreCase("partsAdd")){
                 alert.setContentText("Successfully Added The Part");
-            }else if(in.equalsIgnoreCase("editCar")){
+            }else if(in.equalsIgnoreCase("carsEdit")){
                 alert.setContentText("Successfully Edited The Car");
-            }else if(in.equalsIgnoreCase("editPart")){
+            }else if(in.equalsIgnoreCase("partsEdit")){
                 alert.setContentText("Successfully Edited The Part");
-            }else{
-
             }
             alert.showAndWait();
-            clearCarPartForm();
+            clearCarPartForm(in);
         }else{
-            if(in.equalsIgnoreCase("addCar")){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/alert.fxml"));
+            Parent root = loader.load();
 
-            }else if(in.equalsIgnoreCase("addPart")){
+            alertController alertController = loader.getController();
 
-            }else if(in.equalsIgnoreCase("editCar")){
-
-            }else if(in.equalsIgnoreCase("editPart")){
-
+            if(in.equalsIgnoreCase("carsAdd")){
+                alertController.setAlert("You have unsaved changes for adding a car. Are you sure you want to cancel?");
+            }else if(in.equalsIgnoreCase("partsAdd")){
+                alertController.setAlert("You have unsaved changes for adding a part. Are you sure you want to cancel?");
+            }else if(in.equalsIgnoreCase("cartsEdit")){
+                alertController.setAlert("You have unsaved changes for editing a car. Are you sure you want to cancel?");
+            }else if(in.equalsIgnoreCase("partsEdit")){
+                alertController.setAlert("You have unsaved changes for editing a part. Are you sure you want to cancel?");
             }
-        }
-    }
+            Stage alertStage = new Stage();
+            alertStage.initModality(Modality.APPLICATION_MODAL);
+            alertStage.initStyle(StageStyle.TRANSPARENT);
+            alertStage.setScene(new Scene(root));
 
-    private void clearCarPartForm() {
+            if (in.equals("carsBtn") || in.equals("partsBtn")){
+                System.out.println(in);
+                alertController.confirmBtn.setOnAction(e -> {
+                    clearCarPartForm(in);
+                    alertStage.close();
+                });
+                alertController.cancelBtn.setOnAction(e -> {
+                    alertStage.close();
+                });
+            }else {
+                System.out.println(in);
+                alertController.confirmBtn.setOnAction(e -> {
+                    clearCarPartForm(in);
+                    alertStage.close();
+                });
+                alertController.cancelBtn.setOnAction(e -> {
+                    alertStage.close();
+                });
+            }
+
+            alertStage.showAndWait();
+        }
+
+    }
+    // in = carsBtn , partsBtn or null
+    private void clearCarPartForm(String in) {
             if (addCarbtn.isDisable()) {
                 carModelText.clear();
                 carYearText.clear();
@@ -701,7 +751,17 @@ public class managerInventoryController {
                 partRelativeComboBox.getSelectionModel().clearSelection();
 
             }
-        fadeInOut(false, extraPane, inventoryPane);
+            if(in.equals("carsBtn") ) {
+                addCarbtn.setDisable(false);
+                addPartbtn.setDisable(true);
+                fadeInOut(true,addPart,addCar);
+            }else if(in.equals("partsBtn")){
+                addCarbtn.setDisable(true);
+                addPartbtn.setDisable(false);
+                fadeInOut(true,addCar,addPart);
+            }else{
+                fadeInOut(false, extraPane, inventoryPane);
+            }
     }
 
 

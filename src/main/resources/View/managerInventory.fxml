@@ -455,7 +455,7 @@
                                           </StackPane>
                                           <HBox alignment="CENTER_RIGHT" style="-fx-padding: 12 20 12 20;">
                                              <children>
-                                                <Button fx:id="partCancle" mnemonicParsing="false" onAction="#clickPartCancle" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="Cancel" />
+                                                <Button fx:id="partCancel" mnemonicParsing="false" onAction="#clickPartCancel" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="Cancel" />
                                                 <Region HBox.hgrow="ALWAYS" />
                                                 <Button fx:id="partConfirm" mnemonicParsing="false" onAction="#clickPartConfirm" style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-background-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="Confirm">
                                                    <HBox.margin>
