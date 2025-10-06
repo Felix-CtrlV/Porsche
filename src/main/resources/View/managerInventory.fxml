@@ -112,7 +112,7 @@
                                 </VBox>
 
                                 <!-- Models Section -->
-                                <VBox fx:id="modelsPane" prefHeight="321.0" prefWidth="260.0" spacing="15.0" style="-fx-padding: 20 0 0 0; -fx-background-color: #fafafa; -fx-border-color: #f0f0f0; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 1;">
+                                <VBox fx:id="modelsPane" prefHeight="321.0" prefWidth="260.0" spacing="15.0" style="-fx-padding: 20 0 0 0; -fx-background-color: #fafafa; -fx-border-color: #f0f0f0; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 1;" VBox.vgrow="ALWAYS">
                                     <HBox alignment="CENTER_LEFT" spacing="60.0">
                                         <children>
                                             <Label style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-font-size: 14; -fx-font-family: 'Arial';" text="MODELS" underline="true">
@@ -125,8 +125,8 @@
                                     </HBox>
                                     <GridPane fx:id="modelsShowBox" style="-fx-padding: 15;">
                                         <columnConstraints>
-                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
-                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
+                                            <ColumnConstraints fx:id="modelsCol1" hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
+                                            <ColumnConstraints fx:id="modelsCol2" hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
                                         </columnConstraints>
                                         <rowConstraints>
                                             <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
@@ -137,7 +137,7 @@
                                             <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="911 Turbo S" GridPane.rowIndex="0" />
                                             <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="Cayenne Turbo" GridPane.rowIndex="1" />
                                             <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="Taycan Turbo" GridPane.rowIndex="2" />
-                                            <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="Panamera 4S" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                            <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="Panamera 4S" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
                                             <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="Macan GTS" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                             <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="718 Cayman" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                         </children>
@@ -196,7 +196,7 @@
                         </VBox>
                     </children>
                 </HBox>
-                <BorderPane fx:id="extraPane" maxHeight="768.0" maxWidth="1366.0" minHeight="768.0" minWidth="1366.0">
+                <BorderPane fx:id="extraPane" maxHeight="768.0" maxWidth="1366.0" minHeight="768.0" minWidth="1366.0" visible="false">
                     <center>
                   <StackPane>
                      <children>

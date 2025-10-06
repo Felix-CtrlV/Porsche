@@ -2,14 +2,18 @@ package Controllers;
 
 import Database.Porsche_DB;
 import Model.inventory;
+import Model.user;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,26 +21,27 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.w3c.dom.Text;
 
+import javax.xml.transform.Result;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class managerInventoryController {
@@ -45,7 +50,7 @@ public class managerInventoryController {
     private TableColumn<inventory, Double> priceCol;
 
     @FXML
-    private TableColumn<inventory,?> actionCol;
+    private TableColumn<inventory,inventory> actionCol;
 
     @FXML
     private VBox addCar;
@@ -129,7 +134,7 @@ public class managerInventoryController {
     private RadioButton hybridRadio;
 
     @FXML
-    private TableColumn<inventory, Integer> idCol;
+    private TableColumn<inventory, String> idCol;
 
     @FXML
     private Button inventoryAdd;
@@ -230,6 +235,12 @@ public class managerInventoryController {
 
     @FXML
     private CheckBox carTaycan;
+
+    @FXML
+    private ColumnConstraints modelsCol1;
+
+    @FXML
+    private ColumnConstraints modelsCol2;
 
     @FXML
     private VBox addPane;
@@ -361,7 +372,7 @@ public class managerInventoryController {
 
     @FXML
     void clickModelsSelectAll(ActionEvent event) {
-        selectAll(modelsSelectAll.isSelected(),modelsSelectAll);
+        setSelect(modelsSelectAll.isSelected(),modelsSelectAll);
     }
 
     @FXML
@@ -377,51 +388,55 @@ public class managerInventoryController {
 
     @FXML
     void clickRefreshTable(ActionEvent event) {
-
+        setCarsTable();
+        setPartsTable();
+        inventoryData.clear();
+        inventoryData.addAll(carsData);
+        inventoryData.addAll(partsData);
+        setupSearchBar();
+        if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+            showTable("cars");
+        }else{
+            showTable("parts");
+        }
     }
 
     @FXML
     void clickSearchBtn(ActionEvent event) {
-
+        handleSearch();
     }
 
     @FXML
     void clickSelect718(ActionEvent event) {
-        selectAll(car718.isSelected(),car718);
-
+        setSelect(car718.isSelected(),car718);
     }
 
     @FXML
     void clickSelect911(ActionEvent event) {
-        selectAll(car911.isSelected(),car911);
-
+        setSelect(car911.isSelected(),car911);
     }
 
     @FXML
     void clickSelectCayenne(ActionEvent event) {
-        selectAll(carCayenne.isSelected(),carCayenne);
-
+        setSelect(carCayenne.isSelected(),carCayenne);
     }
 
     @FXML
     void clickSelectMacan(ActionEvent event) {
-        selectAll(carMacan.isSelected(),carMacan);
-
+        setSelect(carMacan.isSelected(),carMacan);
     }
 
     @FXML
     void clickSelectPanamera(ActionEvent event) {
-        selectAll(carPanamera.isSelected(),carPanamera);
-
+        setSelect(carPanamera.isSelected(),carPanamera);
     }
     @FXML
     void clickSelectTaycan(ActionEvent event) {
-        selectAll(carTaycan.isSelected(),carTaycan);
-
+        setSelect(carTaycan.isSelected(),carTaycan);
     }
     @FXML
     void clickSeriesSelectAll(ActionEvent event) {
-        selectAll(seriesSelectAll.isSelected(),seriesSelectAll);
+        setSelect(seriesSelectAll.isSelected(),seriesSelectAll);
     }
 
     @FXML
@@ -438,13 +453,14 @@ public class managerInventoryController {
         String selectedValue = inventoryBox.getValue();
 
         if ("Cars".equals(selectedValue)) {
-            selectAll(true,seriesSelectAll);
+            setSelect(true,seriesSelectAll);
             fadeInOut(true,modelsPane,null);
             fadeInOut(true, seriesPane, null);
+            showTable("cars");
         } else if ("Parts".equals(selectedValue)) {
             fadeInOut(false,modelsPane,null);
             fadeInOut(false, seriesPane, null);
-
+            showTable("parts");
         }
     }
 
@@ -452,13 +468,15 @@ public class managerInventoryController {
 
     @FXML
     private void initialize(){
-
             extraPane.setVisible(false);
             inventoryPane.setOpacity(1);
-
+            setCarsTable();
+            setPartsTable();
+            inventoryData.addAll(carsData);
+            inventoryData.addAll(partsData);
             inventoryBox.getItems().addAll("Cars","Parts");
             inventoryBox.setValue("Cars");
-            selectAll(true,seriesSelectAll);
+            setSelect(true,seriesSelectAll);
 
             setupFloatingLabel(partNameText, partNameLbl);
             setupFloatingLabel(partQtyText, partQtyLbl);
@@ -473,11 +491,15 @@ public class managerInventoryController {
             setupFloatingLabel(carExtColorText, carExtColorLbl);
             setupFloatingLabel(carIntColorText, carIntColorLbl);
 
-            idCol.setCellValueFactory(d->new ReadOnlyObjectWrapper<>(d.getValue().getId()));
+            idCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getInventoryId()));
             nameCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getName()));
             statusCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getStatus()));
             qtyCol.setCellValueFactory(d->new ReadOnlyObjectWrapper<>(d.getValue().getQty()));
             priceCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getPrice()));
+            setActionColumn();
+
+            showTable("cars");
+            setupSearchBar();
     }
     List<File> file = new ArrayList<>();
     Porsche_DB db = new Porsche_DB();
@@ -523,8 +545,7 @@ public class managerInventoryController {
         }
     }
 
-    private void selectAll(boolean check, CheckBox in){
-
+    private void setSelect(boolean check, CheckBox in){
         if (in == seriesSelectAll) {
             in.setSelected(check);
             car718.setSelected(check);
@@ -534,8 +555,10 @@ public class managerInventoryController {
             carPanamera.setSelected(check);
             carTaycan.setSelected(check);
             modelsSelectAll.setSelected(check);
+
         }else{
             seriesSelectAll.setSelected(false);
+
             modelsSelectAll.setSelected(true);
             in.setSelected(check);
 
@@ -544,7 +567,9 @@ public class managerInventoryController {
                     carMacan.isSelected() && carPanamera.isSelected()
                 ){
                 seriesSelectAll.setSelected(true);
+
             }
+
 
         }
         if(!carTaycan.isSelected() && !car911.isSelected() &&
@@ -559,8 +584,9 @@ public class managerInventoryController {
                 fadeInOut(true,modelsPane,null);
             }
         }
-    }
+        showTable("cars");
 
+    }
     private void setupFloatingLabel(TextField field, Label label) {
 
         EventHandler<MouseEvent> onEnter = e -> translateInOut(true, label, field);
@@ -579,7 +605,6 @@ public class managerInventoryController {
             }
         });
     }
-
     private void translateInOut(boolean check,Label label,TextField field){
 
         TranslateTransition translate = new TranslateTransition(Duration.millis(250),label);
@@ -599,7 +624,6 @@ public class managerInventoryController {
         translate.play();
 
     }
-
     //in the path data there is cars (extra pane) , parts (extra pane), carsBtn , parstBtn , addCars, addParts
     private void hasData(boolean check, String path) throws SQLException {
         if (path.contains("car")) {
@@ -763,6 +787,281 @@ public class managerInventoryController {
                 fadeInOut(false, extraPane, inventoryPane);
             }
     }
+    private ObservableList<inventory> inventoryData = FXCollections.observableArrayList();
+    private void setActionColumn() {
+        actionCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        actionCol.setCellFactory(param -> new TableCell<inventory, inventory>() {
+            private final Button editButton = new Button("Edit");
+            private final Button deleteButton = new Button("Delete");
+            private final HBox buttonsContainer = new HBox(5, editButton, deleteButton);
 
+            {
+                // Style the buttons
+                editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 11px; -fx-padding: 5 10 5 10;");
+                deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-size: 11px; -fx-padding: 5 10 5 10;");
+
+                editButton.setOnAction(event -> {
+                    inventory item = getTableView().getItems().get(getIndex());
+                    editTable(item);
+                });
+
+                deleteButton.setOnAction(event -> {
+                    inventory item = getTableView().getItems().get(getIndex());
+                    tableUpdateDelete(false,item);
+                });
+            }
+
+            @Override
+            protected void updateItem(inventory item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(buttonsContainer);
+                }
+            }
+        });
+    }
+    // for showTable check ("cars" , "parts" ,"search")
+    private ObservableList<inventory> carsData = FXCollections.observableArrayList();
+    private HashMap<CheckBox,String > models = new HashMap<>();
+    private ObservableList<inventory> partsData = FXCollections.observableArrayList();
+    private ObservableList<inventory> searchDate = FXCollections.observableArrayList();
+    private void showTable(String check){
+        int sItems =0;
+        int total = 0;
+       if("cars".equals(check)){
+           sItems = showCarsTable();
+           total = carsData.size();
+       }else if("parts".equals(check)){
+          sItems = showPartsTable();
+          total = partsData.size();
+       }else{
+           sItems = showSearchItemTable();
+           total = inventoryData.size();
+       }
+
+        showTableRows.setText("Showing " + total + " of " + sItems + " items");
+    }
+    private void setCarsTable(){
+        try{
+            carsData.clear();
+            models.clear();
+            CallableStatement cs = con.prepareCall("CALL getAllCars()");
+            ResultSet rs = cs.executeQuery();
+            while (rs.next()){
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                String extColor = rs.getString(3);
+                String intColor = rs.getString(4);
+                String fuels = rs.getString(5);
+                int productYear = rs.getInt(6);
+                int qty = rs.getInt(7);
+                Double price = rs.getDouble(8);
+                String photoUrl = rs.getString(9);
+                String status = (qty !=0) ?"On" : "Out";
+                String inventoryId = String.format("C-%03d", id);
+                carsData.add(new inventory(inventoryId,name,extColor,intColor,fuels,productYear,qty,price,status,photoUrl));
+            }
+            for(inventory i : carsData){
+                models.put(new CheckBox(i.getModels()),i.getSeries());
+            }
+            cs.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void setPartsTable(){
+        try {
+            partsData.clear();
+            CallableStatement cs = con.prepareCall("CALL getAllParts()");
+            ResultSet rs = cs.executeQuery();
+            while ((rs.next())){
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                String forCar = rs.getString(3);
+                String description = rs.getString(4);
+                int qty = rs.getInt(5);
+                Double price = rs.getDouble(6);
+                String photoUrl = rs.getString(7);
+
+                String status = (qty !=0) ?"On" : "Out";
+                String inventoryId = String.format("P-%03d", id);
+                partsData.add(new inventory(inventoryId,name,forCar,description,qty,price,status,photoUrl));
+            }
+            cs.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    private int showCarsTable(){
+        inventoryTable.getItems().clear();
+        boolean selectAll = seriesSelectAll.isSelected();
+        ObservableList<inventory> filterData = FXCollections.observableArrayList();
+        String c911 = car911.isSelected() ? "911" : "";
+        String c718 = car718.isSelected() ? "718":"";
+        String cCayenne = carCayenne.isSelected() ? "cayenne" : "";
+        String cMacan = carMacan.isSelected()? "macan":"";
+        String cPanamera = carPanamera.isSelected()? "panamera":"";
+        String cTaycan = carTaycan.isSelected()? "taycan" : "";
+
+        if(selectAll){
+            filterData.addAll(carsData);
+        }else{
+            for(inventory i : carsData){
+
+                if(     (c911.contains(i.getSeries()) && !c911.isBlank()) ||
+                        (c718.contains(i.getSeries()) && !c718.isBlank()) ||
+                        (cCayenne.contains(i.getSeries()) && !cCayenne.isBlank()) ||
+                        (cMacan.contains(i.getSeries()) && !cMacan.isBlank()) ||
+                        (cPanamera.contains(i.getSeries()) && !cPanamera.isBlank()) ||
+                        (cTaycan.contains(i.getSeries()) && !cTaycan.isBlank())
+                    ){
+                    filterData.add(i);
+
+                }
+            }
+        }
+        ArrayList<CheckBox> in = new ArrayList<>();
+        for(inventory i : filterData) {
+            for (HashMap.Entry<CheckBox, String> entry : models.entrySet()) {
+                if(i.getModels().contains(entry.getValue())) {
+                    in.add(entry.getKey());
+                }
+            }
+        }
+        setModels(in);
+        inventoryTable.setItems(filterData);
+        return  filterData.size();
+    }
+    private int showPartsTable(){
+        inventoryTable.getItems().clear();
+        ObservableList<inventory> filterData = FXCollections.observableArrayList();
+        filterData.addAll(partsData);
+        inventoryTable.setItems(filterData);
+        return partsData.size();
+    }
+    private ContextMenu searchSuggestions = new ContextMenu();
+    private void setupSearchBar() {
+        // Set up key listener for Enter key
+        searchBar.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleSearch();
+            }
+        });
+        // Set up text change listener for suggestions
+        searchBar.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.isEmpty()) {
+                searchSuggestions.hide();
+                return;
+            }
+            // Clear previous suggestions
+            searchSuggestions.getItems().clear();
+
+            // Find matching staff
+            List<MenuItem> matches = new ArrayList<>();
+            for (inventory i : inventoryData) {
+                String searchText = newText.toLowerCase();
+                String id = String.valueOf(i.getInventoryId().toLowerCase());
+                String name = i.getName().toLowerCase();
+
+                if (id.contains(searchText) || name.contains(searchText)) {
+                    String suggestionText = i.getInventoryId() + " - " + i.getName();
+                    MenuItem item = new MenuItem(suggestionText);
+
+                    // Set action for when suggestion is clicked
+                    item.setOnAction(e -> {
+                        searchBar.setText(suggestionText);
+                        searchSuggestions.hide();
+                        searchDate.clear();
+                        searchDate.add(i);
+                        showTable("search");
+                    });
+
+                    matches.add(item);
+                }
+            }
+
+            // Show suggestions if matches found
+            if (!matches.isEmpty()) {
+                searchSuggestions.getItems().addAll(matches);
+                searchSuggestions.show(searchBar, Side.BOTTOM, 0, 0);
+            } else {
+                searchSuggestions.hide();
+            }
+        });
+
+        // Hide suggestions when text field loses focus
+        searchBar.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                searchSuggestions.hide();
+            }
+        });
+    }
+
+    private void handleSearch() {
+        String searchText = searchBar.getText().trim();
+        if (searchText.isEmpty()) {
+            return;
+        }
+
+        // Try to find a matching staff member
+        for (inventory i :inventoryData) {
+            String id = i.getInventoryId();
+            String name = i.getName();
+
+            // Check if search text matches ID or name
+            if (searchText.equalsIgnoreCase(id) ||
+                    searchText.equalsIgnoreCase(name) ||
+                    searchText.equalsIgnoreCase(id + " - " + name)) {
+                    searchDate.clear();
+                    searchDate.add(i);
+                    showTable("search");
+                return;
+            }
+        }
+    }
+
+    private int showSearchItemTable(){
+        inventoryTable.getItems().clear();
+        ObservableList<inventory> filterData = FXCollections.observableArrayList();
+        filterData.addAll(searchDate);
+        inventoryTable.setItems(filterData);
+        return searchDate.size();
+    }
+
+    private void editTable(inventory in){
+        addPane.setVisible(false);
+        editPane.setVisible(true);
+
+        fadeInOut(true,extraPane,inventoryPane);
+    }
+
+    private void tableUpdateDelete(boolean check,inventory in){
+        if(check){
+
+        }else{
+            int id = in.getId();
+            for(inventory i: inventoryData){
+                if(i.getId() == id){
+                    inventoryData.clear();
+                }
+            }
+        }
+    }
+
+    private void setModels(ArrayList<CheckBox> in) {
+        modelsShowBox.getChildren().clear();
+        modelsCol1.setHgrow(Priority.ALWAYS);
+        modelsCol2.setHgrow(Priority.ALWAYS);
+
+        for(int i = 0; i < in.size(); i++){
+            int row = i / 2;
+            int col = i % 2;
+            modelsShowBox.add(in.get(i), col, row);  // Correct order: column, row
+        }
+        modelsShowBox.setVisible(true);
+    }
 
 }
