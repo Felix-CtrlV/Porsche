@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="220.0" maxWidth="400.0" minHeight="220.0" minWidth="298.0" prefHeight="220.0" prefWidth="347.0" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #fde68a; -fx-border-radius: 14; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.alertController">
+<BorderPane maxHeight="220.0" maxWidth="400.0" minHeight="216.0" minWidth="298.0" prefHeight="220.0" prefWidth="341.0" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #fde68a; -fx-border-radius: 14; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.alertController">
     <top>
         <HBox alignment="CENTER" prefHeight="65.0" prefWidth="400.0" style="-fx-background-color: #fcd34d; -fx-background-radius: 14 14 0 0; -fx-border-color: #fcd34d; -fx-border-width: 0 0 2 0;" BorderPane.alignment="CENTER">
             <children>
