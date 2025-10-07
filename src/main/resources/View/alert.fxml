@@ -8,10 +8,10 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="383.0" maxWidth="529.0" minHeight="0.0" minWidth="298.0" prefHeight="196.0" prefWidth="442.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.alertController">
+<BorderPane maxHeight="383.0" maxWidth="529.0" minHeight="0.0" minWidth="298.0" prefHeight="196.0" prefWidth="317.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.alertController">
 
     <center>
-        <VBox style="-fx-background-color: white; -fx-border-color: #fde68a; -fx-background-radius: 14px; -fx-border-radius: 14px; -fx-border-width: 2;" BorderPane.alignment="CENTER">
+        <VBox prefHeight="196.0" prefWidth="418.0" style="-fx-background-color: white; -fx-border-color: #fde68a; -fx-background-radius: 14px; -fx-border-radius: 14px; -fx-border-width: 2;" BorderPane.alignment="CENTER">
             <children>
                 <HBox alignment="CENTER" prefHeight="65.0" prefWidth="400.0" style="-fx-background-color: #fcd34d; -fx-background-radius: 14 14 0 0; -fx-border-color: #fcd34d; -fx-border-width: 0 0 2 0;">
                     <children>
