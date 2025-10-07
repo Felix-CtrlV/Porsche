@@ -196,7 +196,7 @@
                         </VBox>
                     </children>
                 </HBox>
-                <BorderPane fx:id="extraPane" maxHeight="768.0" maxWidth="1366.0" minHeight="768.0" minWidth="1366.0" visible="false">
+                <BorderPane fx:id="extraPane" maxHeight="768.0" maxWidth="1366.0" minHeight="768.0" minWidth="1366.0">
                     <center>
                   <StackPane>
                      <children>
@@ -483,7 +483,7 @@
                               </HBox>
                               <StackPane maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0">
                                  <children>
-                                    <VBox fx:id="editPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;">
+                                    <VBox fx:id="editPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;" visible="false">
                                        <children>
                                           <HBox prefHeight="226.0" prefWidth="408.0" spacing="12.0">
                                              <children>
@@ -502,7 +502,7 @@
                                                       <HBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="244.0" spacing="12.0">
                                                          <children>
                                                             <Label minWidth="21.0" prefHeight="18.0" prefWidth="21.0" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="ID-" />
-                                                            <Label fx:id="carIdLabel111" prefHeight="18.0" prefWidth="54.0" style="-fx-text-fill: #374151; -fx-border-width: 1;" text="CAR-001" />
+                                                            <Label fx:id="editPartId" prefHeight="18.0" prefWidth="54.0" style="-fx-text-fill: #374151; -fx-border-width: 1;" text="CAR-001" />
                                                          </children>
                                                          <VBox.margin>
                                                             <Insets top="5.0" />
@@ -562,9 +562,9 @@
                                           </VBox>
                                           <HBox alignment="CENTER_RIGHT" style="-fx-padding: 12 20 12 20;">
                                              <children>
-                                                <Button fx:id="editPartRevert" mnemonicParsing="false" onAction="#clickEditPartRevert" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="REVERT" />
+                                                <Button fx:id="editPartRevert" mnemonicParsing="false"  style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="REVERT" />
                                                 <Region HBox.hgrow="ALWAYS" />
-                                                <Button fx:id="editPartApply" mnemonicParsing="false" onAction="#clickEditPartApply" style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-background-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="APPLY">
+                                                <Button fx:id="editPartApply" mnemonicParsing="false" style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-background-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="APPLY">
                                                    <HBox.margin>
                                                       <Insets left="8.0" />
                                                    </HBox.margin>
@@ -576,7 +576,7 @@
                                           </HBox>
                                        </children>
                                     </VBox>
-                                    <VBox fx:id="editCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;" visible="false">
+                                    <VBox fx:id="editCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;">
                                        <children>
                                           <HBox prefHeight="226.0" prefWidth="408.0" spacing="12.0">
                                              <children>
@@ -597,7 +597,7 @@
                                                             <HBox alignment="CENTER_LEFT" prefHeight="18.0" prefWidth="192.0">
                                                                <children>
                                                                   <Label minWidth="21.0" prefHeight="18.0" prefWidth="21.0" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="ID-" />
-                                                                  <Label fx:id="carIdlbl" prefHeight="18.0" prefWidth="54.0" style="-fx-text-fill: #374151; -fx-border-width: 1;" text="CAR-001" wrapText="true" />
+                                                                  <Label fx:id="editCarId" prefHeight="18.0" prefWidth="54.0" style="-fx-text-fill: #374151; -fx-border-width: 1;" text="CAR-001" wrapText="true" />
                                                                </children>
                                                                <VBox.margin>
                                                                   <Insets top="5.0" />
@@ -606,7 +606,7 @@
                                                             <HBox alignment="CENTER_LEFT">
                                                                <children>
                                                                   <Label minWidth="38.0" prefHeight="18.0" prefWidth="44.0" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Series :" wrapText="true" />
-                                                                  <Label fx:id="carSerieslbl" text="Label" wrapText="true" />
+                                                                  <Label fx:id="editCarSeries" text="Label" wrapText="true" />
                                                                </children>
                                                             </HBox>
                                                             <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="190.0" spacing="8">
@@ -666,9 +666,9 @@
                                           </VBox>
                                           <HBox alignment="CENTER_RIGHT" style="-fx-padding: 12 20 12 20;">
                                              <children>
-                                                <Button fx:id="editCarRevert" mnemonicParsing="false" onAction="#clickEditCarRevert" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="REVERT" />
+                                                <Button fx:id="editCarRevert" mnemonicParsing="false"  style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="REVERT" />
                                                 <Region HBox.hgrow="ALWAYS" />
-                                                <Button fx:id="editCarApply" mnemonicParsing="false" onAction="#clickEditCarApply" style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-background-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="APPLY">
+                                                <Button fx:id="editCarApply" mnemonicParsing="false"  style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-background-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="APPLY">
                                                    <HBox.margin>
                                                       <Insets left="8.0" />
                                                    </HBox.margin>

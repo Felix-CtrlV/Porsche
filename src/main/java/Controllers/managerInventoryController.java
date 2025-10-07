@@ -3,7 +3,11 @@ package Controllers;
 import Database.Porsche_DB;
 import Model.inventory;
 import Model.user;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.FadeTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,7 +17,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -254,6 +260,10 @@ public class managerInventoryController {
     @FXML
     private VBox editCar;
     @FXML
+    private Label editCarId;
+    @FXML
+    private Label editCarSeries;
+    @FXML
     private TextField editCarName;
     @FXML
     private TextField editCarUsage;
@@ -267,9 +277,17 @@ public class managerInventoryController {
     private TextField editCarPrice;
     @FXML
     private ImageView editCarImg;
+    @FXML
+    private  TextField editCarProductAt;
+    @FXML
+    private  Button editCarApply;
+    @FXML
+    private Button editCarRevert;
 
     @FXML
     private VBox editPart;
+    @FXML
+    private Label editPartId;
     @FXML
     private TextField editPartName;
     @FXML
@@ -280,26 +298,12 @@ public class managerInventoryController {
     private TextField editPartQty;
     @FXML
     private TextField editPartPrice;
-
     @FXML
-    void clickEditPartRevert(ActionEvent event){
-
-    }
-
+    private ImageView editPartImg;
     @FXML
-    void clickEditPartApply(ActionEvent evnet){
-
-    }
-
+    private Button editPartRevert;
     @FXML
-    void clickEditCarRevert(ActionEvent event){
-
-    }
-
-    @FXML
-    void clickEditCarApply(ActionEvent event){
-
-    }
+    private Button editPartApply;
 
     public managerInventoryController() throws SQLException, ClassNotFoundException {
     }
@@ -307,6 +311,7 @@ public class managerInventoryController {
 
     @FXML
     void carHandlerDrop(DragEvent event) throws FileNotFoundException {
+        file.clear();
         file = event.getDragboard().getFiles();
         Image img = new Image(new FileInputStream(file.get(0)));
         carImage.setImage(img);
@@ -321,6 +326,7 @@ public class managerInventoryController {
 
     @FXML
     void partHandlerDrop(DragEvent event) throws FileNotFoundException {
+        file.clear();
         file = event.getDragboard().getFiles();
         Image img = new Image(new FileInputStream(file.get(0)));
         partImage.setImage(img);
@@ -791,15 +797,19 @@ public class managerInventoryController {
     private void setActionColumn() {
         actionCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         actionCol.setCellFactory(param -> new TableCell<inventory, inventory>() {
-            private final Button editButton = new Button("Edit");
-            private final Button deleteButton = new Button("Delete");
-            private final HBox buttonsContainer = new HBox(5, editButton, deleteButton);
-
+            private final Button editButton = new Button();
+            private final Button deleteButton = new Button();
+            private final HBox buttonsContainer = new HBox(8, editButton, deleteButton);
             {
-                // Style the buttons
-                editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 11px; -fx-padding: 5 10 5 10;");
-                deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-size: 11px; -fx-padding: 5 10 5 10;");
-
+                editButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.EDIT));
+                deleteButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.TRASH));
+                editButton.setStyle("-fx-background-color: transparent;");
+                deleteButton.setStyle("-fx-background-color: transparent;");
+                editButton.setCursor(Cursor.HAND);
+                deleteButton.setCursor(Cursor.HAND);
+                addHoverAnimation(editButton);
+                addHoverAnimation(deleteButton);
+                // Set click actions
                 editButton.setOnAction(event -> {
                     inventory item = getTableView().getItems().get(getIndex());
                     editTable(item);
@@ -807,10 +817,11 @@ public class managerInventoryController {
 
                 deleteButton.setOnAction(event -> {
                     inventory item = getTableView().getItems().get(getIndex());
-                    tableUpdateDelete(false,item);
+                    tableUpdateDelete(false, item);
                 });
-            }
 
+                buttonsContainer.setAlignment(Pos.CENTER);
+            }
             @Override
             protected void updateItem(inventory item, boolean empty) {
                 super.updateItem(item, empty);
@@ -819,6 +830,34 @@ public class managerInventoryController {
                 } else {
                     setGraphic(buttonsContainer);
                 }
+            }
+            private void addHoverAnimation(Button button) {
+                ScaleTransition scaleUp = new ScaleTransition(Duration.millis(150), button);
+                scaleUp.setToX(1.2);
+                scaleUp.setToY(1.2);
+
+                ScaleTransition scaleDown = new ScaleTransition(Duration.millis(150), button);
+                scaleDown.setToX(1.0);
+                scaleDown.setToY(1.0);
+
+                RotateTransition shake = new RotateTransition(Duration.millis(100), button);
+                shake.setFromAngle(-5);
+                shake.setToAngle(5);
+                shake.setCycleCount(2);
+                shake.setAutoReverse(true);
+
+                button.setOnMouseEntered(e -> {
+                    // Reset rotation just in case
+                    button.setRotate(0);
+                    scaleUp.playFromStart();
+                    shake.playFromStart();
+                });
+
+                button.setOnMouseExited(e -> {
+                    scaleDown.playFromStart();
+                    // Ensure icon returns to normal angle
+                    scaleDown.setOnFinished(ev -> button.setRotate(0));
+                });
             }
         });
     }
@@ -1034,21 +1073,94 @@ public class managerInventoryController {
     private void editTable(inventory in){
         addPane.setVisible(false);
         editPane.setVisible(true);
-
-        fadeInOut(true,extraPane,inventoryPane);
-    }
-
-    private void tableUpdateDelete(boolean check,inventory in){
-        if(check){
-
+        if (in.getInventoryId().contains("C")){
+            editCar.setVisible(true);
+            editPart.setVisible(false);
+            editTitle.setText("(Car)");
+            setEditCar(in);
+            editCarRevert.setOnAction(e->{
+                setEditCar(in);
+            });
+            editCarApply.setOnAction(e->{
+                tableUpdateDelete(true,in);
+            });
         }else{
-            int id = in.getId();
-            for(inventory i: inventoryData){
-                if(i.getId() == id){
-                    inventoryData.clear();
+            editCar.setVisible(false);
+            editPart.setVisible(true);
+            editTitle.setText("(Part)");
+            setEditPart(in);
+            editPartRevert.setOnAction(e->{
+                setEditPart(in);
+            });
+            editPartApply.setOnAction(e->{
+                tableUpdateDelete(true,in);
+            });
+        }
+        fadeInOut(true,extraPane,inventoryPane);
+
+
+
+    }
+    private void setEditCar(inventory in){
+        editCarId.setText(in.getInventoryId());
+        editCarSeries.setText(in.getSeries());
+        editCarName.setText(in.getName());
+        if (in.getPhoto() != null && !in.getPhoto().trim().isEmpty()) {
+            file.clear();
+            file.add(new File(in.getPhoto()));
+            if (!file.isEmpty()) {
+
+                try {
+                    Image img = new Image(new FileInputStream(file.get(0)));
+                    editCarImg.setImage(img);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
+        editCarExtColor.setText(in.getExtColor());
+        editCarIntColor.setText(in.getIntColor());
+        editCarQty.setText(String.valueOf(in.getQty()));
+        editCarPrice.setText(String.valueOf(in.getPrice()));
+        editCarProductAt.setText(String.valueOf(in.getProductYear()));
+        String fuel = "";
+        if(in.getFuelType().contains("gas")){
+            fuel += "Gasoline/";
+        }else if(in.getFuelType().contains("hy")){
+            fuel += "Hybrid/";
+        }else if(in.getFuelType().contains("di")){
+            fuel += "diseal/";
+        }else {
+            fuel +=in.getFuelType();
+        }
+        if(in.getFuelType().contains("ele")){
+            fuel += "electric";
+        }
+        editCarUsage.setText(fuel);
+    }
+    private void setEditPart(inventory in){
+        editPartId.setText(in.getInventoryId());
+        editPartName.setText(in.getName());
+        editPartDescription.setText(in.getDescription());
+        editPartForCar.setText(in.getForCar());
+        editPartQty.setText(String.valueOf(in.getQty()));
+        editPartPrice.setText(String.valueOf(in.getPrice()));
+        if (in.getPhoto() != null && !in.getPhoto().trim().isEmpty()) {
+            file.clear();
+            file.add(new File(in.getPhoto()));
+            if (!file.isEmpty()) {
+
+                try {
+                    Image img = new Image(new FileInputStream(file.get(0)));
+                    editPartImg.setImage(img);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+    private void tableUpdateDelete(boolean check,inventory in){
+
     }
 
     private void setModels(ArrayList<CheckBox> in) {
