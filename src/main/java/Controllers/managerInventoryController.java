@@ -697,7 +697,8 @@ public class managerInventoryController {
             }
         }
     }
-    //for alernt there have "carsAdd" "partsAdd" "carsEdit" "partsEdit" and if true that will  show the information and if false that will show warning
+    //for alernt there have "carsAdd" "partsAdd" "carsEdit" "partsEdit" "partsUpdate" "carsUpdate" "partsDelete" "carsDelete"
+    // and if true that will  show the information and if false that will show warning
     private void alertForm(boolean check,String in) throws IOException {
 
         if(check){
@@ -711,6 +712,10 @@ public class managerInventoryController {
                 alert.setContentText("Successfully Edited The Car");
             }else if(in.equalsIgnoreCase("partsEdit")){
                 alert.setContentText("Successfully Edited The Part");
+            }else if(in.equalsIgnoreCase("partsUpdate")){
+                alert.setContentText("Successfully Updated The Part");
+            }else if(in.equalsIgnoreCase("carsUpadate")){
+                alert.setContentText("Successfully Updated The Car");
             }
             alert.showAndWait();
             clearCarPartForm(in);
@@ -728,6 +733,10 @@ public class managerInventoryController {
                 alertController.setAlert("You have unsaved changes for editing a car. Are you sure you want to cancel?");
             }else if(in.equalsIgnoreCase("partsEdit")){
                 alertController.setAlert("You have unsaved changes for editing a part. Are you sure you want to cancel?");
+            }else if(in.equalsIgnoreCase("partsDelete")){
+                alertController.setAlert("Do you really want to Delete this part ?");
+            }else if(in.equalsIgnoreCase("carsDelete")){
+                alertController.setAlert("Do you really want to Delete this car ?");
             }
             Stage alertStage = new Stage();
             alertStage.initModality(Modality.APPLICATION_MODAL);
@@ -794,6 +803,10 @@ public class managerInventoryController {
             }
     }
     private ObservableList<inventory> inventoryData = FXCollections.observableArrayList();
+    private ObservableList<inventory> carsData = FXCollections.observableArrayList();
+    private HashMap<CheckBox,String > models = new HashMap<>();
+    private ObservableList<inventory> partsData = FXCollections.observableArrayList();
+    private ObservableList<inventory> searchDate = FXCollections.observableArrayList();
     private void setActionColumn() {
         actionCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         actionCol.setCellFactory(param -> new TableCell<inventory, inventory>() {
@@ -862,10 +875,6 @@ public class managerInventoryController {
         });
     }
     // for showTable check ("cars" , "parts" ,"search")
-    private ObservableList<inventory> carsData = FXCollections.observableArrayList();
-    private HashMap<CheckBox,String > models = new HashMap<>();
-    private ObservableList<inventory> partsData = FXCollections.observableArrayList();
-    private ObservableList<inventory> searchDate = FXCollections.observableArrayList();
     private void showTable(String check){
         int sItems =0;
         int total = 0;
@@ -1097,9 +1106,6 @@ public class managerInventoryController {
             });
         }
         fadeInOut(true,extraPane,inventoryPane);
-
-
-
     }
     private void setEditCar(inventory in){
         editCarId.setText(in.getInventoryId());
@@ -1160,7 +1166,20 @@ public class managerInventoryController {
         }
     }
     private void tableUpdateDelete(boolean check,inventory in){
+        if (check){
+            if(in.getInventoryId().contains("C")){
 
+            }else{
+
+            }
+        }else{
+
+            if(in.getInventoryId().contains("C")){
+
+            }else{
+
+            }
+        }
     }
 
     private void setModels(ArrayList<CheckBox> in) {
