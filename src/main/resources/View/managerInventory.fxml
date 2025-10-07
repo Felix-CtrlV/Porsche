@@ -479,6 +479,14 @@
                                  <children>
                                     <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-padding: 15;" text="EDIT INVENTORY" />
                                     <Label fx:id="editTitle" style="-fx-text-fill: white;" text="(Car)" />
+                                    <Button maxHeight="32.0" maxWidth="32.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: #ff4757; -fx-border-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="✕">
+                                       <font>
+                                          <Font name="Arial Black" size="18.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="200.0" />
+                                       </HBox.margin>
+                                    </Button>
                                  </children>
                               </HBox>
                               <StackPane maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0">
@@ -562,7 +570,7 @@
                                           </VBox>
                                           <HBox alignment="CENTER_RIGHT" style="-fx-padding: 12 20 12 20;">
                                              <children>
-                                                <Button fx:id="editPartRevert" mnemonicParsing="false"  style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="REVERT" />
+                                                <Button fx:id="editPartRevert" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="REVERT" />
                                                 <Region HBox.hgrow="ALWAYS" />
                                                 <Button fx:id="editPartApply" mnemonicParsing="false" style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-background-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="APPLY">
                                                    <HBox.margin>
@@ -666,9 +674,9 @@
                                           </VBox>
                                           <HBox alignment="CENTER_RIGHT" style="-fx-padding: 12 20 12 20;">
                                              <children>
-                                                <Button fx:id="editCarRevert" mnemonicParsing="false"  style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="REVERT" />
+                                                <Button fx:id="editCarRevert" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="REVERT" />
                                                 <Region HBox.hgrow="ALWAYS" />
-                                                <Button fx:id="editCarApply" mnemonicParsing="false"  style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-background-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="APPLY">
+                                                <Button fx:id="editCarApply" mnemonicParsing="false" style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-background-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="APPLY">
                                                    <HBox.margin>
                                                       <Insets left="8.0" />
                                                    </HBox.margin>
