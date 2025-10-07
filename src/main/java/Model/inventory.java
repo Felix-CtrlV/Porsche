@@ -1,21 +1,62 @@
 package Model;
 
 public class inventory {
-    private int id,qty;
-    private String name,status;
-    private double price;
+   private int id,qty,productYear;
+   private String name,description,intColor,extColor,fuelType,series,forCar,status,models,inventoryId,photo;
+   private double price ;
 
-    //for inventory of manger view
-    public inventory(int id, int qty, String name, double price) {
-        this.id = id;
-        this.qty = qty;
+   public inventory(){}
+
+    //for car table
+    public inventory(String inventoryId, String name, String extColor, String intColor, String fuelType, int productYear, int qty, double price, String status,String photo) {
+        this.inventoryId = inventoryId;
         this.name = name;
-        if(qty >0){
-            this.status = "On";
-        }else{
-            this.status = "Out";
-        }
+        this.setSeries(name);
+        this.setModels(name);
+        this.intColor = intColor;
+        this.extColor = extColor;
+        this.fuelType = fuelType;
+        this.productYear = productYear;
+        this.qty = qty;
         this.price = price;
+        this.status = status;
+        this.photo = photo;
+    }
+
+    //for part table
+    public inventory(String inventoryId, String name, String forCar, String description, int qty, double price, String status,String photo) {
+        this.inventoryId = inventoryId;
+        this.name = name;
+        this.forCar = forCar;
+        this.description = description;
+        this.qty = qty;
+        this.price = price;
+        this.status = status;
+        this.photo = photo;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getInventoryId() {
+        return inventoryId;
+    }
+
+    public void setInventoryId(String inventoryId) {
+        this.inventoryId = inventoryId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getId() {
@@ -34,6 +75,14 @@ public class inventory {
         this.qty = qty;
     }
 
+    public int getProductYear() {
+        return productYear;
+    }
+
+    public void setProductYear(int productYear) {
+        this.productYear = productYear;
+    }
+
     public String getName() {
         return name;
     }
@@ -42,12 +91,62 @@ public class inventory {
         this.name = name;
     }
 
-    public String getStatus() {
-        return status;
+    public String getDescription() {
+        return description;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getIntColor() {
+        return intColor;
+    }
+
+    public void setIntColor(String intColor) {
+        this.intColor = intColor;
+    }
+
+    public String getExtColor() {
+        return extColor;
+    }
+
+    public void setExtColor(String extColor) {
+        this.extColor = extColor;
+    }
+
+    public String getFuelType() {
+        return fuelType;
+    }
+
+    public void setFuelType(String fuelType) {
+        this.fuelType = fuelType;
+    }
+
+    public String getSeries() {
+        return series;
+    }
+
+    public void setSeries(String in) {
+        String [] check = in.split(" ");
+        this.series = check[0];
+    }
+
+    public String getModels() {
+        return models;
+    }
+
+    public void setModels(String in) {
+        String [] check = in.split("");
+        this.models = check[1];
+    }
+
+    public String getForCar() {
+        return forCar;
+    }
+
+    public void setForCar(String forCar) {
+        this.forCar = forCar;
     }
 
     public double getPrice() {
