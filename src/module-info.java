@@ -12,6 +12,8 @@ module Porsche {
     requires java.scripting;
 
     requires mysql.connector.j;
+    requires de.jensd.fx.glyphs.fontawesome;
+//    requires Porsche;
 
     opens MainUI to javafx.fxml;
     opens Controllers to javafx.fxml;
