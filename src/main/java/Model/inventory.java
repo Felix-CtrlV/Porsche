@@ -8,7 +8,7 @@ public class inventory {
    public inventory(){}
 
     //for car table
-    public inventory(String inventoryId, String name, String extColor, String intColor, String fuelType, int productYear, int qty, double price, String status,String photo) {
+    public inventory(int id ,String inventoryId, String name, String extColor, String intColor, String fuelType, int productYear, int qty, double price, String status,String photo) {
         this.inventoryId = inventoryId;
         this.name = name;
         this.setSeries(name);
@@ -24,7 +24,7 @@ public class inventory {
     }
 
     //for part table
-    public inventory(String inventoryId, String name, String forCar, String description, int qty, double price, String status,String photo) {
+    public inventory(int id ,String inventoryId, String name, String forCar, String description, int qty, double price, String status,String photo) {
         this.inventoryId = inventoryId;
         this.name = name;
         this.forCar = forCar;

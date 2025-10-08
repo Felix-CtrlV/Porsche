@@ -42,13 +42,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
 public class managerInventoryController {
 
@@ -308,7 +303,6 @@ public class managerInventoryController {
     public managerInventoryController() throws SQLException, ClassNotFoundException {
     }
 
-
     @FXML
     void carHandlerDrop(DragEvent event) throws FileNotFoundException {
         file.clear();
@@ -341,12 +335,12 @@ public class managerInventoryController {
 
     @FXML
     void clickAddCarbtn(ActionEvent event) throws SQLException {
-        hasData(false,"partsBtn");
+        hasData(false,"partsAddBtn");
     }
 
     @FXML
     void clickAddPartbtn(ActionEvent event) throws SQLException {
-        hasData(false,"carsBtn");
+        hasData(false,"carsAddBtn");
     }
 
     @FXML
@@ -447,11 +441,22 @@ public class managerInventoryController {
 
     @FXML
     void extraPaneMouseClick(MouseEvent event) throws SQLException {
-        if(addCarbtn.isDisable()) {
-            hasData(false,"cars" );
-        }else{
-            hasData(false,"parts");
+        if(addPane.isVisible()) {
+            if (addCar.isVisible()) {
+                hasData(false, "carsAdd");
+            } else if (addPart.isVisible()) {
+                hasData(false, "partsAdd");
+            }
+        }else {
+            if (editTitle.getText().contains("Car")) {
+                hasData(false, "carsEdit");
+                System.out.println("cars edit extrapane");
+            } else {
+                hasData(false, "partsEdit");
+
+            }
         }
+
     }
 
     @FXML
@@ -469,7 +474,15 @@ public class managerInventoryController {
             showTable("parts");
         }
     }
-
+    @FXML
+    void clickBackBtn(MouseEvent event) throws SQLException {
+        if(editTitle.getText().contains("Car")) {
+            hasData(false, "carsEdit");
+            System.out.println("cars edit back btn");
+        }else{
+            hasData(false,"partsEdit");
+        }
+    }
     //true is in or select and false is out or unselect
 
     @FXML
@@ -510,6 +523,13 @@ public class managerInventoryController {
     List<File> file = new ArrayList<>();
     Porsche_DB db = new Porsche_DB();
     Connection con = db.connect();
+
+    private ObservableList<inventory> inventoryData = FXCollections.observableArrayList();
+    private ObservableList<inventory> carsData = FXCollections.observableArrayList();
+    private HashMap<CheckBox,String > models = new HashMap<>();
+    private ObservableList<inventory> partsData = FXCollections.observableArrayList();
+    private ObservableList<inventory> searchDate = FXCollections.observableArrayList();
+    private inventory editPath;
 
     private void fadeInOut(boolean check, Node cNode,Node bNode){
 
@@ -630,72 +650,92 @@ public class managerInventoryController {
         translate.play();
 
     }
-    //in the path data there is cars (extra pane) , parts (extra pane), carsBtn , parstBtn , addCars, addParts
+    //in the path data there is carsAddBtn , partsAddBtn , carsAdd, partsAdd, carsEdit ,partsEdit
     private void hasData(boolean check, String path) throws SQLException {
-        if (path.contains("car")) {
-            String img = file.isEmpty() ? "" : String.valueOf(file.get(0));
-            String models = carModelText.getText().trim();
-            String trim = carTrimText.getText().trim();
-            String extColor = carExtColorText.getText().trim();
-            String intColor = carIntColorText.getText().trim();
-            RadioButton selectedFuel = (RadioButton) fuelTypeGroup.getSelectedToggle();
-            String fuel_type = (selectedFuel != null) ? selectedFuel.getText() : "";
-            String qty = carQtyText.getText().trim();
-            String price = carPriceText.getText().trim();
+            try{
+                boolean allEmpty = true;
+                if (path.contains("carsAdd")) {
+                    String img = file.isEmpty() ? "" : String.valueOf(file.get(0));
+                    String models = carModelText.getText().trim();
+                    String trim = carTrimText.getText().trim();
+                    String extColor = carExtColorText.getText().trim();
+                    String intColor = carIntColorText.getText().trim();
+                    RadioButton selectedFuel = (RadioButton) fuelTypeGroup.getSelectedToggle();
+                    String fuel_type = (selectedFuel != null) ? selectedFuel.getText() : "";
+                    String qty = carQtyText.getText().trim();
+                    String price = carPriceText.getText().trim();
 
-            boolean allEmpty = img.isEmpty() && models.isEmpty() && trim.isEmpty() &&
-                    extColor.isEmpty() && intColor.isEmpty() &&
-                    fuel_type.isEmpty() && qty.isEmpty() && price.isEmpty();
+                    allEmpty = img.isEmpty() && models.isEmpty() && trim.isEmpty() &&
+                            extColor.isEmpty() && intColor.isEmpty() &&
+                            fuel_type.isEmpty() && qty.isEmpty() && price.isEmpty();
 
+                } else if (path.contains("partsAdd")) {
+                    String img = file.isEmpty() ? "" : String.valueOf(file.get(0));
+                    String name = partNameText.getText().trim();
+                    String qty = partQtyText.getText().trim();
+                    String price = partPriceText.getText().trim();
+                    String description = partDescriptionText.getText().trim();
 
-            try {
-                if (check) {
+                    allEmpty = img.isEmpty() && name.isEmpty() && qty.isEmpty() &&
+                            price.isEmpty() && description.isEmpty();
 
-                        alertForm(true, path);
-                } else {
+                }else if(path.equalsIgnoreCase("carsEdit")){
 
-                    if (allEmpty && (path.equals("cars") || path.equals("carsAdd")) ) {
-                        clearCarPartForm(path);
-                    } else if (allEmpty && path.equals("carsBtn")) {
-                            clearCarPartForm(path);
-                    }else {
-                        alertForm(check, path);
+                    Image img = editCarImg.getImage();
+                    String photoPath = editPath.getPhoto();
+
+                    boolean sameImage = true;
+                    if ((img == null || img.getUrl() == null) && (photoPath == null || photoPath.trim().isEmpty())) {
+                        sameImage = true; // both no image
+                    } else if (img != null && img.getUrl() != null && photoPath != null && !photoPath.trim().isEmpty()) {
+                        sameImage = img.getUrl().equals(photoPath);
                     }
+
+                    allEmpty = sameImage &&
+                            Objects.equals(editCarName.getText(), editPath.getName()) &&
+                            Objects.equals(editCarUsage.getText(), editPath.getFuelType()) &&
+                            Objects.equals(editCarProductAt.getText(), String.valueOf(editPath.getProductYear())) &&
+                            Objects.equals(editCarIntColor.getText(), editPath.getIntColor()) &&
+                            Objects.equals(editCarExtColor.getText(), editPath.getExtColor()) &&
+                            Objects.equals(editCarQty.getText(), String.valueOf(editPath.getQty())) &&
+                            Objects.equals(editCarPrice.getText(), String.valueOf(editPath.getPrice()));
+
+                    System.out.println("cars edit "+allEmpty);
+                }else if(path.equalsIgnoreCase("partsEdit")){
+
+                    Image img = editPartImg.getImage();
+                    String photoPath = editPath.getPhoto();
+
+                    boolean sameImage = true;
+                    if (img == null && (photoPath == null || photoPath.trim().isEmpty())) {
+                        sameImage = true;
+                    } else if (img != null && photoPath != null && !photoPath.trim().isEmpty()) {
+                        try {
+                            sameImage = img.getUrl() != null && img.getUrl().equals(photoPath);
+                        } catch (Exception e) {
+                        }
+                    }
+                    allEmpty = sameImage &&
+                            Objects.equals(editPartName.getText(), editPath.getName()) &&
+                            Objects.equals(editPartForCar.getText(), editPath.getForCar()) &&
+                            Objects.equals(editPartDescription.getText(), editPath.getDescription()) &&
+                            Objects.equals(editPartPrice.getText(), String.valueOf(editPath.getPrice())) &&
+                            Objects.equals(editPartQty.getText(), String.valueOf(editPath.getQty()));
+                }
+
+                if(check){
+                    alertForm(check,path);
+                }else  if (allEmpty && (path.equalsIgnoreCase("carsAddBtn") || path.equalsIgnoreCase("carsAdd")
+                                        || path.equalsIgnoreCase("partsAddBtn") || path.equalsIgnoreCase("partsAdd")
+                                        || path.equalsIgnoreCase("carsEdit") || path.equalsIgnoreCase("partsEdit")
+                )){
+                    clearCarPartForm(path);
+                }else{
+                    alertForm(check, path);
                 }
             }catch ( IOException e){
                 throw new RuntimeException(e);
             }
-
-        } else if (path.contains("part")) {
-            String img = file.isEmpty() ? "" : String.valueOf(file.get(0));
-            String name = partNameText.getText().trim();
-            String qty = partQtyText.getText().trim();
-            String price = partPriceText.getText().trim();
-            String description = partDescriptionText.getText().trim();
-
-            boolean allEmpty = img.isEmpty() && name.isEmpty() && qty.isEmpty() &&
-                    price.isEmpty() && description.isEmpty();
-
-
-            try {
-                if (check) {
-                    alertForm(true, path);
-
-                } else {
-                    if (allEmpty && (path.equals("parts") || path.equals("partsAdd") )) {
-                        clearCarPartForm(path);
-
-                    } else if (allEmpty && path.equals("partsBtn")) {
-                        clearCarPartForm(path);
-
-                    }else {
-                        alertForm(check, path);
-                    }
-                }
-            } catch (IOException e) {
-                        throw new RuntimeException(e);
-            }
-        }
     }
     //for alernt there have "carsAdd" "partsAdd" "carsEdit" "partsEdit" "partsUpdate" "carsUpdate" "partsDelete" "carsDelete"
     // and if true that will  show the information and if false that will show warning
@@ -704,17 +744,17 @@ public class managerInventoryController {
         if(check){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Finished");
-            if(in.equalsIgnoreCase("carsAdd")){
+            if(in.contains("carsAdd")){
                 alert.setContentText("Successfully Added The Car");
-            }else if(in.equalsIgnoreCase("partsAdd")){
+            }else if(in.contains("partsAdd")){
                 alert.setContentText("Successfully Added The Part");
-            }else if(in.equalsIgnoreCase("carsEdit")){
+            }else if(in.contains("carsEdit")){
                 alert.setContentText("Successfully Edited The Car");
-            }else if(in.equalsIgnoreCase("partsEdit")){
+            }else if(in.contains("partsEdit")){
                 alert.setContentText("Successfully Edited The Part");
-            }else if(in.equalsIgnoreCase("partsUpdate")){
+            }else if(in.contains("partsUpdate")){
                 alert.setContentText("Successfully Updated The Part");
-            }else if(in.equalsIgnoreCase("carsUpadate")){
+            }else if(in.contains("carsUpadate")){
                 alert.setContentText("Successfully Updated The Car");
             }
             alert.showAndWait();
@@ -725,17 +765,17 @@ public class managerInventoryController {
 
             alertController alertController = loader.getController();
 
-            if(in.equalsIgnoreCase("carsAdd")){
+            if(in.contains("carsAdd")){
                 alertController.setAlert("You have unsaved changes for adding a car. Are you sure you want to cancel?");
-            }else if(in.equalsIgnoreCase("partsAdd")){
+            }else if(in.contains("partsAdd")){
                 alertController.setAlert("You have unsaved changes for adding a part. Are you sure you want to cancel?");
-            }else if(in.equalsIgnoreCase("cartsEdit")){
+            }else if(in.contains("carsEdit")){
                 alertController.setAlert("You have unsaved changes for editing a car. Are you sure you want to cancel?");
-            }else if(in.equalsIgnoreCase("partsEdit")){
+            }else if(in.contains("partsEdit")){
                 alertController.setAlert("You have unsaved changes for editing a part. Are you sure you want to cancel?");
-            }else if(in.equalsIgnoreCase("partsDelete")){
+            }else if(in.contains("partsDelete")){
                 alertController.setAlert("Do you really want to Delete this part ?");
-            }else if(in.equalsIgnoreCase("carsDelete")){
+            }else if(in.contains("carsDelete")){
                 alertController.setAlert("Do you really want to Delete this car ?");
             }
             Stage alertStage = new Stage();
@@ -743,8 +783,9 @@ public class managerInventoryController {
             alertStage.initStyle(StageStyle.TRANSPARENT);
             alertStage.setScene(new Scene(root));
 
-            if (in.equals("carsBtn") || in.equals("partsBtn")){
-                System.out.println(in);
+            if (in.equals("carsAddBtn") || in.equals("partsAddBtn")
+                    || in.equals("carsEdit") || in.equals("partsEdit")
+                ){
                 alertController.confirmBtn.setOnAction(e -> {
                     clearCarPartForm(in);
                     alertStage.close();
@@ -752,8 +793,15 @@ public class managerInventoryController {
                 alertController.cancelBtn.setOnAction(e -> {
                     alertStage.close();
                 });
+            }else if( in.equals("carsDelete") || in.equals("partsDelete")){
+                alertController.confirmBtn.setOnAction(e -> {
+                   tableAddUpdateDelete(false);
+                    alertStage.close();
+                });
+                alertController.cancelBtn.setOnAction(e -> {
+                    alertStage.close();
+                });
             }else {
-                System.out.println(in);
                 alertController.confirmBtn.setOnAction(e -> {
                     clearCarPartForm(in);
                     alertStage.close();
@@ -769,44 +817,41 @@ public class managerInventoryController {
     }
     // in = carsBtn , partsBtn or null
     private void clearCarPartForm(String in) {
-            if (addCarbtn.isDisable()) {
-                carModelText.clear();
-                carYearText.clear();
-                carTrimText.clear();
-                carExtColorText.clear();
-                carIntColorText.clear();
-                carPriceText.clear();
-                carQtyText.clear();
-                carImage.setImage(null);
-                gasolineRadio.setSelected(false);
-                electricCheckBox.setSelected(false);
-            }
-            if(addPartbtn.isDisable()) {
-                partNameText.clear();
-                partDescriptionText.clear();
-                partPriceText.clear();
-                partQtyText.clear();
-                partImage.setImage(null);
-                partRelativeComboBox.getSelectionModel().clearSelection();
+                if (addCarbtn.isDisable()) {
+                    carModelText.clear();
+                    carYearText.clear();
+                    carTrimText.clear();
+                    carExtColorText.clear();
+                    carIntColorText.clear();
+                    carPriceText.clear();
+                    carQtyText.clear();
+                    carImage.setImage(null);
+                    gasolineRadio.setSelected(false);
+                    electricCheckBox.setSelected(false);
+                }
+                if (addPartbtn.isDisable()) {
+                    partNameText.clear();
+                    partDescriptionText.clear();
+                    partPriceText.clear();
+                    partQtyText.clear();
+                    partImage.setImage(null);
+                    partRelativeComboBox.getSelectionModel().clearSelection();
 
-            }
-            if(in.equals("carsBtn") ) {
-                addCarbtn.setDisable(false);
-                addPartbtn.setDisable(true);
-                fadeInOut(true,addPart,addCar);
-            }else if(in.equals("partsBtn")){
-                addCarbtn.setDisable(true);
-                addPartbtn.setDisable(false);
-                fadeInOut(true,addCar,addPart);
-            }else{
-                fadeInOut(false, extraPane, inventoryPane);
-            }
+                }
+                if (in.equals("carsAddBtn")) {
+                    addCarbtn.setDisable(false);
+                    addPartbtn.setDisable(true);
+                    fadeInOut(true, addPart, addCar);
+                } else if (in.equals("partsAddBtn")) {
+                    addCarbtn.setDisable(true);
+                    addPartbtn.setDisable(false);
+                    fadeInOut(true, addCar, addPart);
+                } else {
+                    fadeInOut(false, extraPane, inventoryPane);
+                }
+
+
     }
-    private ObservableList<inventory> inventoryData = FXCollections.observableArrayList();
-    private ObservableList<inventory> carsData = FXCollections.observableArrayList();
-    private HashMap<CheckBox,String > models = new HashMap<>();
-    private ObservableList<inventory> partsData = FXCollections.observableArrayList();
-    private ObservableList<inventory> searchDate = FXCollections.observableArrayList();
     private void setActionColumn() {
         actionCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         actionCol.setCellFactory(param -> new TableCell<inventory, inventory>() {
@@ -825,12 +870,23 @@ public class managerInventoryController {
                 // Set click actions
                 editButton.setOnAction(event -> {
                     inventory item = getTableView().getItems().get(getIndex());
-                    editTable(item);
+                    editPath = item;
+                    editTable();
                 });
 
                 deleteButton.setOnAction(event -> {
                     inventory item = getTableView().getItems().get(getIndex());
-                    tableUpdateDelete(false, item);
+                    editPath = item;
+                    try {
+                        if (item.getInventoryId().contains("C")) {
+                            alertForm(false, "carsDelete");
+                        } else {
+                            alertForm(false, "partsDelete");
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
                 });
 
                 buttonsContainer.setAlignment(Pos.CENTER);
@@ -909,7 +965,7 @@ public class managerInventoryController {
                 String photoUrl = rs.getString(9);
                 String status = (qty !=0) ?"On" : "Out";
                 String inventoryId = String.format("C-%03d", id);
-                carsData.add(new inventory(inventoryId,name,extColor,intColor,fuels,productYear,qty,price,status,photoUrl));
+                carsData.add(new inventory(id,inventoryId,name,extColor,intColor,fuels,productYear,qty,price,status,photoUrl));
             }
             for(inventory i : carsData){
                 models.put(new CheckBox(i.getModels()),i.getSeries());
@@ -935,7 +991,7 @@ public class managerInventoryController {
 
                 String status = (qty !=0) ?"On" : "Out";
                 String inventoryId = String.format("P-%03d", id);
-                partsData.add(new inventory(inventoryId,name,forCar,description,qty,price,status,photoUrl));
+                partsData.add(new inventory(id,inventoryId,name,forCar,description,qty,price,status,photoUrl));
             }
             cs.close();
         } catch (SQLException e) {
@@ -1047,7 +1103,6 @@ public class managerInventoryController {
             }
         });
     }
-
     private void handleSearch() {
         String searchText = searchBar.getText().trim();
         if (searchText.isEmpty()) {
@@ -1079,41 +1134,41 @@ public class managerInventoryController {
         return searchDate.size();
     }
 
-    private void editTable(inventory in){
+    private void editTable(){
         addPane.setVisible(false);
         editPane.setVisible(true);
-        if (in.getInventoryId().contains("C")){
+        if (editPath.getInventoryId().contains("C")){
             editCar.setVisible(true);
             editPart.setVisible(false);
             editTitle.setText("(Car)");
-            setEditCar(in);
+            setEditCar();
             editCarRevert.setOnAction(e->{
-                setEditCar(in);
+                setEditCar();
             });
             editCarApply.setOnAction(e->{
-                tableUpdateDelete(true,in);
+                tableAddUpdateDelete(true);
             });
         }else{
             editCar.setVisible(false);
             editPart.setVisible(true);
             editTitle.setText("(Part)");
-            setEditPart(in);
+            setEditPart();
             editPartRevert.setOnAction(e->{
-                setEditPart(in);
+                setEditPart();
             });
             editPartApply.setOnAction(e->{
-                tableUpdateDelete(true,in);
+                tableAddUpdateDelete(true);
             });
         }
         fadeInOut(true,extraPane,inventoryPane);
     }
-    private void setEditCar(inventory in){
-        editCarId.setText(in.getInventoryId());
-        editCarSeries.setText(in.getSeries());
-        editCarName.setText(in.getName());
-        if (in.getPhoto() != null && !in.getPhoto().trim().isEmpty()) {
+    private void setEditCar(){
+        editCarId.setText(editPath.getInventoryId());
+        editCarSeries.setText(editPath.getSeries());
+        editCarName.setText(editPath.getName());
+        if (editPath.getPhoto() != null && !editPath.getPhoto().trim().isEmpty()) {
             file.clear();
-            file.add(new File(in.getPhoto()));
+            file.add(new File(editPath.getPhoto()));
             if (!file.isEmpty()) {
 
                 try {
@@ -1124,36 +1179,36 @@ public class managerInventoryController {
                 }
             }
         }
-        editCarExtColor.setText(in.getExtColor());
-        editCarIntColor.setText(in.getIntColor());
-        editCarQty.setText(String.valueOf(in.getQty()));
-        editCarPrice.setText(String.valueOf(in.getPrice()));
-        editCarProductAt.setText(String.valueOf(in.getProductYear()));
+        editCarExtColor.setText(editPath.getExtColor());
+        editCarIntColor.setText(editPath.getIntColor());
+        editCarQty.setText(String.valueOf(editPath.getQty()));
+        editCarPrice.setText(String.valueOf(editPath.getPrice()));
+        editCarProductAt.setText(String.valueOf(editPath.getProductYear()));
         String fuel = "";
-        if(in.getFuelType().contains("gas")){
+        if(editPath.getFuelType().contains("gas")){
             fuel += "Gasoline/";
-        }else if(in.getFuelType().contains("hy")){
+        }else if(editPath.getFuelType().contains("hy")){
             fuel += "Hybrid/";
-        }else if(in.getFuelType().contains("di")){
+        }else if(editPath.getFuelType().contains("di")){
             fuel += "diseal/";
         }else {
-            fuel +=in.getFuelType();
+            fuel +=editPath.getFuelType();
         }
-        if(in.getFuelType().contains("ele")){
+        if(editPath.getFuelType().contains("ele")){
             fuel += "electric";
         }
         editCarUsage.setText(fuel);
     }
-    private void setEditPart(inventory in){
-        editPartId.setText(in.getInventoryId());
-        editPartName.setText(in.getName());
-        editPartDescription.setText(in.getDescription());
-        editPartForCar.setText(in.getForCar());
-        editPartQty.setText(String.valueOf(in.getQty()));
-        editPartPrice.setText(String.valueOf(in.getPrice()));
-        if (in.getPhoto() != null && !in.getPhoto().trim().isEmpty()) {
+    private void setEditPart(){
+        editPartId.setText(editPath.getInventoryId());
+        editPartName.setText(editPath.getName());
+        editPartDescription.setText(editPath.getDescription());
+        editPartForCar.setText(editPath.getForCar());
+        editPartQty.setText(String.valueOf(editPath.getQty()));
+        editPartPrice.setText(String.valueOf(editPath.getPrice()));
+        if (editPath.getPhoto() != null && !editPath.getPhoto().trim().isEmpty()) {
             file.clear();
-            file.add(new File(in.getPhoto()));
+            file.add(new File(editPath.getPhoto()));
             if (!file.isEmpty()) {
 
                 try {
@@ -1165,20 +1220,62 @@ public class managerInventoryController {
             }
         }
     }
-    private void tableUpdateDelete(boolean check,inventory in){
-        if (check){
-            if(in.getInventoryId().contains("C")){
+    private void tableAddUpdateDelete(boolean check){
+        try {
+            if (check) {
+                if(addPane.isVisible()){
 
-            }else{
+                }else {
+                    if (editPath.getInventoryId().contains("C")) {
+                        String sql = "UPDATE cars SET car_name = ?, fuel_type = ?, product_year = ?, " +
+                                "int_color = ?, ext_color = ?, qty = ?, price = ?, photo = ? WHERE car_id = ?";
+
+                    } else {
+
+                    }
+                }
+
+
+            } else {
+                if (editPath.getInventoryId().contains("C")) {
+                    String sql = "DELETE FROM cars WHERE car_id = ? ";
+                    PreparedStatement ps = con.prepareCall(sql);
+                    ps.setInt(1,editPath.getId());
+                    ps.execute();
+                    ps.close();
+                    for (inventory i : carsData){
+                        if (i == editPath){
+                            carsData.clear();
+                        }
+
+                    }
+                } else {
+                    String sql = "DELETE FROM car_parts WHERE part_id = ? ";
+                    PreparedStatement ps = con.prepareCall(sql);
+                    ps.setInt(1,editPath.getId());
+                    ps.execute();
+                    ps.close();
+                    for(inventory i : partsData){
+                        if(i == editPath){
+                            partsData.clear();
+                        }
+                    }
+                }
+
+                for(inventory i : inventoryData){
+                    if(i == editPath){
+                        inventoryData.clear();
+                    }
+                }
 
             }
-        }else{
-
-            if(in.getInventoryId().contains("C")){
-
+            if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                showTable("cars");
             }else{
-
+                showTable("parts");
             }
+        } catch ( SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
