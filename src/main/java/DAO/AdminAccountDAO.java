@@ -1,18 +1,21 @@
 package DAO;
 
-import Database.Porsche_DB;
+import Database.DatabaseConnectionManager;
 import Model.user;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdminAccountDAO {
+    private static final Logger logger = LoggerFactory.getLogger(AdminAccountDAO.class);
     private final Connection conn;
 
-    public AdminAccountDAO() throws SQLException, ClassNotFoundException {
-        this.conn = new Porsche_DB().connect();
+    public AdminAccountDAO() throws SQLException {
+        this.conn = DatabaseConnectionManager.getInstance().getConnection();
+        logger.debug("AdminAccountDAO initialized with connection from pool");
     }
 
     public List<user> getStaffCards(String status, String role) throws SQLException {
@@ -80,7 +83,55 @@ public class AdminAccountDAO {
         return weeks;
     }
 
+    public double getMonthlyAttendance(int staffId, int month, int year) throws SQLException {
+        String sql = "CALL getMonthlyAttendance(?,?,?)";
+        
+        try (CallableStatement cs = conn.prepareCall(sql)) {
+            cs.setInt(1, staffId);
+            cs.setInt(2, month);
+            cs.setInt(3, year);
+            
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    // Returns: present_day, absent_day, total_day, attendance_percentage
+                    return rs.getDouble(4); // attendance_percentage
+                }
+            }
+        }
+        return 0.0;
+    }
+
+    public int[][] getTargetData(int staffId, int month, int year) throws SQLException {
+        String sql = "CALL targetviewchart(?,?,?)";
+        
+        try (CallableStatement cs = conn.prepareCall(sql)) {
+            cs.setInt(1, staffId);
+            cs.setInt(2, month);
+            cs.setInt(3, year);
+            
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    // Returns: target_car, target_part, achieve_car, achieve_part
+                    int targetCar = rs.getInt(1);
+                    int targetPart = rs.getInt(2);
+                    int achieveCar = rs.getInt(3);
+                    int achievePart = rs.getInt(4);
+                    
+                    return new int[][]{{achieveCar, targetCar}, {achievePart, targetPart}};
+                }
+            }
+        }
+        return new int[][]{{0, 0}, {0, 0}};
+    }
+
     public void close() {
-        try { if (conn != null && !conn.isClosed()) conn.close(); } catch (SQLException ignored) {}
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+                logger.debug("Connection returned to pool");
+            }
+        } catch (SQLException e) {
+            logger.error("Error closing connection", e);
+        }
     }
 }

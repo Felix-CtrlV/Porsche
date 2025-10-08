@@ -128,7 +128,6 @@ public class adminDashboardController {
             p.setInt(4, current.getUserid());
             p.execute();
         } catch (
-                ClassNotFoundException |
                 SQLException ex) {
             throw new RuntimeException(ex);
         }

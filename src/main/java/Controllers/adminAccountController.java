@@ -2,6 +2,8 @@ package Controllers;
 
 import DAO.AdminAccountDAO;
 import Model.user;
+import Utils.ThreadPoolManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -19,6 +21,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.File;
@@ -28,6 +32,7 @@ import java.time.format.TextStyle;
 import java.util.*;
 
 public class adminAccountController {
+    private static final Logger logger = LoggerFactory.getLogger(adminAccountController.class);
 
     // ---------- Staff Info ----------
     @FXML
@@ -73,9 +78,16 @@ public class adminAccountController {
     private final ContextMenu searchMenu = new ContextMenu();
     private final LocalDate today = LocalDate.now();
     private int currentMonth, currentYear;
+    private LocalDate currentStaffStartDate;
+    private LocalDate currentStaffEndDate;
 
-    public adminAccountController() throws Exception {
-        dao = new AdminAccountDAO();
+    public adminAccountController() {
+        try {
+            dao = new AdminAccountDAO();
+        } catch (Exception e) {
+            logger.error("Failed to initialize AdminAccountDAO", e);
+            throw new RuntimeException("Failed to initialize controller", e);
+        }
     }
 
     @FXML
@@ -121,8 +133,11 @@ public class adminAccountController {
         };
 
         task.setOnSucceeded(e -> updateChart(task.getValue()));
-        task.setOnFailed(e -> task.getException().printStackTrace());
-        new Thread(task, "WeeklySales").start();
+        task.setOnFailed(e -> {
+            logger.error("Failed to load weekly sales", task.getException());
+            Platform.runLater(() -> setupEmptyChart());
+        });
+        ThreadPoolManager.getInstance().execute(task);
     }
 
     private void updateChart(List<Double> weeklySales) {
@@ -139,6 +154,138 @@ public class adminAccountController {
         lineChart.getData().add(series);
     }
 
+    // ---------- Attendance ----------
+    private void loadAttendanceAsync(int staffId, int month, int year) {
+        if (staffId == 0)
+            return;
+
+        Task<Double> task = new Task<>() {
+            @Override
+            protected Double call() throws Exception {
+                return dao.getMonthlyAttendance(staffId, month, year);
+            }
+        };
+
+        task.setOnSucceeded(e -> updateAttendance(task.getValue()));
+        task.setOnFailed(e -> {
+            logger.error("Failed to load attendance", task.getException());
+            Platform.runLater(() -> updateAttendance(0.0));
+        });
+        ThreadPoolManager.getInstance().execute(task);
+    }
+
+    private void updateAttendance(double percent) {
+        if (attendancePercent == null || attendanceCircle == null)
+            return;
+
+        attendancePercent.setText(String.format("%.0f%%", percent));
+        
+        // Update circle stroke dash to show percentage
+        double radius = 100;
+        double circumference = 2 * Math.PI * radius;
+        double dashLength = (percent / 100.0) * circumference;
+        attendanceCircle.getStrokeDashArray().setAll(dashLength, circumference);
+        attendanceCircle.setVisible(true);
+    }
+
+    // ---------- Targets ----------
+    private void loadTargetsAsync(int staffId, int month, int year) {
+        if (staffId == 0)
+            return;
+
+        Task<int[][]> task = new Task<>() {
+            @Override
+            protected int[][] call() throws Exception {
+                return dao.getTargetData(staffId, month, year);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            int[][] data = task.getValue();
+            updateTargets(data[0], data[1]);
+        });
+        task.setOnFailed(e -> {
+            logger.error("Failed to load targets", task.getException());
+            Platform.runLater(() -> updateTargets(new int[]{0, 0}, new int[]{0, 0}));
+        });
+        ThreadPoolManager.getInstance().execute(task);
+    }
+
+    private void updateTargets(int[] carData, int[] partData) {
+        if (targetCar == null || targetPart == null)
+            return;
+
+        // Car targets
+        int carAchieved = carData[0];
+        int carTarget = carData[1];
+        targetCar.setText(carAchieved + "/" + carTarget);
+        
+        if (carTarget > 0) {
+            int carOver = carAchieved - carTarget;
+            targetOverCar.setText((carOver >= 0 ? "+" : "") + carOver);
+            targetOverCar.setStyle("-fx-text-fill: " + (carOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
+            targetCarMessagelbl.setText(carOver >= 0 ? "Target Achieved! 🎉" : "Missed the target");
+            targetCarMessagelbl.setStyle("-fx-text-fill: " + (carOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
+            
+            double carPercent = Math.min(100.0, (carAchieved * 100.0) / carTarget);
+            updateCircleProgress(carCircle, carPercent);
+        } else {
+            targetOverCar.setText("+0");
+            targetCarMessagelbl.setText("No target set");
+            updateCircleProgress(carCircle, 0);
+        }
+
+        // Part targets
+        int partAchieved = partData[0];
+        int partTarget = partData[1];
+        targetPart.setText(partAchieved + "/" + partTarget);
+        
+        if (partTarget > 0) {
+            int partOver = partAchieved - partTarget;
+            targetOverPart.setText((partOver >= 0 ? "+" : "") + partOver);
+            targetOverPart.setStyle("-fx-text-fill: " + (partOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
+            targetPartMessagelbl.setText(partOver >= 0 ? "Target Achieved! 🎉" : "Missed the target");
+            targetPartMessagelbl.setStyle("-fx-text-fill: " + (partOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
+            
+            double partPercent = Math.min(100.0, (partAchieved * 100.0) / partTarget);
+            updateCircleProgress(partCircle, partPercent);
+        } else {
+            targetOverPart.setText("+0");
+            targetPartMessagelbl.setText("No target set");
+            updateCircleProgress(partCircle, 0);
+        }
+    }
+
+    private void updateCircleProgress(Circle circle, double percent) {
+        if (circle == null)
+            return;
+        
+        double radius = circle.getRadius();
+        double circumference = 2 * Math.PI * radius;
+        double dashLength = (percent / 100.0) * circumference;
+        circle.getStrokeDashArray().setAll(dashLength, circumference);
+        circle.setRotate(-90); // Start from top
+    }
+
+    private void clearAttendanceAndTargets() {
+        if (attendancePercent != null)
+            attendancePercent.setText("0%");
+        if (attendanceCircle != null)
+            attendanceCircle.setVisible(false);
+        if (targetCar != null)
+            targetCar.setText("0/0");
+        if (targetPart != null)
+            targetPart.setText("0/0");
+        if (targetOverCar != null)
+            targetOverCar.setText("+0");
+        if (targetOverPart != null)
+            targetOverPart.setText("+0");
+        if (targetCarMessagelbl != null)
+            targetCarMessagelbl.setText("No data");
+        if (targetPartMessagelbl != null)
+            targetPartMessagelbl.setText("No data");
+    }
+
     // ---------- Load Staff ----------
     private void loadStaffCardsAsync(boolean active) {
         Task<List<user>> task = new Task<>() {
@@ -149,12 +296,15 @@ public class adminAccountController {
         };
 
         task.setOnSucceeded(e -> {
-            staffList.setAll(task.getValue()); // Works now because staffList is ObservableList
+            staffList.setAll(task.getValue());
             populateStaffCards();
         });
 
-        task.setOnFailed(e -> task.getException().printStackTrace());
-        new Thread(task, "LoadStaffCards").start();
+        task.setOnFailed(e -> {
+            logger.error("Failed to load staff cards", task.getException());
+            Platform.runLater(() -> staffListContainer.getChildren().clear());
+        });
+        ThreadPoolManager.getInstance().execute(task);
     }
 
     private void populateStaffCards() {
@@ -171,21 +321,25 @@ public class adminAccountController {
                 card.setOnMouseClicked(e -> {
                     showStaffDetails(staff);
                     loadWeeklySalesAsync(staff.getId(), currentMonth, currentYear);
+                    loadAttendanceAsync(staff.getId(), currentMonth, currentYear);
+                    loadTargetsAsync(staff.getId(), currentMonth, currentYear);
                 });
 
                 staffListContainer.getChildren().add(card);
-            } catch (
-                    IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException ex) {
+                logger.error("Failed to load staff card for user ID: " + staff.getId(), ex);
             }
         }
 
         if (!staffList.isEmpty()) {
             showStaffDetails(staffList.get(0));
             loadWeeklySalesAsync(staffList.get(0).getId(), currentMonth, currentYear);
+            loadAttendanceAsync(staffList.get(0).getId(), currentMonth, currentYear);
+            loadTargetsAsync(staffList.get(0).getId(), currentMonth, currentYear);
         } else {
             selectedStaffId = 0;
             setupEmptyChart();
+            clearAttendanceAndTargets();
         }
     }
 
@@ -208,8 +362,8 @@ public class adminAccountController {
                         : new File(path).toURI().toString();
                 StaffImage.setImage(new Image(uri, true));
             }
-        } catch (
-                Exception ignored) {
+        } catch (Exception e) {
+            logger.warn("Failed to load image for staff ID: " + staff.getId(), e);
         }
 
         selectedStaffId = staff.getId();
@@ -252,6 +406,8 @@ public class adminAccountController {
                         searchMenu.hide();
                         showStaffDetails(s);
                         loadWeeklySalesAsync(s.getId(), currentMonth, currentYear);
+                        loadAttendanceAsync(s.getId(), currentMonth, currentYear);
+                        loadTargetsAsync(s.getId(), currentMonth, currentYear);
                     });
                     matches.add(item);
                 }
@@ -281,6 +437,8 @@ public class adminAccountController {
                 .ifPresent(s -> {
                     showStaffDetails(s);
                     loadWeeklySalesAsync(s.getId(), currentMonth, currentYear);
+                    loadAttendanceAsync(s.getId(), currentMonth, currentYear);
+                    loadTargetsAsync(s.getId(), currentMonth, currentYear);
                 });
     }
 
@@ -296,6 +454,8 @@ public class adminAccountController {
                 currentMonth = selectedMonth;
                 updateDateControls();
                 loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+                loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+                loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
             }
         });
 
@@ -307,6 +467,8 @@ public class adminAccountController {
                 updateMonthBox();
                 updateDateControls();
                 loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+                loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+                loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
             }
         });
     }
@@ -314,17 +476,18 @@ public class adminAccountController {
     private void updateMonthYearOptions(user staff) {
         updatingDateBox = true;
 
-        yearBox.getItems().clear();
-        LocalDate start = Optional.ofNullable(staff.getStart_date()).orElse(today);
-        LocalDate end = Optional.ofNullable(staff.getEnd_date()).orElse(today);
+        currentStaffStartDate = Optional.ofNullable(staff.getStart_date()).orElse(today);
+        currentStaffEndDate = Optional.ofNullable(staff.getEnd_date()).orElse(today);
 
-        for (int y = start.getYear(); y <= end.getYear(); y++)
+        yearBox.getItems().clear();
+        for (int y = currentStaffStartDate.getYear(); y <= currentStaffEndDate.getYear(); y++)
             yearBox.getItems().add(y);
         if (!yearBox.getItems().contains(currentYear))
-            currentYear = start.getYear();
+            currentYear = currentStaffStartDate.getYear();
         yearBox.setValue(currentYear);
 
         updateMonthBox();
+        updateDateControls();
         updatingDateBox = false;
     }
 
@@ -346,11 +509,34 @@ public class adminAccountController {
     }
 
     private void updateDateControls() {
+        if (NextMonthbtn == null || NextYearbtn == null || PreviousMonthbtn == null || PreviousYearbtn == null)
+            return;
+        
+        // Disable next buttons if at current month/year
         boolean isCurrentYear = currentYear == today.getYear();
-        NextMonthbtn.setDisable(isCurrentYear && currentMonth >= today.getMonthValue());
-        NextYearbtn.setDisable(currentYear >= today.getYear());
-        PreviousMonthbtn.setDisable(currentYear <= today.getYear() && currentMonth <= 1);
-        PreviousYearbtn.setDisable(currentYear <= 1);
+        boolean isCurrentMonth = isCurrentYear && currentMonth == today.getMonthValue();
+        NextMonthbtn.setDisable(isCurrentMonth);
+        NextYearbtn.setDisable(isCurrentYear);
+        
+        // Hide next buttons if at current month/year
+        NextMonthbtn.setVisible(!isCurrentMonth);
+        NextYearbtn.setVisible(!isCurrentYear);
+        
+        // Disable/hide previous buttons if at staff start date
+        if (currentStaffStartDate != null) {
+            boolean isStartYear = currentYear == currentStaffStartDate.getYear();
+            boolean isStartMonth = isStartYear && currentMonth == currentStaffStartDate.getMonthValue();
+            
+            PreviousMonthbtn.setDisable(isStartMonth);
+            PreviousYearbtn.setDisable(isStartYear);
+            PreviousMonthbtn.setVisible(!isStartMonth);
+            PreviousYearbtn.setVisible(!isStartYear);
+        } else {
+            PreviousMonthbtn.setDisable(false);
+            PreviousYearbtn.setDisable(false);
+            PreviousMonthbtn.setVisible(true);
+            PreviousYearbtn.setVisible(true);
+        }
     }
 
     @FXML
@@ -358,11 +544,14 @@ public class adminAccountController {
         if (currentMonth == 12) {
             currentMonth = 1;
             currentYear++;
+            yearBox.setValue(currentYear);
         } else
             currentMonth++;
         updateMonthBox();
         updateDateControls();
         loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
     }
 
     @FXML
@@ -370,27 +559,36 @@ public class adminAccountController {
         if (currentMonth == 1) {
             currentMonth = 12;
             currentYear--;
+            yearBox.setValue(currentYear);
         } else
             currentMonth--;
         updateMonthBox();
         updateDateControls();
         loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
     }
 
     @FXML
     private void nextYearClick(MouseEvent e) {
         currentYear++;
+        yearBox.setValue(currentYear);
         updateMonthBox();
         updateDateControls();
         loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
     }
 
     @FXML
     private void prevYearClick(MouseEvent e) {
         currentYear--;
+        yearBox.setValue(currentYear);
         updateMonthBox();
         updateDateControls();
         loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
     }
 
     boolean cardtype = true;

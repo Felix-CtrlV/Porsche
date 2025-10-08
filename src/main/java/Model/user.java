@@ -1,7 +1,6 @@
 package Model;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class user {
     private int id;
@@ -121,12 +120,10 @@ public class user {
     }
 
     public LocalDate getStart_date() {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
         return start_date;
     }
 
     public LocalDate getEnd_date() {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
         return end_date;
     }
 

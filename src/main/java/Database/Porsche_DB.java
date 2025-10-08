@@ -1,27 +1,38 @@
 package Database;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Legacy database connection class.
+ * @deprecated Use DatabaseConnectionManager.getInstance().getConnection() instead.
+ * This class is kept for backward compatibility but delegates to the connection pool.
+ */
+@Deprecated
 public class Porsche_DB {
-
-    final String url = "jdbc:mysql://avnadmin:AVNS_tTQ3tp0kJN1xSXUbvN5@car-pg3-anthtooaung2792005-fda5.d.aivencloud.com:26737/car_show_room?ssl-mode=REQUIRED";
-    final String username = "avnadmin";
-    final String password = "AVNS_tTQ3tp0kJN1xSXUbvN5";
+    private static final Logger logger = LoggerFactory.getLogger(Porsche_DB.class);
     Connection con;
 
-    public Connection connect () throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        con = DriverManager.getConnection(url, username, password);
-        System.out.println("Connected");
+    /**
+     * @deprecated Use DatabaseConnectionManager.getInstance().getConnection()
+     */
+    @Deprecated
+    public Connection connect() throws SQLException {
+        con = DatabaseConnectionManager.getInstance().getConnection();
+        logger.debug("Connection obtained from pool");
         return con;
     }
 
+    /**
+     * Closes the connection and returns it to the pool.
+     */
     public void disconnect() throws SQLException {
-        if(con!=null && !con.isClosed()){
+        if (con != null && !con.isClosed()) {
             con.close();
-            System.out.println("Disconnected from the main.java.Database");
+            logger.debug("Connection returned to pool");
         }
     }
 }

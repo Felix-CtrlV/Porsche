@@ -1,7 +1,7 @@
 package Controllers;
 
-import Database.Porsche_DB;
 import MainUI.login;
+import Utils.LogoutHelper;
 import Utils.Session;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -28,14 +28,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class managerDashboardController {
+    private static final Logger logger = LoggerFactory.getLogger(managerDashboardController.class);
 
     @FXML
     private ToggleButton Mode;
@@ -207,19 +207,13 @@ public class managerDashboardController {
                         Stage stage = (Stage) newWin;
                         stage.setOnCloseRequest(event -> {
                             try {
-                                Porsche_DB connect = new Porsche_DB();
-                                Connection con = connect.connect();
-                                CallableStatement check_out = con.prepareCall("call logout(?, ?)");
                                 if (current != null) {
-                                    check_out.setInt(1, current.getUserid());
-                                    check_out.setString(2, String.valueOf(LocalDateTime.now()));
-                                    check_out.execute();
+                                    LogoutHelper.performLogout(current.getUserid());
                                 }
-                                connect.disconnect();
-                                Session.clearSession();
-                            } catch (
-                                    Exception ex) {
-                                ex.printStackTrace();
+                                login log_in = new login();
+                                log_in.start(new Stage());
+                            } catch (Exception ex) {
+                                logger.error("Error during window close logout", ex);
                             }
                         });
                     }
@@ -254,19 +248,13 @@ public class managerDashboardController {
         Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
         home.close();
 
-        Porsche_DB connect = new Porsche_DB();
-        Connection con = connect.connect();
-        CallableStatement check_out = con.prepareCall("call logout(?, ?)");
         Session current = Session.getInstance();
         if (current != null) {
             adminid = current.getUserid();
         }
-        check_out.setInt(1, adminid);
-        check_out.setString(2, String.valueOf(LocalDateTime.now()));
-        check_out.execute();
+        LogoutHelper.performLogout(adminid);
         login log_in = new login();
         log_in.start(new Stage());
-        Session.clearSession();
     }
 
 

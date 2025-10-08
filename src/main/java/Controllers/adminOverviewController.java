@@ -58,7 +58,7 @@ public class adminOverviewController implements Initializable {
         try {
             connect = new Porsche_DB();
             con = connect.connect();
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 

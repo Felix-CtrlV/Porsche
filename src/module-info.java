@@ -13,6 +13,9 @@ module Porsche {
 
     requires mysql.connector.j;
     requires de.jensd.fx.glyphs.fontawesome;
+    requires org.slf4j;
+    requires com.zaxxer.hikari;
+    requires jakarta.mail;
 //    requires Porsche;
 
     opens MainUI to javafx.fxml;

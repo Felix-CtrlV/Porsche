@@ -1,6 +1,8 @@
 package Utils;
 
-import Database.Porsche_DB;
+import Database.DatabaseConnectionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Session {
-
+    private static final Logger logger = LoggerFactory.getLogger(Session.class);
     private static Session instance;
 
     private int userid;
@@ -36,19 +38,16 @@ public class Session {
     }
 
     public static void closePreviousSessionIfAny(int userId) {
-        try {
-            Porsche_DB connect = new Porsche_DB();
-            Connection con = connect.connect();
-
-            PreparedStatement sessionclose = con.prepareStatement("UPDATE user_attendance SET check_out = ? WHERE user_id = ? AND check_out IS NULL");
+        try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement sessionclose = con.prepareStatement(
+                     "UPDATE user_attendance SET check_out = ? WHERE user_id = ? AND check_out IS NULL")) {
+            
             sessionclose.setString(1, String.valueOf(LocalDateTime.now()));
             sessionclose.setInt(2, userId);
-            sessionclose.executeUpdate();
-
-            connect.disconnect();
-        } catch (
-                SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            int updated = sessionclose.executeUpdate();
+            logger.debug("Closed {} previous session(s) for user ID: {}", updated, userId);
+        } catch (SQLException e) {
+            logger.error("Failed to close previous session for user ID: " + userId, e);
         }
     }
 

@@ -113,7 +113,7 @@
                                             <image>
                                                 <Image url="@../Image/usericon.png" />
                                             </image></ImageView>
-                                        <Label fx:id="StaffNameLable" prefHeight="46.0" prefWidth="282.0" style="-fx-font-weight: bold; -fx-font-size: 30;" text="John Doe" />
+                                        <Label fx:id="StaffNameLabel" prefHeight="46.0" prefWidth="282.0" style="-fx-font-weight: bold; -fx-font-size: 30;" text="John Doe" />
                                     </children>
                                 </HBox>
 
@@ -166,7 +166,7 @@
 
                                         <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
 
-                                        <Button fx:id="PreviousYearbth" mnemonicParsing="false" onMouseClicked="#prevYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                                        <Button fx:id="PreviousYearbtn" mnemonicParsing="false" onMouseClicked="#prevYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
                                         <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
                                         <Button fx:id="NextYearbtn" mnemonicParsing="false" onMouseClicked="#nextYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                                     </children>
