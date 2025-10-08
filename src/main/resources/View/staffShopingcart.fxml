@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="1188.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: yellow;" HBox.hgrow="SOMETIMES" />
+            <HBox prefHeight="530.0" prefWidth="596.0">
+               <children>
+                  <Line endX="-99.99998474121094" endY="516.2929077148438" startX="-100.0" />
+                  <VBox prefHeight="530.0" prefWidth="320.0" style="-fx-background-color: red;" HBox.hgrow="SOMETIMES" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </center>
+   <top>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1188.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Checkout" />
+         </children>
+      </HBox>
+   </top>
+</BorderPane>

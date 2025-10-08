@@ -1,13 +1,46 @@
-.black-pane {
-    -fx-background-color: rgb(71, 71, 71);
-    -fx-background-radius: 15;
-    -fx-border-radius: 15;
+.heading {
+    -fx-font-family: Arial, sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 32;
+    -fx-color: #000000;
+    -fx-margin: 0;
+}
+
+.square-button {
+    -fx-background-color: #C21E2B;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-font-family: Arial;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4, 0.2, 0, 2);
+    -fx-transition: all 0.2s ease-in-out;
+}
+.square-button:hover {
+    -fx-background-color: #D32F2F;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 6, 0.25, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+.square-button:pressed {
+    -fx-background-color: #A81C1C;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 8, 0.3, 0, 4);
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+.transparent-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white 0.7;
+    -fx-underline: true;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
 }
 
 .arrow-button {
-    -fx-background-color:
-        linear-gradient(from 0% 0% to 0% 100%, rgba(200,200,200,0.5) 0%, rgba(180,180,180,0.25) 100%),
-        rgba(180, 180, 180, 0.3);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, rgba(200,200,200,0.5) 0%, rgba(180,180,180,0.25) 100%), rgba(180, 180, 180, 0.3);
     -fx-text-fill: white;
     -fx-font-size: 12px;
     -fx-cursor: hand;
@@ -18,18 +51,12 @@
     -fx-border-width: 1;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.2, 0, 1);
 }
-
 .arrow-button:hover {
-    -fx-background-color:
-        linear-gradient(from 0% 0% to 0% 100%, rgba(210,210,210,0.6) 0%, rgba(190,190,190,0.3) 100%),
-        rgba(190, 190, 190, 0.35);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, rgba(210,210,210,0.6) 0%, rgba(190,190,190,0.3) 100%), rgba(190, 190, 190, 0.35);
     -fx-text-fill: #222222;
 }
-
 .arrow-button:pressed {
-    -fx-background-color:
-        linear-gradient(from 0% 0% to 0% 100%, rgba(160,160,160,0.4) 0%, rgba(140,140,140,0.2) 100%),
-        rgba(140, 140, 140, 0.25);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, rgba(160,160,160,0.4) 0%, rgba(140,140,140,0.2) 100%), rgba(140, 140, 140, 0.25);
     -fx-text-fill: white;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0.3, 0, 2);
 }
@@ -63,91 +90,29 @@
     -fx-font-weight: bold;
 }
 
-.combobox {
-    -fx-background-color: rgba(100, 100, 100, 0.6);
+
+.setbtn {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
     -fx-text-fill: white;
-    -fx-font-family: "Arial";
     -fx-font-size: 14px;
-    -fx-background-radius: 12;
+    -fx-font-family: "Arial";
+    -fx-background-radius: 20;
     -fx-cursor: hand;
-    -fx-opacity: 0.9;
-    -fx-border-color: rgba(255, 255, 255, 0.4);
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.4), 10, 0.2, 0, 0);
+    -fx-padding: 6 12 6 12;
 }
-
-.combobox:hover {
-    -fx-background-color: rgba(120, 120, 120, 0.5);
-    -fx-opacity: 1.0;
-}
-
-.combobox:pressed {
-    -fx-background-color: rgba(80, 80, 80, 0.6);
-}
-
-.date-picker {
-    -fx-background-color: rgba(100, 100, 100, 0.6);
+.setbtn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.25);
     -fx-text-fill: white;
-    -fx-font-family: "Arial";
-    -fx-font-size: 14px;
-    -fx-background-radius: 12;
-    -fx-border-color: rgba(255, 255, 255, 0.4);
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
-    -fx-cursor: hand;
-    -fx-opacity: 0.9;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.2, 0, 2);
 }
-
-.date-picker:hover {
-    -fx-background-color: rgba(120, 120, 120, 0.5);
-    -fx-opacity: 1.0;
-}
-
-.date-picker .text-field {
-    -fx-background-color: rgb(234, 234, 234);
-    -fx-font-family: "Arial";
-    -fx-font-size: 14px;
-    -fx-background-radius: 9 0 0 9;
-    -fx-border-radius: 9 0 0 9;
-    -fx-border-color: rgba(255, 255, 255, 0.4);
-    -fx-border-width: 1;
-}
-
-.date-picker .arrow-button {
-    -fx-background-color: rgba(100, 100, 100, 0.6);
-    -fx-background-radius: 0 9 9 0;
-    -fx-border-radius: 0 9 9 0;
-    -fx-border-color: rgba(255, 255, 255, 0.4);
-    -fx-border-width: 1;
-}
-
-.date-picker:pressed {
-    -fx-background-color: rgba(80, 80, 80, 0.6);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-}
-
-.date-picker .popup-content {
-    -fx-background-color: rgba(100, 100, 100, 0.6);
-    -fx-background-radius: 4;
-    -fx-border-radius: 4;
-    -fx-border-color: rgba(255, 255, 255, 0.4);
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.2, 0, 2);
-}
-
-.date-picker .day-cell {
-    -fx-background-radius: 4;
-    -fx-border-radius: 4;
-}
-
-.date-picker .day-cell:filled:selected,
-.date-picker .day-cell:filled:hover {
-    -fx-background-color: rgba(120, 120, 120, 0.7);
+.setbtn:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.35);
     -fx-text-fill: white;
-    -fx-background-radius: 4;
-    -fx-border-radius: 4;
+}
+.setbtn.active {
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+    -fx-text-fill: #C21E2B;
+    -fx-font-weight: bold;
 }
 
 .exportbtn {
@@ -159,17 +124,14 @@
     -fx-background-radius: 12;
     -fx-cursor: hand;
     -fx-opacity: 0.9;
-    -fx-border-color: rgba(255, 255, 255, 0.4);
+    -fx-border-color: #fe6579;
     -fx-border-radius: 12;
     -fx-border-width: 2;
-    -fx-border-color: #fe6579;
 }
-
 .exportbtn:hover {
     -fx-background-color: rgba(120, 120, 120, 0.5);
     -fx-opacity: 1.0;
 }
-
 .exportbtn:pressed {
     -fx-background-color: rgba(80, 80, 80, 0.6);
     -fx-scale-x: 1.02;
@@ -177,29 +139,31 @@
 }
 
 .logoutbtn {
-    -fx-background-color: red;  /* original color */
+    -fx-background-color: red;
     -fx-text-fill: white;
     -fx-font-family: "Arial";
     -fx-font-size: 14px;
-    -fx-opacity: 0.8;
+    -fx-opacity: 0.85;
     -fx-background-radius: 8;
     -fx-cursor: hand;
-    -fx-opacity: 0.85;
     -fx-transition: 0.5s;
 }
-
 .logoutbtn:hover {
     -fx-background-color: #cc0000;
     -fx-opacity: 1.0;
 }
-
 .logoutbtn:pressed {
     -fx-background-color: #990000;
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
 }
 
-/* Glassmorphism main panel */
+.black-pane {
+    -fx-background-color: rgb(71, 71, 71);
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+}
+
 .glass_main {
     -fx-background-color: rgba(255,255,255,0.9),linear-gradient(to bottom right, rgba(255,255,255,0.35), rgba(255,255,255,0.06));
     -fx-background-insets: 0, 0;
@@ -210,62 +174,12 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 3, 0.35, 0, 1);
 }
 
-.tab_main {
-    -fx-background-color: rgba(255,255,255,0.9),linear-gradient(to bottom right, rgba(255,255,255,0.35), rgba(255,255,255,0.05));
-    -fx-background-insets: 0, 0;
-    -fx-background-radius: 15 15 15 15;
-    -fx-border-color: rgba(255,255,255,0.45);
-    -fx-border-width: 1;
-    -fx-border-radius: 15 15 15 15;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 3, 0.35, 0, 0.7);
-}
-
-.panel_main {
-    -fx-background-color:
-        linear-gradient(to bottom right, #1c1c1c, #2b2b2b, #3d3d3d); /* dark metallic gradient */
-    -fx-background-radius: 20;
-
-    -fx-border-color: #b30000; /* deep, luxurious red accent */
-    -fx-border-width: 2;
-    -fx-border-radius: 20;
-
-    -fx-effect: dropshadow(gaussian, rgba(179,0,0,0.35), 12, 0.4, 0, 0),
-                dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0.3, 0, 2);
-}
-
-
-
-.glassy-button {
-    -fx-background-color:
-        rgba(255,255,255,0.25),
-        linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
-    -fx-background-insets: 0, 0;
-    -fx-background-radius: 15;
-    -fx-border-color: rgba(220, 20, 60, 0.8); /* strong crimson red */
-    -fx-border-width: 1.5;
-    -fx-border-radius: 15;
-    -fx-text-fill: rgba(220, 20, 60, 0.95);
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-    -fx-padding: 6 15 6 15;
-    -fx-effect: dropshadow(gaussian, rgba(220, 20, 60, 0.55), 10, 0.45, 0, 1);
-    -fx-background-insets: 0, 1;
-}
-
-.glassy-button:hover {
-    -fx-background-color:
-        rgba(255,255,255,0.35),
-        linear-gradient(to bottom right, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-    -fx-effect: dropshadow(gaussian, rgba(220, 20, 60, 0.75), 14, 0.5, 0, 2);
-    -fx-text-fill: rgba(255, 0, 0, 1); /* brighter red on hover */
-}
-
-.glassy-button:pressed {
-    -fx-background-color:
-        rgba(230,230,230,0.35),
-        linear-gradient(to bottom right, rgba(230,230,230,0.25), rgba(200,200,200,0.1));
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 6, 0.3, 0, 1);
-    -fx-translate-y: 1;
+.stats {
+    -fx-background-color: white;
+    -fx-background-radius: 15px;
+    -fx-border-width: 0;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0.3, 0, 2);
 }
 
 .font {
@@ -273,14 +187,12 @@
     -fx-font-size: 14px;
     -fx-opacity: 0.70;
 }
-
 .selected_dash_font {
     -fx-font-family: "Arial";
     -fx-font-size: 14px;
     -fx-opacity: 0.70;
     -fx-font-weight: 700;
 }
-
 .topic_font {
     -fx-font-family: "Arial";
     -fx-font-size: 22px;
@@ -299,14 +211,12 @@
     -fx-text-fill: #222222;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0.3, 0, 4);
 }
-
 .table-view .column-header-background {
     -fx-background-color: rgba(245, 245, 245, 0.7);
     -fx-background-radius: 12 12 0 0;
     -fx-border-color: rgba(180, 180, 180, 0.3);
     -fx-border-width: 0 0 1 0;
 }
-
 .table-view .column-header {
     -fx-background-color: transparent;
     -fx-text-fill: #111111;
@@ -314,37 +224,16 @@
     -fx-alignment: CENTER_LEFT;
     -fx-padding: 6 10;
 }
-
-/* Different shades for columns */
-.table-view .table-column:nth-child(1) .table-cell {
-    -fx-background-color: rgba(255, 255, 255, 0.6);
-}
-
-.table-view .table-column:nth-child(2) .table-cell {
-    -fx-background-color: rgba(240, 240, 240, 0.6);
-}
-
-.table-view .table-column:nth-child(3) .table-cell {
-    -fx-background-color: rgba(230, 230, 230, 0.6);
-}
-
-.table-view .table-column:nth-child(4) .table-cell {
-    -fx-background-color: rgba(220, 220, 220, 0.6);
-}
-
-.table-row-cell:hover {
-    -fx-background-color: rgba(200, 220, 255, 0.5);
-    -fx-cursor: hand;
-}
-
-/* Selected row */
+.table-view .table-column:nth-child(1) .table-cell { -fx-background-color: rgba(255, 255, 255, 0.6); }
+.table-view .table-column:nth-child(2) .table-cell { -fx-background-color: rgba(240, 240, 240, 0.6); }
+.table-view .table-column:nth-child(3) .table-cell { -fx-background-color: rgba(230, 230, 230, 0.6); }
+.table-view .table-column:nth-child(4) .table-cell { -fx-background-color: rgba(220, 220, 220, 0.6); }
+.table-row-cell:hover { -fx-background-color: rgba(200, 220, 255, 0.5); -fx-cursor: hand; }
 .table-row-cell:filled:selected, .table-row-cell:focused:selected {
     -fx-background-color: rgba(150, 190, 255, 0.6);
     -fx-text-fill: #000000;
     -fx-font-weight: bold;
 }
-
-/* Table cell text */
 .table-cell {
     -fx-padding: 4 10;
     -fx-alignment: CENTER;
@@ -352,101 +241,72 @@
     -fx-border-color: rgba(255, 255, 255, 0.15);
     -fx-border-width: 0 1 0 0;
 }
-
-.table-view .table-column:last-child .table-cell {
-    -fx-border-width: 0;
-}
+.table-view .table-column:last-child .table-cell { -fx-border-width: 0; }
 
 .scroll-bar .track {
     -fx-background-color: rgba(255, 255, 255, 0.15);
     -fx-background-radius: 8;
 }
-
 .scroll-bar .thumb {
     -fx-background-color: rgba(160, 160, 160, 0.4);
     -fx-background-radius: 8;
 }
-
 .scroll-bar .thumb:hover {
     -fx-background-color: rgba(120, 120, 120, 0.5);
 }
 
-.stats {
-    -fx-background-color: white;
-    -fx-background-radius: 15px;
-    -fx-border-width: 0;
-    -fx-padding: 5px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0.3, 0, 2);
+.light {
+    -fx-base: #FFFFFF;
+    -fx-control-inner-background: #FFFFFF;
+    -fx-text-fill: #1E1E1E;
 }
+.light .heading { -fx-text-fill: #000000; }
+.light .transparent-button { -fx-text-fill: black; }
+.light .transparent-button:hover { -fx-text-fill: #4a90e2; }
+.light .transparent-button:pressed { -fx-text-fill: #2a6bbf; }
+.light .arrow-button { -fx-border-color: #1E1E1E; -fx-text-fill: #1E1E1E; }
+.light .arrow-button:hover { -fx-background-color: rgba(0, 0, 0, 0.1); }
+.light .arrow-button:pressed { -fx-background-color: rgba(0, 0, 0, 0.2); }
+.light .navbtn { -fx-background-color: #E0E0E0; -fx-text-fill: #1E1E1E; }
+.light .navbtn:hover { -fx-background-color: #CCCCCC; }
+.light .navbtn:pressed { -fx-background-color: #AAAAAA; }
+.light .setbtn { -fx-background-color: #F0F0F0; -fx-text-fill: #1E1E1E; }
+.light .setbtn:hover { -fx-background-color: #DDDDDD; }
+.light .setbtn:pressed { -fx-background-color: #BBBBBB; }
+.light .combobox, .light .date-picker { -fx-border-color: #1E1E1E; -fx-text-fill: #1E1E1E; }
+.light .exportbtn { -fx-background-color: transparent; -fx-text-fill: #1E1E1E; -fx-border-color: #1E1E1E; }
+.light .exportbtn:hover { -fx-background-color: #1E1E1E; -fx-text-fill: white; }
+.light .exportbtn:pressed { -fx-background-color: #333333; }
+.light .logoutbtn { -fx-background-color: #E63946; -fx-text-fill: white; }
+.light .logoutbtn:hover { -fx-background-color: #D62839; }
+.light .logoutbtn:pressed { -fx-background-color: #BA1B1D; }
+.light .glass_main, .light .tab_main, .light .panel_main,
+.light .stats, .light .staffCard, .light .cardShape {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-border-color: rgba(0, 0, 0, 0.2);
+}
+.light .font { -fx-text-fill: #1E1E1E; }
+.light .selected_dash_font { -fx-text-fill: #4a90e2; }
+.light .topic_font { -fx-text-fill: #1E1E1E; }
+.light .table-view { -fx-border-color: #1E1E1E; }
+.light .table-row-cell:hover { -fx-background-color: rgba(74, 144, 226, 0.1); }
+.light .table-row-cell:filled:selected, .light .table-row-cell:focused:selected {
+    -fx-background-color: #4a90e2; -fx-text-fill: white;
+}
+.light .scroll-bar .thumb { -fx-background-color: #1E1E1E; }
+.light .scroll-bar .thumb:hover { -fx-background-color: #4a90e2; }
+.light .default-color0.chart-bar { -fx-bar-fill: #C21E2B; }
+.light .default-color1.chart-bar { -fx-bar-fill: #FFD300; }
+.light .default-color2.chart-bar { -fx-bar-fill: #C21E2B; }
+.light .default-color3.chart-bar { -fx-bar-fill: #FFD300; }
 
-/* Change bar colors */
-.default-color0.chart-bar {
-    -fx-bar-fill: #C21E2B;   /* first series */
+.dark {
+    -fx-base: #1E1E1E;
+    -fx-control-inner-background: #1E1E1E;
+    -fx-text-fill: #E0E0E0;
 }
-
-.default-color1.chart-bar {
-    -fx-bar-fill: #FFD300;   /* second series */
-}
-
-.default-color2.chart-bar {
-    -fx-bar-fill: #C21E2B; /* third series */
-}
-
-.default-color3.chart-bar {
-    -fx-bar-fill: #FFD300; /* fourth series */
-}
-
-.staffCard{
-    -fx-background-color: #d6d3c2;
-    -fx-background-radius: 15px;
-    -fx-border-width: 0;
-    -fx-padding: 5px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0.3, 0, 2);
-}
-.cardShape{
-    -fx-stroke: transparent;
-    -fx-fill: #d6d3c2;
-     -fx-border-width: 0;
-     -fx-scale-x :3;
-     -fx-scale-y: 3;
-    -fx-fill : #d6d3c2;
-}
-.slipFont{
-         -fx-font-family: "Arial";
-         -fx-font-size: 15 ;
-         -fx-font-weight: bold;
-         -fx-text-fill : #34252F;
-}
-
-.toggle-switch {
-    -fx-background-color: #ccc;       /* track color */
-    -fx-background-radius: 20;
-    -fx-pref-width: 50;
-    -fx-pref-height: 25;
-    -fx-padding: 0;
-}
-
-.toggle-switch:selected {
-    -fx-background-color: grey;    /* track color when ON */
-}
-
-.toggle-switch .thumb {
-    -fx-background-color: white;
-    -fx-background-radius: 50%;
-    -fx-pref-width: 21;
-    -fx-pref-height: 21;
-    -fx-translate-x: 2;
-    -fx-transition: translateX 0.2s;
-}
-
-.toggle-switch:selected .thumb {
-    -fx-translate-x: 27;
-}
-
-.hoversmth:hover {
-    -fx-background-color : rgb(109, 109, 109);
-}
-
-.hoversmth:pressed{
-    -fx-background-color : rgb(141, 141, 141);
-}
+.dark .heading { -fx-text-fill: #FFFFFF; }
+.dark .transparent-button { -fx-text-fill: #E0E0E0; }
+.dark .transparent-button:hover { -fx-text-fill: #4a90e2; }
+.dark .transparent-button:pressed { -fx-text-fill: #2a6bbf; }
+.dark .arrow-button { -fx-border-color: #FFFFFF; -fx-text-fill:

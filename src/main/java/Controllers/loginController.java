@@ -189,7 +189,7 @@ public class loginController {
                     Parent root = switch (u.getRole().toLowerCase()) {
                         case "admin" -> FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/adminDashboard.fxml")));
                         case "manager" -> FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/managerDashboard.fxml")));
-                        case "staff" -> FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/StaffDashboard.fxml")));
+                        case "staff" -> FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/staffWelcome.fxml")));
                         default -> throw new IllegalStateException("Unknown role: " + role);
                     };
                     Stage stage = new Stage();
