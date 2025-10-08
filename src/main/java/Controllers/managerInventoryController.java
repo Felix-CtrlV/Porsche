@@ -31,6 +31,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -42,6 +43,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
 
@@ -438,6 +441,25 @@ public class managerInventoryController {
     void clickSeriesSelectAll(ActionEvent event) {
         setSelect(seriesSelectAll.isSelected(),seriesSelectAll);
     }
+    @FXML
+    private void clickCarImage(MouseEvent event) {
+        handleImageSelection(carImage);
+    }
+
+    @FXML
+    private void clickPartImage(MouseEvent event) {
+        handleImageSelection(partImage);
+    }
+
+    @FXML
+    private void clickEditCarImage(MouseEvent event) {
+        handleImageSelection(editCarImg);
+    }
+
+    @FXML
+    private void clickEditPartImage(MouseEvent event) {
+        handleImageSelection(editPartImg);
+    }
 
     @FXML
     void extraPaneMouseClick(MouseEvent event) throws SQLException {
@@ -450,7 +472,6 @@ public class managerInventoryController {
         }else {
             if (editTitle.getText().contains("Car")) {
                 hasData(false, "carsEdit");
-                System.out.println("cars edit extrapane");
             } else {
                 hasData(false, "partsEdit");
 
@@ -478,7 +499,6 @@ public class managerInventoryController {
     void clickBackBtn(MouseEvent event) throws SQLException {
         if(editTitle.getText().contains("Car")) {
             hasData(false, "carsEdit");
-            System.out.println("cars edit back btn");
         }else{
             hasData(false,"partsEdit");
         }
@@ -515,9 +535,20 @@ public class managerInventoryController {
             statusCol.setCellValueFactory(d->new SimpleStringProperty(d.getValue().getStatus()));
             qtyCol.setCellValueFactory(d->new ReadOnlyObjectWrapper<>(d.getValue().getQty()));
             priceCol.setCellValueFactory(d-> new ReadOnlyObjectWrapper<>(d.getValue().getPrice()));
-            setActionColumn();
+
 
             showTable("cars");
+
+            carImage.setCursor(Cursor.HAND);
+            partImage.setCursor(Cursor.HAND);
+            editCarImg.setCursor(Cursor.HAND);
+            editPartImg.setCursor(Cursor.HAND);
+            carImage.setPickOnBounds(true);
+            partImage.setPickOnBounds(true);
+            editCarImg.setPickOnBounds(true);
+            editPartImg.setPickOnBounds(true);
+
+            setActionColumn();
             setupSearchBar();
     }
     List<File> file = new ArrayList<>();
@@ -680,47 +711,71 @@ public class managerInventoryController {
                             price.isEmpty() && description.isEmpty();
 
                 }else if(path.equalsIgnoreCase("carsEdit")){
-
-                    Image img = editCarImg.getImage();
-                    String photoPath = editPath.getPhoto();
-
-                    boolean sameImage = true;
-                    if ((img == null || img.getUrl() == null) && (photoPath == null || photoPath.trim().isEmpty())) {
-                        sameImage = true; // both no image
-                    } else if (img != null && img.getUrl() != null && photoPath != null && !photoPath.trim().isEmpty()) {
-                        sameImage = img.getUrl().equals(photoPath);
+                    String fuel = "";
+                    if (editPath.getFuelType().contains("gas")) {
+                        fuel += "Gasoline/";
+                    } else if (editPath.getFuelType().contains("hy")) {
+                        fuel += "Hybrid/";
+                    } else if (editPath.getFuelType().contains("di")) {
+                        fuel += "diesel/"; // fixed typo from "diseal"
+                    } else {
+                        fuel += editPath.getFuelType();
                     }
-
+                    if (editPath.getFuelType().contains("ele")) {
+                        fuel += "electric";
+                    }
+                    boolean sameImage = true;
+                    if (!file.isEmpty() && editPath.getPhoto() != null) {
+                        File selectedFile = file.get(0);
+                        try {
+                            String selectedPath = selectedFile.getCanonicalPath();
+                            String originalPath = new File(editPath.getPhoto()).getCanonicalPath();
+                            sameImage = selectedPath.equals(originalPath);
+                        } catch (IOException e) {
+                            sameImage = false;
+                        }
+                    } else if (file.isEmpty() && (editPath.getPhoto() == null || editPath.getPhoto().isEmpty())) {
+                        sameImage = true;
+                    } else {
+                        sameImage = false;
+                    }
+                    System.out.println(sameImage);
                     allEmpty = sameImage &&
-                            Objects.equals(editCarName.getText(), editPath.getName()) &&
-                            Objects.equals(editCarUsage.getText(), editPath.getFuelType()) &&
-                            Objects.equals(editCarProductAt.getText(), String.valueOf(editPath.getProductYear())) &&
-                            Objects.equals(editCarIntColor.getText(), editPath.getIntColor()) &&
-                            Objects.equals(editCarExtColor.getText(), editPath.getExtColor()) &&
-                            Objects.equals(editCarQty.getText(), String.valueOf(editPath.getQty())) &&
-                            Objects.equals(editCarPrice.getText(), String.valueOf(editPath.getPrice()));
+                            Objects.equals(editCarName.getText(), editPath.getName())
+                            && editCarUsage.getText().equals(fuel)
+                            && Objects.equals(editCarProductAt.getText(), String.valueOf(editPath.getProductYear()))
+                            && Objects.equals(editCarIntColor.getText(), editPath.getIntColor())
+                            && Objects.equals(editCarExtColor.getText(), editPath.getExtColor())
+                            && Objects.equals(editCarQty.getText(), String.valueOf(editPath.getQty()))
+                            && Objects.equals(editCarPrice.getText(), String.valueOf(editPath.getPrice()));
 
-                    System.out.println("cars edit "+allEmpty);
+
                 }else if(path.equalsIgnoreCase("partsEdit")){
-
                     Image img = editPartImg.getImage();
                     String photoPath = editPath.getPhoto();
-
                     boolean sameImage = true;
-                    if (img == null && (photoPath == null || photoPath.trim().isEmpty())) {
-                        sameImage = true;
-                    } else if (img != null && photoPath != null && !photoPath.trim().isEmpty()) {
+                    if (!file.isEmpty() && photoPath != null) {
+                        File selectedFile = file.get(0);
                         try {
-                            sameImage = img.getUrl() != null && img.getUrl().equals(photoPath);
-                        } catch (Exception e) {
+                            String selectedPath = selectedFile.getCanonicalPath();
+                            String originalPath = new File(photoPath).getCanonicalPath();
+                            sameImage = selectedPath.equals(originalPath);
+                        } catch (IOException e) {
+                            sameImage = false;
                         }
+                    } else if ((file.isEmpty() || file.get(0) == null) && (photoPath == null || photoPath.isEmpty())) {
+                        sameImage = true;
+                    } else {
+                        sameImage = false;
                     }
-                    allEmpty = sameImage &&
-                            Objects.equals(editPartName.getText(), editPath.getName()) &&
-                            Objects.equals(editPartForCar.getText(), editPath.getForCar()) &&
-                            Objects.equals(editPartDescription.getText(), editPath.getDescription()) &&
-                            Objects.equals(editPartPrice.getText(), String.valueOf(editPath.getPrice())) &&
-                            Objects.equals(editPartQty.getText(), String.valueOf(editPath.getQty()));
+                    allEmpty =
+                            sameImage &&
+                                    Objects.equals(editPartName.getText(), editPath.getName())
+                                    && Objects.equals(editPartForCar.getText(), editPath.getForCar())
+                                    && Objects.equals(editPartDescription.getText(), editPath.getDescription())
+                                    && Objects.equals(editPartPrice.getText(), String.valueOf(editPath.getPrice()))
+                                    && Objects.equals(editPartQty.getText(), String.valueOf(editPath.getQty()));
+
                 }
 
                 if(check){
@@ -828,6 +883,7 @@ public class managerInventoryController {
                     carImage.setImage(null);
                     gasolineRadio.setSelected(false);
                     electricCheckBox.setSelected(false);
+                    file.clear();
                 }
                 if (addPartbtn.isDisable()) {
                     partNameText.clear();
@@ -836,7 +892,32 @@ public class managerInventoryController {
                     partQtyText.clear();
                     partImage.setImage(null);
                     partRelativeComboBox.getSelectionModel().clearSelection();
+                    file.clear();
+                }
+                if(editPane.isVisible()){
+                    if(editTitle.getText().contains("C")){
+                        editCarId.setText(null);
+                        editCarSeries.setText(null);
+                        editCarName.setText(null);
 
+                        editCarExtColor.setText(null);
+                        editCarIntColor.setText(null);
+                        editCarQty.setText(null);
+                        editCarPrice.setText(null);
+                        editCarProductAt.setText(null);
+                        editCarUsage.setText(null);
+                        editCarImg.setImage(null);
+                    }else{
+                        editPartId.setText(null);
+                        editPartName.setText(null);
+                        editPartDescription.setText(null);
+                        editPartForCar.setText(null);
+                        editPartQty.setText(null);
+                        editPartPrice.setText(null);
+                        editPartImg.setImage(null);
+                        file.clear();
+                    }
+                    file.clear();
                 }
                 if (in.equals("carsAddBtn")) {
                     addCarbtn.setDisable(false);
@@ -966,8 +1047,11 @@ public class managerInventoryController {
                 String status = (qty !=0) ?"On" : "Out";
                 String inventoryId = String.format("C-%03d", id);
                 carsData.add(new inventory(id,inventoryId,name,extColor,intColor,fuels,productYear,qty,price,status,photoUrl));
+
+
             }
             for(inventory i : carsData){
+                System.out.println(i.getModels());
                 models.put(new CheckBox(i.getModels()),i.getSeries());
             }
             cs.close();
@@ -1032,6 +1116,7 @@ public class managerInventoryController {
             for (HashMap.Entry<CheckBox, String> entry : models.entrySet()) {
                 if(i.getModels().contains(entry.getValue())) {
                     in.add(entry.getKey());
+                    System.out.println(entry);
                 }
             }
         }
@@ -1143,6 +1228,7 @@ public class managerInventoryController {
             editTitle.setText("(Car)");
             setEditCar();
             editCarRevert.setOnAction(e->{
+                System.out.println("clicking edit car revert");
                 setEditCar();
             });
             editCarApply.setOnAction(e->{
@@ -1242,13 +1328,14 @@ public class managerInventoryController {
                     PreparedStatement ps = con.prepareCall(sql);
                     ps.setInt(1,editPath.getId());
                     ps.execute();
-                    ps.close();
                     for (inventory i : carsData){
                         if (i == editPath){
                             carsData.clear();
                         }
 
                     }
+                    ps.close();
+
                 } else {
                     String sql = "DELETE FROM car_parts WHERE part_id = ? ";
                     PreparedStatement ps = con.prepareCall(sql);
@@ -1284,12 +1371,42 @@ public class managerInventoryController {
         modelsCol1.setHgrow(Priority.ALWAYS);
         modelsCol2.setHgrow(Priority.ALWAYS);
 
-        for(int i = 0; i < in.size(); i++){
+        for (int i = 0; i < in.size(); i++) {
             int row = i / 2;
             int col = i % 2;
-            modelsShowBox.add(in.get(i), col, row);  // Correct order: column, row
+
+            CheckBox newBox = new CheckBox(in.get(i).getText());
+            newBox.setSelected(in.get(i).isSelected());
+            newBox.setOnAction(e->{
+
+            });
+            modelsShowBox.add(newBox, col, row);
         }
+
         modelsShowBox.setVisible(true);
     }
+
+
+
+    private void handleImageSelection(ImageView targetImageView) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(targetImageView.getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                Image image = new Image(new FileInputStream(selectedFile));
+                targetImageView.setImage(image);
+                file.clear();
+                file.add(selectedFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 }
