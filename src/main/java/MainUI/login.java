@@ -23,7 +23,7 @@ public class login extends Application {
         SplashScreen splash = SplashScreen.getSplashScreen();
             Parent root = null;
             try {
-                root = FXMLLoader.load(Objects.requireNonNull(this.getClass().getResource("/View/login.fxml")));
+                root = FXMLLoader.load(Objects.requireNonNull(this.getClass().getResource("/View/staffShopingcart.fxml")));
             } catch (
                     IOException e) {
                 throw new RuntimeException(e);
