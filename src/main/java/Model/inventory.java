@@ -25,6 +25,7 @@ public class inventory {
 
     //for part table
     public inventory(int id ,String inventoryId, String name, String forCar, String description, int qty, double price, String status,String photo) {
+       this.id = id;
         this.inventoryId = inventoryId;
         this.name = name;
         this.forCar = forCar;
@@ -128,8 +129,14 @@ public class inventory {
     }
 
     public void setSeries(String in) {
-        String [] check = in.split(" ");
+        String [] check = in.split(" ",2);
         this.series = check[0];
+        if(check.length>1){
+            setModels(check[1]);
+            System.out.println(check[1]);
+        }else {
+            setModels(" ");
+        }
     }
 
     public String getModels() {
@@ -137,8 +144,7 @@ public class inventory {
     }
 
     public void setModels(String in) {
-        String [] check = in.split("");
-        this.models = check[1];
+        this.models = in;
     }
 
     public String getForCar() {
