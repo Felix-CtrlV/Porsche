@@ -31,7 +31,6 @@ public class adminOrderController {
     private TableColumn<orderView, String> status_col;
     @FXML
     private TableColumn<orderView, String> total_col;
-
     @FXML
     private ComboBox<String> dateBox;
     @FXML
@@ -45,14 +44,13 @@ public class adminOrderController {
 
     private int currentMonth = LocalDate.now().getMonthValue();
     private int currentYear = LocalDate.now().getYear();
-
     private final String[] months = {
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     };
+    private boolean showingCombo = true;
 
     private ObservableList<orderView> list = FXCollections.observableArrayList();
-
-    boolean showingCombo = true;
 
     @FXML
     void clickSwitch(ActionEvent event) {
@@ -61,96 +59,105 @@ public class adminOrderController {
         dateContainer.setVisible(!showingCombo);
 
         if (showingCombo) {
-            loadOrderBox();
+            loadOrdersByBox();
         } else {
             updateMonthYearLabels();
-            loadOrderByCustomDate(currentMonth, currentYear);
+            loadOrdersByMonthYear(currentMonth, currentYear);
         }
     }
 
     @FXML
     void clickMonthNext(ActionEvent event) {
-        currentMonth++;
-        if (currentMonth > 12) {
-            currentMonth = 1;
-            currentYear++;
-            if (currentYear == LocalDate.now().getYear()) {
-                yearNext.setVisible(false);
-            }
-        }
-        updateMonthYearLabels();
-        loadOrderByCustomDate(currentMonth, currentYear);
-        if (currentMonth == LocalDate.now().getMonthValue() && currentYear == LocalDate.now().getYear()) {
-            monthNext.setVisible(false);
-        }
+        adjustMonth(1);
     }
 
     @FXML
     void clickMonthPrev(ActionEvent event) {
-        currentMonth--;
-        if (currentMonth < 1) {
-            currentMonth = 12;
-            currentYear--;
-            yearNext.setVisible(true);
-        }
-        updateMonthYearLabels();
-        loadOrderByCustomDate(currentMonth, currentYear);
-        monthNext.setVisible(true);
+        adjustMonth(-1);
     }
 
     @FXML
     void clickYearNext(ActionEvent event) {
-        currentYear++;
-        updateMonthYearLabels();
-        loadOrderByCustomDate(currentMonth, currentYear);
-        if (currentYear == LocalDate.now().getYear()) {
-            yearNext.setVisible(false);
-            if (currentMonth == LocalDate.now().getMonthValue()) {
-                monthNext.setVisible(false);
-
-            }
-        }
+        adjustYear(1);
     }
 
     @FXML
     void clickYearPrev(ActionEvent event) {
-        currentYear--;
+        adjustYear(-1);
+    }
+
+    private void adjustMonth(int delta) {
+        currentMonth += delta;
+        if (currentMonth > 12) {
+            currentMonth = 1;
+            currentYear++;
+        }
+        if (currentMonth < 1) {
+            currentMonth = 12;
+            currentYear--;
+        }
         updateMonthYearLabels();
-        loadOrderByCustomDate(currentMonth, currentYear);
-        yearNext.setVisible(true);
-        monthNext.setVisible(true);
+        loadOrdersByMonthYear(currentMonth, currentYear);
+    }
+
+    private void adjustYear(int delta) {
+        currentYear += delta;
+        updateMonthYearLabels();
+        loadOrdersByMonthYear(currentMonth, currentYear);
     }
 
     private void updateMonthYearLabels() {
-        boolean flag = false;
+        LocalDate now = LocalDate.now();
         yearlbl.setText(String.valueOf(currentYear));
-        if (currentYear == LocalDate.now().getYear()) {
-            while (flag == false) {
-                if (currentMonth > LocalDate.now().getMonthValue()) {
-                    currentMonth--;
-                }else{
-                    flag = true;
-                }
-            }
+
+        if (currentYear >= now.getYear() && currentMonth > now.getMonthValue()) {
+            currentMonth = now.getMonthValue();
         }
+
         monthlbl.setText(months[currentMonth - 1]);
+
+        // Hide future buttons if necessary
+        monthNext.setVisible(!(currentYear == now.getYear() && currentMonth == now.getMonthValue()));
+        yearNext.setVisible(currentYear < now.getYear());
     }
 
-    private void loadOrderBox() {
+    private void loadOrdersByBox() {
+        loadOrders("call orders_general_view_date(?)", dateBox.getValue());
+    }
+
+    private void loadOrdersByMonthYear(int month, int year) {
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.plusMonths(1);
+        loadOrders("SELECT o.order_id, c.customer_name, o.order_date, o.order_status, SUM(d.total_price) AS total_price " +
+                        "FROM orders o JOIN customer_info c ON o.customer_id = c.customer_id " +
+                        "JOIN order_details d ON o.order_id = d.order_id " +
+                        "WHERE o.order_date >= ? AND o.order_date < ? " +
+                        "GROUP BY o.order_id, c.customer_name, o.order_date, o.order_status",
+                start.toString(), end.toString());
+    }
+
+    private void loadOrders(String query, String... params) {
         table.setPlaceholder(new Label("Loading..."));
+
         Task<ObservableList<orderView>> task = new Task<>() {
             @Override
             protected ObservableList<orderView> call() throws Exception {
                 ObservableList<orderView> tempList = FXCollections.observableArrayList();
-
                 Porsche_DB connect = new Porsche_DB();
                 Connection con = connect.connect();
 
-                CallableStatement cs = con.prepareCall("call orders_general_view_date(?)");
-                cs.setString(1, dateBox.getValue());
-                ResultSet rs = cs.executeQuery();
+                PreparedStatement ps;
+                if (query.startsWith("call")) {
+                    ps = con.prepareCall(query);
+                    ps.setString(1, params[0]);
+                } else {
+                    ps = con.prepareStatement(query);
+                    ps.setString(1, params[0]);
+                    ps.setString(2, params[1]);
+                }
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
+                ResultSet rs = ps.executeQuery();
+
                 while (rs.next()) {
                     int orderid = rs.getInt(1);
                     String customername = rs.getString(2);
@@ -158,92 +165,43 @@ public class adminOrderController {
                     String status = rs.getString(4);
                     String total = "$" + rs.getString(5);
 
-                    orderView orderview = new orderView(orderid, customername, LocalDateTime.parse(orderdate, formatter), status, total);
-                    tempList.add(orderview);
+                    tempList.add(new orderView(orderid, customername, parseOrderDate(orderdate), status, total));
                 }
+
                 connect.disconnect();
                 return tempList;
             }
         };
+
         task.setOnSucceeded(e -> {
             ObservableList<orderView> data = task.getValue();
             table.setItems(data);
-            if (data.isEmpty()) {
-                table.setPlaceholder(new Label("No orders found for this selection"));
-            } else {
-                table.setPlaceholder(new Label(""));
-            }
+            table.setPlaceholder(data.isEmpty() ? new Label("No orders found for this selection") : new Label(""));
         });
+
         task.setOnFailed(e -> task.getException().printStackTrace());
+
         new Thread(task).start();
     }
 
-    private void loadOrderByCustomDate(int month, int year) {
-        table.setPlaceholder(new Label("Loading..."));
-        Task<ObservableList<orderView>> task = new Task<>() {
-            @Override
-            protected ObservableList<orderView> call() throws Exception {
-                ObservableList<orderView> tempList = FXCollections.observableArrayList();
-
-                Porsche_DB connect = new Porsche_DB();
-                Connection con = connect.connect();
-
-                LocalDate start = LocalDate.of(year, month, 1);
-                LocalDate end = start.plusMonths(1);
-
-                PreparedStatement p = con.prepareStatement(
-                        "SELECT o.order_id, c.customer_name, o.order_date, o.order_status, SUM(d.total_price) AS total_price " +
-                                "FROM orders o JOIN customer_info c ON o.customer_id = c.customer_id " +
-                                "JOIN order_details d ON o.order_id = d.order_id " +
-                                "WHERE o.order_date >= ? AND o.order_date < ? " +
-                                "GROUP BY o.order_id, c.customer_name, o.order_date, o.order_status"
-                );
-
-                p.setString(1, start.toString());
-                p.setString(2, end.toString());
-                ResultSet rs = p.executeQuery();
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
-                while (rs.next()) {
-                    int orderid = rs.getInt(1);
-                    String customername = rs.getString(2);
-                    String orderdate = rs.getString(3);
-                    String status = rs.getString(4);
-                    String total = "$" + rs.getString(5);
-
-                    orderView orderview = new orderView(orderid, customername,
-                            LocalDateTime.parse(orderdate, formatter),
-                            status, total);
-                    tempList.add(orderview);
-                }
-
-                connect.disconnect();
-                return tempList;
-            }
-        };
-        task.setOnSucceeded(e -> {
-            ObservableList<orderView> data = task.getValue();
-            table.setItems(data);
-            if (data.isEmpty()) {
-                table.setPlaceholder(new Label("No orders found for this selection"));
-            } else {
-                table.setPlaceholder(new Label(""));
-            }
-        });
-
-        task.setOnFailed(e -> task.getException().printStackTrace());
-        new Thread(task).start();
+    private LocalDateTime parseOrderDate(String orderDateStr) {
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
+            return LocalDateTime.parse(orderDateStr, dtf);
+        } catch (
+                Exception e) {
+            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-M-d");
+            return LocalDate.parse(orderDateStr, df).atStartOfDay();
+        }
     }
 
     public void initialize() {
         dateContainer.setVisible(false);
-        if (currentYear == LocalDate.now().getYear()) {
-            yearNext.setVisible(false);
-        }
-        if (currentMonth == LocalDate.now().getMonthValue() && currentYear == LocalDate.now().getYear()) {
-            monthNext.setVisible(false);
-        }
 
+        if (currentYear == LocalDate.now().getYear())
+            yearNext.setVisible(false);
+        if (currentMonth == LocalDate.now().getMonthValue() && currentYear == LocalDate.now().getYear())
+            monthNext.setVisible(false);
 
         orders_col.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().getOrderId()));
         customer_col.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getCustomername()));
@@ -253,10 +211,8 @@ public class adminOrderController {
 
         dateBox.setItems(FXCollections.observableArrayList("Today", "This Week", "This Month"));
         dateBox.getSelectionModel().selectFirst();
+        loadOrdersByBox();
 
-        loadOrderBox();
-
-
-        dateBox.setOnAction(e -> loadOrderBox());
+        dateBox.setOnAction(e -> loadOrdersByBox());
     }
 }

@@ -1,0 +1,86 @@
+package DAO;
+
+import Database.Porsche_DB;
+import Model.user;
+
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AdminAccountDAO {
+    private final Connection conn;
+
+    public AdminAccountDAO() throws SQLException, ClassNotFoundException {
+        this.conn = new Porsche_DB().connect();
+    }
+
+    public List<user> getStaffCards(String status, String role) throws SQLException {
+        String sql = """
+            SELECT user_id, user_name, user_phone, user_email, user_address, dob, start_date, end_date, user_status
+            FROM user_info
+            WHERE user_role = ? AND user_status = ?
+            ORDER BY user_id
+        """;
+
+        List<user> list = new ArrayList<>();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, role.toLowerCase());
+            ps.setInt(2, status.equalsIgnoreCase("Active") ? 1 : 0);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new user(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("user_phone"),
+                            rs.getString("user_email"),
+                            rs.getString("user_address"),
+                            rs.getDate("dob") != null ? rs.getDate("dob").toLocalDate() : null,
+                            rs.getInt("user_status") == 1 ? "Active" : "Inactive",
+                            rs.getDate("start_date") != null ? rs.getDate("start_date").toLocalDate() : null,
+                            rs.getDate("end_date") != null ? rs.getDate("end_date").toLocalDate() : null
+                    ));
+                }
+            }
+        }
+        return list;
+    }
+
+    public List<Double> getWeeklySales(int staffId, int month, int year) throws SQLException {
+        List<Double> weeks = new ArrayList<>(List.of(0.0, 0.0, 0.0, 0.0));
+        String sql = """
+            SELECT 
+              CASE 
+                WHEN DAY(order_date) BETWEEN 1 AND 7 THEN 1
+                WHEN DAY(order_date) BETWEEN 8 AND 14 THEN 2
+                WHEN DAY(order_date) BETWEEN 15 AND 21 THEN 3
+                ELSE 4 
+              END AS wk, 
+              SUM(paid_amount) AS total
+            FROM orders
+            WHERE (? = 0 OR user_id = ?) 
+              AND MONTH(order_date) = ? 
+              AND YEAR(order_date) = ?
+            GROUP BY wk
+        """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ps.setInt(2, staffId);
+            ps.setInt(3, month);
+            ps.setInt(4, year);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    weeks.set(rs.getInt("wk") - 1, rs.getDouble("total"));
+                }
+            }
+        }
+        return weeks;
+    }
+
+    public void close() {
+        try { if (conn != null && !conn.isClosed()) conn.close(); } catch (SQLException ignored) {}
+    }
+}

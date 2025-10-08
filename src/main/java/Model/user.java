@@ -8,6 +8,8 @@ public class user {
     private String username, email, password, address, phone, role, nrc, is_active;
     private LocalDate dob;
     private LocalDate start_date, end_date;
+    private String imagePath;
+
     public user(){}
 
     //admin account and manager staff view (userCard)
@@ -143,4 +145,13 @@ public class user {
     public void setNrc(String nrc) {
         this.nrc = nrc;
     }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
 }
