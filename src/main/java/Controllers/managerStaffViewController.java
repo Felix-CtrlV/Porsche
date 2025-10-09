@@ -132,7 +132,6 @@ public class managerStaffViewController {
     @FXML
     private Label TotalOrderlbl;
 
-
     @FXML
     private TableView<managerOrderView> ordersTable;
 
@@ -256,7 +255,7 @@ public class managerStaffViewController {
     @FXML
     private void initialize() throws SQLException, IOException {
 
-        //for creating the month  and year of this month
+        //for creating the month and year of this month
         currentDateSelect();
 
         //for inserting staff cards

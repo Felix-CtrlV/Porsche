@@ -1,966 +1,603 @@
 package Controllers;
 
-import Database.Porsche_DB;
-import Model.managerOrderView;
+import DAO.AdminAccountDAO;
 import Model.user;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleStringProperty;
+import Utils.ThreadPoolManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Node;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-
-import java.io.File;
 import java.io.IOException;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
+import java.io.File;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class adminAccountController {
+    private static final Logger logger = LoggerFactory.getLogger(adminAccountController.class);
 
+    // ---------- Staff Info ----------
     @FXML
-    private Label StaffListTitleLabel;
-
-     @FXML
-    private Button ActiveInactiveSwitchbtn;
-
-    @FXML
-    private TableColumn<managerOrderView, Double> TotalAmountCol;
-
-    @FXML
-    private Label CancelOrderlbl;
-
-    @FXML
-    private Label CompleOrderlbl;
-
-    @FXML
-    private TableColumn<managerOrderView, String> CustomerNameCol;
-
-    @FXML
-    private TableColumn<managerOrderView, Date> DateCol;
-
-    @FXML
-    private Label IsInstallPaidAmountLabel;
-
-    @FXML
-    private Label IsInstallRemainAmountLabel;
-
-    @FXML
-    private BorderPane IsInstallmentBorderPane;
-
-    @FXML
-    private TableColumn<managerOrderView, String> IsInstallmentCol;
-
-    @FXML
-    private VBox IsInstallorderItemsContainer;
-
-    @FXML
-    private Label IsInstalltotalPriceLabel;
-
-    @FXML
-    private BorderPane IsNotInstallBorderPane;
-
-    @FXML
-    private Button NextMonthbtn;
-
-    @FXML
-    private Button NextYearbtn;
-
-    @FXML
-    private TableColumn<managerOrderView, Integer> NoCol;
-
-    @FXML
-    private Label NoInstallTotalPriceLabel;
-
-    @FXML
-    private VBox NoInstallorderItemsContainer;
-
-    @FXML
-    private Label PendOrderlbl;
-
-    @FXML
-    private Button PreviousMonthbtn;
-
-    @FXML
-    private Button PreviousYearbth;
-
-    @FXML
-    private Button SearchNamebtn;
-
-    @FXML
-    private Label StaffAddressLabel;
-
-    @FXML
-    private Label StaffDOBLabel;
-
-    @FXML
-    private Label StaffEmailLabel;
-
+    private Label StaffListTitleLabel, StaffAddressLabel, StaffDOBLabel, StaffEmailLabel, StaffNameLabel, StaffPhoneLabel;
     @FXML
     private ImageView StaffImage;
-
-    @FXML
-    private Label StaffNameLable;
-
-    @FXML
-    private Label StaffPhoneLabel;
-
     @FXML
     private TextField StaffSearchText;
-
-    @FXML
-    private Circle attendanceBackCircle;
-
-    @FXML
-    private Label TotalOrderlbl;
-
-
-    @FXML
-    private TableView<managerOrderView> ordersTable;
-
     @FXML
     private VBox staffListContainer;
-
     @FXML
-    private Label DueDateLabel;
-
-
+    private Button ActiveInactiveSwitchbtn, SearchNamebtn;
     @FXML
-    private Circle partCircle;
+    private ComboBox<String> roleCombo;
 
+    // ---------- Chart ----------
     @FXML
-    private Text targetCar;
+    private AreaChart<String, Number> lineChart;
 
-    @FXML
-    private Label targetCarMessagelbl;
-
-    @FXML
-    private Label targetOverCar;
-
-    @FXML
-    private Label targetOverPart;
-
-    @FXML
-    private Text targetPart;
-
-    @FXML
-    private Label targetPartMessagelbl;
-
-    @FXML
-    private HBox targetlayer;
-
-    @FXML
-    private Circle attendanceCircle;
-
-    @FXML
-    private Text attendancePercent;
-
-    @FXML
-    private Circle carCircle;
-
+    // ---------- Month / Year ----------
     @FXML
     private ChoiceBox<String> monthBox;
-
     @FXML
     private ChoiceBox<Integer> yearBox;
-
     @FXML
-    void SwitchMouseClick(MouseEvent event) throws SQLException, IOException {
-        if (cardtype) {
-            cardtype = false;
-            StaffListTitleLabel.setText("Staff List (InActive)");
-            addStaffCard(cardtype);
+    private Button NextMonthbtn, PreviousMonthbtn, NextYearbtn, PreviousYearbtn;
 
-        } else {
-            cardtype = true;
-            StaffListTitleLabel.setText("Staff List (Active)");
-            addStaffCard(cardtype);
-        }
-    }
-
+    // ---------- Target / Attendance (Placeholders) ----------
     @FXML
-    void nextMonthClick(MouseEvent event) {
-        currentMonth++;
-        if (currentMonth > 12) {
-            currentMonth = 1;
-            currentYear++;
-        }
-        ;
-        updateYearMonthLabel();
-    }
-
+    private Circle attendanceCircle, attendanceBackCircle, carCircle, partCircle;
     @FXML
-    void nextYearClick(MouseEvent event) {
-        currentYear++;
-        if (today.getYear() == currentYear) {
-            if (currentMonth > today.getMonthValue()) {
-                currentMonth = today.getMonthValue();
-            }
-        }
-        updateYearMonthLabel();
-
-    }
-
+    private Text attendancePercent, targetCar, targetPart;
     @FXML
-    void prevMonthClick(MouseEvent event) {
-        currentMonth--;
-        if (currentMonth < 1) {
-            currentMonth = 12;
-            currentYear--;
-        };
-        updateYearMonthLabel();
-
-    }
-
+    private Label targetCarMessagelbl, targetPartMessagelbl, targetOverCar, targetOverPart, DueDateLabel;
     @FXML
-    void prevYearClick(MouseEvent event) {
-        currentYear--;
-        updateYearMonthLabel();
+    private VBox targetlayer;
 
-    }
-
-    @FXML
-    void ordersTableClick(MouseEvent event) throws IOException {
-        managerOrderView selectorder = ordersTable.getSelectionModel().getSelectedItem();
-        orderDetails(selectorder);
-    }
-
-
-    @FXML
-    private void initialize() throws SQLException, IOException {
-
-        //for creating the month  and year of this month
-        currentDateSelect();
-
-        //for inserting staff cards
-        StaffListTitleLabel.setText("Staff List (Active)");
-        addStaffCard(cardtype);
-
-
-        // for inserting orders
-        NoCol.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().getNo()));
-        CustomerNameCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getCus_name()));
-        DateCol.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().getOrder_date()));
-        TotalAmountCol.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
-        IsInstallmentCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getIs_installmenat()));
-
-        yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                currentYear = newVal;
-                updateYearMonthLabel();
-            }
-        });
-
-        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (!updatingMonthBox && newVal != null) {
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
-                Month parsedMonth = Month.from(fmt.parse(newVal));
-                currentMonth = parsedMonth.getValue();
-                updateYearMonthLabel();
-            }
-        });
-
-        //for car and parts of the show circle
-        IsInstallmentBorderPane.setVisible(false);
-        IsNotInstallBorderPane.setVisible(false);
-        targetlayer.setVisible(true);
-        carsAndPartsTarget();
-        setupSearchBar();
-
-    }
-
-
-    private boolean cardtype = true;
-
-    private LocalDate today = LocalDate.now();
-    private DateTimeFormatter fmonth = DateTimeFormatter.ofPattern("MMM");
-
-    private DateTimeFormatter fyear = DateTimeFormatter.ofPattern("yyyy");
-
-    private int currentMonth;
-    private int currentYear;
-
+    // ---------- Variables ----------
+    private boolean showActive = true;
+    private final AdminAccountDAO dao;
+    private final ObservableList<user> staffList = FXCollections.observableArrayList();
     private int selectedStaffId = 0;
+    private final ContextMenu searchMenu = new ContextMenu();
+    private final LocalDate today = LocalDate.now();
+    private int currentMonth, currentYear;
+    private LocalDate currentStaffStartDate;
+    private LocalDate currentStaffEndDate;
 
-
-    private List<user> staffInfoList = new ArrayList<user>();
-
-    public adminAccountController() throws SQLException, ClassNotFoundException, IOException {
-
-    }
-
-    Porsche_DB db = new Porsche_DB();
-    Connection con = db.connect();
-
-
-    // for staff of information like email phone address etc
-    private void showStaffDetails(user staff) {
-        StaffNameLable.setText(staff.getUsername());
-        StaffPhoneLabel.setText(staff.getPhone());
-        StaffEmailLabel.setText(staff.getEmail());
-        StaffAddressLabel.setText(staff.getAddress());
-        StaffDOBLabel.setText(staff.getDob().toString());
-
-//        StaffImage.setImage(new Image(staff.getImagePath()));
-
-        highlightSelectedCard(staff.getId());
-        selectedStaffId = staff.getId();
-
-        System.out.println(selectedStaffId);
-        currentDateSelect();
+    public adminAccountController() {
         try {
-            refreshOrdersTable();
-            monthlyOrdersStatus(selectedStaffId, currentMonth, currentYear);
-            carsAndPartsTarget();
-            monthlyAttendance();
-            insertMonthYearChoiceBox(staff);
-            updateChoiceBoxes();
-        } catch (
-                SQLException e) {
-            throw new RuntimeException(e);
-        }
-        ;
-    }
-
-    //for the staff of monthly sold out the order table
-    private void refreshOrdersTable() throws SQLException {
-        if (selectedStaffId != 0) {
-            ordersTable.getItems().clear();
-            showOrdersTable(selectedStaffId, currentMonth, currentYear);
-
-            ordersTable.getSelectionModel().clearSelection();
-            ordersTable.refresh();
+            dao = new AdminAccountDAO();
+        } catch (Exception e) {
+            logger.error("Failed to initialize AdminAccountDAO", e);
+            throw new RuntimeException("Failed to initialize controller", e);
         }
     }
 
-    private void showOrdersTable(int staffId, int month, int year) throws SQLException {
-        List<managerOrderView> managerordersList = new ArrayList<>();
-        CallableStatement cs = con.prepareCall("CALL getordersbyuserid(?,?,?)");
-        cs.setInt(1, staffId);
-        cs.setInt(2, month);
-        cs.setInt(3, year);
-        ResultSet rs = cs.executeQuery();
+    @FXML
+    public void initialize() {
+        currentMonth = today.getMonthValue();
+        currentYear = today.getYear();
 
-        ordersTable.getItems().clear();
-        managerordersList.clear();
+        // Initialize role combo
+        roleCombo.setItems(FXCollections.observableArrayList("Manager", "Staff"));
+        roleCombo.setValue("Manager");
+        roleCombo.valueProperty().addListener((obs, o, n) -> loadStaffCardsAsync(showActive));
 
-        while (rs.next()) {
-            int no = rs.getInt(1);
-            int order_id = rs.getInt(2);
-            String cus_name = rs.getString(3);
-            Date date = rs.getDate(4);
-            Double total_amount = rs.getDouble(5);
-            boolean installment = rs.getBoolean(6);
-            String carsandparts_name = rs.getString(7);
-            String carsandparts_qty = rs.getString(8);
-            String carsandparts_price = rs.getString(9);
-            Double payed_amount = rs.getDouble(10);
-            Double remain_amount = rs.getDouble(11);
-            Date due_date = rs.getDate(12);
+        // Setup search, month/year, chart
+        setupSearch();
+        setupMonthYear();
+        setupEmptyChart();
 
-            String is_installment = "No";
-            if (installment == true) {
-                is_installment = "Yes";
-            } else {
-                is_installment = "No";
+        StaffListTitleLabel.setText("List (Active)");
+        loadStaffCardsAsync(showActive);
+    }
+
+    // ---------- Chart ----------
+    private void setupEmptyChart() {
+        if (lineChart == null)
+            return;
+        lineChart.getData().clear();
+        XYChart.Series<String, Number> s = new XYChart.Series<>();
+        s.setName("Weekly Sales");
+        for (int i = 1; i <= 4; i++)
+            s.getData().add(new XYChart.Data<>("Week " + i, 0));
+        lineChart.getData().add(s);
+    }
+
+    private void loadWeeklySalesAsync(int staffId, int month, int year) {
+        if (staffId == 0)
+            return;
+
+        Task<List<Double>> task = new Task<>() {
+            @Override
+            protected List<Double> call() throws Exception {
+                return dao.getWeeklySales(staffId, month, year);
             }
+        };
 
-            managerOrderView od = new managerOrderView(no, order_id, cus_name, date, total_amount, is_installment, carsandparts_name, carsandparts_qty, carsandparts_price, payed_amount, remain_amount, due_date);
-
-            managerordersList.add(od);
-
-        }
-
-        ordersTable.getItems().addAll(managerordersList);
-
-//        if (!managerordersList.isEmpty()) {
-//            ordersTable.getSelectionModel().select(0);
-//        }
+        task.setOnSucceeded(e -> updateChart(task.getValue()));
+        task.setOnFailed(e -> {
+            logger.error("Failed to load weekly sales", task.getException());
+            Platform.runLater(() -> setupEmptyChart());
+        });
+        ThreadPoolManager.getInstance().execute(task);
     }
 
-    //to see like a slip of the order table
-    private void orderDetails(managerOrderView orders) throws IOException {
+    private void updateChart(List<Double> weeklySales) {
+        if (lineChart == null || weeklySales == null)
+            return;
 
-        NoInstallorderItemsContainer.getChildren().clear();
-        IsInstallorderItemsContainer.getChildren().clear();
-        targetlayer.setVisible(false);
-        //to load the orders detail in the page like slip
-        String[] names = orders.getCarsandparts_name();
-        String[] qty = orders.getCarsandparts_qty();
-        String[] price = orders.getCarsandparts_perprice();
+        lineChart.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Weekly Sales");
 
-        if (orders.getIs_installmenat().equalsIgnoreCase("yes")) {
+        for (int i = 0; i < 4; i++)
+            series.getData().add(new XYChart.Data<>("Week " + (i + 1), weeklySales.get(i)));
 
-
-            IsNotInstallBorderPane.setVisible(false);
-            IsInstallmentBorderPane.setVisible(true);
-            IsInstalltotalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
-            DueDateLabel.setText(String.valueOf(orders.getDue_date()));
-            IsInstallRemainAmountLabel.setText(String.valueOf(orders.getRemain_amount()));
-            IsInstallPaidAmountLabel.setText(String.valueOf(orders.getPayed_amount()));
-
-            for (int i = 0; i < names.length; i++) {
-                File fxmlFile = new File("src/main/resources/View/managerStaffInstallment.fxml");
-                FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-                Node orderItem = loader.load();
-
-                managerStaffInstallmentController controller = loader.getController();
-                controller.setData(names[i], qty[i], price[i]);
-
-                System.out.println(names[i] + " " + qty[i] + " " + price[i]);
-                IsInstallorderItemsContainer.getChildren().add(orderItem);
-            }
-
-        } else {
-
-            IsNotInstallBorderPane.setVisible(true);
-            IsInstallmentBorderPane.setVisible(false);
-            NoInstallTotalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
-
-            for (int i = 0; i < names.length; i++) {
-                File fxmlFile = new File("src/main/resources/View/managerStaffInstallment.fxml");
-                FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-                Node orderItem = loader.load();
-
-                managerStaffInstallmentController controller = loader.getController();
-                controller.setData(names[i], qty[i], price[i]);
-
-                System.out.println(names[i] + " " + qty[i] + " " + price[i]);
-                NoInstallorderItemsContainer.getChildren().add(orderItem);
-
-            }
-        }
-
-
+        lineChart.getData().add(series);
     }
 
-    // for monthly order status box
-    private void monthlyOrdersStatus(int staffid, int month, int year) throws SQLException {
+    // ---------- Attendance ----------
+    private void loadAttendanceAsync(int staffId, int month, int year) {
+        if (staffId == 0)
+            return;
 
-        CallableStatement cs = con.prepareCall("CALL monthlyorderstatus(?,?,?)");
-        cs.setInt(1, staffid);
-        cs.setInt(2, month);
-        cs.setInt(3, year);
+        Task<Double> task = new Task<>() {
+            @Override
+            protected Double call() throws Exception {
+                return dao.getMonthlyAttendance(staffId, month, year);
+            }
+        };
 
-        ResultSet rs = cs.executeQuery();
-
-
-        if (rs.next()) {
-            TotalOrderlbl.setText(String.valueOf(rs.getInt(1)));
-            CompleOrderlbl.setText(String.valueOf(rs.getInt(2)));
-            PendOrderlbl.setText(String.valueOf(rs.getInt(3)));
-            CancelOrderlbl.setText(String.valueOf(rs.getInt(4)));
-        }
-        rs.close();
-        cs.close();
+        task.setOnSucceeded(e -> updateAttendance(task.getValue()));
+        task.setOnFailed(e -> {
+            logger.error("Failed to load attendance", task.getException());
+            Platform.runLater(() -> updateAttendance(0.0));
+        });
+        ThreadPoolManager.getInstance().execute(task);
     }
 
-    // for staff card add and highlight the select card
-    private void highlightSelectedCard(int staffId) {
-        // Reset all cards to default style
-        for (Node node : staffListContainer.getChildren()) {
-            node.setStyle(" -fx-border-color: transparent;");
-        }
+    private void updateAttendance(double percent) {
+        if (attendancePercent == null || attendanceCircle == null)
+            return;
 
-        // Highlight selected card
-        for (Node node : staffListContainer.getChildren()) {
-            if (node.getUserData() != null && node.getUserData() instanceof Integer) {
-                if ((int) node.getUserData() == staffId) {
-                    node.setStyle("-fx-background-color: #e8f0fe; -fx-border-color: #1a73e8; -fx-border-radius: 8; -fx-background-radius: 8;");
-                    break;
-                }
-            }
-        }
-    }
-
-    private void addStaffCard(boolean check) throws IOException, SQLException {
-
-        staffListContainer.getChildren().clear();
-        staffInfoList.clear();
-
-        CallableStatement cs = con.prepareCall("CALL createcards(?,?)");
-        if (check) {
-            cs.setString(1, "active");
-        } else {
-            cs.setString(1, "inactive");
-        }
-
-        cs.setString(2, "manager");
-
-        ResultSet rs = cs.executeQuery();
-
-        while (rs.next()) {
-            int id = rs.getInt("user_id");
-
-            String name = rs.getString("user_name");
-            String phone = rs.getString("user_phone");
-            String email = rs.getString("user_email");
-            String address = rs.getString("user_address");
-            String dob = rs.getString("dob");
-            String status = rs.getInt("user_status") == 1 ? "Active" : "Inactive";
-            java.sql.Date sqlStart = rs.getDate("start_date");
-            java.sql.Date sqlEnd = rs.getDate("end_date");
-
-            LocalDate str = (sqlStart != null) ? sqlStart.toLocalDate() : null;
-            LocalDate end = (sqlEnd != null) ? sqlEnd.toLocalDate() : null;
-
-            user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status, str, end);
-            staffInfoList.add(staff);
-
-
-            File fxmlFile = new File("src/main/resources/View/userCards.fxml");
-
-            FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-            Node staffCard = loader.load();
-
-            cardController cardController = loader.getController();
-
-            staffCard.setUserData(staff.getId());
-
-
-            cardController.setData(
-                    staff.getId(),
-                    staff.getUsername(),
-                    staff.getIs_active()
-            );
-
-
-            final user currentStaff = staff;
-            staffCard.setOnMouseClicked(event -> {
-
-                showStaffDetails(currentStaff);
-
-
-            });
-            staffListContainer.getChildren().add(staffCard);
-        }
-
-        boolean selectedExists = false;
-        for (user u : staffInfoList) {
-            if (u.getId() == selectedStaffId) {
-                selectedExists = true;
-                break;
-            }
-        }
-        if (!selectedExists) {
-            if (!staffInfoList.isEmpty()) {
-                selectedStaffId = staffInfoList.get(0).getId();
-            } else {
-                selectedStaffId = 0; // nothing to select
-            }
-        }
-
-        // If we now have a valid selectedStaffId, show its details.
-        if (selectedStaffId != 0) {
-            for (user staffInfo : staffInfoList) {
-                if (staffInfo.getId() == selectedStaffId) {
-                    showStaffDetails(staffInfo);
-                    break;
-                }
-            }
-        } else {
-            // no staff: clear details and orders
-            StaffNameLable.setText("");
-            StaffPhoneLabel.setText("");
-            StaffEmailLabel.setText("");
-            StaffAddressLabel.setText("");
-            StaffDOBLabel.setText("");
-            ordersTable.getItems().clear();
-        }
-
-
-        rs.close();
-        cs.close();
-
-    }
-
-    // for car and part of target  circle
-    private void carsAndPartsTarget() throws SQLException {
-        IsNotInstallBorderPane.setVisible(false);
-        IsInstallmentBorderPane.setVisible(false);
-        targetlayer.setVisible(true);
-        CallableStatement cs = con.prepareCall("CALL targetviewchart(?,?,?)");
-        cs.setInt(1, selectedStaffId);
-        cs.setInt(2, currentMonth);
-        cs.setInt(3, currentYear);
-        ResultSet rs = cs.executeQuery();
-        if (rs.next()) {
-            int target_car = rs.getInt(1);
-            int target_part = rs.getInt(2);
-            int achieve_car = rs.getInt(3);
-            int achieve_part = rs.getInt(4);
-
-            generate_carCircle(target_car, achieve_car);
-            generate_partCircle(target_part, achieve_part);
-
-        }
-    }
-
-    private void generate_carCircle(int target, int achieve) {
-        carCircle.setVisible(true);
-        targetCar.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
-        int targetOverC = 0;
-        double progressCar = 0;
-        if (achieve == 0 && target == 0) {
-            targetOverCar.setText("0");
-            carCircle.setVisible(false);
-            targetCarMessagelbl.setText("No Target");
-
-        } else if (achieve >= target) {
-            targetOverC = achieve - target;
-            progressCar = (target > 0) ? (double) achieve / achieve : 0;
-            targetOverCar.setText("+" + String.valueOf(targetOverC));
-
-            if (achieve > target) {
-                targetCarMessagelbl.setText("Extra Bonous ");
-            } else {
-                targetCarMessagelbl.setText("Hit the target");
-            }
-
-
-        } else {
-            targetOverC = target - achieve;
-            progressCar = (target > 0) ? (double) achieve / target : 0;
-            targetOverCar.setText("-" + String.valueOf(targetOverC));
-            targetCarMessagelbl.setText("Need to hit target");
-        }
-
-        double circulerCar = 2 * Math.PI * carCircle.getRadius();
-        carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
-        carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
-
-
-    }
-
-    private void generate_partCircle(int target, int achieve) {
-        targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
-        partCircle.setVisible(true);
-        int targetOverP = 0;
-        double progressPart = 0;
-        if (target == 0 && achieve == 0) {
-            targetOverPart.setText("0");
-            partCircle.setVisible(false);
-            targetPartMessagelbl.setText("No target");
-
-        } else if (achieve >= target) {
-            targetOverP = achieve - target;
-            targetOverPart.setText("+" + String.valueOf(targetOverP));
-            progressPart = (target > 0) ? (double) achieve / achieve : 0;
-            if (achieve > target) {
-                targetPartMessagelbl.setText("Extra Bonous ");
-            } else {
-                targetPartMessagelbl.setText("Hit the target");
-            }
-
-
-        } else {
-            targetOverP = target - achieve;
-            targetOverPart.setText("-" + String.valueOf(targetOverP));
-            progressPart = (target > 0) ? (double) achieve / target : 0;
-            targetPartMessagelbl.setText("Need to hit target");
-        }
-
-        double circulerPart = 2 * Math.PI * partCircle.getRadius();
-        partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
-        partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
-
-
-    }
-
-    // for monthly attendance circle
-    private void monthlyAttendance() throws SQLException {
-        attendanceBackCircle.setVisible(true);
+        attendancePercent.setText(String.format("%.0f%%", percent));
+        
+        // Update circle stroke dash to show percentage
+        double radius = 100;
+        double circumference = 2 * Math.PI * radius;
+        double dashLength = (percent / 100.0) * circumference;
+        attendanceCircle.getStrokeDashArray().setAll(dashLength, circumference);
         attendanceCircle.setVisible(true);
-        CallableStatement cs = con.prepareCall("CALL getMonthlyAttendance(?,?,?)");
-        cs.setInt(1, selectedStaffId);
-        cs.setInt(2, currentMonth);
-        cs.setInt(3, currentYear);
-
-        ResultSet rs = cs.executeQuery();
-
-        if (rs.next()) {
-            int present_day = rs.getInt(1);
-            int absent_day = rs.getInt(2);
-            double attendance_perentage = rs.getDouble(4);
-
-            double attendCircle = 2 * Math.PI * partCircle.getRadius();
-            double progress = attendance_perentage / 100;
-            attendanceCircle.getStrokeDashArray().setAll(attendCircle, attendCircle);
-            attendanceCircle.setStrokeDashOffset(attendCircle * (1 - progress));
-
-            if (present_day == 0) {
-                attendanceCircle.setVisible(false);
-
-            }
-            if (absent_day == 0) {
-                attendanceBackCircle.setVisible(false);
-            }
-
-            attendancePercent.setText(String.valueOf(attendance_perentage) + "%");
-
-        }
-
     }
 
-    // for search bar
-    private ContextMenu searchSuggestions = new ContextMenu();
+    // ---------- Targets ----------
+    private void loadTargetsAsync(int staffId, int month, int year) {
+        if (staffId == 0)
+            return;
 
-    private void setupSearchBar() {
-        // Set up key listener for Enter key
-        StaffSearchText.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                handleSearch();
+        Task<int[][]> task = new Task<>() {
+            @Override
+            protected int[][] call() throws Exception {
+                return dao.getTargetData(staffId, month, year);
             }
+        };
+
+        task.setOnSucceeded(e -> {
+            int[][] data = task.getValue();
+            updateTargets(data[0], data[1]);
+        });
+        task.setOnFailed(e -> {
+            logger.error("Failed to load targets", task.getException());
+            Platform.runLater(() -> updateTargets(new int[]{0, 0}, new int[]{0, 0}));
+        });
+        ThreadPoolManager.getInstance().execute(task);
+    }
+
+    private void updateTargets(int[] carData, int[] partData) {
+        if (targetCar == null || targetPart == null)
+            return;
+
+        // Car targets
+        int carAchieved = carData[0];
+        int carTarget = carData[1];
+        targetCar.setText(carAchieved + "/" + carTarget);
+        
+        if (carTarget > 0) {
+            int carOver = carAchieved - carTarget;
+            targetOverCar.setText((carOver >= 0 ? "+" : "") + carOver);
+            targetOverCar.setStyle("-fx-text-fill: " + (carOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
+            targetCarMessagelbl.setText(carOver >= 0 ? "Target Achieved! 🎉" : "Missed the target");
+            targetCarMessagelbl.setStyle("-fx-text-fill: " + (carOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
+            
+            double carPercent = Math.min(100.0, (carAchieved * 100.0) / carTarget);
+            updateCircleProgress(carCircle, carPercent);
+        } else {
+            targetOverCar.setText("+0");
+            targetCarMessagelbl.setText("No target set");
+            updateCircleProgress(carCircle, 0);
+        }
+
+        // Part targets
+        int partAchieved = partData[0];
+        int partTarget = partData[1];
+        targetPart.setText(partAchieved + "/" + partTarget);
+        
+        if (partTarget > 0) {
+            int partOver = partAchieved - partTarget;
+            targetOverPart.setText((partOver >= 0 ? "+" : "") + partOver);
+            targetOverPart.setStyle("-fx-text-fill: " + (partOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
+            targetPartMessagelbl.setText(partOver >= 0 ? "Target Achieved! 🎉" : "Missed the target");
+            targetPartMessagelbl.setStyle("-fx-text-fill: " + (partOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
+            
+            double partPercent = Math.min(100.0, (partAchieved * 100.0) / partTarget);
+            updateCircleProgress(partCircle, partPercent);
+        } else {
+            targetOverPart.setText("+0");
+            targetPartMessagelbl.setText("No target set");
+            updateCircleProgress(partCircle, 0);
+        }
+    }
+
+    private void updateCircleProgress(Circle circle, double percent) {
+        if (circle == null)
+            return;
+        
+        double radius = circle.getRadius();
+        double circumference = 2 * Math.PI * radius;
+        double dashLength = (percent / 100.0) * circumference;
+        circle.getStrokeDashArray().setAll(dashLength, circumference);
+        circle.setRotate(-90); // Start from top
+    }
+
+    private void clearAttendanceAndTargets() {
+        if (attendancePercent != null)
+            attendancePercent.setText("0%");
+        if (attendanceCircle != null)
+            attendanceCircle.setVisible(false);
+        if (targetCar != null)
+            targetCar.setText("0/0");
+        if (targetPart != null)
+            targetPart.setText("0/0");
+        if (targetOverCar != null)
+            targetOverCar.setText("+0");
+        if (targetOverPart != null)
+            targetOverPart.setText("+0");
+        if (targetCarMessagelbl != null)
+            targetCarMessagelbl.setText("No data");
+        if (targetPartMessagelbl != null)
+            targetPartMessagelbl.setText("No data");
+    }
+
+    // ---------- Load Staff ----------
+    private void loadStaffCardsAsync(boolean active) {
+        Task<List<user>> task = new Task<>() {
+            @Override
+            protected List<user> call() throws Exception {
+                return dao.getStaffCards(active ? "Active" : "Inactive", roleCombo.getValue());
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            staffList.setAll(task.getValue());
+            populateStaffCards();
         });
 
-        // Set up search button click handler
-        SearchNamebtn.setOnMouseClicked(event -> {
-            handleSearch();
+        task.setOnFailed(e -> {
+            logger.error("Failed to load staff cards", task.getException());
+            Platform.runLater(() -> staffListContainer.getChildren().clear());
         });
+        ThreadPoolManager.getInstance().execute(task);
+    }
 
-        // Set up text change listener for suggestions
-        StaffSearchText.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText.isEmpty()) {
-                searchSuggestions.hide();
+    private void populateStaffCards() {
+        staffListContainer.getChildren().clear();
+
+        for (user staff : staffList) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/userCards.fxml"));
+                Node card = loader.load();
+                if (loader.getController() instanceof cardController cc)
+                    cc.setData(staff.getId(), staff.getUsername(), staff.getIs_active());
+
+                card.setUserData(staff.getId());
+                card.setOnMouseClicked(e -> {
+                    showStaffDetails(staff);
+                    loadWeeklySalesAsync(staff.getId(), currentMonth, currentYear);
+                    loadAttendanceAsync(staff.getId(), currentMonth, currentYear);
+                    loadTargetsAsync(staff.getId(), currentMonth, currentYear);
+                });
+
+                staffListContainer.getChildren().add(card);
+            } catch (IOException ex) {
+                logger.error("Failed to load staff card for user ID: " + staff.getId(), ex);
+            }
+        }
+
+        if (!staffList.isEmpty()) {
+            showStaffDetails(staffList.get(0));
+            loadWeeklySalesAsync(staffList.get(0).getId(), currentMonth, currentYear);
+            loadAttendanceAsync(staffList.get(0).getId(), currentMonth, currentYear);
+            loadTargetsAsync(staffList.get(0).getId(), currentMonth, currentYear);
+        } else {
+            selectedStaffId = 0;
+            setupEmptyChart();
+            clearAttendanceAndTargets();
+        }
+    }
+
+    private void showStaffDetails(user staff) {
+        if (staff == null)
+            return;
+
+        StaffNameLabel.setText(Optional.ofNullable(staff.getUsername()).orElse(""));
+        StaffPhoneLabel.setText(Optional.ofNullable(staff.getPhone()).orElse(""));
+        StaffEmailLabel.setText(Optional.ofNullable(staff.getEmail()).orElse(""));
+        StaffAddressLabel.setText(Optional.ofNullable(staff.getAddress()).orElse(""));
+        StaffDOBLabel.setText(staff.getDob() != null ?
+                staff.getDob().format(DateTimeFormatter.ofPattern("dd MMM yyyy")) : "");
+
+        try {
+            if (staff.getImagePath() != null && !staff.getImagePath().isBlank()) {
+                String path = staff.getImagePath();
+                String uri = path.startsWith("http://") || path.startsWith("https://") || path.startsWith("file:")
+                        ? path
+                        : new File(path).toURI().toString();
+                StaffImage.setImage(new Image(uri, true));
+            }
+        } catch (Exception e) {
+            logger.warn("Failed to load image for staff ID: " + staff.getId(), e);
+        }
+
+        selectedStaffId = staff.getId();
+        highlightCard(staff.getId());
+        updateMonthYearOptions(staff);
+    }
+
+    private void highlightCard(int id) {
+        staffListContainer.getChildren().forEach(node ->
+                node.setStyle("-fx-border-color: transparent;"));
+
+        staffListContainer.getChildren().stream()
+                .filter(n -> Objects.equals(n.getUserData(), id))
+                .findFirst()
+                .ifPresent(n -> n.setStyle("-fx-background-color: #e8f0fe; -fx-border-color: #1a73e8; -fx-border-radius: 8;"));
+    }
+
+    // ---------- Search ----------
+    private void setupSearch() {
+        StaffSearchText.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER)
+                searchStaff();
+        });
+        SearchNamebtn.setOnMouseClicked(e -> searchStaff());
+
+        StaffSearchText.textProperty().addListener((obs, o, text) -> {
+            if (text == null || text.isEmpty()) {
+                searchMenu.hide();
                 return;
             }
 
-            // Clear previous suggestions
-            searchSuggestions.getItems().clear();
-
-            // Find matching staff
             List<MenuItem> matches = new ArrayList<>();
-            for (user staff : staffInfoList) {
-                String searchText = newText.toLowerCase();
-                String staffId = String.valueOf(staff.getId()).toLowerCase();
-                String staffName = staff.getUsername().toLowerCase();
+            String lower = text.toLowerCase();
 
-                if (staffId.contains(searchText) || staffName.contains(searchText)) {
-                    String suggestionText = staff.getId() + " - " + staff.getUsername();
-                    MenuItem item = new MenuItem(suggestionText);
-
-                    // Set action for when suggestion is clicked
-                    item.setOnAction(e -> {
-                        StaffSearchText.setText(suggestionText);
-                        searchSuggestions.hide();
-                        showStaffDetails(staff);
+            for (user s : staffList) {
+                if (String.valueOf(s.getId()).contains(lower) || s.getUsername().toLowerCase().contains(lower)) {
+                    MenuItem item = new MenuItem(s.getId() + " - " + s.getUsername());
+                    item.setOnAction(ev -> {
+                        StaffSearchText.setText(s.getUsername());
+                        searchMenu.hide();
+                        showStaffDetails(s);
+                        loadWeeklySalesAsync(s.getId(), currentMonth, currentYear);
+                        loadAttendanceAsync(s.getId(), currentMonth, currentYear);
+                        loadTargetsAsync(s.getId(), currentMonth, currentYear);
                     });
-
                     matches.add(item);
                 }
             }
 
-            // Show suggestions if matches found
             if (!matches.isEmpty()) {
-                searchSuggestions.getItems().addAll(matches);
-                searchSuggestions.show(StaffSearchText, Side.BOTTOM, 0, 0);
-            } else {
-                searchSuggestions.hide();
-            }
+                searchMenu.getItems().setAll(matches);
+                searchMenu.show(StaffSearchText, Side.BOTTOM, 0, 0);
+            } else
+                searchMenu.hide();
         });
 
-        // Hide suggestions when text field loses focus
-        StaffSearchText.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal) {
-                searchSuggestions.hide();
-            }
+        StaffSearchText.focusedProperty().addListener((obs, o, focus) -> {
+            if (!focus)
+                searchMenu.hide();
         });
     }
 
-    private void handleSearch() {
-        String searchText = StaffSearchText.getText().trim();
-        if (searchText.isEmpty()) {
+    private void searchStaff() {
+        String text = StaffSearchText.getText().trim();
+        if (text.isEmpty())
             return;
-        }
 
-        // Try to find a matching staff member
-        for (user staff : staffInfoList) {
-            String staffId = String.valueOf(staff.getId());
-            String staffName = staff.getUsername();
+        staffList.stream()
+                .filter(s -> s.getUsername().equalsIgnoreCase(text) || String.valueOf(s.getId()).equals(text))
+                .findFirst()
+                .ifPresent(s -> {
+                    showStaffDetails(s);
+                    loadWeeklySalesAsync(s.getId(), currentMonth, currentYear);
+                    loadAttendanceAsync(s.getId(), currentMonth, currentYear);
+                    loadTargetsAsync(s.getId(), currentMonth, currentYear);
+                });
+    }
 
-            // Check if search text matches ID or name
-            if (searchText.equalsIgnoreCase(staffId) ||
-                    searchText.equalsIgnoreCase(staffName) ||
-                    searchText.equalsIgnoreCase(staffId + " - " + staffName)) {
+    // ---------- Month/Year ----------
+    private boolean updatingDateBox = false;
 
-                // Show staff details
-                showStaffDetails(staff);
+    private void setupMonthYear() {
+        monthBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (updatingDateBox || newVal == null)
                 return;
+            int selectedMonth = Month.valueOf(newVal.toUpperCase(Locale.ENGLISH)).getValue();
+            if (selectedMonth != currentMonth) {
+                currentMonth = selectedMonth;
+                updateDateControls();
+                loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+                loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+                loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
             }
-        }
-    }
+        });
 
-    private void updateYearMonthLabel() {
-        Year nyear = Year.of(currentYear);
-        int curyear = today.getYear();
-
-        Month nmonth = Month.of(currentMonth);
-        String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-
-        int curmonth = today.getMonthValue();
-
-        if (currentYear >= curyear) {
-            NextYearbtn.setDisable(true);
-            NextYearbtn.setVisible(false);
-            if (currentMonth >= curmonth) {
-                NextMonthbtn.setDisable(true);
-                NextMonthbtn.setVisible(false);
-            } else {
-                NextMonthbtn.setDisable(false);
-                NextMonthbtn.setVisible(true);
-            }
-        } else {
-            NextYearbtn.setDisable(false);
-            NextYearbtn.setVisible(true);
-            NextMonthbtn.setDisable(false);
-            NextMonthbtn.setVisible(true);
-        }
-
-        if (!staffInfoList.isEmpty()) {
-            user selected = staffInfoList.stream()
-                    .filter(s -> s.getId() == selectedStaffId)
-                    .findFirst()
-                    .orElse(null);
-
-            if (selected != null && selected.getStart_date() != null) {
-                LocalDate start = selected.getStart_date();
-
-
-                if (currentYear <= start.getYear()) {
-                    PreviousYearbth.setDisable(true);
-                    PreviousYearbth.setVisible(false);
-
-
-                    if (currentYear == start.getYear() && currentMonth <= start.getMonthValue()) {
-                        PreviousMonthbtn.setDisable(true);
-                        PreviousMonthbtn.setVisible(false);
-                    } else {
-                        PreviousMonthbtn.setDisable(false);
-                        PreviousMonthbtn.setVisible(true);
-                    }
-                } else {
-                    PreviousYearbth.setDisable(false);
-                    PreviousYearbth.setVisible(true);
-                    PreviousMonthbtn.setDisable(false);
-                    PreviousMonthbtn.setVisible(true);
-                }
-            }
-        }
-
-
-        // 🔹 Sync ComboBoxes with updated currentMonth/currentYear
-        String monthName = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-        if (monthBox.getItems().contains(monthName)) {
-            monthBox.setValue(monthName);
-        }
-
-        if (yearBox.getItems().contains(currentYear)) {
-            yearBox.setValue(currentYear);
-        }
-
-        try {
-            refreshOrdersTable();
-            monthlyOrdersStatus(selectedStaffId, currentMonth, currentYear);
-            carsAndPartsTarget();
-            monthlyAttendance();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    private void currentDateSelect() {
-        currentMonth = today.getMonthValue();
-        currentYear = today.getYear();
-//        Monthslabel.setText(today.format(fmonth));
-        NextMonthbtn.setDisable(true);
-        NextMonthbtn.setVisible(false);
-//        Yearslabel.setText(today.format(fyear));
-        NextYearbtn.setDisable(true);
-        NextYearbtn.setVisible(false);
-
-    }
-
-    private void insertMonthYearChoiceBox(user staff) {
-        yearBox.getItems().clear();
-        LocalDate end = (staff.getEnd_date() != null) ? staff.getEnd_date() : today;
-
-        for (int y = staff.getStart_date().getYear(); y <= end.getYear(); y++) {
-            yearBox.getItems().add(y);
-        }
-
-        yearBox.setValue(currentYear);
-        updateMonthBoxForYear(currentYear, staff);
-
-        // Add year listener only once
-        yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
+        yearBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (updatingDateBox || newVal == null)
+                return;
+            if (newVal != currentYear) {
                 currentYear = newVal;
-                updateMonthBoxForYear(currentYear, staff);
-                updateYearMonthLabel();
+                updateMonthBox();
+                updateDateControls();
+                loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+                loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+                loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
             }
         });
     }
 
+    private void updateMonthYearOptions(user staff) {
+        updatingDateBox = true;
 
-    private boolean updatingMonthBox = false;
+        currentStaffStartDate = Optional.ofNullable(staff.getStart_date()).orElse(today);
+        currentStaffEndDate = Optional.ofNullable(staff.getEnd_date()).orElse(today);
 
-    private void updateMonthBoxForYear(int year, user staff) {
-        int startMonth = 1;
-        int endMonth = 12;
+        yearBox.getItems().clear();
+        for (int y = currentStaffStartDate.getYear(); y <= currentStaffEndDate.getYear(); y++)
+            yearBox.getItems().add(y);
+        if (!yearBox.getItems().contains(currentYear))
+            currentYear = currentStaffStartDate.getYear();
+        yearBox.setValue(currentYear);
 
-        if (year == staff.getStart_date().getYear()) startMonth = staff.getStart_date().getMonthValue();
-        if (staff.getEnd_date() != null && year == staff.getEnd_date().getYear()) {
-            endMonth = staff.getEnd_date().getMonthValue();
-        } else if (year == today.getYear() && staff.getEnd_date() == null) {
-            endMonth = today.getMonthValue();
-        }
+        updateMonthBox();
+        updateDateControls();
+        updatingDateBox = false;
+    }
+
+    private void updateMonthBox() {
+        updatingDateBox = true;
 
         List<String> months = new ArrayList<>();
-        for (int m = startMonth; m <= endMonth; m++) {
-            months.add(Month.of(m).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
-        }
 
-        updatingMonthBox = true;
+        // Optional: Limit months by staff start/end if needed
+        for (int i = 1; i <= 12; i++)
+            months.add(Month.of(i).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+
         monthBox.setItems(FXCollections.observableArrayList(months));
-
-        // Make sure currentMonth is valid
-        if (!months.contains(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH))) {
-            currentMonth = startMonth; // default to first available month
-        }
-
+        if (currentMonth < 1 || currentMonth > 12)
+            currentMonth = 1;
         monthBox.setValue(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
-        updatingMonthBox = false;
+
+        updatingDateBox = false;
     }
 
-    private void updateChoiceBoxes() {
-        String monthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-        if (!monthBox.getItems().contains(monthName) && !monthBox.getItems().isEmpty()) {
-            monthName = monthBox.getItems().get(0);
-            currentMonth = Month.valueOf(monthName.toUpperCase(Locale.ENGLISH)).getValue();
+    private void updateDateControls() {
+        if (NextMonthbtn == null || NextYearbtn == null || PreviousMonthbtn == null || PreviousYearbtn == null)
+            return;
+        
+        // Disable next buttons if at current month/year
+        boolean isCurrentYear = currentYear == today.getYear();
+        boolean isCurrentMonth = isCurrentYear && currentMonth == today.getMonthValue();
+        NextMonthbtn.setDisable(isCurrentMonth);
+        NextYearbtn.setDisable(isCurrentYear);
+        
+        // Hide next buttons if at current month/year
+        NextMonthbtn.setVisible(!isCurrentMonth);
+        NextYearbtn.setVisible(!isCurrentYear);
+        
+        // Disable/hide previous buttons if at staff start date
+        if (currentStaffStartDate != null) {
+            boolean isStartYear = currentYear == currentStaffStartDate.getYear();
+            boolean isStartMonth = isStartYear && currentMonth == currentStaffStartDate.getMonthValue();
+            
+            PreviousMonthbtn.setDisable(isStartMonth);
+            PreviousYearbtn.setDisable(isStartYear);
+            PreviousMonthbtn.setVisible(!isStartMonth);
+            PreviousYearbtn.setVisible(!isStartYear);
+        } else {
+            PreviousMonthbtn.setDisable(false);
+            PreviousYearbtn.setDisable(false);
+            PreviousMonthbtn.setVisible(true);
+            PreviousYearbtn.setVisible(true);
         }
-        monthBox.setValue(monthName);
-        yearBox.setValue(currentYear);
     }
+
+    @FXML
+    private void nextMonthClick(MouseEvent e) {
+        if (currentMonth == 12) {
+            currentMonth = 1;
+            currentYear++;
+            yearBox.setValue(currentYear);
+        } else
+            currentMonth++;
+        updateMonthBox();
+        updateDateControls();
+        loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
+    }
+
+    @FXML
+    private void prevMonthClick(MouseEvent e) {
+        if (currentMonth == 1) {
+            currentMonth = 12;
+            currentYear--;
+            yearBox.setValue(currentYear);
+        } else
+            currentMonth--;
+        updateMonthBox();
+        updateDateControls();
+        loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
+    }
+
+    @FXML
+    private void nextYearClick(MouseEvent e) {
+        currentYear++;
+        yearBox.setValue(currentYear);
+        updateMonthBox();
+        updateDateControls();
+        loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
+    }
+
+    @FXML
+    private void prevYearClick(MouseEvent e) {
+        currentYear--;
+        yearBox.setValue(currentYear);
+        updateMonthBox();
+        updateDateControls();
+        loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
+        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
+        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
+    }
+
+    boolean cardtype = true;
+
+    @FXML
+    void SwitchMouseClick(MouseEvent event) {
+        cardtype = !cardtype;
+        StaffListTitleLabel.setText(cardtype ? "List (Active)" : "List (InActive)");
+        loadStaffCardsAsync(cardtype);
+    }
+
 }

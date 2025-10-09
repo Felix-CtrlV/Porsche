@@ -200,7 +200,7 @@
                     <center>
                   <StackPane>
                      <children>
-                              <VBox fx:id="addPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
+                              <VBox fx:id="addPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
                                   <children>
                                       <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                           <children>
@@ -220,13 +220,13 @@
                                                   <children>
                                                         <StackPane maxHeight="125.0" minHeight="125.0" onDragDropped="#carHandlerDrop" onDragOver="#carHandlerOver" prefHeight="120.0" prefWidth="200.0" style="-fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-border-width: 2; -fx-border-style: dashed; -fx-background-color: #f9fafb; -fx-background-radius: 6;">
                                                             <children>
-                                                                <ImageView fx:id="carImage" fitHeight="120.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                                                                 <VBox alignment="CENTER" prefHeight="80.0" prefWidth="335.0" spacing="4">
                                                                     <children>
                                                                         <Label style="-fx-text-fill: #6b7280; -fx-font-size: 20;" text="📷" />
                                                                         <Label style="-fx-text-fill: #6b7280; -fx-font-size: 11;" text="Click to upload car image" />
                                                                     </children>
                                                                 </VBox>
+                                                                <ImageView fx:id="carImage" fitHeight="120.0" fitWidth="408.0" onMouseClicked="#clickCarImage" pickOnBounds="true" preserveRatio="true" />
                                                             </children>
                                                         </StackPane>
                                                       <HBox minHeight="40.0" spacing="12" VBox.vgrow="NEVER">
@@ -380,13 +380,13 @@
                                              <children>
                                                 <StackPane onDragDropped="#partHandlerDrop" onDragOver="#partHandlerOver" prefHeight="190.0" prefWidth="393.0" style="-fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-border-width: 2; -fx-border-style: dashed; -fx-background-color: #f9fafb; -fx-background-radius: 6;">
                                                    <children>
-                                                      <ImageView fx:id="partImage" fitHeight="120.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                                                       <VBox alignment="CENTER" spacing="4">
                                                          <children>
                                                             <Label style="-fx-text-fill: #6b7280; -fx-font-size: 20;" text="📷" />
                                                             <Label style="-fx-text-fill: #6b7280; -fx-font-size: 11;" text="Click to upload car image" />
                                                          </children>
                                                       </VBox>
+                                                      <ImageView fx:id="partImage" fitHeight="178.0" fitWidth="408.0" onMouseClicked="#clickPartImage" pickOnBounds="true" preserveRatio="true" />
                                                    </children>
                                                 </StackPane>
                                              </children>
@@ -473,7 +473,7 @@
                               </StackPane>
                                   </children>
                               </VBox>
-                        <VBox fx:id="editPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                        <VBox fx:id="editPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
                            <children>
                               <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                  <children>
@@ -491,7 +491,7 @@
                               </HBox>
                               <StackPane maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0">
                                  <children>
-                                    <VBox fx:id="editPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;" visible="false">
+                                    <VBox fx:id="editPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;">
                                        <children>
                                           <HBox prefHeight="226.0" prefWidth="408.0" spacing="12.0">
                                              <children>
@@ -499,7 +499,7 @@
                                                    <children>
                                                       <StackPane maxHeight="166.0" maxWidth="150.0" minHeight="125.0" onDragDropped="#carHandlerDrop" onDragOver="#carHandlerOver" prefHeight="166.0" prefWidth="109.0" style="-fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-border-width: 2; -fx-border-style: dashed; -fx-background-color: #f9fafb; -fx-background-radius: 6;">
                                                          <children>
-                                                            <ImageView fx:id="editPartImg" fitHeight="166.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                                                            <ImageView fx:id="editPartImg" fitHeight="166.0" fitWidth="150.0" onMouseClicked="#clickEditPartImage" pickOnBounds="true" preserveRatio="true" />
                                                          </children>
                                                       </StackPane>
                                                       <TextField fx:id="editPartName" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
@@ -584,7 +584,7 @@
                                           </HBox>
                                        </children>
                                     </VBox>
-                                    <VBox fx:id="editCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;">
+                                    <VBox fx:id="editCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;" visible="false">
                                        <children>
                                           <HBox prefHeight="226.0" prefWidth="408.0" spacing="12.0">
                                              <children>
@@ -592,7 +592,7 @@
                                                    <children>
                                                       <StackPane maxHeight="166.0" minHeight="125.0" onDragDropped="#carHandlerDrop" onDragOver="#carHandlerOver" prefHeight="166.0" prefWidth="109.0" style="-fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-border-width: 2; -fx-border-style: dashed; -fx-background-color: #f9fafb; -fx-background-radius: 6;">
                                                          <children>
-                                                            <ImageView fx:id="editCarImg" fitHeight="162.0" fitWidth="142.0" pickOnBounds="true" preserveRatio="true" />
+                                                            <ImageView fx:id="editCarImg" fitHeight="162.0" fitWidth="142.0" onMouseClicked="#clickEditCarImage" pickOnBounds="true" preserveRatio="true" />
                                                          </children>
                                                       </StackPane>
                                                       <TextField fx:id="editCarName" promptText="Car Name" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35; -fx-pref-width: 140;" />
@@ -676,7 +676,7 @@
                                              <children>
                                                 <Button fx:id="editCarRevert" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="REVERT" />
                                                 <Region HBox.hgrow="ALWAYS" />
-                                                <Button fx:id="editCarApply"  mnemonicParsing="false" style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-background-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="APPLY">
+                                                <Button fx:id="editCarApply" mnemonicParsing="false" style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-background-radius: 6; -fx-pref-width: 90; -fx-pref-height: 35;" text="APPLY">
                                                    <HBox.margin>
                                                       <Insets left="8.0" />
                                                    </HBox.margin>

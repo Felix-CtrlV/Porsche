@@ -1,8 +1,9 @@
 package Controllers;
 
-import Database.Porsche_DB;
+import Database.DatabaseConnectionManager;
 import Model.user;
 import Utils.Session;
+import Utils.ThreadPoolManager;
 import Utils.defaultStage;
 import javafx.animation.*;
 import javafx.concurrent.Task;
@@ -22,6 +23,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -31,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class loginController {
+    private static final Logger logger = LoggerFactory.getLogger(loginController.class);
 
     @FXML
     private MediaView videoview;
@@ -133,32 +137,33 @@ public class loginController {
                 protected user call() throws Exception {
                     String name = nametxt.getText();
                     String password = pwtxt.getText();
-                    Porsche_DB connect = new Porsche_DB();
-                    Connection con = connect.connect();
+                    
+                    try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
+                         CallableStatement p1 = con.prepareCall("call login(?,?,?)")) {
+                        
+                        p1.setString(1, name);
+                        p1.setString(2, password);
+                        p1.setString(3, String.valueOf(LocalDateTime.now()));
+                        
+                        try (ResultSet rs = p1.executeQuery()) {
+                            if (rs.next()) {
+                                int id = rs.getInt(1);
+                                String email = rs.getString(4);
+                                String phone = rs.getString(5);
+                                String address = rs.getString(6);
+                                String dobStr = rs.getString(7);
+                                String role = rs.getString(8);
+                                LocalDate dob = (dobStr != null) ? LocalDate.parse(dobStr) : null;
 
-                    CallableStatement p1 = con.prepareCall("call login(?,?,?)");
-                    p1.setString(1, name);
-                    p1.setString(2, password);
-                    p1.setString(3, String.valueOf(LocalDateTime.now()));
-                    ResultSet rs = p1.executeQuery();
-                    user u = null;
-                    if (rs.next()) {
-                        int id = rs.getInt(1);
-                        String pw = rs.getString(3);
-                        String email = rs.getString(4);
-                        String phone = rs.getString(5);
-                        String address = rs.getString(6);
-                        String dobStr = rs.getString(7);
-                        String role = rs.getString(8);
-                        LocalDate dob = (dobStr != null) ? LocalDate.parse(dobStr) : null;
-
-                        if (id != 0 && role != null) {
-                            u = new user(id, name, role, password, email, phone, address, dob);
+                                if (id != 0 && role != null) {
+                                    logger.info("User {} logged in successfully with role: {}", name, role);
+                                    return new user(id, name, role, password, email, phone, address, dob);
+                                }
+                            }
                         }
                     }
-
-                    connect.disconnect();
-                    return u;
+                    logger.warn("Failed login attempt for username: {}", name);
+                    return null;
                 }
             };
             task.setOnSucceeded(e1 -> {
@@ -200,18 +205,19 @@ public class loginController {
                     Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     home.close();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    logger.error("Failed to load dashboard for role: " + role, ex);
+                    slideError("Failed to load dashboard. Please contact support.");
                 }
             });
 
             task.setOnFailed(e -> {
+                logger.error("Login task failed", task.getException());
                 slideError("No Connection. Please TRY AGAIN...");
                 login.setDisable(false);
                 login.setText("Login");
                 clear.setDisable(false);
-                task.getException().printStackTrace();
             });
-            new Thread(task).start();
+            ThreadPoolManager.getInstance().execute(task);
         }
     }
 

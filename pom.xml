@@ -10,8 +10,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -55,11 +55,18 @@
             <version>1.14.1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
+        <!-- MySQL Connector/J -->
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>javax.mail-api</artifactId>
-            <version>1.6.2</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.4.0</version>
+        </dependency>
+
+        <!-- Jakarta Mail for sending emails -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
         </dependency>
 
         <dependency>
@@ -93,6 +100,39 @@
             <artifactId>javafx-media</artifactId>
             <version>21.0.6</version>
         </dependency>
+
+        <!-- Additional JavaFX modules used by module-info -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>21.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>21.0.6</version>
+        </dependency>
+
+        <!-- HikariCP for connection pooling -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+
+        <!-- SLF4J API for logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
+        <!-- Logback for logging implementation -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.14</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -102,11 +142,32 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.13.0</version>
             <configuration>
-                <release>24</release>
+                <release>17</release>
                 <encoding>UTF-8</encoding>
                 <compilerArgs>
-                    <arg>-Xlint:all</arg> <!-- show all warnings -->
+                    <arg>-Xlint:all</arg>
+                    <arg>-Xlint:-deprecation</arg>
                 </compilerArgs>
+            </configuration>
+        </plugin>
+
+        <!-- JavaFX Maven Plugin to run the application -->
+        <plugin>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-maven-plugin</artifactId>
+            <version>0.0.8</version>
+            <configuration>
+                <mainClass>MainUI.Launcher</mainClass>
+                <launcher>APP</launcher>
+                <stripNativeCommands>true</stripNativeCommands>
+                <jlinkZipName>Porsche-jlink</jlinkZipName>
+                <jlinkImageName>Porsche</jlinkImageName>
+                <noManPages>true</noManPages>
+                <noHeaderFiles>true</noHeaderFiles>
+                <compress>2</compress>
+                <addModules>
+                    javafx.controls,javafx.fxml,javafx.graphics,javafx.base,javafx.media,javafx.web,javafx.swing
+                </addModules>
             </configuration>
         </plugin>
     </plugins>
