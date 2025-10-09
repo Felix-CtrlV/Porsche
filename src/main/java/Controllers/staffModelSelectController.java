@@ -1,65 +1,59 @@
 package Controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.control.ScrollPane;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.event.ActionEvent;
+import java.io.IOException;
 
 public class staffModelSelectController {
 
-    @FXML private ScrollPane scrollPane;
-    @FXML private Button btnLeft;
-    @FXML private Button btnRight;
-    @FXML private FlowPane flow_Pane;
-    @FXML private Button configure_btn;
-    @FXML private Button confirm_btn;
-
-    private final double scrollStep = 0.25;
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
-    void redirect(MouseEvent event) {
+    private FlowPane flow_Pane;
 
-    }
+    @FXML
+    private Button back_btn;
 
     @FXML
     private void initialize() {
-        // Left button scroll
-        btnLeft.setOnAction(e -> {
-            double pos = scrollPane.getHvalue() - scrollStep;
-            if (pos < 0) pos = 0;
-            scrollPane.setHvalue(pos);
-        });
-
-        // Right button scroll
-        btnRight.setOnAction(e -> {
-            double pos = scrollPane.getHvalue() + scrollStep;
-            if (pos > 1) pos = 1;
-            scrollPane.setHvalue(pos);
-        });
+        scrollPane.setPannable(true);
+        loadCarCard("911 Carrera", "/Image/911_model.png");
+        loadCarCard("Cayenne Turbo", "/Image/911_select_model.png");
+        loadCarCard("Panamera", "/Image/911_select_model.png");
     }
 
-    public Pane createModelPane(String modelName, String imagePath) {
-        Pane pane = new Pane();
-        pane.setPrefSize(216, 180);
-        pane.getStyleClass().add("image_holder");
+    private void loadCarCard(String modelName, String imagePath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffCarcards.fxml"));
+            Pane card = loader.load();
+            staffCarcardController controller = loader.getController();
+            controller.setCard(modelName, new javafx.scene.image.Image(getClass().getResourceAsStream(imagePath)));
+            flow_Pane.getChildren().add(card);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView(
-                new javafx.scene.image.Image(getClass().getResourceAsStream(imagePath))
-        );
-        imageView.setFitWidth(200);
-        imageView.setFitHeight(83);
-        imageView.setPreserveRatio(true);
-        imageView.setLayoutX(8);
-        imageView.setLayoutY(14);
-
-        javafx.scene.text.Text text = new javafx.scene.text.Text(modelName);
-        text.setLayoutX(14);
-        text.setLayoutY(110);
-        text.getStyleClass().add("selected_model_font");
-
-        pane.getChildren().addAll(imageView, text);
-        return pane;
+    @FXML
+    private void goBack(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/View/staffCars.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

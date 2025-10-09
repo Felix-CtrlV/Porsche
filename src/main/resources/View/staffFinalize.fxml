@@ -1,64 +1,176 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="545.0" prefWidth="1188.0" style="-fx-background-color: eaeaea;" stylesheets="@../CSS/finalize_order_page.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffFinalizeController">
-   <children>
-      <ImageView fitHeight="42.0" fitWidth="52.0" layoutX="12.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Image/porsche_logo.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="selected_model_image" fitHeight="297.0" fitWidth="475.0" layoutX="46.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Image/911_select_model.png" />
-         </image>
-      </ImageView>
-      <Line endX="308.0" layoutX="181.0" layoutY="248.0" opacity="0.6" startX="-100.0" />
-      <Line endX="-100.0" endY="-242.0" layoutX="703.0" layoutY="333.0" opacity="0.6" startX="-100.0" startY="159.0" />
-      <Line endX="-17.0" layoutX="182.0" layoutY="270.0" opacity="0.6" startX="-100.0" />
-      <Text layoutX="81.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="font" text="Vehicle Details" />
-      <Text fx:id="selected_model" layoutX="82.0" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="selected_model_font" text="911 Standard" />
-      <Text layoutX="82.0" layoutY="316.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="font" text="•High-revving 4.0-litre naturally aspirated flat-six" />
-      <Text layoutX="81.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="font" text="•Features front diffuser and active rear wing with DRS (Drag Reduction System)" />
-      <Text layoutX="82.0" layoutY="374.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="font" text="•7-speed Porsche Doppelkupplung (PDK) dual-clutch transmission" />
-      <Text layoutX="82.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="font" text="•Fuel Consumption (WLTP): Combined ~13.2 l/100 km; emissions ~299 g CO₂/km" />
-      <Text fill="#000000ae" layoutX="603.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Configuration">
-         <font>
-            <Font name="System Bold" size="20.0" />
-         </font>
-      </Text>
-      <Line endX="429.0" layoutX="713.0" layoutY="127.0" opacity="0.6" startX="-100.0" />
-      <Line endX="429.0" layoutX="713.0" layoutY="173.0" opacity="0.6" startX="-100.0" />
-      <Line endX="429.0" layoutX="713.0" layoutY="228.0" opacity="0.6" startX="-100.0" />
-      <Line endX="429.0" layoutX="713.0" layoutY="280.0" opacity="0.6" startX="-100.0" />
-      <Line endX="429.0" layoutX="713.0" layoutY="313.0" opacity="0.6" startX="-100.0" />
-      <Text fill="#000000cb" layoutX="613.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="topic_font" text="Base MSRP" wrappingWidth="107.92382645606995">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Text>
-      <Text layoutX="613.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="topic_font" text="Color" />
-      <Text layoutX="613.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="topic_font" text="Wheels" />
-      <Text layoutX="613.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="topic_font" text="Interior" />
-      <Text layoutX="614.0" layoutY="306.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="topic_font" text="Handling" />
-      <Text layoutX="615.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="font" text="Snow White" />
-      <Text layoutX="615.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="font" text="20-inch(fr) and 21-inch(rr) Rose Cermaic Spoke" />
-      <Text layoutX="615.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="font" text="Black leather with GT-silver lining   " />
-      <Button fx:id="goback_btn" layoutX="730.0" layoutY="395.0" mnemonicParsing="false" onMouseClicked="#redirect" prefHeight="27.0" prefWidth="118.0" styleClass="goback_btn" text="Go Back" />
-      <Button fx:id="confirm_btn" layoutX="908.0" layoutY="395.0" maxHeight="40.0" maxWidth="132.0" mnemonicParsing="false" onMouseClicked="#redirect" prefHeight="35.0" prefWidth="128.0" styleClass="confirm_btn" text="Confirm Order" />
-      <Text layoutX="612.0" layoutY="347.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="topic_font" text="Total MSRP for this configuration:  " />
-      <Text fx:id="basic_price" layoutX="1036.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="prices" text="\$0" />
-      <Text fx:id="color_price" layoutX="1036.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="prices" text="\$0" />
-      <Text fx:id="wheels_price" layoutX="1036.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="prices" text="\$0" />
-      <Text fx:id="interior_price" layoutX="1035.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="prices" text="\$0" />
-      <Text fx:id="handling_price" layoutX="1035.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="prices" text="\$0" />
-      <Text fx:id="total_price" layoutX="1033.0" layoutY="347.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="total_price" text="\$0" />
-   </children>
-</AnchorPane>
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../CSS/finalize_order_page.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffFinalizeController">
+    <center>
+        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="520.0" prefWidth="1100.0" spacing="50.0" BorderPane.alignment="CENTER">
+            <children>
+                <VBox alignment="CENTER_LEFT" prefHeight="524.0" prefWidth="491.0">
+                    <children>
+                        <Button fx:id="darkmodebtn" mnemonicParsing="false" onAction="#modechange" prefHeight="30.0" prefWidth="32.0" styleClass="confirm_btn" text="D" />
+                        <StackPane alignment="TOP_LEFT" prefHeight="471.0" prefWidth="492.0">
+                            <children>
+                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                    <children>
+                                        <Region prefHeight="59.0" prefWidth="492.0" />
+                                        <ImageView fx:id="selected_model_image" fitHeight="172.0" fitWidth="492.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../Image/911_select_model.png" />
+                                            </image>
+                                        </ImageView>
+                                        <Line fx:id="line1" endX="630.7867431640625" endY="-3.606600761413574" opacity="0.5" startX="147.20098876953125" startY="-3.606602191925049" strokeWidth="2.0" styleClass="line" />
+                                        <Label opacity="0.8" styleClass="font" text="Vehicle Details:">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Line fx:id="line2" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
+                                        <Label styleClass="selected_model_font" text="911 Carrera GTS">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="car_features" alignment="TOP_LEFT" lineSpacing="20.0" prefHeight="219.0" prefWidth="303.0" styleClass="font" text="•High-revving 4.0-litre naturally aspirated flat-six &#10;•Features front diffuser and active rear wing with Drag Reduction System&#10;•7-speed Porsche Doppelkupplung (PDK) dual-clutch transmission &#10;•Fuel Consumption (WLTP): Combined ~13.2 l/100 km; emissions ~299 g CO₂/km" wrapText="true">
+                                            <VBox.margin>
+                                                <Insets bottom="50.0" top="10.0" />
+                                            </VBox.margin>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </StackPane>
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER_LEFT" prefHeight="524.0" prefWidth="601.0">
+                    <children>
+                        <Label styleClass="topic_font" text="Your Configuration" />
+                        <StackPane prefHeight="368.0" prefWidth="634.0">
+                            <children>
+                                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="481.0" prefWidth="603.0" spacing="5.0" StackPane.alignment="CENTER">
+                                    <children>
+                                        <Line fx:id="line3" endX="-99.79287719726562" endY="484.5857849121094" opacity="0.6" startX="-100.0" strokeWidth="2.0" styleClass="line" HBox.hgrow="SOMETIMES">
+                                            <HBox.margin>
+                                                <Insets left="2.0" />
+                                            </HBox.margin>
+                                        </Line>
+                                        <VBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="365.0" prefWidth="624.0" spacing="10.0" HBox.hgrow="SOMETIMES">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="19.0" prefWidth="624.0">
+                                                    <children>
+                                                        <Label styleClass="prices" text="Base MSRP" />
+                                                        <Region prefHeight="20.0" prefWidth="371.0" />
+                                                        <Label fx:id="basic_price" text="Price here">
+                                                            <font>
+                                                                <Font name="System Bold" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </HBox>
+                                                <Line fx:id="line4" endX="488.29290771484375" endY="-0.621320366859436" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
+                                                <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="624.0">
+                                                    <children>
+                                                        <VBox prefHeight="41.0" prefWidth="155.0" spacing="3.0">
+                                                            <children>
+                                                                <Label styleClass="prices" text="Color" />
+                                                                <Label fx:id="color_opt" styleClass="options_font" text="Snow White" />
+                                                            </children>
+                                                        </VBox>
+                                                        <Region prefHeight="41.0" prefWidth="305.0" />
+                                                        <Label fx:id="color_price" text="Price here">
+                                                            <font>
+                                                                <Font name="System Bold" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </HBox>
+                                                <Line fx:id="line5" endX="488.29290771484375" endY="-0.621320366859436" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
+                                                <HBox alignment="CENTER_LEFT" prefHeight="19.0" prefWidth="624.0">
+                                                    <children>
+                                                        <VBox prefHeight="33.0" prefWidth="346.0">
+                                                            <children>
+                                                                <Label styleClass="prices" text="Wheels" />
+                                                                <Label fx:id="wheels_opt" prefHeight="17.0" prefWidth="348.0" styleClass="options_font" text="20-inch(fr) and 21-inch(rr) Rose Cermaic Spoke" VBox.vgrow="SOMETIMES" />
+                                                            </children>
+                                                        </VBox>
+                                                        <Region prefHeight="34.0" prefWidth="114.0" />
+                                                        <Label fx:id="wheels_price" text="Price here">
+                                                            <font>
+                                                                <Font name="System Bold" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </HBox>
+                                                <Line fx:id="line6" endX="488.29290771484375" endY="-0.621320366859436" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
+                                                <HBox alignment="CENTER_LEFT" prefHeight="19.0" prefWidth="624.0">
+                                                    <children>
+                                                        <VBox prefHeight="36.0" prefWidth="418.0">
+                                                            <children>
+                                                                <Label styleClass="prices" text="Interior" />
+                                                                <Label fx:id="interior_opt" prefHeight="16.0" prefWidth="421.0" styleClass="options_font" text="Black leather with GT-silver lining   " />
+                                                            </children>
+                                                        </VBox>
+                                                        <Region prefHeight="36.0" prefWidth="42.0" />
+                                                        <Label fx:id="interior_price" text="Price here">
+                                                            <font>
+                                                                <Font name="System Bold" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </HBox>
+                                                <Line fx:id="line7" endX="488.29290771484375" endY="-0.621320366859436" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
+                                                <HBox alignment="CENTER_LEFT" prefHeight="19.0" prefWidth="624.0">
+                                                    <children>
+                                                        <Label styleClass="prices" text="Handling costs" />
+                                                        <Region prefHeight="20.0" prefWidth="355.0" />
+                                                        <Label fx:id="handling_price" text="Price here">
+                                                            <font>
+                                                                <Font name="System Bold" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </HBox>
+                                                <Line fx:id="line8" endX="488.29290771484375" endY="-0.621320366859436" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
+                                                <HBox alignment="CENTER_LEFT" prefHeight="19.0" prefWidth="624.0">
+                                                    <children>
+                                                        <Label styleClass="prices" text="Total MSRP for this configuration" />
+                                                        <Region prefHeight="27.0" prefWidth="216.0" />
+                                                        <Label fx:id="total_price" styleClass="total_price" text="Price here">
+                                                            <font>
+                                                                <Font name="System Bold" size="18.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER" prefHeight="157.0" prefWidth="624.0" spacing="100.0" VBox.vgrow="SOMETIMES">
+                                                    <children>
+                                                        <Button fx:id="goback_btn" mnemonicParsing="false" onAction="#goback" prefWidth="128.0" styleClass="goback_btn" text="Go back" />
+                                                        <Button fx:id="confirm_btn" mnemonicParsing="false" styleClass="confirm_btn" text="Confirm Order" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets top="10.0" />
+                                            </HBox.margin>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </StackPane>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </center>
+</BorderPane>

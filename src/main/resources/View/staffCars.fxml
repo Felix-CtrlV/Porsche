@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffCarsController">
+
+    <children>
+        <VBox alignment="CENTER" spacing="5.0" stylesheets="@../CSS/cars.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <Button fx:id="homebtn" mnemonicParsing="false" onAction="#home" text="Home">
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
+         </Button>
+
+            <!-- Line -->
+            <Line endX="800.0" opacity="0.5" startX="0.0">
+                <VBox.margin>
+                    <Insets bottom="-15.0" top="10.0" />
+                </VBox.margin>
+            </Line>
+
+            <!-- Grid for cars -->
+            <GridPane alignment="CENTER" hgap="10.0" vgap="10.0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+
+                <!-- Columns: 3 equal -->
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="33.3" />
+                    <ColumnConstraints percentWidth="33.3" />
+                    <ColumnConstraints percentWidth="33.3" />
+                </columnConstraints>
+
+                <!-- Rows: 2 equal -->
+                <rowConstraints>
+                    <RowConstraints percentHeight="50" />
+                    <RowConstraints percentHeight="50" />
+                </rowConstraints>
+
+                <children>
+                    <!-- Row 1 -->
+                    <ImageView fx:id="nine11_select_image" fitHeight="255.0" fitWidth="424.0" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="image-tile" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+
+                    <ImageView fx:id="seven18_select_image" fitHeight="255.0" fitWidth="424.0" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="image-tile" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                    <ImageView fx:id="taycan_select_image" fitHeight="255.0" fitWidth="424.0" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="image-tile" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+
+                    <!-- Row 2 -->
+                    <ImageView fx:id="panamera_select_image" fitHeight="239.5" fitWidth="421.0" onMouseClicked="#redirect" smooth="true" styleClass="image-tile" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+                    <ImageView fx:id="macan_select_image" fitHeight="255.0" fitWidth="424.0" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="image-tile" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                    <ImageView fx:id="cayenne_select_image" fitHeight="255.0" fitWidth="424.0" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="image-tile" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                </children>
+            <VBox.margin>
+               <Insets bottom="10.0" top="10.0" />
+            </VBox.margin>
+            </GridPane>
+
+            <!-- Bottom line -->
+            <Line endX="800.0" opacity="0.5" startX="0.0">
+                <VBox.margin>
+                    <Insets bottom="10.0" top="-15.0" />
+                </VBox.margin>
+            </Line>
+        </VBox>
+    </children>
+</AnchorPane>

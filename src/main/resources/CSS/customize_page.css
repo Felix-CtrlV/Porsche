@@ -73,7 +73,14 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 24, 0.35, 0, 10);
 }
 
-/* Arrow button */
+.transparent-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(0, 0, 0, 0.7);
+    -fx-underline: true;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
 .arrow-button {
     -fx-background-color: transparent;
     -fx-text-fill: #444444;

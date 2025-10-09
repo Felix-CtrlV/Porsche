@@ -23,7 +23,7 @@ public class login extends Application {
         SplashScreen splash = SplashScreen.getSplashScreen();
             Parent root = null;
             try {
-                root = FXMLLoader.load(Objects.requireNonNull(this.getClass().getResource("/View/login.fxml")));
+                root = FXMLLoader.load(Objects.requireNonNull(this.getClass().getResource("/View/staffShopingcart.fxml")));
             } catch (
                     IOException e) {
                 throw new RuntimeException(e);
@@ -39,9 +39,9 @@ public class login extends Application {
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         });
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.DECORATED);
         stage.setScene(scene);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.setOnShown(e -> stage.centerOnScreen());
         stage.show();
         if(splash!=null) {
