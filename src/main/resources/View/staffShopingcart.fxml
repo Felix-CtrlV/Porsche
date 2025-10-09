@@ -17,7 +17,7 @@
 
 <BorderPane styleClass="root" stylesheets="@../CSS/finalCheckout.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffShopingCartController">
 
-    <!-- Top Section: Title -->
+
     <top>
         <VBox styleClass="header-section">
             <Label styleClass="title-label" text="Final Checkout Summary">
