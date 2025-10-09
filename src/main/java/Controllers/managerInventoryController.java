@@ -739,7 +739,6 @@ public class managerInventoryController {
                     } else {
                         sameImage = false;
                     }
-                    System.out.println(sameImage);
                     allEmpty = sameImage &&
                             Objects.equals(editCarName.getText(), editPath.getName())
                             && editCarUsage.getText().equals(fuel)
@@ -941,7 +940,7 @@ public class managerInventoryController {
             private final HBox buttonsContainer = new HBox(8, editButton, deleteButton);
             {
                 editButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.EDIT));
-                deleteButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.TRASH));
+                deleteButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.BAN));
                 editButton.setStyle("-fx-background-color: transparent;");
                 deleteButton.setStyle("-fx-background-color: transparent;");
                 editButton.setCursor(Cursor.HAND);
@@ -1051,7 +1050,6 @@ public class managerInventoryController {
 
             }
             for(inventory i : carsData){
-                System.out.println(i.getModels());
                 models.put(new CheckBox(i.getModels()),i.getSeries());
             }
             cs.close();
@@ -1116,7 +1114,7 @@ public class managerInventoryController {
             for (HashMap.Entry<CheckBox, String> entry : models.entrySet()) {
                 if(i.getModels().contains(entry.getValue())) {
                     in.add(entry.getKey());
-                    System.out.println(entry);
+
                 }
             }
         }
@@ -1228,7 +1226,7 @@ public class managerInventoryController {
             editTitle.setText("(Car)");
             setEditCar();
             editCarRevert.setOnAction(e->{
-                System.out.println("clicking edit car revert");
+
                 setEditCar();
             });
             editCarApply.setOnAction(e->{
