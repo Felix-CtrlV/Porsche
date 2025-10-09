@@ -302,6 +302,22 @@ public class managerInventoryController {
     private Button editPartRevert;
     @FXML
     private Button editPartApply;
+    @FXML
+    private Button switchTable ;
+    @FXML
+    void clickSwitchTable(ActionEvent event){
+        String currentText = switchTable.getText();
+
+        if (currentText.contains("Available")) {
+            // Switch to showing unavailable items
+            switchTable.setText("Unavailable");
+            showUnavailableItems();
+        } else {
+            // Switch to showing available items
+            switchTable.setText("Available");
+            showAvailableItems();
+        }
+    }
 
     public managerInventoryController() throws SQLException, ClassNotFoundException {
     }
@@ -557,8 +573,10 @@ public class managerInventoryController {
 
     private ObservableList<inventory> inventoryData = FXCollections.observableArrayList();
     private ObservableList<inventory> carsData = FXCollections.observableArrayList();
+    private ObservableList<inventory> carsOffData = FXCollections.observableArrayList();
     private HashMap<CheckBox,String > models = new HashMap<>();
     private ObservableList<inventory> partsData = FXCollections.observableArrayList();
+    private ObservableList<inventory> partsOffDate = FXCollections.observableArrayList();
     private ObservableList<inventory> searchDate = FXCollections.observableArrayList();
     private inventory editPath;
 
@@ -975,8 +993,23 @@ public class managerInventoryController {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
+                    setStyle(""); // Clear any previous styling
                 } else {
                     setGraphic(buttonsContainer);
+
+                    // Style based on availability
+                    if ("Out".equals(item.getStatus()) || item.getQty() <= 0) {
+                        // Gray out unavailable items
+                        setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: #6c757d;");
+                        // Also style the buttons to be less prominent
+                        editButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #6c757d;");
+                        deleteButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #6c757d;");
+                    } else {
+                        // Normal styling for available items
+                        setStyle("");
+                        editButton.setStyle("-fx-background-color: transparent;");
+                        deleteButton.setStyle("-fx-background-color: transparent;");
+                    }
                 }
             }
             private void addHoverAnimation(Button button) {
@@ -1026,9 +1059,32 @@ public class managerInventoryController {
 
         showTableRows.setText("Showing " + total + " of " + sItems + " items");
     }
+
+    private void showAvailableItems(){
+        // Show currently available items based on the selected inventory type
+        if (inventoryBox.getValue().equalsIgnoreCase("Cars")) {
+            showTable("cars");
+        } else {
+            showTable("parts");
+        }
+    }
+
+    private void showUnavailableItems(){
+        // Show items marked as Unavailable based on the selected inventory type
+        inventoryTable.getItems().clear();
+        if (inventoryBox.getValue().equalsIgnoreCase("Cars")) {
+            inventoryTable.setItems(carsOffData);
+            showTableRows.setText("Showing " + carsOffData.size() + " of " + carsOffData.size() + " items");
+        } else {
+            inventoryTable.setItems(partsOffDate);
+            showTableRows.setText("Showing " + partsOffDate.size() + " of " + partsOffDate.size() + " items");
+        }
+    }
+
     private void setCarsTable(){
         try{
             carsData.clear();
+            partsData.clear();
             models.clear();
             CallableStatement cs = con.prepareCall("CALL getAllCars()");
             ResultSet rs = cs.executeQuery();
@@ -1042,12 +1098,20 @@ public class managerInventoryController {
                 int qty = rs.getInt(7);
                 Double price = rs.getDouble(8);
                 String photoUrl = rs.getString(9);
+                Boolean check = rs.getBoolean(10);
                 String status = (qty !=0) ?"On" : "Out";
+                if(!check && qty == 0){
+                    status = "Unavailable";
+                }
                 String inventoryId = String.format("C-%03d", id);
-                carsData.add(new inventory(id,inventoryId,name,extColor,intColor,fuels,productYear,qty,price,status,photoUrl));
-
+                if(status.equals("Unavailable")){
+                    carsOffData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl));
+                }else {
+                    carsData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl));
+                }
 
             }
+
             for(inventory i : carsData){
                 models.put(new CheckBox(i.getModels()),i.getSeries());
             }
@@ -1058,6 +1122,7 @@ public class managerInventoryController {
     }
     private void setPartsTable(){
         try {
+            partsOffDate.clear();
             partsData.clear();
             CallableStatement cs = con.prepareCall("CALL getAllParts()");
             ResultSet rs = cs.executeQuery();
@@ -1069,10 +1134,19 @@ public class managerInventoryController {
                 int qty = rs.getInt(5);
                 Double price = rs.getDouble(6);
                 String photoUrl = rs.getString(7);
+                Boolean check = rs.getBoolean(8);
 
                 String status = (qty !=0) ?"On" : "Out";
+                if(!check && qty == 0){
+                    status = "Unavailable";
+                }
                 String inventoryId = String.format("P-%03d", id);
-                partsData.add(new inventory(id,inventoryId,name,forCar,description,qty,price,status,photoUrl));
+                if(status.equals("Unavailable")){
+                    partsOffDate.add(new inventory(id,inventoryId,name,forCar,description,qty,price,status,photoUrl));
+                }else{
+                    partsData.add(new inventory(id,inventoryId,name,forCar,description,qty,price,status,photoUrl));
+                }
+
             }
             cs.close();
         } catch (SQLException e) {
@@ -1310,8 +1384,6 @@ public class managerInventoryController {
 
                 }else {
                     if (editPath.getInventoryId().contains("C")) {
-                        String sql = "UPDATE cars SET car_name = ?, fuel_type = ?, product_year = ?, " +
-                                "int_color = ?, ext_color = ?, qty = ?, price = ?, photo = ? WHERE car_id = ?";
 
                     } else {
 
@@ -1321,9 +1393,10 @@ public class managerInventoryController {
 
             } else {
                 if (editPath.getInventoryId().contains("C")) {
-                    String sql = "DELETE FROM cars WHERE car_id = ? ";
+                    String sql = "UPDATE cars SET car_status= ? WHERE car_id = ? ";
                     PreparedStatement ps = con.prepareCall(sql);
-                    ps.setInt(1,editPath.getId());
+                    ps.setBoolean(1,false);
+                    ps.setInt(2,editPath.getId());
                     ps.execute();
                     for (inventory i : carsData){
                         if (i == editPath){
