@@ -144,3 +144,10 @@ Caused by: java.lang.Error: Unresolved compilation problems:
 2025-10-09 11:22:47.673 [Thread-1520] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
 2025-10-09 11:22:47.673 [Thread-1520] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
 2025-10-09 11:22:47.849 [Thread-1520] INFO  Controllers.loginController - User staff logged in successfully with role: staff
+2025-10-09 18:55:55.892 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 18:55:55.922 [Thread-1053] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 18:55:57.495 [Thread-1053] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@19a7c9e8
+2025-10-09 18:55:57.498 [Thread-1053] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 18:55:57.498 [Thread-1053] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 18:55:57.646 [Thread-1053] INFO  Controllers.loginController - User zaw lin logged in successfully with role: manager
+2025-10-09 18:57:59.553 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 10 logged out successfully

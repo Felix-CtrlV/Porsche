@@ -750,7 +750,6 @@ public class managerInventoryController {
 
 
                 }else if(path.equalsIgnoreCase("partsEdit")){
-                    Image img = editPartImg.getImage();
                     String photoPath = editPath.getPhoto();
                     boolean sameImage = true;
                     if (!file.isEmpty() && photoPath != null) {
@@ -1383,8 +1382,6 @@ public class managerInventoryController {
 
         modelsShowBox.setVisible(true);
     }
-
-
 
     private void handleImageSelection(ImageView targetImageView) {
         FileChooser fileChooser = new FileChooser();
