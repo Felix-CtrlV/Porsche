@@ -132,3 +132,15 @@ Caused by: java.lang.Error: Unresolved compilation problems:
 2025-10-09 00:58:37.634 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 10 logged out successfully
 2025-10-09 00:58:42.832 [Thread-14713] INFO  Controllers.loginController - User admin logged in successfully with role: admin
 2025-10-09 00:58:44.957 [Thread-22397] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
+2025-10-09 11:21:21.485 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:21:21.567 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:21:23.052 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@447b75af
+2025-10-09 11:21:23.055 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:21:23.056 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:21:23.203 [Thread-5077] INFO  Controllers.loginController - User staff logged in successfully with role: staff
+2025-10-09 11:22:46.279 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:22:46.310 [Thread-1520] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:22:47.669 [Thread-1520] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@427684ef
+2025-10-09 11:22:47.673 [Thread-1520] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:22:47.673 [Thread-1520] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:22:47.849 [Thread-1520] INFO  Controllers.loginController - User staff logged in successfully with role: staff
