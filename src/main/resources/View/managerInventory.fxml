@@ -168,7 +168,7 @@
                                         <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-family: 'Arial Black';" text="INVENTORY" />
                                         <Label style="-fx-text-fill: #6c757d; -fx-font-size: 12; -fx-font-style: italic;" text="Real-time Porsche vehicle stock management" />
                                     </VBox>
-                           <Button fx:id="exportCSV1" onAction="#clickExportCSV" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15;" text="Available ←→ Unavailable">
+                           <Button fx:id="switchTable" onAction="#clickSwitchTable" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15;" text="Available ←→ Unavailable">
                               <HBox.margin>
                                  <Insets left="650.0" />
                               </HBox.margin>
@@ -196,9 +196,9 @@
 
                                 <!-- Table Footer -->
                                 <HBox alignment="CENTER_RIGHT" spacing="12" style="-fx-padding: 20 0 0 0;">
+                                    <Button fx:id="exportCSV" onAction="#clickExportCSV" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15;" text="Export CSV" visible="false" />
                                     <Label fx:id="showTableRows" style="-fx-text-fill: #6c757d; -fx-font-size: 12; -fx-font-weight: bold;" text="Showing 25 of 60 Porsche vehicles" />
                                     <Button fx:id="refreshTable" onAction="#clickRefreshTable" style="-fx-background-color: #d5001c; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15; -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.3), 6, 0, 0, 2);" text="Refresh Data" />
-                                    <Button fx:id="exportCSV" onAction="#clickExportCSV" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15;" text="Export CSV" />
                                 </HBox>
                             </children>
                         </VBox>

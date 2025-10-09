@@ -241,9 +241,8 @@
                         <Insets />
                      </HBox.margin>
                      <children>
-
                                       <!-- Updated visible BorderPane with consistent styling -->
-                                <BorderPane fx:id="IsInstallmentBorderPane" prefHeight="322.0" prefWidth="382.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false">
+                                <BorderPane fx:id="installmentPane" prefHeight="322.0" prefWidth="382.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" visible="false">
                                     <padding>
                                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                     </padding>
@@ -254,21 +253,21 @@
                                                     <children>
                                                         <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Paid Amount:" />
                                                         <Region prefHeight="17.0" prefWidth="230.0" HBox.hgrow="ALWAYS" />
-                                                        <Label fx:id="IsInstallPaidAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #34a853;" text="0.00" />
+                                                        <Label fx:id="paidAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #34a853;" text="0.00" />
                                                     </children>
                                                 </HBox>
                                                 <HBox spacing="10.0">
                                                     <children>
                                                         <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Remain Amount:" />
                                                         <Region prefHeight="17.0" prefWidth="222.0" HBox.hgrow="ALWAYS" />
-                                                        <Label fx:id="IsInstallRemainAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #ea4335;" text="0.00" />
+                                                        <Label fx:id="remainAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #ea4335;" text="0.00" />
                                                     </children>
                                                 </HBox>
                                     <HBox spacing="10.0">
                                        <children>
                                           <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Due Date" />
                                           <Region prefHeight="17.0" prefWidth="55.0" HBox.hgrow="NEVER" />
-                                          <Label fx:id="DueDateLabel" style="-fx-font-weight: bold; -fx-text-fill: #fbbc04;" text="2025-10-20" />
+                                          <Label fx:id="dueDateLabel" style="-fx-font-weight: bold; -fx-text-fill: #fbbc04;" text="2025-10-20" />
                                        </children>
                                     </HBox>
                                             </children>
@@ -278,7 +277,7 @@
                                         <HBox alignment="CENTER_RIGHT" spacing="100.0" style="-fx-border-color: #f1f3f4; -fx-border-width: 1 0 0 0; -fx-padding: 10 0 0 0;" BorderPane.alignment="CENTER">
                                             <children>
                                                 <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Total Price:" />
-                                                <Label fx:id="IsInstalltotalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="0.00">
+                                                <Label fx:id="totalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="0.00">
                                        <HBox.margin>
                                           <Insets right="90.0" />
                                        </HBox.margin>
@@ -293,11 +292,11 @@
                                         </HBox>
                                     </bottom>
                            <center>
-                              <TableView fx:id="inventoryTable" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-border-color: #e9ecef; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-size: 12; -fx-border-width: 1.5;" BorderPane.alignment="CENTER">
+                              <TableView fx:id="installmentTable" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-border-color: #e9ecef; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-size: 12; -fx-border-width: 1.5;" BorderPane.alignment="CENTER">
                                  <columns>
-                                    <TableColumn fx:id="nameCol" prefWidth="164.79999351501465" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-font-family: 'Arial';" text="Name" />
-                                    <TableColumn fx:id="qtyCol" prefWidth="120.0001220703125" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER; -fx-font-family: 'Arial';" text="Quantity" />
-                                    <TableColumn fx:id="priceCol" prefWidth="151.0" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER_RIGHT; -fx-font-family: 'Arial';" text="Price" />
+                                    <TableColumn fx:id="installmentNameCol" prefWidth="164.79999351501465" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-font-family: 'Arial';" text="Name" />
+                                    <TableColumn fx:id="installmentQtyCol" prefWidth="120.0001220703125" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER; -fx-font-family: 'Arial';" text="Quantity" />
+                                    <TableColumn fx:id="installmentPriceCol" prefWidth="151.0" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER_RIGHT; -fx-font-family: 'Arial';" text="Price($)" />
                                  </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
