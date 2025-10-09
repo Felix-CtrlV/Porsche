@@ -122,7 +122,7 @@
                                                 <Label style="-fx-text-fill: #fecaca; -fx-font-size: 10px; -fx-font-weight: 700; -fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 6; -fx-padding: 2 4 2 4;" text="+2.0%" />
                                             </children>
                                             <padding>
-                                                <Insets left="60.0" />
+                                                <Insets left="61.0" />
                                             </padding>
                                         </HBox>
                                     </children>
