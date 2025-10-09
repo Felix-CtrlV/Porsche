@@ -2,9 +2,13 @@ package Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+
+import java.io.IOException;
 
 public class staffinternalcartController {
 
@@ -32,10 +36,23 @@ public class staffinternalcartController {
     @FXML
     private Button comfirmbtn;
 
+    public staffinternalcartController() throws IOException {
+    }
+
+
     @FXML
     void clickcomfirmbtn(ActionEvent event) {
+        String name = namelbl.getText();
+        double price = Double.parseDouble(pricelbl.getText());
 
+        // Get instance of shopping cart controller and add accessory
+        if (staffShopingCartControllerInstance != null) {
+            staffShopingCartControllerInstance.addAccessory(name, price);
+        }
+
+        System.out.println("Accessory confirmed: " + name + " - " + price);
     }
+
 
     @FXML
     void clickdeletebtn(ActionEvent event) {
@@ -43,6 +60,10 @@ public class staffinternalcartController {
         pricelbl.setText("");
 
     }
+    private staffShopingCartController staffShopingCartControllerInstance;
+
+    public void setCartController(staffShopingCartController controller) {
+        this.staffShopingCartControllerInstance = controller;}
 
     @FXML
     void clickminusbtn(ActionEvent event) {
@@ -75,5 +96,8 @@ public class staffinternalcartController {
         numberlbl.setText("0");
 
     }
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("staffShopingCart.fxml"));
+    Parent root = loader.load();
+    staffShopingCartController cartController = loader.getController();
 
 }
