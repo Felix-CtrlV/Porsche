@@ -132,20 +132,15 @@ Caused by: java.lang.Error: Unresolved compilation problems:
 2025-10-09 00:58:37.634 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 10 logged out successfully
 2025-10-09 00:58:42.832 [Thread-14713] INFO  Controllers.loginController - User admin logged in successfully with role: admin
 2025-10-09 00:58:44.957 [Thread-22397] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
-2025-10-09 08:45:45.628 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-09 08:45:45.659 [Thread-1697] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-09 08:45:48.030 [Thread-1697] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@60002fd3
-2025-10-09 08:45:48.034 [Thread-1697] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-09 08:45:48.034 [Thread-1697] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-09 08:45:48.336 [Thread-1697] INFO  Controllers.loginController - User zaw lin logged in successfully with role: manager
-2025-10-09 09:05:10.707 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-09 09:05:10.735 [Thread-9752] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-09 09:05:13.240 [Thread-9752] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6eb40815
-2025-10-09 09:05:13.246 [Thread-9752] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-09 09:05:13.246 [Thread-9752] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-09 09:05:13.607 [Thread-9752] INFO  Controllers.loginController - User zaw lin logged in successfully with role: manager
-2025-10-09 09:12:41.951 [Thread-13176] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@57473674 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-10-09 09:12:41.954 [Thread-13176] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7544606f (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-10-09 09:12:41.959 [Thread-13176] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1b5e1c25 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-10-09 09:12:41.962 [Thread-13176] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6b41fb3d (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-10-09 09:12:41.964 [Thread-13176] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7f490da5 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2025-10-09 11:21:21.485 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:21:21.567 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:21:23.052 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@447b75af
+2025-10-09 11:21:23.055 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:21:23.056 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:21:23.203 [Thread-5077] INFO  Controllers.loginController - User staff logged in successfully with role: staff
+2025-10-09 11:22:46.279 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:22:46.310 [Thread-1520] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:22:47.669 [Thread-1520] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@427684ef
+2025-10-09 11:22:47.673 [Thread-1520] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:22:47.673 [Thread-1520] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:22:47.849 [Thread-1520] INFO  Controllers.loginController - User staff logged in successfully with role: staff
