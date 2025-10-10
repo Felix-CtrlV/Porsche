@@ -252,3 +252,13 @@ Caused by: java.lang.Error: Unresolved compilation problems:
 2025-10-09 22:06:33.348 [Thread-1120] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
 2025-10-09 22:06:33.616 [Thread-1120] INFO  Controllers.loginController - User zaw lin logged in successfully with role: manager
 2025-10-09 22:07:10.453 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 10 logged out successfully
+2025-10-10 11:25:48.788 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-10 11:25:48.823 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-10 11:25:54.309 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7e1ee487
+2025-10-10 11:25:54.312 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-10 11:25:54.312 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-10 11:25:54.516 [Thread-5077] WARN  Controllers.loginController - Failed login attempt for username: Ko Zaw Lin
+2025-10-10 11:26:43.509 [Thread-5077] WARN  Controllers.loginController - Failed login attempt for username: Zaw Lin
+2025-10-10 11:27:41.682 [Thread-5077] WARN  Controllers.loginController - Failed login attempt for username: Ko Zaw Lin
+2025-10-10 11:27:52.030 [Thread-5077] INFO  Controllers.loginController - User Manager logged in successfully with role: manager
+2025-10-10 11:28:58.254 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
