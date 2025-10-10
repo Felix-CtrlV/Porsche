@@ -44,7 +44,12 @@ public class authenticationController {
 
             if (pw.equals(current.getPassword())) {
                 if (dashboardController != null) {
-                    dashboardController.setProfile();
+                    // Check if this is for password change (OTP flow)
+                    if (isPasswordChangeFlow) {
+                        dashboardController.proceedWithOTP();
+                    } else {
+                        dashboardController.setProfile();
+                    }
                 }
                 Stage stage = (Stage) submit.getScene().getWindow();
                 stage.close();
@@ -58,9 +63,15 @@ public class authenticationController {
 
 
     private adminDashboardController dashboardController;
+    private boolean isPasswordChangeFlow = false;
 
     public void init(adminDashboardController dashboardController) {
         this.dashboardController = dashboardController;
+    }
+
+    public void init(adminDashboardController dashboardController, boolean isPasswordChangeFlow) {
+        this.dashboardController = dashboardController;
+        this.isPasswordChangeFlow = isPasswordChangeFlow;
     }
 
 

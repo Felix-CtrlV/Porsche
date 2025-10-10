@@ -132,3 +132,708 @@ Caused by: java.lang.Error: Unresolved compilation problems:
 2025-10-09 00:58:37.634 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 10 logged out successfully
 2025-10-09 00:58:42.832 [Thread-14713] INFO  Controllers.loginController - User admin logged in successfully with role: admin
 2025-10-09 00:58:44.957 [Thread-22397] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
+2025-10-09 08:43:11.088 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 08:43:11.151 [Thread-1768] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 08:43:13.347 [Thread-1768] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@cc0d5dd
+2025-10-09 08:43:13.362 [Thread-1768] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 08:43:13.364 [Thread-1768] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 08:43:13.793 [Thread-1768] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 08:43:18.919 [Thread-3139] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
+2025-10-09 09:06:53.248 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11m37s62ms701µs600ns).
+2025-10-09 09:10:49.651 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 09:10:49.723 [Thread-1982] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 09:10:53.006 [Thread-1982] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6056e98f
+2025-10-09 09:10:53.012 [Thread-1982] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 09:10:53.012 [Thread-1982] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 09:10:53.323 [Thread-1982] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 09:11:00.573 [Thread-3369] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
+2025-10-09 09:11:17.878 [Thread-3370] INFO  Controllers.loginController - User zaw lin logged in successfully with role: manager
+2025-10-09 09:11:32.434 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 10 logged out successfully
+2025-10-09 09:12:15.274 [Thread-3370] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 09:12:17.211 [Thread-22781] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
+2025-10-09 09:12:48.776 [Thread-34100] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
+2025-10-09 09:41:35.904 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 09:41:36.014 [Thread-7383] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 09:41:38.990 [Thread-7383] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2f26c8d
+2025-10-09 09:41:39.007 [Thread-7383] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 09:41:39.007 [Thread-7383] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 09:41:39.258 [Thread-7383] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 09:41:44.205 [Thread-8840] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
+2025-10-09 09:43:28.709 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 09:43:28.767 [Thread-1098] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 09:43:31.433 [Thread-1098] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6bcfaff5
+2025-10-09 09:43:31.480 [Thread-1098] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 09:43:31.546 [Thread-1098] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 09:43:32.028 [Thread-1098] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 09:44:28.381 [Thread-11742] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
+2025-10-09 09:50:39.019 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 09:50:39.103 [Thread-1011] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 09:50:43.340 [Thread-1011] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@63ac82b8
+2025-10-09 09:50:43.350 [Thread-1011] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 09:50:43.350 [Thread-1011] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 09:50:44.378 [Thread-1011] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 09:53:09.534 [Thread-27336] ERROR Utils.OTPService - Failed to send email
+jakarta.mail.AuthenticationFailedException: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-794d4b396c5sm1260645b3a.16 - gsmtp
+
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:947)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:858)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:762)
+	at jakarta.mail.Service.connect(Service.java:364)
+	at jakarta.mail.Service.connect(Service.java:222)
+	at jakarta.mail.Service.connect(Service.java:171)
+	at jakarta.mail.Transport.send0(Transport.java:230)
+	at jakarta.mail.Transport.send(Transport.java:100)
+	at Utils.OTPService.sendEmail(OTPService.java:139)
+	at Utils.OTPService.sendOTP(OTPService.java:58)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:481)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+2025-10-09 09:54:53.011 [Thread-45824] ERROR Utils.OTPService - Failed to send email
+jakarta.mail.AuthenticationFailedException: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 98e67ed59e1d1-33b511157a1sm5093221a91.11 - gsmtp
+
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:947)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:858)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:762)
+	at jakarta.mail.Service.connect(Service.java:364)
+	at jakarta.mail.Service.connect(Service.java:222)
+	at jakarta.mail.Service.connect(Service.java:171)
+	at jakarta.mail.Transport.send0(Transport.java:230)
+	at jakarta.mail.Transport.send(Transport.java:100)
+	at Utils.OTPService.sendEmail(OTPService.java:139)
+	at Utils.OTPService.sendOTP(OTPService.java:58)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:481)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+2025-10-09 10:05:23.654 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 10:05:23.834 [Thread-1164] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 10:05:25.979 [Thread-1164] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@10556012
+2025-10-09 10:05:25.994 [Thread-1164] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 10:05:26.015 [Thread-1164] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 10:05:26.249 [Thread-1164] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 10:05:44.788 [Thread-4937] ERROR Utils.OTPService - Email configuration not set. Please update SENDER_EMAIL and SENDER_PASSWORD in OTPService.java
+2025-10-09 10:24:05.649 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m39s543ms881µs300ns).
+2025-10-09 10:25:13.420 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 10:25:13.882 [Thread-1273] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 10:25:15.565 [Thread-1273] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@44dc6226
+2025-10-09 10:25:15.571 [Thread-1273] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 10:25:15.573 [Thread-1273] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 10:25:15.729 [Thread-1273] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 10:25:27.467 [Thread-3758] ERROR Utils.OTPService - Email configuration not set. Please update SENDER_EMAIL and SENDER_PASSWORD in OTPService.java
+2025-10-09 10:27:54.495 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 10:27:54.524 [Thread-893] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 10:27:55.858 [Thread-893] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3ed99acb
+2025-10-09 10:27:55.863 [Thread-893] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 10:27:55.865 [Thread-893] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 10:27:56.093 [Thread-893] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 10:28:07.633 [Thread-3277] ERROR Utils.OTPService - Email configuration not set. Please update SENDER_EMAIL and SENDER_PASSWORD in OTPService.java
+2025-10-09 10:29:45.633 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 10:29:45.738 [Thread-1989] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 10:29:48.459 [Thread-1989] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@353de7bd
+2025-10-09 10:29:48.465 [Thread-1989] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 10:29:48.466 [Thread-1989] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 10:29:48.709 [Thread-1989] WARN  Controllers.loginController - Failed login attempt for username: admin
+2025-10-09 10:29:52.955 [Thread-1989] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 10:30:03.947 [Thread-5242] ERROR Utils.OTPService - Email configuration not set. Please update SENDER_EMAIL and SENDER_PASSWORD in OTPService.java
+2025-10-09 10:39:13.746 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 10:39:13.783 [Thread-872] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 10:39:15.490 [Thread-872] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@727f8c52
+2025-10-09 10:39:15.495 [Thread-872] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 10:39:15.502 [Thread-872] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 10:39:15.729 [Thread-872] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 10:39:26.403 [Thread-3176] ERROR Utils.OTPService - Email configuration not set. Please update SENDER_EMAIL and SENDER_PASSWORD in OTPService.java
+2025-10-09 10:43:47.331 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 10:43:47.371 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 10:43:48.683 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5863bb08
+2025-10-09 10:43:48.686 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 10:43:48.686 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 10:43:48.830 [Thread-5077] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 10:43:58.281 [Thread-5079] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-09 10:44:06.536 [Thread-5079] ERROR Utils.OTPService - Failed to send email to: kaungswan59@gmail.com
+jakarta.mail.AuthenticationFailedException: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034f8770dsm13111845ad.117 - gsmtp
+
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:947)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:858)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:762)
+	at jakarta.mail.Service.connect(Service.java:364)
+	at jakarta.mail.Service.connect(Service.java:222)
+	at jakarta.mail.Service.connect(Service.java:171)
+	at jakarta.mail.Transport.send0(Transport.java:230)
+	at jakarta.mail.Transport.send(Transport.java:100)
+	at Utils.OTPService.sendEmail(OTPService.java:162)
+	at Utils.OTPService.sendOTP(OTPService.java:73)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:481)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:1)
+	at javafx.graphics@21.0.6/javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.Thread.run(Thread.java:1570)
+2025-10-09 10:44:06.541 [Thread-5079] ERROR Utils.OTPService - MessagingException details: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034f8770dsm13111845ad.117 - gsmtp
+
+2025-10-09 10:44:06.541 [Thread-5079] ERROR Utils.OTPService - Failed to send email to: kaungswan59@gmail.com
+2025-10-09 11:06:00.044 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:06:00.093 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:06:02.330 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@61edf8d0
+2025-10-09 11:06:02.333 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:06:02.334 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:06:02.481 [Thread-5077] INFO  Controllers.loginController - User ADMIN logged in successfully with role: admin
+2025-10-09 11:06:14.264 [Thread-5079] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-09 11:06:16.447 [Thread-5079] ERROR Utils.OTPService - Failed to send email to: kaungswan59@gmail.com
+jakarta.mail.AuthenticationFailedException: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 98e67ed59e1d1-33b510e8feesm5426200a91.3 - gsmtp
+
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:947)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:858)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:762)
+	at jakarta.mail.Service.connect(Service.java:364)
+	at jakarta.mail.Service.connect(Service.java:222)
+	at jakarta.mail.Service.connect(Service.java:171)
+	at jakarta.mail.Transport.send0(Transport.java:230)
+	at jakarta.mail.Transport.send(Transport.java:100)
+	at Utils.OTPService.sendEmail(OTPService.java:162)
+	at Utils.OTPService.sendOTP(OTPService.java:73)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:481)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+2025-10-09 11:06:16.483 [Thread-5079] ERROR Utils.OTPService - MessagingException details: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 98e67ed59e1d1-33b510e8feesm5426200a91.3 - gsmtp
+
+2025-10-09 11:06:16.487 [Thread-5079] ERROR Utils.OTPService - Failed to send email to: kaungswan59@gmail.com
+2025-10-09 11:13:59.612 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:13:59.661 [Thread-1514] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:14:01.359 [Thread-1514] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@358f3943
+2025-10-09 11:14:01.365 [Thread-1514] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:14:01.366 [Thread-1514] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:14:01.559 [Thread-1514] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 11:14:13.158 [Thread-3915] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-09 11:14:23.301 [Thread-3915] ERROR Utils.OTPService - Failed to send email to: kaungswan59@gmail.com
+jakarta.mail.AuthenticationFailedException: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2PR06CA0008.apcprd06.prod.outlook.com 2025-10-09T04:44:22.429Z 08DE060DD65D0B15]
+
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:947)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:858)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:762)
+	at jakarta.mail.Service.connect(Service.java:364)
+	at jakarta.mail.Service.connect(Service.java:222)
+	at jakarta.mail.Service.connect(Service.java:171)
+	at jakarta.mail.Transport.send0(Transport.java:230)
+	at jakarta.mail.Transport.send(Transport.java:100)
+	at Utils.OTPService.sendEmail(OTPService.java:162)
+	at Utils.OTPService.sendOTP(OTPService.java:67)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:481)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:478)
+	at javafx.graphics@21.0.6/javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.Thread.run(Thread.java:1570)
+2025-10-09 11:14:23.305 [Thread-3915] ERROR Utils.OTPService - MessagingException details: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2PR06CA0008.apcprd06.prod.outlook.com 2025-10-09T04:44:22.429Z 08DE060DD65D0B15]
+
+2025-10-09 11:14:23.305 [Thread-3915] WARN  Utils.OTPService - SMTP failed, using simple email service for testing
+2025-10-09 11:14:23.308 [Thread-3915] INFO  Utils.SimpleEmailService - === OTP EMAIL SIMULATION ===
+2025-10-09 11:14:23.308 [Thread-3915] INFO  Utils.SimpleEmailService - To: kaungswan59@gmail.com
+2025-10-09 11:14:23.308 [Thread-3915] INFO  Utils.SimpleEmailService - Subject: Porsche System - Password Change OTP
+2025-10-09 11:14:23.308 [Thread-3915] INFO  Utils.SimpleEmailService - Body:
+2025-10-09 11:14:23.308 [Thread-3915] INFO  Utils.SimpleEmailService - Hello,
+2025-10-09 11:14:23.308 [Thread-3915] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:14:23.308 [Thread-3915] INFO  Utils.SimpleEmailService - Your OTP for password change is: 174205
+2025-10-09 11:14:23.308 [Thread-3915] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:14:23.309 [Thread-3915] INFO  Utils.SimpleEmailService - This OTP will expire in 5 minutes.
+2025-10-09 11:14:23.309 [Thread-3915] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:14:23.309 [Thread-3915] INFO  Utils.SimpleEmailService - If you did not request this, please ignore this email.
+2025-10-09 11:14:23.309 [Thread-3915] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:14:23.309 [Thread-3915] INFO  Utils.SimpleEmailService - Best regards,
+2025-10-09 11:14:23.309 [Thread-3915] INFO  Utils.SimpleEmailService - Porsche System
+2025-10-09 11:14:23.309 [Thread-3915] INFO  Utils.SimpleEmailService - === END EMAIL ===
+2025-10-09 11:14:24.311 [Thread-3915] INFO  Utils.SimpleEmailService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:14:24.311 [Thread-3915] INFO  Utils.OTPService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:16:13.921 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:16:13.952 [Thread-871] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:16:15.452 [Thread-871] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@60511bb7
+2025-10-09 11:16:15.457 [Thread-871] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:16:15.457 [Thread-871] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:16:15.777 [Thread-871] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 11:16:24.737 [Thread-2835] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-09 11:16:32.911 [Thread-2835] ERROR Utils.OTPService - Failed to send email to: kaungswan59@gmail.com
+jakarta.mail.AuthenticationFailedException: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2PR01CA0046.apcprd01.prod.exchangelabs.com 2025-10-09T04:46:36.370Z 08DE06D8CF85CC3D]
+
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:947)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:858)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:762)
+	at jakarta.mail.Service.connect(Service.java:364)
+	at jakarta.mail.Service.connect(Service.java:222)
+	at jakarta.mail.Service.connect(Service.java:171)
+	at jakarta.mail.Transport.send0(Transport.java:230)
+	at jakarta.mail.Transport.send(Transport.java:100)
+	at Utils.OTPService.sendEmail(OTPService.java:162)
+	at Utils.OTPService.sendOTP(OTPService.java:67)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:481)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:478)
+	at javafx.graphics@21.0.6/javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.Thread.run(Thread.java:1570)
+2025-10-09 11:16:32.915 [Thread-2835] ERROR Utils.OTPService - MessagingException details: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2PR01CA0046.apcprd01.prod.exchangelabs.com 2025-10-09T04:46:36.370Z 08DE06D8CF85CC3D]
+
+2025-10-09 11:16:32.915 [Thread-2835] WARN  Utils.OTPService - SMTP failed, using simple email service for testing
+2025-10-09 11:16:32.916 [Thread-2835] INFO  Utils.SimpleEmailService - === OTP EMAIL SIMULATION ===
+2025-10-09 11:16:32.918 [Thread-2835] INFO  Utils.SimpleEmailService - To: kaungswan59@gmail.com
+2025-10-09 11:16:32.918 [Thread-2835] INFO  Utils.SimpleEmailService - Subject: Porsche System - Password Change OTP
+2025-10-09 11:16:32.918 [Thread-2835] INFO  Utils.SimpleEmailService - Body:
+2025-10-09 11:16:32.918 [Thread-2835] INFO  Utils.SimpleEmailService - Hello,
+2025-10-09 11:16:32.918 [Thread-2835] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:16:32.918 [Thread-2835] INFO  Utils.SimpleEmailService - Your OTP for password change is: 617240
+2025-10-09 11:16:32.918 [Thread-2835] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:16:32.919 [Thread-2835] INFO  Utils.SimpleEmailService - This OTP will expire in 5 minutes.
+2025-10-09 11:16:32.919 [Thread-2835] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:16:32.919 [Thread-2835] INFO  Utils.SimpleEmailService - If you did not request this, please ignore this email.
+2025-10-09 11:16:32.919 [Thread-2835] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:16:32.919 [Thread-2835] INFO  Utils.SimpleEmailService - Best regards,
+2025-10-09 11:16:32.919 [Thread-2835] INFO  Utils.SimpleEmailService - Porsche System
+2025-10-09 11:16:32.919 [Thread-2835] INFO  Utils.SimpleEmailService - === END EMAIL ===
+2025-10-09 11:16:33.923 [Thread-2835] INFO  Utils.SimpleEmailService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:16:33.923 [Thread-2835] INFO  Utils.OTPService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:17:06.974 [Thread-10355] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-09 11:17:14.931 [Thread-10355] ERROR Utils.OTPService - Failed to send email to: kaungswan59@gmail.com
+jakarta.mail.AuthenticationFailedException: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2PR01CA0047.apcprd01.prod.exchangelabs.com 2025-10-09T04:47:25.333Z 08DE05BC709AD314]
+
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:947)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:858)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:762)
+	at jakarta.mail.Service.connect(Service.java:364)
+	at jakarta.mail.Service.connect(Service.java:222)
+	at jakarta.mail.Service.connect(Service.java:171)
+	at jakarta.mail.Transport.send0(Transport.java:230)
+	at jakarta.mail.Transport.send(Transport.java:100)
+	at Utils.OTPService.sendEmail(OTPService.java:162)
+	at Utils.OTPService.sendOTP(OTPService.java:67)
+	at Controllers.ChangePasswordController$1.call(ChangePasswordController.java:100)
+	at Controllers.ChangePasswordController$1.call(ChangePasswordController.java:97)
+	at javafx.graphics@21.0.6/javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.Thread.run(Thread.java:1570)
+2025-10-09 11:17:14.932 [Thread-10355] ERROR Utils.OTPService - MessagingException details: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2PR01CA0047.apcprd01.prod.exchangelabs.com 2025-10-09T04:47:25.333Z 08DE05BC709AD314]
+
+2025-10-09 11:17:14.932 [Thread-10355] WARN  Utils.OTPService - SMTP failed, using simple email service for testing
+2025-10-09 11:17:14.932 [Thread-10355] INFO  Utils.SimpleEmailService - === OTP EMAIL SIMULATION ===
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - To: kaungswan59@gmail.com
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - Subject: Porsche System - Password Change OTP
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - Body:
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - Hello,
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - Your OTP for password change is: 499860
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - This OTP will expire in 5 minutes.
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - If you did not request this, please ignore this email.
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - Best regards,
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - Porsche System
+2025-10-09 11:17:14.933 [Thread-10355] INFO  Utils.SimpleEmailService - === END EMAIL ===
+2025-10-09 11:17:15.935 [Thread-10355] INFO  Utils.SimpleEmailService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:17:15.935 [Thread-10355] INFO  Utils.OTPService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:17:48.081 [Thread-14027] WARN  Utils.OTPService - Invalid OTP for email: kaungswan59@gmail.com
+2025-10-09 11:17:50.477 [Thread-14028] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-09 11:18:00.535 [Thread-14028] ERROR Utils.OTPService - Failed to send email to: kaungswan59@gmail.com
+jakarta.mail.AuthenticationFailedException: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2PR02CA0033.apcprd02.prod.outlook.com 2025-10-09T04:47:51.089Z 08DE05A08D5AA001]
+
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:947)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:858)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:762)
+	at jakarta.mail.Service.connect(Service.java:364)
+	at jakarta.mail.Service.connect(Service.java:222)
+	at jakarta.mail.Service.connect(Service.java:171)
+	at jakarta.mail.Transport.send0(Transport.java:230)
+	at jakarta.mail.Transport.send(Transport.java:100)
+	at Utils.OTPService.sendEmail(OTPService.java:162)
+	at Utils.OTPService.sendOTP(OTPService.java:67)
+	at Controllers.ChangePasswordController$3.call(ChangePasswordController.java:173)
+	at Controllers.ChangePasswordController$3.call(ChangePasswordController.java:170)
+	at javafx.graphics@21.0.6/javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.Thread.run(Thread.java:1570)
+2025-10-09 11:18:00.535 [Thread-14028] ERROR Utils.OTPService - MessagingException details: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2PR02CA0033.apcprd02.prod.outlook.com 2025-10-09T04:47:51.089Z 08DE05A08D5AA001]
+
+2025-10-09 11:18:00.535 [Thread-14028] WARN  Utils.OTPService - SMTP failed, using simple email service for testing
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - === OTP EMAIL SIMULATION ===
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - To: kaungswan59@gmail.com
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - Subject: Porsche System - Password Change OTP
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - Body:
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - Hello,
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - Your OTP for password change is: 793963
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - This OTP will expire in 5 minutes.
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - If you did not request this, please ignore this email.
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - Best regards,
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - Porsche System
+2025-10-09 11:18:00.535 [Thread-14028] INFO  Utils.SimpleEmailService - === END EMAIL ===
+2025-10-09 11:18:01.558 [Thread-14028] INFO  Utils.SimpleEmailService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:18:01.580 [Thread-14028] INFO  Utils.OTPService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:19:37.579 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:19:37.625 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:19:39.198 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@21ac0d01
+2025-10-09 11:19:39.204 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:19:39.205 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:19:39.382 [Thread-5077] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 11:19:51.409 [Thread-5079] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-09 11:20:01.521 [Thread-5079] ERROR Utils.OTPService - Failed to send email to: kaungswan59@gmail.com
+jakarta.mail.AuthenticationFailedException: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2P153CA0026.APCP153.PROD.OUTLOOK.COM 2025-10-09T04:50:01.519Z 08DE05F689D4C3AD]
+
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:947)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:858)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:762)
+	at jakarta.mail.Service.connect(Service.java:364)
+	at jakarta.mail.Service.connect(Service.java:222)
+	at jakarta.mail.Service.connect(Service.java:171)
+	at jakarta.mail.Transport.send0(Transport.java:230)
+	at jakarta.mail.Transport.send(Transport.java:100)
+	at Utils.OTPService.sendEmail(OTPService.java:162)
+	at Utils.OTPService.sendOTP(OTPService.java:67)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:481)
+	at Controllers.adminDashboardController$2.call(adminDashboardController.java:478)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+2025-10-09 11:20:01.524 [Thread-5079] ERROR Utils.OTPService - MessagingException details: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2P153CA0026.APCP153.PROD.OUTLOOK.COM 2025-10-09T04:50:01.519Z 08DE05F689D4C3AD]
+
+2025-10-09 11:20:01.524 [Thread-5079] WARN  Utils.OTPService - SMTP failed, using simple email service for testing
+2025-10-09 11:20:01.528 [Thread-5079] INFO  Utils.SimpleEmailService - === OTP EMAIL SIMULATION ===
+2025-10-09 11:20:01.528 [Thread-5079] INFO  Utils.SimpleEmailService - To: kaungswan59@gmail.com
+2025-10-09 11:20:01.530 [Thread-5079] INFO  Utils.SimpleEmailService - Subject: Porsche System - Password Change OTP
+2025-10-09 11:20:01.531 [Thread-5079] INFO  Utils.SimpleEmailService - Body:
+2025-10-09 11:20:01.531 [Thread-5079] INFO  Utils.SimpleEmailService - Hello,
+2025-10-09 11:20:01.531 [Thread-5079] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:20:01.531 [Thread-5079] INFO  Utils.SimpleEmailService - Your OTP for password change is: 396376
+2025-10-09 11:20:01.531 [Thread-5079] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:20:01.531 [Thread-5079] INFO  Utils.SimpleEmailService - This OTP will expire in 5 minutes.
+2025-10-09 11:20:01.532 [Thread-5079] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:20:01.532 [Thread-5079] INFO  Utils.SimpleEmailService - If you did not request this, please ignore this email.
+2025-10-09 11:20:01.533 [Thread-5079] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:20:01.533 [Thread-5079] INFO  Utils.SimpleEmailService - Best regards,
+2025-10-09 11:20:01.534 [Thread-5079] INFO  Utils.SimpleEmailService - Porsche System
+2025-10-09 11:20:01.534 [Thread-5079] INFO  Utils.SimpleEmailService - === END EMAIL ===
+2025-10-09 11:20:02.536 [Thread-5079] INFO  Utils.SimpleEmailService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:20:02.536 [Thread-5079] INFO  Utils.OTPService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:20:17.358 [Thread-5080] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-09 11:20:25.189 [Thread-5080] ERROR Utils.OTPService - Failed to send email to: kaungswan59@gmail.com
+jakarta.mail.AuthenticationFailedException: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2P153CA0024.APCP153.PROD.OUTLOOK.COM 2025-10-09T04:50:11.132Z 08DE05FE65ACB09F]
+
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:947)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:858)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:762)
+	at jakarta.mail.Service.connect(Service.java:364)
+	at jakarta.mail.Service.connect(Service.java:222)
+	at jakarta.mail.Service.connect(Service.java:171)
+	at jakarta.mail.Transport.send0(Transport.java:230)
+	at jakarta.mail.Transport.send(Transport.java:100)
+	at Utils.OTPService.sendEmail(OTPService.java:162)
+	at Utils.OTPService.sendOTP(OTPService.java:67)
+	at Controllers.ChangePasswordController$1.call(ChangePasswordController.java:100)
+	at Controllers.ChangePasswordController$1.call(ChangePasswordController.java:97)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+2025-10-09 11:20:25.190 [Thread-5080] ERROR Utils.OTPService - MessagingException details: 535 5.7.139 Authentication unsuccessful, basic authentication is disabled. [SI2P153CA0024.APCP153.PROD.OUTLOOK.COM 2025-10-09T04:50:11.132Z 08DE05FE65ACB09F]
+
+2025-10-09 11:20:25.190 [Thread-5080] WARN  Utils.OTPService - SMTP failed, using simple email service for testing
+2025-10-09 11:20:25.190 [Thread-5080] INFO  Utils.SimpleEmailService - === OTP EMAIL SIMULATION ===
+2025-10-09 11:20:25.190 [Thread-5080] INFO  Utils.SimpleEmailService - To: kaungswan59@gmail.com
+2025-10-09 11:20:25.192 [Thread-5080] INFO  Utils.SimpleEmailService - Subject: Porsche System - Password Change OTP
+2025-10-09 11:20:25.192 [Thread-5080] INFO  Utils.SimpleEmailService - Body:
+2025-10-09 11:20:25.192 [Thread-5080] INFO  Utils.SimpleEmailService - Hello,
+2025-10-09 11:20:25.192 [Thread-5080] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:20:25.193 [Thread-5080] INFO  Utils.SimpleEmailService - Your OTP for password change is: 375816
+2025-10-09 11:20:25.194 [Thread-5080] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:20:25.194 [Thread-5080] INFO  Utils.SimpleEmailService - This OTP will expire in 5 minutes.
+2025-10-09 11:20:25.194 [Thread-5080] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:20:25.194 [Thread-5080] INFO  Utils.SimpleEmailService - If you did not request this, please ignore this email.
+2025-10-09 11:20:25.195 [Thread-5080] INFO  Utils.SimpleEmailService - 
+2025-10-09 11:20:25.195 [Thread-5080] INFO  Utils.SimpleEmailService - Best regards,
+2025-10-09 11:20:25.195 [Thread-5080] INFO  Utils.SimpleEmailService - Porsche System
+2025-10-09 11:20:25.195 [Thread-5080] INFO  Utils.SimpleEmailService - === END EMAIL ===
+2025-10-09 11:20:26.197 [Thread-5080] INFO  Utils.SimpleEmailService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:20:26.197 [Thread-5080] INFO  Utils.OTPService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:20:47.089 [Thread-5081] INFO  Utils.OTPService - OTP verified successfully for: kaungswan59@gmail.com
+2025-10-09 11:26:23.090 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:26:23.143 [Thread-1790] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:26:25.897 [Thread-1790] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4da272a5
+2025-10-09 11:26:25.903 [Thread-1790] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:26:25.904 [Thread-1790] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:26:26.076 [Thread-1790] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 11:26:35.717 [Thread-3989] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
+2025-10-09 11:26:45.118 [Thread-5684] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-09 11:26:53.031 [Thread-5684] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d2e1a72fcca58-794d510e3fasm1481144b3a.26 - gsmtp
+
+2025-10-09 11:26:57.146 [Thread-5684] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034f366c0sm14219395ad.94 - gsmtp
+
+2025-10-09 11:26:57.147 [Thread-5684] INFO  Utils.OTPService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:27:03.334 [Thread-8968] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-09 11:27:04.959 [Thread-8968] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 98e67ed59e1d1-33b511135a3sm5476991a91.11 - gsmtp
+
+2025-10-09 11:27:06.174 [Thread-8968] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034f36413sm14073275ad.99 - gsmtp
+
+2025-10-09 11:27:06.175 [Thread-8968] INFO  Utils.OTPService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-09 11:28:15.492 [Thread-21839] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:28:17.128 [Thread-21839] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d2e1a72fcca58-794e20c2f47sm1451788b3a.61 - gsmtp
+
+2025-10-09 11:28:19.015 [Thread-21839] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034e175f3sm14506485ad.29 - gsmtp
+
+2025-10-09 11:28:19.015 [Thread-21839] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:28:21.799 [Thread-22917] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:28:25.975 [Thread-22917] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 98e67ed59e1d1-33b529d9448sm2387970a91.3 - gsmtp
+
+2025-10-09 11:28:41.971 [Thread-22917] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 98e67ed59e1d1-33b529f6c84sm2269403a91.5 - gsmtp
+
+2025-10-09 11:28:41.971 [Thread-22917] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:30:56.777 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:30:56.854 [Thread-575] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:31:00.720 [Thread-575] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@62c42472
+2025-10-09 11:31:00.727 [Thread-575] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:31:00.729 [Thread-575] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:31:01.650 [Thread-575] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 11:31:13.814 [Thread-3674] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:31:45.210 [Thread-9289] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:31:47.379 [Thread-9289] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034e1cbf3sm14704195ad.40 - gsmtp
+
+2025-10-09 11:31:48.601 [Thread-9289] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d2e1a72fcca58-794d4f1f4adsm1485094b3a.18 - gsmtp
+
+2025-10-09 11:31:48.602 [Thread-9289] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:31:52.381 [Thread-3674] WARN  Utils.RealEmailService - Gmail sending failed: Exception reading response
+2025-10-09 11:31:53.855 [Thread-3674] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034f36c3fsm14297765ad.98 - gsmtp
+
+2025-10-09 11:31:53.855 [Thread-3674] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:31:56.471 [Thread-11278] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:32:00.089 [Thread-11278] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 98e67ed59e1d1-33b510e7fafsm5439016a91.5 - gsmtp
+
+2025-10-09 11:32:02.804 [Thread-11278] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034deaa54sm14718105ad.5 - gsmtp
+
+2025-10-09 11:32:02.805 [Thread-11278] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:32:15.341 [Thread-14658] INFO  Utils.OTPService - OTP verified successfully for: swankaung809@gmail.com
+2025-10-09 11:32:30.419 [Thread-17313] ERROR C.ChangePasswordController - Failed to update password for user ID: 4
+java.sql.SQLSyntaxErrorException: Unknown column 'user_password' in 'field list'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:113)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:938)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1106)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1045)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1369)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1030)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at Controllers.ChangePasswordController.updatePasswordInDatabase(ChangePasswordController.java:258)
+	at Controllers.ChangePasswordController$4.call(ChangePasswordController.java:220)
+	at Controllers.ChangePasswordController$4.call(ChangePasswordController.java:217)
+	at javafx.graphics@21.0.6/javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.Thread.run(Thread.java:1570)
+2025-10-09 11:32:35.713 [Thread-18216] ERROR C.ChangePasswordController - Failed to update password for user ID: 4
+java.sql.SQLSyntaxErrorException: Unknown column 'user_password' in 'field list'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:113)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:938)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1106)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1045)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1369)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1030)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at Controllers.ChangePasswordController.updatePasswordInDatabase(ChangePasswordController.java:258)
+	at Controllers.ChangePasswordController$4.call(ChangePasswordController.java:220)
+	at Controllers.ChangePasswordController$4.call(ChangePasswordController.java:217)
+	at javafx.graphics@21.0.6/javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.Thread.run(Thread.java:1570)
+2025-10-09 11:32:39.612 [Thread-18935] ERROR C.ChangePasswordController - Failed to update password for user ID: 4
+java.sql.SQLSyntaxErrorException: Unknown column 'user_password' in 'field list'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:113)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:938)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1106)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1045)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1369)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1030)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at Controllers.ChangePasswordController.updatePasswordInDatabase(ChangePasswordController.java:258)
+	at Controllers.ChangePasswordController$4.call(ChangePasswordController.java:220)
+	at Controllers.ChangePasswordController$4.call(ChangePasswordController.java:217)
+	at javafx.graphics@21.0.6/javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.Thread.run(Thread.java:1570)
+2025-10-09 11:32:46.783 [Thread-20252] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:32:48.414 [Thread-20252] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034f3b85fsm14374445ad.102 - gsmtp
+
+2025-10-09 11:32:49.620 [Thread-20252] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d2e1a72fcca58-794e1bf7604sm1463516b3a.55 - gsmtp
+
+2025-10-09 11:32:49.621 [Thread-20252] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:35:32.175 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:35:32.237 [Thread-816] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:35:34.256 [Thread-816] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@77a592e8
+2025-10-09 11:35:34.265 [Thread-816] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:35:34.266 [Thread-816] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:35:34.437 [Thread-816] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 11:35:40.926 [Thread-2425] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:35:42.748 [Thread-2425] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034f93e06sm14461855ad.115 - gsmtp
+
+2025-10-09 11:35:43.939 [Thread-2425] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034de6c70sm14767955ad.13 - gsmtp
+
+2025-10-09 11:35:43.940 [Thread-2425] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:35:48.082 [Thread-3706] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:35:49.825 [Thread-3706] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 41be03b00d2f7-b6099ad9573sm19397851a12.9 - gsmtp
+
+2025-10-09 11:36:16.201 [Thread-3706] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034e18557sm14717865ad.39 - gsmtp
+
+2025-10-09 11:36:16.202 [Thread-3706] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:37:31.189 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:37:31.217 [Thread-1490] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:37:33.810 [Thread-1490] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@392d792c
+2025-10-09 11:37:33.819 [Thread-1490] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:37:33.821 [Thread-1490] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:37:34.003 [Thread-1490] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 11:37:46.693 [Thread-4245] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:37:58.049 [Thread-6087] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:37:59.690 [Thread-6087] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 98e67ed59e1d1-33b50f07431sm5457566a91.0 - gsmtp
+
+2025-10-09 11:38:00.987 [Thread-6087] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 98e67ed59e1d1-33b510fc5e6sm5516293a91.6 - gsmtp
+
+2025-10-09 11:38:00.989 [Thread-6087] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:38:09.261 [Thread-8288] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:38:11.015 [Thread-8288] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034deaa54sm14886405ad.5 - gsmtp
+
+2025-10-09 11:38:12.855 [Thread-8288] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d2e1a72fcca58-794d510d189sm1519020b3a.27 - gsmtp
+
+2025-10-09 11:38:12.855 [Thread-8288] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:38:15.686 [Thread-4245] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 98e67ed59e1d1-33b513ae7d9sm5374823a91.24 - gsmtp
+
+2025-10-09 11:38:17.525 [Thread-4245] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 41be03b00d2f7-b6099afa5fdsm19996513a12.15 - gsmtp
+
+2025-10-09 11:38:17.526 [Thread-4245] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:40:45.853 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:40:45.880 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:40:47.255 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@a3bf746
+2025-10-09 11:40:47.257 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:40:47.258 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:40:47.387 [Thread-5077] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 11:40:53.785 [Thread-5079] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:40:55.580 [Thread-5079] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034de6de2sm14972025ad.18 - gsmtp
+
+2025-10-09 11:40:56.996 [Thread-5079] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034f9cf7csm14587495ad.125 - gsmtp
+
+2025-10-09 11:40:56.997 [Thread-5079] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:41:01.346 [Thread-5080] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 11:41:02.973 [Thread-5080] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034f366c0sm14607245ad.94 - gsmtp
+
+2025-10-09 11:41:04.141 [Thread-5080] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034f089a3sm14702565ad.76 - gsmtp
+
+2025-10-09 11:41:04.142 [Thread-5080] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 11:45:59.953 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 11:45:59.985 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 11:46:01.540 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@75c63471
+2025-10-09 11:46:01.778 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 11:46:01.785 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 11:46:01.944 [Thread-5077] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 11:46:01.977 [JavaFX Application Thread] ERROR Controllers.loginController - Failed to load dashboard for role: admin
+javafx.fxml.LoadException: 
+/D:/7.Java_Workspace/Porsche/target/classes/View/adminDashboard.fxml:22
+
+	at javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2722)
+	at javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:946)
+	at javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:983)
+	at javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:230)
+	at javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:757)
+	at javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2853)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2649)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3376)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3332)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3300)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3272)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3248)
+	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:3241)
+	at Controllers.loginController.lambda$clickLogin$0(loginController.java:195)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.concurrent.EventHelper.fireEvent(EventHelper.java:219)
+	at javafx.concurrent.Task.fireEvent(Task.java:1332)
+	at javafx.concurrent.Task.setState(Task.java:725)
+	at javafx.concurrent.Task$TaskCallable.lambda$call$1(Task.java:1410)
+	at com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455)
+	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.reflect.InvocationTargetException: null
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(Unknown Source)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Unknown Source)
+	at java.base/java.lang.reflect.Constructor.newInstance(Unknown Source)
+	at javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:941)
+	... 32 common frames omitted
+Caused by: java.lang.Error: Unresolved compilation problem: 
+	logger cannot be resolved
+
+	at Controllers.adminDashboardController.<init>(adminDashboardController.java:163)
+	... 36 common frames omitted
+2025-10-09 20:20:28.807 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7h45m18s900ms590µs600ns).
+2025-10-09 20:25:40.668 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-09 20:25:40.759 [Thread-871] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-09 20:25:44.589 [Thread-871] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@49988e40
+2025-10-09 20:25:44.613 [Thread-871] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-09 20:25:44.617 [Thread-871] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-09 20:25:45.050 [Thread-871] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-09 20:25:56.603 [Thread-3751] INFO  Utils.OTPService - Attempting to send OTP to: swankaung809@gmail.com
+2025-10-09 20:25:59.906 [Thread-3751] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 98e67ed59e1d1-33b5293e5e4sm2567248a91.2 - gsmtp
+
+2025-10-09 20:26:01.990 [Thread-3751] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 41be03b00d2f7-b609f05662bsm20598104a12.39 - gsmtp
+
+2025-10-09 20:26:01.992 [Thread-3751] INFO  Utils.OTPService - OTP sent successfully to: swankaung809@gmail.com
+2025-10-09 20:35:01.087 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=8m46s369ms837µs900ns).
+2025-10-09 20:35:15.510 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=8m46s339ms702µs900ns).
+2025-10-09 20:58:21.705 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=13m36s24ms429µs).
+2025-10-09 20:58:37.291 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=13m35s999ms586µs300ns).
+2025-10-09 20:58:37.795 [JavaFX Application Thread] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@15a80b32 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
