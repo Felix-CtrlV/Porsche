@@ -17,12 +17,12 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<HBox xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.bestSellerController">
+<HBox maxHeight="120.0" maxWidth="550.0" minHeight="120.0" minWidth="300.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.bestSellerController">
    <children>
-      <StackPane maxHeight="120.0" maxWidth="500.0" minHeight="120.0" minWidth="500.0" prefHeight="120.0" prefWidth="500.0">
+      <StackPane maxHeight="120.0" maxWidth="550.0" minHeight="120.0" minWidth="300.0" HBox.hgrow="ALWAYS">
           <children>
               <!-- Modern Card Background - 60% Dominant Color -->
-              <Rectangle arcHeight="14" arcWidth="14" height="120.0" width="500.0">
+              <Rectangle arcHeight="14" arcWidth="14" height="120.0" width="550.0">
                   <fill>
                       <LinearGradient endX="1.0" endY="1.0">
                           <stops>
@@ -44,10 +44,10 @@
                   </effect>
               </Rectangle>
       
-                    <HBox maxHeight="120.0" maxWidth="500.0" minHeight="120.0" minWidth="500.0" prefHeight="120.0" prefWidth="500.0" spacing="0">
+                          <HBox minHeight="120.0" minWidth="500.0" prefHeight="120.0" prefWidth="500.0" spacing="0" StackPane.alignment="CENTER">
                   <children>
                       <!-- Profile Section - 30% Secondary Color Area -->
-                      <StackPane prefHeight="120.0" prefWidth="138.0" style="-fx-background-color: #f8fafc;">
+                      <StackPane prefHeight="120.0" prefWidth="105.0" style="-fx-background-color: #f8fafc;" HBox.hgrow="ALWAYS">
                           <children>
                         <ImageView fx:id="imange" fitHeight="111.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -60,14 +60,14 @@
                           </padding>
                       </StackPane>
       
-                            <!-- Content Section -->
-                      <StackPane alignment="CENTER_LEFT" minHeight="120.0" prefHeight="120.0" prefWidth="365.0">
+                                  <!-- Content Section -->
+                      <StackPane alignment="CENTER_LEFT" minHeight="120.0" prefHeight="120.0" prefWidth="289.0" HBox.hgrow="ALWAYS">
                           <GridPane alignment="CENTER_LEFT" hgap="12" minHeight="120.0" minWidth="240.0" prefHeight="120.0" prefWidth="351.0" style="-fx-background-color: transparent;" vgap="6">
                               <padding>
                                   <Insets bottom="16" left="16" right="16" top="16" />
                               </padding>
       
-                                    <!-- Personal Details Block -->
+                                          <!-- Personal Details Block -->
                               <VBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="163.0" spacing="2" GridPane.columnIndex="0" GridPane.rowIndex="0">
                                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="6.0">
                                       <children>
@@ -90,46 +90,46 @@
                                   </HBox>
                               </VBox>
       
-                                    <!-- Rank Badge Block - 10% Accent Color -->
+                                          <!-- Rank Badge Block - 10% Accent Color -->
                               <StackPane alignment="TOP_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="0" />
       
-                                    <!-- Section Divider -->
+                                          <!-- Section Divider -->
                               <Rectangle arcHeight="4" arcWidth="4" fill="#f1f5f9" height="2" width="208" GridPane.columnSpan="2" GridPane.rowIndex="1" />
       
-                                    <!-- Work Metrics Block -->
+                                          <!-- Work Metrics Block -->
                               <GridPane hgap="16" prefHeight="68.0" prefWidth="325.0" style="-fx-background-color: transparent;" vgap="4" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                   <columnConstraints>
                                       <ColumnConstraints hgrow="ALWAYS" percentWidth="46.0" />
                                       <ColumnConstraints hgrow="ALWAYS" percentWidth="54.0" />
                                   </columnConstraints>
       
-                                        <!-- Work Hours Metric -->
+                                              <!-- Work Hours Metric -->
                                   <VBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="129.0" spacing="1" GridPane.columnIndex="0">
                                       <Label style="-fx-font-size: 9px; -fx-font-weight: 700; -fx-text-fill: #64748b; -fx-font-family: 'Segoe UI', system; -fx-letter-spacing: 0.8;" text="WORK HOURS" />
                                       <Label fx:id="workHour" style="-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #2563eb; -fx-font-family: 'Segoe UI', system;" text="40 hrs" />
                                       <Label fx:id="hourRate" prefHeight="15.0" prefWidth="164.0" style="-fx-font-size: 12px; -fx-text-fill: #10b981; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', system;" text="+5% this month" wrapText="true" />
                                   </VBox>
       
-                                        <!-- Vertical Separator -->
+                                              <!-- Vertical Separator -->
                                   <Rectangle arcHeight="2" arcWidth="2" fill="#e2e8f0" height="32" width="1.5" GridPane.columnIndex="0" GridPane.halignment="RIGHT">
                                       <effect>
                                           <InnerShadow color="rgba(0,0,0,0.05)" radius="1" />
                                       </effect>
                                   </Rectangle>
       
-                                        <!-- Sales Metric -->
+                                              <!-- Sales Metric -->
                                   <VBox alignment="CENTER_LEFT" spacing="1" GridPane.columnIndex="1">
                                       <Label style="-fx-font-size: 9px; -fx-font-weight: 700; -fx-text-fill: #64748b; -fx-font-family: 'Segoe UI', system; -fx-letter-spacing: 0.8;" text="SALES PERFORMANCE" />
                                       <Label fx:id="soldRevenue" style="-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #059669; -fx-font-family: 'Segoe UI', system;" text="\$12,450" />
                                       <Label fx:id="revenueRate" prefHeight="15.0" prefWidth="197.0" style="-fx-font-size: 12px; -fx-text-fill: #10b981; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', system;" text="+12% this month" wrapText="true" />
                                   </VBox>
       
-                                        <rowConstraints>
+                                              <rowConstraints>
                                       <RowConstraints />
                                   </rowConstraints>
                               </GridPane>
       
-                                    <columnConstraints>
+                                          <columnConstraints>
                                   <ColumnConstraints hgrow="ALWAYS" percentWidth="55" />
                                   <ColumnConstraints hgrow="ALWAYS" percentWidth="45" />
                               </columnConstraints>

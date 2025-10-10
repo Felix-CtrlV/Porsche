@@ -2,165 +2,109 @@ package Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 public class staffCustomizeController {
 
-    @FXML
-    private ImageView Car_model_display_image;
+    @FXML private ImageView model_image;
+    @FXML private Label car_frame_num;
+    @FXML private Label fuel_type;
+    @FXML private Label model_name;
+    @FXML private Button confirm_btn;
+    @FXML private Button back_btn;
 
-    @FXML
-    private ImageView car_model_view_image;
-
-    @FXML
-    private Button carPrevBtn;
-
-    @FXML
-    private Button carNextBtn;
-
-    @FXML
-    private Label car_frame_num;
-
-    @FXML
-    private Label fuel_type;
-
-    @FXML
-    private Label car_model_name;
-
-//    @FXML
-//    private Line car_description;
-
-    @FXML
-    private VBox wheel_selector;
-
-    @FXML
-    private Label rim_price;
-
-    @FXML
-    private Button wheelPrevBtn;
-
-    @FXML
-    private ImageView wheels_image;
-
-    @FXML
-    private Button wheelNextBtn;
-
-    @FXML
-    private VBox Tyre_selector;
-
-    @FXML
-    private Label tyre_price;
-
-    @FXML
-    private Button tyrePrevBtn;
-
-    @FXML
-    private ImageView tyres_image;
-
-    @FXML
-    private Button tyreNextBtn;
-
-    @FXML
-    private VBox color_selector;
-
-    @FXML
-    private Label color_price;
-
-    @FXML
-    private Button colorPrevBtn;
-
-    @FXML
-    private ImageView color_image;
-
-    @FXML
-    private Button colorNextBtn;
-
-    @FXML
-    private ImageView porsche_logo_image;
-
-    @FXML
-    private Button modelbtn;
-
-    @FXML
-    private Button customizebtn;
-
-    @FXML
-    private Button cartbtn;
-
-    @FXML
-    private Button confirmorderbtn;
+    // ScrollPanes for each customization section
+    @FXML private ScrollPane wheels_scroll;
+    @FXML private ScrollPane color_scroll;
+    @FXML private ScrollPane interior_scroll;
 
     public void initialize() {
-        Image porsche_logo = new Image(getClass().getResourceAsStream("/Image/porsche_logo.png"));
-        porsche_logo_image.setImage(porsche_logo);
-        Image car_model_view = new Image(getClass().getResourceAsStream("/Image/911_gt3_rs_car_model.png"));
-        car_model_view_image.setImage(car_model_view);
-        Image car_modell_text = new Image(getClass().getResourceAsStream("/Image/911_gt3rs_displaytext.png"));
-        Car_model_display_image.setImage(car_modell_text);
-    }
-    @FXML
-    void clickCarNext(ActionEvent event) {
+        try (InputStream imgStream = getClass().getResourceAsStream("/Image/911_carrera_gts.png")) {
+            if (imgStream == null) {
+                System.err.println("Image not found at /Image/911_carrera_gts.png");
+                return;
+            }
+            Image car_model_view = new Image(imgStream);
+            model_image.setImage(car_model_view);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    }
-
-    @FXML
-    void clickCarPrev(ActionEvent event) {
-
-    }
-
-    @FXML
-    void clickCart(ActionEvent event) {
-
-    }
-
-    @FXML
-    void clickColorNext(ActionEvent event) {
-
-    }
-
-    @FXML
-    void clickColorPerv(ActionEvent event) {
-
+        wheels_scroll.setHvalue(0);
+        color_scroll.setHvalue(0);
+        interior_scroll.setHvalue(0);
     }
 
     @FXML
     void clickConfirm(ActionEvent event) {
-
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/View/staffFinalize.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    void clickCustomize(ActionEvent event) {
-
+    void back(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/View/staffModelSelect.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    void clickModels(ActionEvent event) {
+    void left(ActionEvent event) {
+        Object source = event.getSource();
 
+        if (source == null) return;
+
+        if (source == leftbtn) scrollLeft(wheels_scroll);
+        else if (source == leftbtn1) scrollLeft(color_scroll);
+        else if (source == leftbtn2) scrollLeft(interior_scroll);
     }
 
     @FXML
-    void clickTyreNext(ActionEvent event) {
+    void right(ActionEvent event) {
+        Object source = event.getSource();
 
+        if (source == null) return;
+
+        if (source == rightbtn) scrollRight(wheels_scroll);
+        else if (source == rightbtn1) scrollRight(color_scroll);
+        else if (source == rightbtn2) scrollRight(interior_scroll);
     }
 
-    @FXML
-    void clickTyrePrev(ActionEvent event) {
-
+    private void scrollLeft(ScrollPane pane) {
+        double current = pane.getHvalue();
+        pane.setHvalue(Math.max(current - 0.2, 0));
     }
 
-    @FXML
-    void clickWheelNext(ActionEvent event) {
-
+    private void scrollRight(ScrollPane pane) {
+        double current = pane.getHvalue();
+        pane.setHvalue(Math.min(current + 0.2, 1));
     }
 
-    @FXML
-    void clickWheelPrev(ActionEvent event) {
-
-    }
-
+    @FXML private Button leftbtn;
+    @FXML private Button rightbtn;
+    @FXML private Button leftbtn1;
+    @FXML private Button rightbtn1;
+    @FXML private Button leftbtn2;
+    @FXML private Button rightbtn2;
 }
-
-

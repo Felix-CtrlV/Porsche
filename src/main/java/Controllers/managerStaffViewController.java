@@ -57,26 +57,9 @@ public class managerStaffViewController {
     @FXML
     private TableColumn<managerOrderView, Date> DateCol;
 
-    @FXML
-    private Label IsInstallPaidAmountLabel;
-
-    @FXML
-    private Label IsInstallRemainAmountLabel;
-
-    @FXML
-    private BorderPane IsInstallmentBorderPane;
 
     @FXML
     private TableColumn<managerOrderView, String> IsInstallmentCol;
-
-    @FXML
-    private VBox IsInstallorderItemsContainer;
-
-    @FXML
-    private Label IsInstalltotalPriceLabel;
-
-    @FXML
-    private BorderPane IsNotInstallBorderPane;
 
     @FXML
     private Button NextMonthbtn;
@@ -86,12 +69,6 @@ public class managerStaffViewController {
 
     @FXML
     private TableColumn<managerOrderView, Integer> NoCol;
-
-    @FXML
-    private Label NoInstallTotalPriceLabel;
-
-    @FXML
-    private VBox NoInstallorderItemsContainer;
 
     @FXML
     private Label PendOrderlbl;
@@ -139,10 +116,6 @@ public class managerStaffViewController {
     private VBox staffListContainer;
 
     @FXML
-    private Label DueDateLabel;
-
-
-    @FXML
     private Circle partCircle;
 
     @FXML
@@ -180,6 +153,35 @@ public class managerStaffViewController {
 
     @FXML
     private ChoiceBox<Integer> yearBox;
+
+    @FXML
+    private BorderPane installmentPane ;
+
+    @FXML
+    private Label remainAmountLabel;
+
+    @FXML
+    private Label paidAmountLabel;
+
+    @FXML
+    private Label dueDateLabel ;
+
+    @FXML
+    private Label totalPriceLabel ;
+
+    @FXML
+    private TableView<String> installmentTable;
+
+    @FXML
+    private TableColumn<String,String> installmentNameCol;
+
+    @FXML
+    private TableColumn<String,String> installmentQtyCol;
+
+    @FXML
+    private TableColumn<String,String> installmentPriceCol;
+
+
 
     @FXML
     void SwitchMouseClick(MouseEvent event) throws SQLException, IOException {
@@ -243,8 +245,7 @@ public class managerStaffViewController {
 
         if (selectorder == null) {
             // Show target overview when no order is selected or table is empty
-            IsInstallmentBorderPane.setVisible(false);
-            IsNotInstallBorderPane.setVisible(false);
+            installmentPane.setVisible(false);
             targetlayer.setVisible(true);
             return;
         }
@@ -287,8 +288,7 @@ public class managerStaffViewController {
         });
 
         //for car and parts of the show circle
-        IsInstallmentBorderPane.setVisible(false);
-        IsNotInstallBorderPane.setVisible(false);
+       installmentPane.setVisible(false);
         targetlayer.setVisible(true);
         setTarget();
         setupSearchBar();
@@ -347,8 +347,7 @@ public class managerStaffViewController {
         }
 
         targetlayer.setVisible(true);
-        IsInstallmentBorderPane.setVisible(false);
-        IsNotInstallBorderPane.setVisible(false);
+        installmentPane.setVisible(false);
     }
 
     //for the staff of monthly sold out the order table
@@ -409,58 +408,48 @@ public class managerStaffViewController {
 
     //to see like a slip of the order table
     private void orderDetails(managerOrderView orders) throws IOException {
-
-        NoInstallorderItemsContainer.getChildren().clear();
-        IsInstallorderItemsContainer.getChildren().clear();
+        installmentTable.getItems().clear();
         targetlayer.setVisible(false);
-        //to load the orders detail in the page like slip
+        installmentPane.setVisible(true);
+
+        // Load order details
         String[] names = orders.getCarsandparts_name();
         String[] qty = orders.getCarsandparts_qty();
         String[] price = orders.getCarsandparts_perprice();
 
-        if (orders.getIs_installmenat().equalsIgnoreCase("yes")) {
+        totalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
+        dueDateLabel.setText(String.valueOf(orders.getDue_date()));
+        remainAmountLabel.setText(String.valueOf(orders.getRemain_amount()));
+        paidAmountLabel.setText(String.valueOf(orders.getPayed_amount()));
 
+        // Clear and populate the installment table
+        installmentTable.getItems().clear();
 
-            IsNotInstallBorderPane.setVisible(false);
-            IsInstallmentBorderPane.setVisible(true);
-            IsInstalltotalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
-            DueDateLabel.setText(String.valueOf(orders.getDue_date()));
-            IsInstallRemainAmountLabel.setText(String.valueOf(orders.getRemain_amount()));
-            IsInstallPaidAmountLabel.setText(String.valueOf(orders.getPayed_amount()));
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i].trim();
+            String quantity = qty[i].trim();
+            String itemPrice = price[i].trim();
 
-            for (int i = 0; i < names.length; i++) {
-                File fxmlFile = new File("src/main/resources/View/managerStaffInstallment.fxml");
-                FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-                Node orderItem = loader.load();
-
-                managerStaffInstallmentController controller = loader.getController();
-                controller.setData(names[i], qty[i], price[i]);
-
-                System.out.println(names[i] + " " + qty[i] + " " + price[i]);
-                IsInstallorderItemsContainer.getChildren().add(orderItem);
-            }
-
-        } else {
-
-            IsNotInstallBorderPane.setVisible(true);
-            IsInstallmentBorderPane.setVisible(false);
-            NoInstallTotalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
-
-            for (int i = 0; i < names.length; i++) {
-                File fxmlFile = new File("src/main/resources/View/managerStaffInstallment.fxml");
-                FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-                Node orderItem = loader.load();
-
-                managerStaffInstallmentController controller = loader.getController();
-                controller.setData(names[i], qty[i], price[i]);
-
-                System.out.println(names[i] + " " + qty[i] + " " + price[i]);
-                NoInstallorderItemsContainer.getChildren().add(orderItem);
-
-            }
+            // Create a formatted string for the table row
+            String rowData = String.format("%s|%s|%s", name, quantity, itemPrice);
+            installmentTable.getItems().add(rowData);
         }
 
+        // Set up table columns to display the data properly
+        installmentNameCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 0 ? parts[0] : "");
+        });
 
+        installmentQtyCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
+        });
+
+        installmentPriceCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
+        });
     }
 
     // for monthly order status box
@@ -841,8 +830,7 @@ public class managerStaffViewController {
         Year nyear = Year.of(currentYear);
         int curyear = today.getYear();
         targetlayer.setVisible(true);
-        IsNotInstallBorderPane.setVisible(false);
-        IsInstallmentBorderPane.setVisible(false);
+        installmentPane.setVisible(false);
 
         Month nmonth = Month.of(currentMonth);
         String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);

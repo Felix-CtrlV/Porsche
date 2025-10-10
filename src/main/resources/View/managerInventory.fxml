@@ -48,10 +48,13 @@
                                  <StackPane minHeight="45.0" prefHeight="65.0" prefWidth="280.0">
                                      <children>
                                          <TextField fx:id="searchBar" minHeight="45.0" prefHeight="35.0" prefWidth="300.0" promptText="Search by model, VIN, or ID..." style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #e0e0e0; -fx-background-color: #fafafa; -fx-padding: 0 15 0 15; -fx-font-size: 13; -fx-border-width: 1.5;" StackPane.alignment="CENTER" />
-                                         <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#clickSearchBtn" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: #d5001c; -fx-background-radius: 16; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.4), 8, 0, 0, 2); -fx-text-fill: white;" text="🔍" StackPane.alignment="CENTER_RIGHT">
+                                         <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#clickSearchBtn" prefHeight="43.0" prefWidth="62.0" style="-fx-background-color: transparent; -fx-background-radius: 18; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.4), 8, 0, 0, 2); -fx-text-fill: red; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 6, 0, 0, 2);" text="🔍" StackPane.alignment="CENTER_RIGHT">
                                              <StackPane.margin>
-                                                 <Insets right="8.0" />
+                                                 <Insets />
                                              </StackPane.margin>
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
                                          </Button>
                                      </children>
                                      <VBox.margin>
@@ -165,6 +168,11 @@
                                         <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-family: 'Arial Black';" text="INVENTORY" />
                                         <Label style="-fx-text-fill: #6c757d; -fx-font-size: 12; -fx-font-style: italic;" text="Real-time Porsche vehicle stock management" />
                                     </VBox>
+                           <Button fx:id="switchTable" onAction="#clickSwitchTable" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15;" text="Available ←→ Unavailable">
+                              <HBox.margin>
+                                 <Insets left="650.0" />
+                              </HBox.margin>
+                           </Button>
                                 </HBox>
                         <StackPane VBox.vgrow="ALWAYS">
                            <children>
@@ -188,15 +196,15 @@
 
                                 <!-- Table Footer -->
                                 <HBox alignment="CENTER_RIGHT" spacing="12" style="-fx-padding: 20 0 0 0;">
+                                    <Button fx:id="exportCSV" onAction="#clickExportCSV" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15;" text="Export CSV" visible="false" />
                                     <Label fx:id="showTableRows" style="-fx-text-fill: #6c757d; -fx-font-size: 12; -fx-font-weight: bold;" text="Showing 25 of 60 Porsche vehicles" />
                                     <Button fx:id="refreshTable" onAction="#clickRefreshTable" style="-fx-background-color: #d5001c; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15; -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.3), 6, 0, 0, 2);" text="Refresh Data" />
-                                    <Button fx:id="exportCSV" onAction="#clickExportCSV" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15;" text="Export CSV" />
                                 </HBox>
                             </children>
                         </VBox>
                     </children>
                 </HBox>
-                <BorderPane fx:id="extraPane" maxHeight="768.0" maxWidth="1366.0" minHeight="768.0" minWidth="1366.0">
+                <BorderPane fx:id="extraPane" maxHeight="768.0" maxWidth="1366.0" minHeight="768.0" minWidth="1366.0" visible="false">
                     <center>
                   <StackPane>
                      <children>

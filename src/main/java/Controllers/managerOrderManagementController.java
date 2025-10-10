@@ -1,18 +1,20 @@
 package Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.PieChart;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 
 public class managerOrderManagementController {
+
+    @FXML
+    private Button PreviousMonthbtn;
 
     @FXML
     private TextField SearchText;
@@ -21,103 +23,133 @@ public class managerOrderManagementController {
     private Button Searchbtn;
 
     @FXML
-    private Label confirmOrderlbl;
+    private Label confirmPriceRateLabel;
 
     @FXML
-    private Label confirmOrderMessage;
+    private Label confrimPriceLabel;
 
     @FXML
-    private Label pendingOrderlbl;
+    private Label confrimQty;
 
     @FXML
-    private Label pendingOrderMessage;
+    private Circle confrimQtyCircle;
 
     @FXML
-    private Label cancelOrderlbl;
-
-    @FXML
-    private Label cancelOrderMessage;
-
-    @FXML
-    private TableView<?> orderTable;
-
-    @FXML
-    private TableColumn<?, ?> noCol;
-
-    @FXML
-    private TableColumn<?, ?> orderDateCol;
-
-    @FXML
-    private TableColumn<?, ?> installmentCol;
-
-    @FXML
-    private TableColumn<?, ?> orderStatusCol;
-
-    @FXML
-    private Button PreviousMonthbtn;
-
-    @FXML
-    private ChoiceBox<?> monthBox;
-
-    @FXML
-    private Button NextMonthbtn;
-
-    @FXML
-    private Button PreviousYearbth;
-
-    @FXML
-    private ChoiceBox<?> yearBox;
-
-    @FXML
-    private Button NextYearbtn;
-
-    @FXML
-    private Label paidAmountlbl;
-
-    @FXML
-    private Label remainAmountlbl;
-
-    @FXML
-    private VBox orderItemsContainer;
-
-    @FXML
-    private Label totalPricelbl;
-
-    @FXML
-    private VBox InstallmentPane;
-
-    @FXML
-    private Label totalPriceLabel12;
-
-    @FXML
-    private Label staffNamelbl;
+    private TableColumn<?, ?> customerNameCol;
 
     @FXML
     private Label customerNamelabel;
 
     @FXML
-    private PieChart orderPieChart;
+    private TableColumn<?, ?> installmentNameCol;
 
     @FXML
-    private LineChart<?, ?> orderTrendChart;
+    private TableColumn<?, ?> installmentPriceCol;
 
     @FXML
-    void nextMonthClick(MouseEvent event) {
+    private TableColumn<?, ?> installmentQtyCol;
+
+    @FXML
+    private TableView<?> installmentTable;
+
+    @FXML
+    private ChoiceBox<?> monthBox;
+
+    @FXML
+    private Button monthlyRevenue;
+
+    @FXML
+    private Button nextMonthbtn;
+
+    @FXML
+    private Button nextYearbtn;
+
+    @FXML
+    private TableColumn<?, ?> orderDateCol;
+
+    @FXML
+    private TableView<?> orderTable;
+
+    @FXML
+    private Label paidAmountlbl;
+
+    @FXML
+    private Label pendingPriceLabel;
+
+    @FXML
+    private Label pendingPriceRateLabel;
+
+    @FXML
+    private Label pendingQty;
+
+    @FXML
+    private Circle pendingQtyCircle;
+
+    @FXML
+    private Button previousYearbth;
+
+    @FXML
+    private TableColumn<?, ?> priceCol;
+
+    @FXML
+    private TableColumn<?, ?> qtyCol;
+
+    @FXML
+    private Label remainAmountlbl;
+
+    @FXML
+    private BarChart<?, ?> revenueChart;
+
+    @FXML
+    private TableColumn<?, ?> staffNameCol;
+
+    @FXML
+    private Label staffNamelabel;
+
+    @FXML
+    private TableColumn<?, ?> statusCol;
+
+    @FXML
+    private Label totalPriceLabel;
+
+    @FXML
+    private Button weeklyRevenue;
+
+    @FXML
+    private ChoiceBox<?> yearBox;
+
+    @FXML
+    void clickMonthlyRevenue(ActionEvent event) {
 
     }
 
     @FXML
-    void nextYearClick(MouseEvent event) {
+    void clickNextMonthbtn(ActionEvent event) {
 
     }
 
     @FXML
-    void prevMonthClick(MouseEvent event) {
+    void clickNextYearbn(ActionEvent event) {
 
     }
 
     @FXML
-    void prevYearClick(MouseEvent event) {
+    void clickPreviousMonthbtn(ActionEvent event) {
+
+    }
+
+    @FXML
+    void clickPreviousYearbtn(ActionEvent event) {
+
+    }
+
+    @FXML
+    void clickWeeklyRevenue(ActionEvent event) {
+
+    }
+
+    @FXML
+    void searchTextAction(ActionEvent event) {
 
     }
 
