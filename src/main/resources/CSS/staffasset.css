@@ -1,0 +1,48 @@
+.root {
+    -fx-background-color: white;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-text-fill: #111;
+}
+
+/* Image shadow */
+.image-view {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 5);
+}
+
+/* Internal / External Buttons */
+.option-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #c8102e;
+    -fx-border-width: 2;
+    -fx-text-fill: #c8102e;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 25;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-cursor: hand;
+    -fx-letter-spacing: 0.5px;
+}
+
+.option-button:hover {
+    -fx-background-color: #c8102e;
+    -fx-text-fill: white;
+}
+
+/* Accessory Scroll Area */
+.accessory-scroll {
+    -fx-background-color: #fafafa;
+    -fx-border-color: #e5e5e5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* FlowPane items spacing */
+.flow-pane {
+    -fx-alignment: center;
+}

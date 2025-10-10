@@ -1,7 +1,6 @@
 package Controllers;
 
 import javafx.animation.FillTransition;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -60,6 +58,17 @@ public class staffFinalizeController {
     }
 
     @FXML
+    void confirmOrder(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/view/staffShopingcart.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void modechange(ActionEvent event) {
         Node root = darkmodebtn.getScene().getRoot();
         Color lightLine = Color.rgb(0,0,0,0.5);
@@ -68,10 +77,8 @@ public class staffFinalizeController {
         Line[] lines = {line1,line2,line3,line4,line5,line6,line7,line8};
 
         if (!darkMode) {
-            // Add dark mode class
             root.getStyleClass().add("dark-mode");
 
-            // Animate lines to white-ish
             for (Line l : lines) {
                 FillTransition ft = new FillTransition(Duration.millis(400), l, (Color) l.getStroke(), darkLine);
                 ft.setCycleCount(1);
@@ -79,10 +86,8 @@ public class staffFinalizeController {
             }
             darkMode = true;
         } else {
-            // Remove dark mode class
             root.getStyleClass().remove("dark-mode");
 
-            // Animate lines back to black-ish
             for (Line l : lines) {
                 FillTransition ft = new FillTransition(Duration.millis(400), l, (Color) l.getStroke(), lightLine);
                 ft.setCycleCount(1);
@@ -95,5 +100,6 @@ public class staffFinalizeController {
     @FXML
     private void initialize() {
         selected_model_image.setImage(new Image(getClass().getResourceAsStream("/Image/911_select_model.png")));
+        confirm_btn.setOnAction(this::confirmOrder);
     }
 }
