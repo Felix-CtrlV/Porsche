@@ -31,7 +31,7 @@
                 <HBox prefHeight="601.0" prefWidth="691.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
                         <!-- Left Side: CAR/PART Content Area -->
-                        <VBox maxWidth="600.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e1e5e9;" HBox.hgrow="ALWAYS">
+                        <VBox maxWidth="550.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e1e5e9;" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="20.0" style="-fx-background-color: white;">
                                     <children>

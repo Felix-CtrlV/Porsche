@@ -1,5 +1,6 @@
 package Controllers;
 
+import Model.managerOrderView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
@@ -41,19 +42,19 @@ public class managerOrderManagementController {
     private Label customerNamelabel;
 
     @FXML
-    private TableColumn<?, ?> installmentNameCol;
+    private TableColumn<managerOrderView, ?> installmentNameCol;
 
     @FXML
-    private TableColumn<?, ?> installmentPriceCol;
+    private TableColumn<managerOrderView, ?> installmentPriceCol;
 
     @FXML
-    private TableColumn<?, ?> installmentQtyCol;
+    private TableColumn<managerOrderView, Integer> installmentQtyCol;
 
     @FXML
-    private TableView<?> installmentTable;
+    private TableView<managerOrderView> installmentTable;
 
     @FXML
-    private ChoiceBox<?> monthBox;
+    private ChoiceBox<String> monthBox;
 
     @FXML
     private Button monthlyRevenue;
@@ -68,7 +69,7 @@ public class managerOrderManagementController {
     private TableColumn<?, ?> orderDateCol;
 
     @FXML
-    private TableView<?> orderTable;
+    private TableView<managerOrderView> orderTable;
 
     @FXML
     private Label paidAmountlbl;

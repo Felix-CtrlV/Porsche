@@ -17,12 +17,12 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<HBox maxHeight="120.0" maxWidth="550.0" minHeight="120.0" minWidth="300.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.bestSellerController">
+<HBox maxHeight="120.0" maxWidth="500.0" minHeight="120.0" minWidth="300.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.bestSellerController">
    <children>
-      <StackPane maxHeight="120.0" maxWidth="550.0" minHeight="120.0" minWidth="300.0" HBox.hgrow="ALWAYS">
+      <StackPane maxHeight="120.0" maxWidth="500.0" minHeight="120.0" minWidth="300.0" HBox.hgrow="ALWAYS">
           <children>
               <!-- Modern Card Background - 60% Dominant Color -->
-              <Rectangle arcHeight="14" arcWidth="14" height="120.0" width="550.0">
+              <Rectangle arcHeight="14" arcWidth="14" height="120.0" width="500.0">
                   <fill>
                       <LinearGradient endX="1.0" endY="1.0">
                           <stops>
@@ -49,7 +49,7 @@
                       <!-- Profile Section - 30% Secondary Color Area -->
                       <StackPane prefHeight="120.0" prefWidth="105.0" style="-fx-background-color: #f8fafc;" HBox.hgrow="ALWAYS">
                           <children>
-                        <ImageView fx:id="imange" fitHeight="111.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="image" fitHeight="111.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../Image/usericon.png" />
                            </image>

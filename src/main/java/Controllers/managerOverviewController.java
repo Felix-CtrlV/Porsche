@@ -418,7 +418,7 @@ public class managerOverviewController {
 
     //target side
     private void setTarget() throws SQLException {
-        CallableStatement cs = con.prepareCall("CALL targetviewchart(?,?,?)");
+        CallableStatement cs = con.prepareCall("CALL targetViewChart(?,?,?)");
         cs.setInt(1,managerId);
         cs.setInt(2,currentMonth);
         cs.setInt(3,currentYear);
@@ -524,7 +524,7 @@ public class managerOverviewController {
     private ObservableList<ManagerOfAttendanceView> setAttendanceTable() throws SQLException {
         ObservableList<ManagerOfAttendanceView> temporylist = FXCollections.observableArrayList();
 
-        CallableStatement cs =con.prepareCall("CALL managerattendanceview()");
+        CallableStatement cs =con.prepareCall("CALL getAttendanceView()");
         ResultSet rs = cs.executeQuery();
 
         while(rs.next()) {
@@ -544,7 +544,7 @@ public class managerOverviewController {
         ObservableList<PieChart.Data> piechartdata = FXCollections.observableArrayList();
         String rating ="0 %";
 
-        CallableStatement cs = con.prepareCall("call attendancepercentage_managerview();");
+        CallableStatement cs = con.prepareCall("call getAttendancePercentage();");
         ResultSet rs = cs.executeQuery();
 
         while(rs.next()){

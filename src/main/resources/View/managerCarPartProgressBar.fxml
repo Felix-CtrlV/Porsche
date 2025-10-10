@@ -9,7 +9,7 @@
 
 <!-- Progress Card -->
 
-<HBox maxHeight="120.0" maxWidth="550.0" minHeight="120.0" minWidth="300.0" style="-fx-background-color: linear-gradient(to right, #ffffff 0%, #fdfeff 100%); -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #f1f5f9; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerCarPartProgressBarController">
+<HBox maxHeight="120.0" maxWidth="500.0" minHeight="120.0" minWidth="300.0" style="-fx-background-color: linear-gradient(to right, #ffffff 0%, #fdfeff 100%); -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #f1f5f9; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerCarPartProgressBarController">
         <padding>
             <Insets bottom="20" left="25" right="25" top="20" />
         </padding>

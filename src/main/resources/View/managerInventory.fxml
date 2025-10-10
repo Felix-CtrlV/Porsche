@@ -168,7 +168,7 @@
                                         <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-family: 'Arial Black';" text="INVENTORY" />
                                         <Label style="-fx-text-fill: #6c757d; -fx-font-size: 12; -fx-font-style: italic;" text="Real-time Porsche vehicle stock management" />
                                     </VBox>
-                           <Button fx:id="switchTable" onAction="#clickSwitchTable" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15;" text="Available ←→ Unavailable">
+                           <Button fx:id="switchTable" onAction="#clickSwitchTable" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15;" text="Available">
                               <HBox.margin>
                                  <Insets left="650.0" />
                               </HBox.margin>
