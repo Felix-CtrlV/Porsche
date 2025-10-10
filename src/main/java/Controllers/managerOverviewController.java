@@ -42,7 +42,8 @@ import java.util.Locale;
 
 public class managerOverviewController {
 
-    private int managerId ;
+    private int managerId;
+    private boolean listenersInitialized = false;
 
     @FXML
     private Button NextMonthbtn;
