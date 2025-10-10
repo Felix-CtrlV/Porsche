@@ -3,6 +3,7 @@ package Controllers;
 import Database.Porsche_DB;
 import Model.managerOrderView;
 import Model.user;
+import Utils.Session;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -15,12 +16,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.CallableStatement;
@@ -255,6 +253,11 @@ public class managerStaffViewController {
 
     @FXML
     private void initialize() throws SQLException, IOException {
+        // Get the manager id from session
+        Session current = Session.getInstance();
+        if (current != null) {
+            managerId = current.getUserid();
+        }
 
         //for creating the month and year of this month
         currentDateSelect();
@@ -306,6 +309,7 @@ public class managerStaffViewController {
     private int currentMonth;
     private int currentYear;
 
+    private int managerId;
     private int selectedStaffId = 0;
 
 
@@ -363,7 +367,7 @@ public class managerStaffViewController {
 
     private void showOrdersTable(int staffId, int month, int year) throws SQLException {
         List<managerOrderView> managerordersList = new ArrayList<>();
-        CallableStatement cs = con.prepareCall("CALL getordersbyuserid(?,?,?)");
+        CallableStatement cs = con.prepareCall("CALL getOrdersByUserId(?,?,?)");
         cs.setInt(1, staffId);
         cs.setInt(2, month);
         cs.setInt(3, year);
@@ -455,7 +459,7 @@ public class managerStaffViewController {
     // for monthly order status box
     private void monthlyOrdersStatus(int staffid, int month, int year) throws SQLException {
 
-        CallableStatement cs = con.prepareCall("CALL monthlyorderstatus(?,?,?)");
+        CallableStatement cs = con.prepareCall("CALL getMontlyOrderStatus(?,?,?)");
         cs.setInt(1, staffid);
         cs.setInt(2, month);
         cs.setInt(3, year);
@@ -467,6 +471,8 @@ public class managerStaffViewController {
             TotalOrderlbl.setText(String.valueOf(rs.getInt(1)));
             CompleOrderlbl.setText(String.valueOf(rs.getInt(2)));
             PendOrderlbl.setText(String.valueOf(rs.getInt(3)));
+            // Column 4 (cancelorder) is returned but not displayed in UI
+            // int cancelOrder = rs.getInt(4);
         }
         rs.close();
         cs.close();
@@ -491,18 +497,12 @@ public class managerStaffViewController {
     }
 
     private void addStaffCard(boolean check) throws IOException, SQLException {
-
         staffListContainer.getChildren().clear();
         staffInfoList.clear();
 
-        CallableStatement cs = con.prepareCall("CALL createcards(?,?)");
-        if (check) {
-            cs.setString(1, "active");
-        } else {
-            cs.setString(1, "inactive");
-        }
-
-        cs.setString(2, "manager");
+        CallableStatement cs = con.prepareCall("CALL createCards(?,?)");
+        cs.setInt(1, managerId);
+        cs.setString(2, check ? "active" : "inactive");
 
         ResultSet rs = cs.executeQuery();
 
