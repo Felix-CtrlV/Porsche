@@ -198,14 +198,12 @@
                             </VBox.margin>
                         </HBox>
 
-                        <!-- Model Name -->
                         <Label fx:id="model_name" styleClass="model-name" text="Carrera GTS">
                             <VBox.margin>
                                 <Insets bottom="15.0" />
                             </VBox.margin>
                         </Label>
 
-                        <!-- Decorative Accent Line -->
                         <HBox prefHeight="2.0" prefWidth="120.0" styleClass="accent-line">
                             <VBox.margin>
                                 <Insets bottom="20.0" />
@@ -213,8 +211,6 @@
                         </HBox>
 
                         <Region VBox.vgrow="ALWAYS" />
-
-                        <!-- Back Button -->
                         <Button fx:id="back_btn" mnemonicParsing="false" onAction="#back" styleClass="back-button" text="‹ BACK TO SELECTION">
                             <VBox.margin>
                                 <Insets bottom="30.0" />

@@ -178,7 +178,6 @@ public class staffCustomizeController {
                 action.run();
             }
         });
-
         scaleDown.play();
     }
 }
