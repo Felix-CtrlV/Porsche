@@ -374,7 +374,7 @@ public class managerInventoryController {
 
     @FXML
     void clickExportCSV(ActionEvent event) {
-
+            
     }
 
     @FXML
