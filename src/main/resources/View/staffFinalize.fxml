@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -15,162 +16,239 @@
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../CSS/finalize_order_page.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffFinalizeController">
     <center>
-        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="520.0" prefWidth="1100.0" spacing="50.0" BorderPane.alignment="CENTER">
-            <children>
-                <VBox alignment="CENTER_LEFT" prefHeight="524.0" prefWidth="491.0">
-                    <children>
-                        <Button fx:id="darkmodebtn" mnemonicParsing="false" onAction="#modechange" prefHeight="30.0" prefWidth="32.0" styleClass="confirm_btn" text="D" />
-                        <StackPane alignment="TOP_LEFT" prefHeight="471.0" prefWidth="492.0">
-                            <children>
-                                <VBox prefHeight="200.0" prefWidth="100.0">
-                                    <children>
-                                        <Region prefHeight="59.0" prefWidth="492.0" />
-                                        <ImageView fx:id="selected_model_image" fitHeight="172.0" fitWidth="492.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../Image/911_select_model.png" />
-                                            </image>
-                                        </ImageView>
-                                        <Line fx:id="line1" endX="630.7867431640625" endY="-3.606600761413574" opacity="0.5" startX="147.20098876953125" startY="-3.606602191925049" strokeWidth="2.0" styleClass="line" />
-                                        <Label opacity="0.8" styleClass="font" text="Vehicle Details:">
+        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1200.0" spacing="50.0" stylesheets="@../CSS/finalize_order_page.css" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
+            </padding>
+
+            <!-- LEFT COLUMN: Vehicle Overview -->
+            <VBox alignment="TOP_LEFT" prefHeight="600.0" prefWidth="500.0" spacing="15.0">
+                <children>
+
+                    <!-- Vehicle Image Section -->
+                    <StackPane prefHeight="250.0" prefWidth="500.0" styleClass="image-container">
+                        <VBox.margin>
+                            <Insets top="10.0" />
+                        </VBox.margin>
+                        <ImageView fx:id="selected_model_image" fitHeight="240.0" fitWidth="480.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="" />
+                            </image>
+                        </ImageView>
+                    </StackPane>
+
+                    <!-- Vehicle Details Section -->
+                    <VBox spacing="12.0">
+                        <VBox.margin>
+                            <Insets top="10.0" />
+                        </VBox.margin>
+
+                        <Line fx:id="line1" endX="400.0" opacity="0.5" startX="0.0" strokeWidth="2.0" styleClass="divider-line" />
+
+                        <Label styleClass="section-header" text="Vehicle Details:">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                        </Label>
+
+                        <Line fx:id="line2" endX="114.0" opacity="0.5" startX="0.0" strokeWidth="2.0" styleClass="divider-line" />
+
+                        <Label styleClass="model-name" text="911 Carrera GTS">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                            <padding>
+                                <Insets top="5.0" />
+                            </padding>
+                        </Label>
+
+                        <Label fx:id="car_features" alignment="TOP_LEFT" lineSpacing="8.0" prefWidth="480.0" styleClass="features-text" text="• High-revving 4.0-litre naturally aspirated flat-six&#10;• Features front diffuser and active rear wing with Drag Reduction System&#10;• 7-speed Porsche Doppelkupplung (PDK) dual-clutch transmission&#10;• Fuel Consumption (WLTP): Combined ~13.2 l/100 km; emissions ~299 g CO₂/km" wrapText="true">
+                            <padding>
+                                <Insets top="8.0" />
+                            </padding>
+                        </Label>
+                    </VBox>
+                </children>
+            </VBox>
+
+            <!-- RIGHT COLUMN: Configuration Breakdown -->
+            <VBox alignment="TOP_LEFT" prefHeight="600.0" prefWidth="550.0" spacing="20.0">
+                <children>
+                    <!-- Header -->
+                    <Label styleClass="config-title" text="Your Configuration">
+                        <font>
+                            <Font name="System Bold" size="24.0" />
+                        </font>
+                        <VBox.margin>
+                            <Insets bottom="5.0" />
+                        </VBox.margin>
+                    </Label>
+
+                    <!-- Configuration Details with Scroll -->
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="config-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                        <VBox spacing="15.0">
+                            <padding>
+                                <Insets bottom="20.0" left="5.0" right="15.0" top="10.0" />
+                            </padding>
+
+                            <HBox>
+                                <Line fx:id="line3" endY="450.0" opacity="0.6" startX="0.0" startY="0.0" strokeWidth="2.0" styleClass="divider-line" />
+
+                                <VBox spacing="18.0" HBox.hgrow="ALWAYS">
+                                    <HBox.margin>
+                                        <Insets left="15.0" />
+                                    </HBox.margin>
+
+                                    <!-- Base MSRP -->
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label styleClass="config-label" text="Base MSRP">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
                                         </Label>
-                                        <Line fx:id="line2" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
-                                        <Label styleClass="selected_model_font" text="911 Carrera GTS">
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="basic_price" styleClass="price-label" text="Price here">
                                             <font>
-                                                <Font size="14.0" />
+                                                <Font name="System Bold" size="14.0" />
                                             </font>
                                         </Label>
-                                        <Label fx:id="car_features" alignment="TOP_LEFT" lineSpacing="20.0" prefHeight="219.0" prefWidth="303.0" styleClass="font" text="•High-revving 4.0-litre naturally aspirated flat-six &#10;•Features front diffuser and active rear wing with Drag Reduction System&#10;•7-speed Porsche Doppelkupplung (PDK) dual-clutch transmission &#10;•Fuel Consumption (WLTP): Combined ~13.2 l/100 km; emissions ~299 g CO₂/km" wrapText="true">
-                                            <VBox.margin>
-                                                <Insets bottom="50.0" top="10.0" />
-                                            </VBox.margin>
-                                        </Label>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </StackPane>
-                    </children>
-                </VBox>
-                <VBox alignment="CENTER_LEFT" prefHeight="524.0" prefWidth="601.0">
-                    <children>
-                        <Label styleClass="topic_font" text="Your Configuration" />
-                        <StackPane prefHeight="368.0" prefWidth="634.0">
-                            <children>
-                                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="481.0" prefWidth="603.0" spacing="5.0" StackPane.alignment="CENTER">
-                                    <children>
-                                        <Line fx:id="line3" endX="-99.79287719726562" endY="484.5857849121094" opacity="0.6" startX="-100.0" strokeWidth="2.0" styleClass="line" HBox.hgrow="SOMETIMES">
-                                            <HBox.margin>
-                                                <Insets left="2.0" />
-                                            </HBox.margin>
-                                        </Line>
-                                        <VBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="365.0" prefWidth="624.0" spacing="10.0" HBox.hgrow="SOMETIMES">
-                                            <children>
-                                                <HBox alignment="CENTER_LEFT" prefHeight="19.0" prefWidth="624.0">
-                                                    <children>
-                                                        <Label styleClass="prices" text="Base MSRP" />
-                                                        <Region prefHeight="20.0" prefWidth="371.0" />
-                                                        <Label fx:id="basic_price" text="Price here">
-                                                            <font>
-                                                                <Font name="System Bold" size="14.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </children>
-                                                </HBox>
-                                                <Line fx:id="line4" endX="488.29290771484375" endY="-0.621320366859436" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
-                                                <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="624.0">
-                                                    <children>
-                                                        <VBox prefHeight="41.0" prefWidth="155.0" spacing="3.0">
-                                                            <children>
-                                                                <Label styleClass="prices" text="Color" />
-                                                                <Label fx:id="color_opt" styleClass="options_font" text="Snow White" />
-                                                            </children>
-                                                        </VBox>
-                                                        <Region prefHeight="41.0" prefWidth="305.0" />
-                                                        <Label fx:id="color_price" text="Price here">
-                                                            <font>
-                                                                <Font name="System Bold" size="14.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </children>
-                                                </HBox>
-                                                <Line fx:id="line5" endX="488.29290771484375" endY="-0.621320366859436" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
-                                                <HBox alignment="CENTER_LEFT" prefHeight="19.0" prefWidth="624.0">
-                                                    <children>
-                                                        <VBox prefHeight="33.0" prefWidth="346.0">
-                                                            <children>
-                                                                <Label styleClass="prices" text="Wheels" />
-                                                                <Label fx:id="wheels_opt" prefHeight="17.0" prefWidth="348.0" styleClass="options_font" text="20-inch(fr) and 21-inch(rr) Rose Cermaic Spoke" VBox.vgrow="SOMETIMES" />
-                                                            </children>
-                                                        </VBox>
-                                                        <Region prefHeight="34.0" prefWidth="114.0" />
-                                                        <Label fx:id="wheels_price" text="Price here">
-                                                            <font>
-                                                                <Font name="System Bold" size="14.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </children>
-                                                </HBox>
-                                                <Line fx:id="line6" endX="488.29290771484375" endY="-0.621320366859436" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
-                                                <HBox alignment="CENTER_LEFT" prefHeight="19.0" prefWidth="624.0">
-                                                    <children>
-                                                        <VBox prefHeight="36.0" prefWidth="418.0">
-                                                            <children>
-                                                                <Label styleClass="prices" text="Interior" />
-                                                                <Label fx:id="interior_opt" prefHeight="16.0" prefWidth="421.0" styleClass="options_font" text="Black leather with GT-silver lining   " />
-                                                            </children>
-                                                        </VBox>
-                                                        <Region prefHeight="36.0" prefWidth="42.0" />
-                                                        <Label fx:id="interior_price" text="Price here">
-                                                            <font>
-                                                                <Font name="System Bold" size="14.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </children>
-                                                </HBox>
-                                                <Line fx:id="line7" endX="488.29290771484375" endY="-0.621320366859436" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
-                                                <HBox alignment="CENTER_LEFT" prefHeight="19.0" prefWidth="624.0">
-                                                    <children>
-                                                        <Label styleClass="prices" text="Handling costs" />
-                                                        <Region prefHeight="20.0" prefWidth="355.0" />
-                                                        <Label fx:id="handling_price" text="Price here">
-                                                            <font>
-                                                                <Font name="System Bold" size="14.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </children>
-                                                </HBox>
-                                                <Line fx:id="line8" endX="488.29290771484375" endY="-0.621320366859436" opacity="0.5" startX="-100.0" strokeWidth="2.0" styleClass="line" />
-                                                <HBox alignment="CENTER_LEFT" prefHeight="19.0" prefWidth="624.0">
-                                                    <children>
-                                                        <Label styleClass="prices" text="Total MSRP for this configuration" />
-                                                        <Region prefHeight="27.0" prefWidth="216.0" />
-                                                        <Label fx:id="total_price" styleClass="total_price" text="Price here">
-                                                            <font>
-                                                                <Font name="System Bold" size="18.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER" prefHeight="157.0" prefWidth="624.0" spacing="100.0" VBox.vgrow="SOMETIMES">
-                                                    <children>
-                                                        <Button fx:id="goback_btn" mnemonicParsing="false" onAction="#goback" prefWidth="128.0" styleClass="goback_btn" text="Go back" />
-                                                        <Button fx:id="confirm_btn" mnemonicParsing="false" styleClass="confirm_btn" text="Confirm Order" />
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                            <HBox.margin>
-                                                <Insets top="10.0" />
-                                            </HBox.margin>
+                                    </HBox>
+
+                                    <Line fx:id="line4" endX="480.0" opacity="0.4" startX="0.0" strokeWidth="1.5" styleClass="divider-line" />
+
+                                    <!-- Color Option -->
+                                    <HBox alignment="TOP_LEFT">
+                                        <VBox spacing="4.0">
+                                            <Label styleClass="config-label" text="Color">
+                                                <font>
+                                                    <Font size="14.0" />
+                                                </font>
+                                            </Label>
+                                            <Label fx:id="color_opt" styleClass="option-detail" text="Snow White">
+                                                <font>
+                                                    <Font size="12.0" />
+                                                </font>
+                                            </Label>
                                         </VBox>
-                                    </children>
-                                </HBox>
-                            </children>
-                        </StackPane>
-                    </children>
-                </VBox>
-            </children>
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="color_price" styleClass="price-label" text="Price here">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                    </HBox>
+
+                                    <Line fx:id="line5" endX="480.0" opacity="0.4" startX="0.0" strokeWidth="1.5" styleClass="divider-line" />
+
+                                    <!-- Wheels Option -->
+                                    <HBox alignment="TOP_LEFT">
+                                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="config-label" text="Wheels">
+                                                <font>
+                                                    <Font size="14.0" />
+                                                </font>
+                                            </Label>
+                                            <Label fx:id="wheels_opt" styleClass="option-detail" text="20-inch(fr) and 21-inch(rr) Rose Ceramic Spoke" wrapText="true">
+                                                <font>
+                                                    <Font size="12.0" />
+                                                </font>
+                                            </Label>
+                                        </VBox>
+                                        <Region minWidth="20.0" />
+                                        <Label fx:id="wheels_price" styleClass="price-label" text="Price here">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                    </HBox>
+
+                                    <Line fx:id="line6" endX="480.0" opacity="0.4" startX="0.0" strokeWidth="1.5" styleClass="divider-line" />
+
+                                    <!-- Interior Option -->
+                                    <HBox alignment="TOP_LEFT">
+                                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="config-label" text="Interior">
+                                                <font>
+                                                    <Font size="14.0" />
+                                                </font>
+                                            </Label>
+                                            <Label fx:id="interior_opt" styleClass="option-detail" text="Black leather with GT-silver lining" wrapText="true">
+                                                <font>
+                                                    <Font size="12.0" />
+                                                </font>
+                                            </Label>
+                                        </VBox>
+                                        <Region minWidth="20.0" />
+                                        <Label fx:id="interior_price" styleClass="price-label" text="Price here">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                    </HBox>
+
+                                    <Line fx:id="line7" endX="480.0" opacity="0.4" startX="0.0" strokeWidth="1.5" styleClass="divider-line" />
+
+                                    <!-- Handling Costs -->
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label styleClass="config-label" text="Handling costs">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="handling_price" styleClass="price-label" text="Price here">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                    </HBox>
+
+                                    <Line fx:id="line8" endX="480.0" opacity="0.5" startX="0.0" strokeWidth="2.0" styleClass="divider-line">
+                                        <VBox.margin>
+                                            <Insets top="5.0" />
+                                        </VBox.margin>
+                                    </Line>
+
+                                    <!-- Total MSRP -->
+                                    <HBox alignment="CENTER_LEFT">
+                                        <VBox.margin>
+                                            <Insets bottom="10.0" top="5.0" />
+                                        </VBox.margin>
+                                        <Label styleClass="config-label" text="Total MSRP for this configuration">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="total_price" styleClass="total-price" text="Price here">
+                                            <font>
+                                                <Font name="System Bold" size="20.0" />
+                                            </font>
+                                        </Label>
+                                    </HBox>
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                    </ScrollPane>
+
+                    <!-- Action Buttons -->
+                    <HBox alignment="CENTER" spacing="30.0">
+                        <VBox.margin>
+                            <Insets top="10.0" />
+                        </VBox.margin>
+                        <Button fx:id="goback_btn" mnemonicParsing="false" onAction="#goback" prefHeight="45.0" prefWidth="160.0" styleClass="goback_btn" text="Go back">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="confirm_btn" mnemonicParsing="false" onAction="#confirmOrder" prefHeight="45.0" prefWidth="160.0" styleClass="confirm_btn" text="Confirm Order">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Button>
+                    </HBox>
+                </children>
+            </VBox>
         </HBox>
     </center>
 </BorderPane>

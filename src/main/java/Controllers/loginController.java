@@ -246,71 +246,27 @@ public class loginController {
     }
 
     public void initialize() throws URISyntaxException {
-        try {
-            // Try to load video if it exists
-            var videoResource = getClass().getResource("/Image/porscheFinal.mp4");
-            if (videoResource != null) {
-                Media media = new Media(videoResource.toExternalForm());
-                MediaPlayer mediaPlayer = new MediaPlayer(media);
-                mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-                mediaPlayer.setAutoPlay(true);
+        Media media = new Media(Objects.requireNonNull(getClass().getResource("/Image/porscheFinal.mp4")).toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setAutoPlay(true);
 
-                mediaPlayer.setOnReady(() -> {
-                    videoview.setMediaPlayer(mediaPlayer);
-                    mediaPlayer.play();
-                });
-            } else {
-                logger.warn("Video file not found: /Image/porscheFinal.mp4");
-            }
-        } catch (Exception e) {
-            logger.error("Failed to load video", e);
-        }
+        mediaPlayer.setOnReady(() -> {
+            videoview.setMediaPlayer(mediaPlayer);
+            mediaPlayer.play();
+        });
 
         nametxt.setPromptText("Fill your Username");
         pwtxt.setPromptText("Fill your Password");
 
-        try {
-            // Try to load logo image if it exists
-            var imageStream = getClass().getResourceAsStream("/Image/porsche_text.png");
-            if (imageStream != null) {
-                Image porsche_text = new Image(imageStream);
-                porsche_image.setImage(porsche_text);
-            } else {
-                logger.warn("Image file not found: /Image/porsche_text.png");
-            }
-        } catch (Exception e) {
-            logger.error("Failed to load image", e);
-        }
-        
-        try {
-            var usericonStream = getClass().getResourceAsStream("/Image/usericon.png");
-            if (usericonStream != null) {
-                Image usericon = new Image(usericonStream);
-                usericon_image.setImage(usericon);
-            }
-        } catch (Exception e) {
-            logger.error("Failed to load usericon", e);
-        }
-        
-        try {
-            var logoStream = getClass().getResourceAsStream("/Image/porsche_logo.png");
-            if (logoStream != null) {
-                Image porsche_logo = new Image(logoStream);
-                porsche_logo_image.setImage(porsche_logo);
-            }
-        } catch (Exception e) {
-            logger.error("Failed to load porsche logo", e);
-        }
-        
-        try {
-            var closeStream = getClass().getResourceAsStream("/Image/close.png");
-            if (closeStream != null) {
-                Image close = new Image(closeStream);
-                closeimg.setImage(close);
-            }
-        } catch (Exception e) {
-            logger.error("Failed to load close icon", e);
-        }
+        Image porsche_text = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_text.png")));
+        porsche_image.setImage(porsche_text);
+        Image usericon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/usericon.png")));
+        usericon_image.setImage(usericon);
+        Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
+        porsche_logo_image.setImage(porsche_logo);
+        Image close = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/close.png")));
+        closeimg.setImage(close);
 
         nametxt.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
