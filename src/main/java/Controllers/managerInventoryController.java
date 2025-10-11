@@ -39,7 +39,7 @@ import javafx.util.Duration;
 import org.w3c.dom.Text;
 
 import javax.xml.transform.Result;
-import java.io.File;
+import java.io.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -374,7 +374,96 @@ public class managerInventoryController {
 
     @FXML
     void clickExportCSV(ActionEvent event) {
-            
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save CSV File");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("CSV Files", "*.csv")
+        );
+        
+        // Set default file name based on current view
+        String defaultFileName = inventoryBox.getValue() + "_inventory_" + 
+                                 java.time.LocalDate.now() + ".csv";
+        fileChooser.setInitialFileName(defaultFileName);
+        
+        // Show save dialog
+        Stage stage = (Stage) exportCSV.getScene().getWindow();
+        File file = fileChooser.showSaveDialog(stage);
+        
+        if (file != null) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                // Get current table items
+                ObservableList<inventory> items = inventoryTable.getItems();
+                
+                if (items.isEmpty()) {
+                    showAlert("No Data", "There is no data to export.", Alert.AlertType.WARNING);
+                    return;
+                }
+                
+                // Determine if we're exporting cars or parts based on first item
+                boolean isCar = items.get(0).getSeries() != null && !items.get(0).getSeries().isEmpty();
+                
+                // Write CSV header
+                if (isCar) {
+                    writer.write("ID,Name,Series,Models,Exterior Color,Interior Color,Fuel Type,Production Year,Quantity,Price,Status");
+                } else {
+                    writer.write("ID,Name,For Car,Description,Quantity,Price,Status");
+                }
+                writer.newLine();
+                
+                // Write data rows
+                for (inventory item : items) {
+                    if (isCar) {
+                        writer.write(escapeCSV(item.getInventoryId()) + ",");
+                        writer.write(escapeCSV(item.getName()) + ",");
+                        writer.write(escapeCSV(item.getSeries()) + ",");
+                        writer.write(escapeCSV(item.getModels()) + ",");
+                        writer.write(escapeCSV(item.getExtColor()) + ",");
+                        writer.write(escapeCSV(item.getIntColor()) + ",");
+                        writer.write(escapeCSV(item.getFuelType()) + ",");
+                        writer.write(item.getProductYear() + ",");
+                        writer.write(item.getQty() + ",");
+                        writer.write(item.getPrice() + ",");
+                        writer.write(escapeCSV(item.getStatus()));
+                    } else {
+                        writer.write(escapeCSV(item.getInventoryId()) + ",");
+                        writer.write(escapeCSV(item.getName()) + ",");
+                        writer.write(escapeCSV(item.getForCar()) + ",");
+                        writer.write(escapeCSV(item.getDescription()) + ",");
+                        writer.write(item.getQty() + ",");
+                        writer.write(item.getPrice() + ",");
+                        writer.write(escapeCSV(item.getStatus()));
+                    }
+                    writer.newLine();
+                }
+                
+                showAlert("Export Successful", "Data exported successfully to:\n" + file.getAbsolutePath(), 
+                         Alert.AlertType.INFORMATION);
+                
+            } catch (IOException e) {
+                showAlert("Export Failed", "Failed to export data: " + e.getMessage(), 
+                         Alert.AlertType.ERROR);
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    private String escapeCSV(String value) {
+        if (value == null) {
+            return "";
+        }
+        // Escape quotes and wrap in quotes if contains comma, quote, or newline
+        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
+    }
+    
+    private void showAlert(String title, String content, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     @FXML

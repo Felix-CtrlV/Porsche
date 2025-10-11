@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class managerOrderView {
     private Integer no,order_id;
-    private String cus_name,is_installmenat,carsandparts_name,carsandparts_qty,carsandparts_perprice;
+    private String cus_name,is_installmenat,carsandparts_name,carsandparts_qty,carsandparts_perprice,staff_name;
 
 
     private double total_amount,payed_amount,remain_amount;
@@ -26,6 +26,26 @@ public class managerOrderView {
         this.due_date = due_date;
     }
 
+    public void setOrder_id(Integer order_id) {
+        this.order_id = order_id;
+    }
+
+    public Integer getNo() {
+        return no;
+    }
+
+    public void setNo(Integer no) {
+        this.no = no;
+    }
+
+    public String getStaff_name() {
+        return staff_name;
+    }
+
+    public void setStaff_name(String staff_name) {
+        this.staff_name = staff_name;
+    }
+
     public String[] getCarsandparts_name() {
         String[] result = carsandparts_name.split(",");
         return  result;
@@ -45,15 +65,6 @@ public class managerOrderView {
     public void setCarsandparts_perprice(String carsandparts_perprice) {
         this.carsandparts_perprice = carsandparts_perprice;
     }
-
-    public int getNo() {
-        return no;
-    }
-
-    public void setNo(int no) {
-        this.no = no;
-    }
-
     public int getOrder_id() {
         return order_id;
     }
