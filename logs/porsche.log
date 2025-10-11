@@ -144,24 +144,58 @@ Caused by: java.lang.Error: Unresolved compilation problems:
 2025-10-11 18:42:23.367 [Thread-8288] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
 2025-10-11 18:42:23.367 [Thread-8288] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
 2025-10-11 18:42:23.883 [Thread-8288] INFO  Controllers.loginController - User staff logged in successfully with role: staff
-2025-10-11 19:22:42.888 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-11 19:22:42.974 [Thread-1267] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-11 19:22:47.171 [Thread-1267] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1da1281c
-2025-10-11 19:22:47.176 [Thread-1267] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-11 19:22:47.176 [Thread-1267] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-11 19:22:48.228 [Thread-1267] INFO  Controllers.loginController - User manager logged in successfully with role: manager
-2025-10-11 19:27:09.150 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
-2025-10-11 19:42:27.854 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-11 19:42:27.881 [Thread-2381] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-11 19:42:33.065 [Thread-2381] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@d6f629f
-2025-10-11 19:42:33.068 [Thread-2381] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-11 19:42:33.068 [Thread-2381] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-11 19:42:33.311 [Thread-2381] INFO  Controllers.loginController - User manager logged in successfully with role: manager
-2025-10-11 19:47:17.295 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
-2025-10-11 23:30:15.270 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-11 23:30:15.295 [Thread-1107] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-11 23:30:16.818 [Thread-1107] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6405b40e
-2025-10-11 23:30:16.822 [Thread-1107] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-11 23:30:16.822 [Thread-1107] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-11 23:30:16.983 [Thread-1107] INFO  Controllers.loginController - User manager logged in successfully with role: manager
-2025-10-11 23:44:22.959 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-11 19:19:15.973 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-11 19:19:16.016 [Thread-1102] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-11 19:19:21.500 [Thread-1102] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5c16b5d9
+2025-10-11 19:19:21.506 [Thread-1102] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-11 19:19:21.507 [Thread-1102] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-11 19:19:22.091 [Thread-1102] INFO  Controllers.loginController - User staff logged in successfully with role: staff
+2025-10-11 19:19:22.264 [JavaFX Application Thread] ERROR Controllers.loginController - Failed to load dashboard for role: staff
+javafx.fxml.LoadException: 
+/E:/Porsche/target/classes/View/staffWelcome.fxml
+
+	at javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2722)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2692)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3376)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3332)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3300)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3272)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3248)
+	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:3241)
+	at Controllers.loginController.lambda$clickLogin$0(loginController.java:197)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.concurrent.EventHelper.fireEvent(EventHelper.java:219)
+	at javafx.concurrent.Task.fireEvent(Task.java:1332)
+	at javafx.concurrent.Task.setState(Task.java:725)
+	at javafx.concurrent.Task$TaskCallable.lambda$call$1(Task.java:1410)
+	at com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455)
+	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run$$$capture(InvokeLaterDispatcher.java:95)
+	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Caused by: java.lang.reflect.InvocationTargetException: null
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:116)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:72)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:270)
+	at com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2688)
+	... 28 common frames omitted
+Caused by: java.lang.NullPointerException: null
+	at java.base/java.util.Objects.requireNonNull(Objects.java:220)
+	at Controllers.staffWelcomeController.initialize(staffWelcomeController.java:35)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	... 35 common frames omitted
