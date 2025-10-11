@@ -30,8 +30,6 @@
                         <Button fx:id="externalbtn" mnemonicParsing="false" onAction="#clickExternalbtn" style="-fx-background-color: transparent; -fx-border-color: #c8102e; -fx-border-width: 2; -fx-text-fill: #c8102e; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 8 25; -fx-background-radius: 5; -fx-border-radius: 5;" text="EXTERNAL" />
                     </children>
                 </HBox>
-
-                <!-- accessory scroll area -->
                 <ScrollPane fx:id="scrollpane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="260.0" prefWidth="800.0" vbarPolicy="ALWAYS">
 
                     <content>
@@ -41,7 +39,6 @@
                             </padding>
 
                             <children>
-                                <!-- Accessories will be added dynamically from controller -->
                             </children>
                         </FlowPane>
                     </content>

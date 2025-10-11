@@ -16,8 +16,6 @@
     -card-shadow-hover: rgba(213, 0, 28, 0.15);
     -border-color: #E5E5E5;
     -divider-color: #D5001C;
-
-    /* Typography - Porsche Next inspired */
     -font-primary: 'Segoe UI Semibold', 'Helvetica Neue', 'Arial', sans-serif;
     -font-secondary: 'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif;
 
@@ -82,10 +80,6 @@
     -fx-letter-spacing: 1px;
     -fx-font-weight: 400;
 }
-
-/* ============================================
-   BUTTONS
-   ============================================ */
 
 .back-button {
     -fx-background-color: transparent;

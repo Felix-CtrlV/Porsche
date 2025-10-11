@@ -29,7 +29,6 @@
     -fx-text-fill: white;
 }
 
-/* Accessory Scroll Area */
 .accessory-scroll {
     -fx-background-color: #fafafa;
     -fx-border-color: #e5e5e5;
@@ -42,7 +41,6 @@
     -fx-background-color: transparent;
 }
 
-/* FlowPane items spacing */
 .flow-pane {
     -fx-alignment: center;
 }

@@ -182,7 +182,6 @@ public class staffCarsController implements Initializable {
         fadeOut.play();
     }
 
-    /** ✅ Fixed Home Button Navigation **/
     @FXML
     private void home(MouseEvent event) {
         System.out.println("🏠 Home button clicked");
