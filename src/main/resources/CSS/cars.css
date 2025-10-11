@@ -1,25 +1,241 @@
-.image-tile {
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-    -fx-border-color: transparent;
+.root {
+    -porsche-red: #D5001C;
+    -porsche-red-hover: #B00016;
+    -porsche-red-glow: rgba(213, 0, 28, 0.3);
+    -porsche-red-light: rgba(213, 0, 28, 0.08);
+    -white: #FFFFFF;
+    -off-white: #F9F9F9;
+    -light-gray: #E8E8E8;
+    -gray: #C0C0C0;
+    -dark-gray: #6B6B6B;
+    -black: #1A1A1A;
+    -metallic-gray: #8C8C8C;
+    -font-primary: 'Helvetica Neue', 'Segoe UI Semibold', 'Arial Rounded MT Bold', sans-serif;
+    -font-secondary: 'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif;
+    -shadow-subtle: 0 2px 12px rgba(0, 0, 0, 0.04);
+    -shadow-normal: 0 4px 20px rgba(0, 0, 0, 0.08);
+    -shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+    -shadow-red: 0 8px 32px rgba(213, 0, 28, 0.25);
+    -transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    -transition-medium: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    -transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.root-pane {
+    -fx-background-color: -white;
+}
+
+.main-container {
+    -fx-background-color: -white;
+}
+
+.header-bar {
+    -fx-background-color: -white;
+}
+
+.home-button {
+    -fx-background-color: transparent;
+    -fx-border-color: -black;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-text-fill: -black;
+    -fx-font-family: -font-primary;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1.2px;
+    -fx-padding: 12px 28px;
     -fx-cursor: hand;
-    -fx-scale-x: 1;
-    -fx-scale-y: 1;
+    -fx-effect: dropshadow(gaussian, transparent, 0, 0, 0, 0);
 }
 
-.image-tile:hover {
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
-}
-
-.image-tile:pressed {
+.home-button:hover {
+    -fx-background-color: -porsche-red;
+    -fx-border-color: -porsche-red;
+    -fx-text-fill: -white;
+    -fx-effect: dropshadow(gaussian, -porsche-red-glow, 16, 0.5, 0, 2);
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
-    -fx-border-color: rgba(0, 0, 0, 0.6);
 }
 
-.title_text {
-    -fx-font-family: "Arial";
+.home-button:pressed {
+    -fx-background-color: -porsche-red-hover;
+    -fx-border-color: -porsche-red-hover;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.porsche-logo-text {
+    -fx-font-family: -font-primary;
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -black;
+    -fx-letter-spacing: 4px;
+}
+
+.title-section {
+    -fx-background-color: transparent;
+}
+
+.main-title {
+    -fx-font-family: -font-primary;
+    -fx-font-size: 42px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -black;
+    -fx-letter-spacing: 3px;
+}
+
+.subtitle {
+    -fx-font-family: -font-secondary;
     -fx-font-size: 14px;
-    -fx-opacity: 0.80;
+    -fx-font-weight: 400;
+    -fx-text-fill: -dark-gray;
+    -fx-letter-spacing: 1px;
+}
+
+.divider-line {
+    -fx-stroke: -porsche-red;
+    -fx-stroke-width: 2px;
+    -fx-opacity: 1.0;
+}
+
+.models-grid {
+    -fx-background-color: -off-white;
+}
+
+.model-tile-container {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.model-tile-wrapper {
+    -fx-background-color: -white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 12, 0, 0, 4);
+    -fx-padding: 0;
+}
+
+.model-tile-wrapper:hover {
+    -fx-effect: dropshadow(gaussian, -porsche-red-glow, 24, 0.4, 0, 8);
+    -fx-translate-y: -6;
+}
+
+.image-container {
+    -fx-background-color: -off-white;
+    -fx-background-radius: 8px 8px 0 0;
+    -fx-padding: 16px;
+}
+
+.model-image {
+    -fx-cursor: hand;
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, transparent, 0, 0, 0, 0);
+}
+
+.model-image:hover {
+    -fx-opacity: 0.95;
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 16, 0, 0, 4);
+}
+
+.model-label-container {
+    -fx-background-color: -white;
+    -fx-background-radius: 0 0 8px 8px;
+}
+
+.model-name {
+    -fx-font-family: -font-primary;
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -black;
+    -fx-letter-spacing: 2px;
+}
+
+.model-tagline {
+    -fx-font-family: -font-secondary;
+    -fx-font-size: 12px;
+    -fx-font-weight: 400;
+    -fx-text-fill: -metallic-gray;
+    -fx-letter-spacing: 0.8px;
+}
+
+.footer-text {
+    -fx-font-family: -font-secondary;
+    -fx-font-size: 10px;
+    -fx-font-weight: 400;
+    -fx-text-fill: -gray;
+    -fx-letter-spacing: 2px;
+}
+
+.model-tile-wrapper,
+.model-image,
+.home-button {
+    -fx-transition: all -transition-medium;
+}
+
+.fade-in {
+    -fx-opacity: 0;
+}
+
+.fade-in-active {
+    -fx-opacity: 1;
+}
+
+.ripple {
+    -fx-background-color: -porsche-red-light;
+    -fx-background-radius: 50%;
+    -fx-opacity: 0.6;
+}
+
+@media (max-width: 1024px) {
+    .main-title {
+        -fx-font-size: 36px;
+    }
+    .model-image {
+        -fx-fit-height: 200.0;
+        -fx-fit-width: 300.0;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-title {
+        -fx-font-size: 28px;
+    }
+    .model-name {
+        -fx-font-size: 16px;
+    }
+    .model-tagline {
+        -fx-font-size: 11px;
+    }
+}
+
+.model-image-loading {
+    -fx-opacity: 0.3;
+}
+
+.model-image-loaded {
+    -fx-opacity: 1.0;
+}
+
+.model-tile-wrapper:focused,
+.home-button:focused {
+    -fx-border-color: -porsche-red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+}
+
+.model-tile-selected {
+    -fx-border-color: -porsche-red;
+    -fx-border-width: 3px;
+    -fx-border-radius: 8px;
+}
+
+.model-tile-wrapper::before {
+    -fx-background-color: linear-gradient(to bottom, transparent, -porsche-red-light);
+    -fx-opacity: 0;
+}
+
+.model-tile-wrapper:hover::before {
+    -fx-opacity: 1;
 }

@@ -4,38 +4,46 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffassetController">
-   <children>
-      <HBox prefHeight="144.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
-         <children>
-            <ImageView fx:id="img" fitHeight="174.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER" prefHeight="31.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Region prefHeight="101.0" prefWidth="192.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="internalbtn" mnemonicParsing="false" onAction="#clickInternalbtn" prefHeight="31.0" prefWidth="77.0" text="Internal" HBox.hgrow="ALWAYS" />
-            <Button fx:id="externalbtn" mnemonicParsing="false" onAction="#clickExternalbtn" prefHeight="31.0" prefWidth="77.0" text="External" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets left="50.0" />
-               </HBox.margin>
-            </Button>
-            <Region layoutX="10.0" layoutY="10.0" prefHeight="31.0" prefWidth="209.0" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <ScrollPane fx:id="scrollpane" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
-         <content>
-            <FlowPane prefHeight="200.0" prefWidth="585.0">
-               <children>
-                  <HBox prefHeight="194.0" prefWidth="583.0" />
-               </children>
-            </FlowPane>
-         </content>
-      </ScrollPane>
-   </children>
-</VBox>
+<BorderPane prefHeight="600.0" prefWidth="1000.0" stylesheets="@../CSS/staffasset.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffassetController">
+
+    <center>
+        <VBox alignment="CENTER" spacing="20.0">
+            <!-- explicit Insets instead of shorthand "padding=" -->
+            <padding>
+                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+            </padding>
+
+            <children>
+                <!-- Car preview image -->
+                <ImageView fx:id="img" fitHeight="250.0" fitWidth="750.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 5);" />
+
+                <!-- only the two buttons you asked to keep -->
+                <HBox alignment="CENTER" spacing="20.0">
+                    <children>
+                        <Button fx:id="internalbtn" mnemonicParsing="false" onAction="#clickInternalbtn" style="-fx-background-color: transparent; -fx-border-color: #c8102e; -fx-border-width: 2; -fx-text-fill: #c8102e; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 8 25; -fx-background-radius: 5; -fx-border-radius: 5;" text="INTERNAL" />
+
+                        <Button fx:id="externalbtn" mnemonicParsing="false" onAction="#clickExternalbtn" style="-fx-background-color: transparent; -fx-border-color: #c8102e; -fx-border-width: 2; -fx-text-fill: #c8102e; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 8 25; -fx-background-radius: 5; -fx-border-radius: 5;" text="EXTERNAL" />
+                    </children>
+                </HBox>
+                <ScrollPane fx:id="scrollpane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="260.0" prefWidth="800.0" vbarPolicy="ALWAYS">
+
+                    <content>
+                        <FlowPane fx:id="flowpane" hgap="25.0" prefWidth="780.0" vgap="25.0">
+                            <padding>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                            </padding>
+
+                            <children>
+                            </children>
+                        </FlowPane>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>
