@@ -159,7 +159,7 @@
                                 </HBox>
                             </children>
                         </VBox>
-                        <TableView fx:id="orderTable" minHeight="0.0" minWidth="780.0" prefHeight="215.0" prefWidth="780.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="orderTable" minHeight="0.0" minWidth="780.0" prefHeight="215.0" prefWidth="780.0" style="-fx-background-color: transparent; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e9ecef; -fx-border-width: 1.5; -fx-font-size: 12;" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="orderDateCol" minWidth="130.0" prefWidth="110.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text=" Order Date" />
                                 <TableColumn fx:id="customerNameCol" minWidth="130.0" prefWidth="130.4000244140625" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="Customer" />
