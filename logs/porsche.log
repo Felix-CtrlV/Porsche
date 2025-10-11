@@ -474,3 +474,9 @@ java.sql.SQLException: Column 'carsandparts_price' not found.
 2025-10-12 03:39:20.868 [Thread-1816] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
 2025-10-12 03:39:21.003 [Thread-1816] INFO  Controllers.loginController - User manager logged in successfully with role: manager
 2025-10-12 03:40:27.598 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-12 03:54:54.273 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-12 03:54:54.303 [Thread-1935] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-12 03:54:55.317 [Thread-1935] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@d21755
+2025-10-12 03:54:55.323 [Thread-1935] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-12 03:54:55.323 [Thread-1935] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-12 03:54:55.451 [Thread-1935] INFO  Controllers.loginController - User manager logged in successfully with role: manager
