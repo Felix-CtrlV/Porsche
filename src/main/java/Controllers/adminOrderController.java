@@ -183,19 +183,33 @@ public class adminOrderController {
     private void applySearchFilter() {
         if (currentSearchText == null || currentSearchText.trim().isEmpty()) {
             filteredOrders = FXCollections.observableArrayList(allOrders);
+            table.setItems(filteredOrders);
+            updateOrderCounts();
         } else {
-            filteredOrders = FXCollections.observableArrayList();
-            String searchLower = currentSearchText.toLowerCase().trim();
-            
-            // Search in order details for car model
-            for (orderView order : allOrders) {
-                if (containsCarModel(order.getOrderId(), searchLower)) {
-                    filteredOrders.add(order);
+            // Run search in background to avoid UI freezing
+            Task<ObservableList<orderView>> searchTask = new Task<>() {
+                @Override
+                protected ObservableList<orderView> call() throws Exception {
+                    ObservableList<orderView> results = FXCollections.observableArrayList();
+                    String searchLower = currentSearchText.toLowerCase().trim();
+                    
+                    for (orderView order : allOrders) {
+                        if (containsCarModel(order.getOrderId(), searchLower)) {
+                            results.add(order);
+                        }
+                    }
+                    return results;
                 }
-            }
+            };
+            
+            searchTask.setOnSucceeded(e -> {
+                filteredOrders = searchTask.getValue();
+                table.setItems(filteredOrders);
+                updateOrderCounts();
+            });
+            
+            new Thread(searchTask).start();
         }
-        table.setItems(filteredOrders);
-        updateOrderCounts();
     }
 
     private boolean containsCarModel(int orderId, String searchText) {
