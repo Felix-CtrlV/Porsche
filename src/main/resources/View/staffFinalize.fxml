@@ -16,7 +16,7 @@
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../CSS/finalize_order_page.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffFinalizeController">
     <center>
-        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1200.0" spacing="50.0" BorderPane.alignment="CENTER">
+        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1200.0" spacing="50.0" stylesheets="@../CSS/finalize_order_page.css" BorderPane.alignment="CENTER">
             <padding>
                 <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
             </padding>
@@ -24,12 +24,6 @@
             <!-- LEFT COLUMN: Vehicle Overview -->
             <VBox alignment="TOP_LEFT" prefHeight="600.0" prefWidth="500.0" spacing="15.0">
                 <children>
-                    <!-- Dark Mode Toggle -->
-                    <Button fx:id="darkmodebtn" mnemonicParsing="false" onAction="#modechange" prefHeight="36.0" prefWidth="36.0" styleClass="dark-toggle" text="D">
-                        <font>
-                            <Font name="System Bold" size="14.0" />
-                        </font>
-                    </Button>
 
                     <!-- Vehicle Image Section -->
                     <StackPane prefHeight="250.0" prefWidth="500.0" styleClass="image-container">
@@ -57,7 +51,7 @@
                             </font>
                         </Label>
 
-                        <Line fx:id="line2" endX="400.0" opacity="0.5" startX="0.0" strokeWidth="2.0" styleClass="divider-line" />
+                        <Line fx:id="line2" endX="114.0" opacity="0.5" startX="0.0" strokeWidth="2.0" styleClass="divider-line" />
 
                         <Label styleClass="model-name" text="911 Carrera GTS">
                             <font>

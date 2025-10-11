@@ -1,15 +1,7 @@
-/* ========================================
-   PORSCHE FINALIZE ORDER PAGE - LIGHT MODE
-   ======================================== */
-
 .root {
     -fx-background-color: #ffffff;
     -fx-font-family: "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
 }
-
-/* ========================================
-   TYPOGRAPHY & TEXT STYLES
-   ======================================== */
 
 .config-title {
     -fx-text-fill: #000000;
@@ -58,28 +50,16 @@
     -fx-font-weight: bold;
 }
 
-/* ========================================
-   IMAGE CONTAINER
-   ======================================== */
-
 .image-container {
     -fx-background-color: #fafafa;
     -fx-background-radius: 12px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 2);
 }
 
-/* ========================================
-   DIVIDER LINES
-   ======================================== */
-
 .divider-line {
-    -fx-stroke: rgba(0, 0, 0, 0.5);
+    -fx-stroke: #C21E2B;
     -fx-stroke-width: 2;
 }
-
-/* ========================================
-   SCROLL PANE
-   ======================================== */
 
 .config-scroll {
     -fx-background-color: transparent;
@@ -107,10 +87,6 @@
 .config-scroll .scroll-bar:vertical .thumb:hover {
     -fx-background-color: rgba(0, 0, 0, 0.35);
 }
-
-/* ========================================
-   BUTTONS - LIGHT MODE
-   ======================================== */
 
 .dark-toggle {
     -fx-background-color: #d50000;
@@ -181,10 +157,6 @@
     -fx-scale-y: 0.98;
 }
 
-/* ========================================
-   DARK MODE STYLES
-   ======================================== */
-
 .dark-mode {
     -fx-background-color: #121212;
 }
@@ -244,7 +216,6 @@
     -fx-background-color: rgba(255, 255, 255, 0.35);
 }
 
-/* Dark Mode Buttons */
 .dark-mode .dark-toggle {
     -fx-background-color: #d50000;
     -fx-text-fill: #ffffff;
@@ -274,19 +245,11 @@
     -fx-text-fill: #ffffff;
 }
 
-/* ========================================
-   ANIMATIONS & TRANSITIONS
-   ======================================== */
-
 .confirm_btn,
 .goback_btn,
 .dark-toggle {
     -fx-transition: all 0.3s ease;
 }
-
-/* ========================================
-   RESPONSIVE ADJUSTMENTS
-   ======================================== */
 
 @media (max-width: 1024px) {
     .config-title {

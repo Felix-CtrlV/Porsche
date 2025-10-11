@@ -241,8 +241,8 @@ public class loginController {
         usericon_image.setImage(usericon);
         Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
         porsche_logo_image.setImage(porsche_logo);
-//        Image close = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/close.png")));
-//        closeimg.setImage(close);
+        Image close = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/close.png")));
+        closeimg.setImage(close);
 
         nametxt.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
