@@ -39,7 +39,7 @@ import javafx.util.Duration;
 import org.w3c.dom.Text;
 
 import javax.xml.transform.Result;
-import java.io.File;
+import java.io.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -302,6 +302,22 @@ public class managerInventoryController {
     private Button editPartRevert;
     @FXML
     private Button editPartApply;
+    @FXML
+    private Button switchTable ;
+    @FXML
+    void clickSwitchTable(ActionEvent event){
+        String currentText = switchTable.getText();
+
+        if (currentText.contains("Available")) {
+            // Switch to showing unavailable items
+            switchTable.setText("Unavailable");
+            showUnavailableItems();
+        } else {
+            // Switch to showing available items
+            switchTable.setText("Available");
+            showAvailableItems();
+        }
+    }
 
     public managerInventoryController() throws SQLException, ClassNotFoundException {
     }
@@ -358,7 +374,96 @@ public class managerInventoryController {
 
     @FXML
     void clickExportCSV(ActionEvent event) {
-
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save CSV File");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("CSV Files", "*.csv")
+        );
+        
+        // Set default file name based on current view
+        String defaultFileName = inventoryBox.getValue() + "_inventory_" + 
+                                 java.time.LocalDate.now() + ".csv";
+        fileChooser.setInitialFileName(defaultFileName);
+        
+        // Show save dialog
+        Stage stage = (Stage) exportCSV.getScene().getWindow();
+        File file = fileChooser.showSaveDialog(stage);
+        
+        if (file != null) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                // Get current table items
+                ObservableList<inventory> items = inventoryTable.getItems();
+                
+                if (items.isEmpty()) {
+                    showAlert("No Data", "There is no data to export.", Alert.AlertType.WARNING);
+                    return;
+                }
+                
+                // Determine if we're exporting cars or parts based on first item
+                boolean isCar = items.get(0).getSeries() != null && !items.get(0).getSeries().isEmpty();
+                
+                // Write CSV header
+                if (isCar) {
+                    writer.write("ID,Name,Series,Models,Exterior Color,Interior Color,Fuel Type,Production Year,Quantity,Price,Status");
+                } else {
+                    writer.write("ID,Name,For Car,Description,Quantity,Price,Status");
+                }
+                writer.newLine();
+                
+                // Write data rows
+                for (inventory item : items) {
+                    if (isCar) {
+                        writer.write(escapeCSV(item.getInventoryId()) + ",");
+                        writer.write(escapeCSV(item.getName()) + ",");
+                        writer.write(escapeCSV(item.getSeries()) + ",");
+                        writer.write(escapeCSV(item.getModels()) + ",");
+                        writer.write(escapeCSV(item.getExtColor()) + ",");
+                        writer.write(escapeCSV(item.getIntColor()) + ",");
+                        writer.write(escapeCSV(item.getFuelType()) + ",");
+                        writer.write(item.getProductYear() + ",");
+                        writer.write(item.getQty() + ",");
+                        writer.write(item.getPrice() + ",");
+                        writer.write(escapeCSV(item.getStatus()));
+                    } else {
+                        writer.write(escapeCSV(item.getInventoryId()) + ",");
+                        writer.write(escapeCSV(item.getName()) + ",");
+                        writer.write(escapeCSV(item.getForCar()) + ",");
+                        writer.write(escapeCSV(item.getDescription()) + ",");
+                        writer.write(item.getQty() + ",");
+                        writer.write(item.getPrice() + ",");
+                        writer.write(escapeCSV(item.getStatus()));
+                    }
+                    writer.newLine();
+                }
+                
+                showAlert("Export Successful", "Data exported successfully to:\n" + file.getAbsolutePath(), 
+                         Alert.AlertType.INFORMATION);
+                
+            } catch (IOException e) {
+                showAlert("Export Failed", "Failed to export data: " + e.getMessage(), 
+                         Alert.AlertType.ERROR);
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    private String escapeCSV(String value) {
+        if (value == null) {
+            return "";
+        }
+        // Escape quotes and wrap in quotes if contains comma, quote, or newline
+        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
+    }
+    
+    private void showAlert(String title, String content, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     @FXML
@@ -557,8 +662,10 @@ public class managerInventoryController {
 
     private ObservableList<inventory> inventoryData = FXCollections.observableArrayList();
     private ObservableList<inventory> carsData = FXCollections.observableArrayList();
+    private ObservableList<inventory> carsOffData = FXCollections.observableArrayList();
     private HashMap<CheckBox,String > models = new HashMap<>();
     private ObservableList<inventory> partsData = FXCollections.observableArrayList();
+    private ObservableList<inventory> partsOffDate = FXCollections.observableArrayList();
     private ObservableList<inventory> searchDate = FXCollections.observableArrayList();
     private inventory editPath;
 
@@ -739,7 +846,6 @@ public class managerInventoryController {
                     } else {
                         sameImage = false;
                     }
-                    System.out.println(sameImage);
                     allEmpty = sameImage &&
                             Objects.equals(editCarName.getText(), editPath.getName())
                             && editCarUsage.getText().equals(fuel)
@@ -751,7 +857,6 @@ public class managerInventoryController {
 
 
                 }else if(path.equalsIgnoreCase("partsEdit")){
-                    Image img = editPartImg.getImage();
                     String photoPath = editPath.getPhoto();
                     boolean sameImage = true;
                     if (!file.isEmpty() && photoPath != null) {
@@ -941,7 +1046,7 @@ public class managerInventoryController {
             private final HBox buttonsContainer = new HBox(8, editButton, deleteButton);
             {
                 editButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.EDIT));
-                deleteButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.TRASH));
+                deleteButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.BAN));
                 editButton.setStyle("-fx-background-color: transparent;");
                 deleteButton.setStyle("-fx-background-color: transparent;");
                 editButton.setCursor(Cursor.HAND);
@@ -977,8 +1082,23 @@ public class managerInventoryController {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
+                    setStyle(""); // Clear any previous styling
                 } else {
                     setGraphic(buttonsContainer);
+
+                    // Style based on availability
+                    if ("Out".equals(item.getStatus()) || item.getQty() <= 0) {
+                        // Gray out unavailable items
+                        setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: #6c757d;");
+                        // Also style the buttons to be less prominent
+                        editButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #6c757d;");
+                        deleteButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #6c757d;");
+                    } else {
+                        // Normal styling for available items
+                        setStyle("");
+                        editButton.setStyle("-fx-background-color: transparent;");
+                        deleteButton.setStyle("-fx-background-color: transparent;");
+                    }
                 }
             }
             private void addHoverAnimation(Button button) {
@@ -1028,9 +1148,32 @@ public class managerInventoryController {
 
         showTableRows.setText("Showing " + total + " of " + sItems + " items");
     }
+
+    private void showAvailableItems(){
+        // Show currently available items based on the selected inventory type
+        if (inventoryBox.getValue().equalsIgnoreCase("Cars")) {
+            showTable("cars");
+        } else {
+            showTable("parts");
+        }
+    }
+
+    private void showUnavailableItems(){
+        // Show items marked as Unavailable based on the selected inventory type
+        inventoryTable.getItems().clear();
+        if (inventoryBox.getValue().equalsIgnoreCase("Cars")) {
+            inventoryTable.setItems(carsOffData);
+            showTableRows.setText("Showing " + carsOffData.size() + " of " + carsOffData.size() + " items");
+        } else {
+            inventoryTable.setItems(partsOffDate);
+            showTableRows.setText("Showing " + partsOffDate.size() + " of " + partsOffDate.size() + " items");
+        }
+    }
+
     private void setCarsTable(){
         try{
             carsData.clear();
+            partsData.clear();
             models.clear();
             CallableStatement cs = con.prepareCall("CALL getAllCars()");
             ResultSet rs = cs.executeQuery();
@@ -1044,14 +1187,21 @@ public class managerInventoryController {
                 int qty = rs.getInt(7);
                 Double price = rs.getDouble(8);
                 String photoUrl = rs.getString(9);
+                Boolean check = rs.getBoolean(10);
                 String status = (qty !=0) ?"On" : "Out";
+                if(!check && qty == 0){
+                    status = "Unavailable";
+                }
                 String inventoryId = String.format("C-%03d", id);
-                carsData.add(new inventory(id,inventoryId,name,extColor,intColor,fuels,productYear,qty,price,status,photoUrl));
-
+                if(status.equals("Unavailable")){
+                    carsOffData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl));
+                }else {
+                    carsData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl));
+                }
 
             }
+
             for(inventory i : carsData){
-                System.out.println(i.getModels());
                 models.put(new CheckBox(i.getModels()),i.getSeries());
             }
             cs.close();
@@ -1061,6 +1211,7 @@ public class managerInventoryController {
     }
     private void setPartsTable(){
         try {
+            partsOffDate.clear();
             partsData.clear();
             CallableStatement cs = con.prepareCall("CALL getAllParts()");
             ResultSet rs = cs.executeQuery();
@@ -1072,10 +1223,19 @@ public class managerInventoryController {
                 int qty = rs.getInt(5);
                 Double price = rs.getDouble(6);
                 String photoUrl = rs.getString(7);
+                Boolean check = rs.getBoolean(8);
 
                 String status = (qty !=0) ?"On" : "Out";
+                if(!check && qty == 0){
+                    status = "Unavailable";
+                }
                 String inventoryId = String.format("P-%03d", id);
-                partsData.add(new inventory(id,inventoryId,name,forCar,description,qty,price,status,photoUrl));
+                if(status.equals("Unavailable")){
+                    partsOffDate.add(new inventory(id,inventoryId,name,forCar,description,qty,price,status,photoUrl));
+                }else{
+                    partsData.add(new inventory(id,inventoryId,name,forCar,description,qty,price,status,photoUrl));
+                }
+
             }
             cs.close();
         } catch (SQLException e) {
@@ -1116,7 +1276,7 @@ public class managerInventoryController {
             for (HashMap.Entry<CheckBox, String> entry : models.entrySet()) {
                 if(i.getModels().contains(entry.getValue())) {
                     in.add(entry.getKey());
-                    System.out.println(entry);
+
                 }
             }
         }
@@ -1228,7 +1388,7 @@ public class managerInventoryController {
             editTitle.setText("(Car)");
             setEditCar();
             editCarRevert.setOnAction(e->{
-                System.out.println("clicking edit car revert");
+
                 setEditCar();
             });
             editCarApply.setOnAction(e->{
@@ -1313,8 +1473,6 @@ public class managerInventoryController {
 
                 }else {
                     if (editPath.getInventoryId().contains("C")) {
-                        String sql = "UPDATE cars SET car_name = ?, fuel_type = ?, product_year = ?, " +
-                                "int_color = ?, ext_color = ?, qty = ?, price = ?, photo = ? WHERE car_id = ?";
 
                     } else {
 
@@ -1324,9 +1482,10 @@ public class managerInventoryController {
 
             } else {
                 if (editPath.getInventoryId().contains("C")) {
-                    String sql = "DELETE FROM cars WHERE car_id = ? ";
+                    String sql = "UPDATE cars SET car_status= ? WHERE car_id = ? ";
                     PreparedStatement ps = con.prepareCall(sql);
-                    ps.setInt(1,editPath.getId());
+                    ps.setBoolean(1,false);
+                    ps.setInt(2,editPath.getId());
                     ps.execute();
                     for (inventory i : carsData){
                         if (i == editPath){
@@ -1385,8 +1544,6 @@ public class managerInventoryController {
 
         modelsShowBox.setVisible(true);
     }
-
-
 
     private void handleImageSelection(ImageView targetImageView) {
         FileChooser fileChooser = new FileChooser();

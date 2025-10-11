@@ -7,7 +7,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -22,111 +21,127 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
-<HBox prefHeight="1000.0" prefWidth="1475.0" spacing="15.0" style="-fx-background-color: linear-gradient(to bottom right, #f8fafc, #e2e8f0);" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-        <VBox minHeight="695.0" minWidth="780.0" spacing="15.0" HBox.hgrow="ALWAYS">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="688.0" prefWidth="1093.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOrderManagementController">
+    <center>
+        <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <HBox alignment="CENTER_LEFT" minHeight="60.0" minWidth="489.0" prefHeight="212.0" prefWidth="979.0" spacing="10.0">
+                <VBox prefHeight="688.0" prefWidth="650.0" spacing="15.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="162.0" prefWidth="447.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4);">
+                        <HBox prefHeight="132.0" prefWidth="780.0" spacing="8.0">
                             <children>
-                                <StackPane minWidth="82.4" prefHeight="202.0" prefWidth="115.0">
+                                <HBox alignment="CENTER_LEFT" prefHeight="108.0" prefWidth="208.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4);" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Circle fill="TRANSPARENT" radius="60.0" stroke="#f1f5f9" strokeWidth="8.0" />
-                                        <Circle fill="transparent" radius="60.0" stroke="#6d8196" strokeWidth="8.0" />
-                                        <Circle fill="transparent" radius="50.0" stroke="#f1f5f9" strokeWidth="8.0" />
-                                        <Circle fill="transparent" radius="50.0" stroke="#e67e22" strokeWidth="8.0" />
+                                        <StackPane minWidth="60.0" prefHeight="80.0" prefWidth="80.0">
+                                            <children>
+                                                <Circle fill="TRANSPARENT" radius="40.0" stroke="#f1f5f9" strokeWidth="6.0" />
+                                                <Circle fx:id="confrimQtyCircle" fill="transparent" radius="40.0" stroke="#6d8196" strokeWidth="6.0" />
+                                                <Circle fill="transparent" radius="30.0" stroke="#f1f5f9" strokeWidth="6.0" />
+                                                <Circle fx:id="pendingQtyCircle" fill="transparent" radius="30.0" stroke="#e67e22" strokeWidth="6.0" />
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                            <HBox.margin>
+                                                <Insets left="15.0" />
+                                            </HBox.margin>
+                                        </StackPane>
+                                        <VBox alignment="CENTER" prefHeight="80.0" spacing="5">
+                                            <children>
+                                                <HBox alignment="CENTER" spacing="8.0">
+                                                    <children>
+                                                        <Label style="-fx-text-fill: #6d8196; -fx-font-size: 12px; -fx-font-weight: 600; -fx-font-family: 'Arial Black';" text="CONFIRM" />
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="confrimQty" style="-fx-text-fill: #6d8196; -fx-font-size: 16px; -fx-font-weight: bold; -fx-font-family: 'Arial Black';" text="800" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="20.0" />
+                                            </HBox.margin>
+                                        </VBox>
+                                        <AnchorPane prefHeight="80.0" prefWidth="15.0">
+                                            <children>
+                                                <Line endX="12.0" endY="60.0" startX="2.0" startY="40.0" stroke="#cbd5e1" strokeLineCap="ROUND" strokeWidth="2.0" />
+                                                <Line endX="12.0" endY="60.0" startX="2.0" startY="80.0" stroke="#cbd5e1" strokeLineCap="ROUND" strokeWidth="2.0" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets bottom="20.0" left="10.0" />
+                                            </HBox.margin>
+                                        </AnchorPane>
+                                        <VBox alignment="CENTER" prefHeight="80.0" spacing="5">
+                                            <children>
+                                                <HBox alignment="CENTER" spacing="8.0">
+                                                    <children>
+                                                        <Label style="-fx-text-fill: #e67e22; -fx-font-size: 12px; -fx-font-weight: 600; -fx-font-family: 'Arial Black';" text="Pending" />
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="pendingQty" style="-fx-text-fill: #e67e22; -fx-font-size: 16px; -fx-font-weight: bold; -fx-font-family: 'Arial Black';" text="450" />
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="10.0" right="15.0" />
+                                            </HBox.margin>
+                                        </VBox>
                                     </children>
+                                </HBox>
+                                <VBox alignment="CENTER" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
                                     <padding>
-                                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                        <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                                     </padding>
-                                    <HBox.margin>
-                                        <Insets left="20.0" />
-                                    </HBox.margin>
-                                </StackPane>
-                                <VBox alignment="CENTER" prefHeight="170.0" prefWidth="100.0" spacing="8">
                                     <children>
-                                        <HBox alignment="CENTER" spacing="10.0">
+                                        <Label style="-fx-text-fill: #6d8196; -fx-font-size: 16px; -fx-font-weight: 600; -fx-font-family: 'Arial Black';" text="CONFIRM" />
+                                        <HBox alignment="CENTER" spacing="6.0">
                                             <children>
-                                                <Label style="-fx-text-fill: #6d8196; -fx-font-size: 14px; -fx-font-weight: 600; -fx-font-family: 'Arial Black';" text="Complete" />
+                                                <Label fx:id="confrimPriceLabel" style="-fx-text-fill: #6d8196; -fx-font-weight: bold; -fx-font-size: 18px; -fx-font-family: 'Arial Black';" text="\$19550">
+                                                    <padding>
+                                                        <Insets left="1.0" />
+                                                    </padding>
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin></Label>
+                                                <Label fx:id="confirmPriceRateLabel" style="-fx-text-fill: #86efac; -fx-font-size: 10px; -fx-font-weight: 700; -fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 6; -fx-padding: 2 4 2 4;" text="+7.1%" />
                                             </children>
+                                            <padding>
+                                                <Insets left="60.0" />
+                                            </padding>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
                                         </HBox>
-                                        <Label style="-fx-text-fill: #6d8196; -fx-font-size: 20px; -fx-font-weight: bold; -fx-font-family: 'Arial Black';" text="800" />
                                     </children>
-                                    <HBox.margin>
-                                        <Insets left="50.0" />
-                                    </HBox.margin>
                                 </VBox>
-                                <AnchorPane prefHeight="110.0" prefWidth="20.0">
+                                <VBox alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
+                                    <padding>
+                                        <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                                    </padding>
                                     <children>
-                                        <Line endX="18.0" endY="101.0" startX="2.0" startY="70.0" stroke="#cbd5e1" strokeLineCap="ROUND" strokeWidth="2.0" />
-                                        <Line endX="18.0" endY="101.0" startX="2.0" startY="130.0" stroke="#cbd5e1" strokeLineCap="ROUND" strokeWidth="2.0" />
-                                    </children>
-                                    <HBox.margin>
-                                        <Insets bottom="60.0" left="20.0" />
-                                    </HBox.margin>
-                                </AnchorPane>
-                                <VBox alignment="CENTER" prefHeight="202.0" prefWidth="98.0" spacing="8">
-                                    <children>
-                                        <HBox alignment="CENTER" spacing="10.0">
+                                        <Label style="-fx-text-fill: #e67e22; -fx-font-size: 16px; -fx-font-weight: 600; -fx-font-family: 'Arial Black';" text="PENDING" />
+                                        <HBox alignment="CENTER" spacing="6.0">
                                             <children>
-                                                <Label style="-fx-text-fill: #e67e22; -fx-font-size: 14px; -fx-font-weight: 600; -fx-font-family: 'Arial Black';" text="Pending" />
+                                                <Label fx:id="pendingPriceLabel" style="-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 18px; -fx-font-family: 'Arial Black';" text="\$1300" />
+                                                <Label fx:id="pendingPriceRateLabel" style="-fx-text-fill: #fecaca; -fx-font-size: 10px; -fx-font-weight: 700; -fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 6; -fx-padding: 2 4 2 4;" text="+2.0%" />
                                             </children>
+                                            <padding>
+                                                <Insets left="61.0" />
+                                            </padding>
                                         </HBox>
-                                        <Label style="-fx-text-fill: #e67e22; -fx-font-size: 20px; -fx-font-weight: bold; -fx-font-family: 'Arial Black';" text="450" />
                                     </children>
-                                    <HBox.margin>
-                                        <Insets left="20.0" right="20.0" />
-                                    </HBox.margin>
                                 </VBox>
                             </children>
-                            <HBox.margin>
-                                <Insets bottom="1.0" />
-                            </HBox.margin>
                         </HBox>
-                        <VBox alignment="CENTER" prefHeight="212.0" prefWidth="229.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 12, 0, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
+                        <VBox prefHeight="250.0" prefWidth="736.0" spacing="8.0" style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc); -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e2e8f0; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0.5, 0, 4);" VBox.vgrow="ALWAYS">
                             <padding>
-                                <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                             </padding>
                             <children>
-                                <Label style="-fx-text-fill: #6d8196; -fx-font-size: 20px; -fx-font-weight: 600; -fx-font-family: 'Arial Black';" text="COMPLETE" />
-                                <HBox alignment="CENTER" spacing="8.0">
+                                <HBox>
                                     <children>
-                                        <Label style="-fx-text-fill: #6d8196; -fx-font-weight: bold; -fx-font-size: 22px; -fx-font-family: 'Arial Black';" text="\$19550" />
-                                        <Label style="-fx-text-fill: #86efac; -fx-font-size: 12px; -fx-font-weight: 700; -fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 8; -fx-padding: 2 6 2 6;" text="+7.1%" />
+                                        <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-family: 'Arial Black';" text="Revenue" />
                                     </children>
                                 </HBox>
-                            </children>
-                        </VBox>
-                        <VBox alignment="CENTER" prefHeight="212.0" prefWidth="239.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(245, 158, 11, 0.3), 12, 0, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
-                            <padding>
-                                <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
-                            </padding>
-                            <children>
-                                <Label style="-fx-text-fill: #e67e22; -fx-font-size: 20px; -fx-font-weight: 600; -fx-font-family: 'Arial Black';" text="PENDING" />
-                                <HBox alignment="CENTER" spacing="8.0">
+                                <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <Label style="-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 22px; -fx-font-family: 'Arial Black';" text="\$1300" />
-                                        <Label style="-fx-text-fill: #fecaca; -fx-font-size: 12px; -fx-font-weight: 700; -fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 8; -fx-padding: 2 6 2 6;" text="+2.0%" />
-                                    </children>
-                                </HBox>
-                            </children>
-                        </VBox>
-                    </children>
-                </HBox>
-                <HBox minHeight="277.0" minWidth="780.0" prefHeight="292.0" prefWidth="979.0" spacing="20.0">
-                    <children>
-                        <VBox alignment="CENTER" minHeight="300.0" minWidth="555.0" prefHeight="342.0" prefWidth="594.0" spacing="10.0" style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc); -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e2e8f0; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0.5, 0, 4);" HBox.hgrow="ALWAYS">
-                            <padding>
-                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                            </padding>
-                            <children>
-
-                                <!-- Chart Section -->
-                                <HBox alignment="CENTER" minHeight="150.0" minWidth="489.0" prefHeight="205.0" prefWidth="936.0" VBox.vgrow="ALWAYS">
-                                    <children>
-                                        <BarChart minHeight="120.0" minWidth="489.0" prefHeight="190.0" prefWidth="936.0" style="-fx-background-color: transparent; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
+                                        <BarChart fx:id="revenueChart" prefHeight="150.0" prefWidth="213.0" style="-fx-background-color: transparent; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" />
                                             </xAxis>
@@ -136,165 +151,143 @@
                                         </BarChart>
                                     </children>
                                 </HBox>
-
-                                <!-- Week Days -->
-                                <HBox alignment="CENTER" spacing="35.0">
+                                <HBox alignment="CENTER" spacing="30.0">
                                     <children>
-                                        <Label style="-fx-text-fill: #64748b; -fx-font-weight: 600; -fx-font-size: 12;" text="📅 Mon" />
-                                        <Label style="-fx-text-fill: #64748b; -fx-font-weight: 600; -fx-font-size: 12;" text="📅 Tue" />
-                                        <Label style="-fx-text-fill: #64748b; -fx-font-weight: 600; -fx-font-size: 12;" text="📅 Wed" />
-                                        <Label style="-fx-text-fill: #64748b; -fx-font-weight: 600; -fx-font-size: 12;" text="📅 Thu" />
-                                        <Label style="-fx-text-fill: #64748b; -fx-font-weight: 600; -fx-font-size: 12;" text="📅 Fri" />
-                                        <Label style="-fx-text-fill: #64748b; -fx-font-weight: 600; -fx-font-size: 12;" text="📅 Sat" />
-                                        <Label style="-fx-text-fill: #64748b; -fx-font-weight: 600; -fx-font-size: 12;" text="📅 Sun" />
+                                        <Button fx:id="weeklyRevenue" mnemonicParsing="false" onAction="#clickWeeklyRevenue" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12px;" text="Weekly" />
+                                        <Button fx:id="monthlyRevenue" mnemonicParsing="false" onAction="#clickMonthlyRevenue" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12px;" text="Monthly" />
                                     </children>
                                 </HBox>
                             </children>
                         </VBox>
-                    </children>
-                    <VBox.margin>
-                        <Insets bottom="10.0" />
-                    </VBox.margin>
-                </HBox>
-
-                <!-- Table Section -->
-                <AnchorPane prefHeight="343.0" prefWidth="781.0" VBox.vgrow="ALWAYS">
-                    <children>
-                        <TableView fx:id="orderTable" minHeight="300.0" minWidth="780.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="orderTable" minHeight="0.0" minWidth="780.0" prefHeight="215.0" prefWidth="780.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="orderDateCol" minWidth="130.0" prefWidth="110.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="📊 Order Date" />
-                                <TableColumn fx:id="staffNameCol" minWidth="130.0" prefWidth="218.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="👤 Staff Name" />
-                                <TableColumn fx:id="customerNameCol" minWidth="130.0" prefWidth="75.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="🤵 Customer" />
-                                <TableColumn fx:id="installmentCol" minWidth="130.0" prefWidth="216.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="💰 Installment" />
-                                <TableColumn fx:id="noCol" maxWidth="100.0" minWidth="130.0" prefWidth="100.0" resizable="false" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="💵 Price" />
-                                <TableColumn fx:id="orderStatusCol" minWidth="130.0" prefWidth="96.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="📈 Status" />
+                                <TableColumn fx:id="orderDateCol" minWidth="130.0" prefWidth="110.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text=" Order Date" />
+                                <TableColumn fx:id="customerNameCol" minWidth="130.0" prefWidth="130.4000244140625" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="Customer" />
+                                <TableColumn fx:id="staffNameCol" minWidth="130.0" prefWidth="218.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text=" Staff Name" />
+                                <TableColumn fx:id="qtyCol" minWidth="130.0" prefWidth="131.19989013671875" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="Qty" />
+                                <TableColumn fx:id="priceCol" maxWidth="100.0" minWidth="130.0" prefWidth="100.0" resizable="false" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="Price" />
+                                <TableColumn fx:id="statusCol" minWidth="130.0" prefWidth="96.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="Status" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
                         </TableView>
                     </children>
-                    <VBox.margin>
-                        <Insets top="10.0" />
-                    </VBox.margin>
-                </AnchorPane>
-            </children>
-        </VBox>
-
-        <!-- Right Sidebar -->
-        <VBox minWidth="480.0" prefHeight="695.0" prefWidth="458.0" spacing="15.0" HBox.hgrow="ALWAYS">
-            <children>
-                <!-- Search and Date Controls -->
-                <HBox alignment="CENTER_RIGHT" minWidth="480.0" prefHeight="66.0" prefWidth="461.0" spacing="8.0" style="-fx-background-color: linear-gradient(to right, #ffffff, #f8fafc); -fx-border-radius: 14; -fx-background-radius: 14; -fx-border-color: #e2e8f0; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
-                    <children>
-                        <StackPane prefHeight="46.0" prefWidth="448.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <TextField fx:id="SearchText" prefHeight="36.0" prefWidth="171.0" promptText="🔍 Search Orders..." style="-fx-background-color: #f8fafc; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #e2e8f0; -fx-prompt-text-fill: #94a3b8;" StackPane.alignment="CENTER">
-                                    <StackPane.margin>
-                                        <Insets left="15.0" right="15.0" />
-                                    </StackPane.margin>
-                                </TextField>
-                                <Button fx:id="Searchbtn" mnemonicParsing="false" prefHeight="30.0" prefWidth="36.0" style="-fx-background-color: linear-gradient(135deg, #667eea, #764ba2); -fx-background-radius: 18; -fx-text-fill: white; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 6, 0, 0, 2);" text="🔍" StackPane.alignment="CENTER_RIGHT">
-                                    <StackPane.margin>
-                                        <Insets bottom="10.0" right="25.0" top="10.0" />
-                                    </StackPane.margin>
-                                </Button>
-                            </children>
-                        </StackPane>
-                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onMouseClicked="#prevMonthClick" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" styleClass="topic_font" text="◀" />
-                        <ChoiceBox fx:id="monthBox" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 5;" stylesheets="@../CSS/general.css" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" onMouseClicked="#nextMonthClick" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" styleClass="topic_font" text="▶" />
-                        <Region prefHeight="26.0" prefWidth="10.0" HBox.hgrow="NEVER" />
-                        <Button fx:id="PreviousYearbth" mnemonicParsing="false" onMouseClicked="#prevYearClick" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" styleClass="topic_font" text="◀" />
-                        <ChoiceBox fx:id="yearBox" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 10; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 5;" stylesheets="@../CSS/general.css" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="NextYearbtn" mnemonicParsing="false" onMouseClicked="#nextYearClick" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" styleClass="topic_font" text="▶" />
-                    </children>
+                </VBox>
+                <VBox maxWidth="430.0" prefHeight="688.0" prefWidth="430.0" spacing="10.0" HBox.hgrow="ALWAYS">
                     <padding>
-                        <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </padding>
-                </HBox>
-
-                <!-- Order Details Panel -->
-                <HBox minWidth="480.0" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <AnchorPane minWidth="480.0" prefHeight="92.0" prefWidth="1280.0" style="-fx-background-color: transparent;">
+                        <VBox spacing="8.0" style="-fx-background-color: linear-gradient(to right, #ffffff, #f8fafc); -fx-border-radius: 14; -fx-background-radius: 14; -fx-border-color: #e2e8f0; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                            <padding>
+                                <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+                            </padding>
                             <children>
-                                <BorderPane minWidth="480.0" prefHeight="357.0" prefWidth="461.0" style="-fx-background-color: linear-gradient(to bottom, #ffffff, #f8fafc); -fx-border-color: #e2e8f0; -fx-border-radius: 16; -fx-background-radius: 16; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                    <padding>
-                                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                    </padding>
-                                    <top>
-                                        <VBox spacing="18.0">
-                                            <children>
-                                                <HBox spacing="12.0">
-                                                    <children>
-                                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 14;" text="💰 Paid Amount:" />
-                                                        <Region HBox.hgrow="ALWAYS" />
-                                                        <Label fx:id="paidAmountlbl" style="-fx-font-weight: bold; -fx-text-fill: #10b981; -fx-font-size: 16; -fx-background-color: rgba(16, 185, 129, 0.1); -fx-background-radius: 8; -fx-padding: 4 8 4 8;" text="0.00" />
-                                                    </children>
-                                                </HBox>
-                                                <HBox spacing="12.0">
-                                                    <children>
-                                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 14;" text="📊 Remain Amount:" />
-                                                        <Region HBox.hgrow="ALWAYS" />
-                                                        <Label fx:id="remainAmountlbl" style="-fx-font-weight: bold; -fx-text-fill: #ef4444; -fx-font-size: 16; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 8; -fx-padding: 4 8 4 8;" text="0.00" />
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER" spacing="80.0" style="-fx-padding: 15 0 0 0;">
-                                                    <children>
-                                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #334155;" text="📦 Name" />
-                                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #334155;" text="🔢 Quantity" />
-                                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #334155;" text="💵 Price" />
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </VBox>
-                                    </top>
-                                    <center>
-                                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: transparent; -fx-border-color: #e2e8f0; -fx-border-radius: 8;" BorderPane.alignment="CENTER">
-                                            <content>
-                                                <VBox fx:id="orderItemsContainer" prefHeight="179.0" prefWidth="464.0" spacing="10.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 8;" />
-                                            </content>
-                                            <padding>
-                                                <Insets top="10.0" />
-                                            </padding>
-                                        </ScrollPane>
-                                    </center>
-                                    <bottom>
-                                        <GridPane prefHeight="120.0" prefWidth="429.0" BorderPane.alignment="CENTER">
-                                            <columnConstraints>
-                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="279.0" minWidth="10.0" prefWidth="279.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="208.0" minWidth="10.0" prefWidth="150.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                                <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="65.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="42.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                            <children>
-                                                <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 14;" text="💎 Total Price:" />
-                                                <Label fx:id="totalPriceLabel121" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 16; -fx-background-color: rgba(59, 130, 246, 0.1); -fx-background-radius: 8; -fx-padding: 4 8 4 8;" text="0.00" GridPane.columnIndex="1" />
-                                                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="12.0" GridPane.rowIndex="1">
-                                                    <children>
-                                                        <Label prefHeight="22.0" prefWidth="114.0" style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 14;" text="👤 From:" />
-                                                        <Label fx:id="staffNamelbl1" prefHeight="44.0" prefWidth="235.0" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 14;" text="label" wrapText="true" />
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="12.0" GridPane.rowIndex="2">
-                                                    <children>
-                                                        <Label prefHeight="21.0" prefWidth="145.0" style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 14;" text="🤵 Customer:" />
-                                                        <Label fx:id="customerNamelabel1" prefHeight="44.0" prefWidth="173.0" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 14;" text="label" wrapText="true" />
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </GridPane>
-                                    </bottom>
-                                </BorderPane>
+                                <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                                    <children>
+                                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonthbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="◀" />
+                                        <ChoiceBox fx:id="monthBox" minWidth="100.0" prefHeight="38.0" prefWidth="67.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 5;" HBox.hgrow="ALWAYS" />
+                                        <Button fx:id="nextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonthbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="▶" />
+                                        <Region prefWidth="10.0" HBox.hgrow="NEVER" />
+                                        <Button fx:id="previousYearbth" mnemonicParsing="false" onAction="#clickPreviousYearbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="◀" />
+                                        <ChoiceBox fx:id="yearBox" minWidth="100.0" prefHeight="38.0" prefWidth="80.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 10; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 5;" HBox.hgrow="ALWAYS" />
+                                        <Button fx:id="nextYearbtn" mnemonicParsing="false" onAction="#clickNextYearbn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="▶" />
+                                    </children>
+                                </HBox>
+                                <StackPane alignment="CENTER_RIGHT" prefHeight="40.0">
+                                    <children>
+                                        <TextField fx:id="SearchText" onAction="#searchTextAction" prefHeight="36.0" promptText="Search Orders..." style="-fx-background-color: #f8fafc; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #e2e8f0; -fx-prompt-text-fill: #94a3b8;" StackPane.alignment="CENTER_LEFT">
+                                            <StackPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                            </StackPane.margin>
+                                        </TextField>
+                                        <Button fx:id="Searchbtn" mnemonicParsing="false" prefHeight="36.0" prefWidth="50.0" style="-fx-background-color: transparent; -fx-background-radius: 18; -fx-text-fill: orange; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.4), 8, 0, 0, 2); -fx-cursor: hand;" text="🔍">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                            <StackPane.margin>
+                                                <Insets />
+                                            </StackPane.margin>
+                                        </Button>
+                                    </children>
+                                </StackPane>
                             </children>
-                        </AnchorPane>
+                        </VBox>
+                        <VBox style="-fx-background-color: linear-gradient(to bottom, #ffffff, #f8fafc); -fx-border-color: #e2e8f0; -fx-border-radius: 16; -fx-background-radius: 16; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);" VBox.vgrow="ALWAYS">
+                            <padding>
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                            </padding>
+                            <children>
+                                <VBox spacing="12.0">
+                                    <children>
+                                        <HBox spacing="10.0">
+                                            <children>
+                                                <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Paid Amount:" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label fx:id="paidAmountlbl" style="-fx-font-weight: bold; -fx-text-fill: #10b981; -fx-font-size: 14; -fx-background-color: rgba(16, 185, 129, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                            </children>
+                                        </HBox>
+                                        <HBox spacing="10.0">
+                                            <children>
+                                                <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Remain Amount:" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label fx:id="remainAmountlbl" style="-fx-font-weight: bold; -fx-text-fill: #ef4444; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                                <TableView fx:id="installmentTable" prefHeight="150.0" style="-fx-background-color: transparent; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-size: 11; -fx-border-width: 1.5;" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="installmentNameCol" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-font-family: 'Arial';" text="Name" />
+                                        <TableColumn fx:id="installmentQtyCol" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER; -fx-font-family: 'Arial';" text="Quantity" />
+                                        <TableColumn fx:id="installmentPriceCol" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER_RIGHT; -fx-font-family: 'Arial';" text="Price" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                    <VBox.margin>
+                                        <Insets top="10.0" />
+                                    </VBox.margin>
+                                </TableView>
+                                <GridPane prefHeight="100.0" VBox.vgrow="NEVER">
+                                    <columnConstraints>
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints vgrow="SOMETIMES" />
+                                        <RowConstraints vgrow="SOMETIMES" />
+                                        <RowConstraints vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Total Price:" />
+                                        <Label fx:id="totalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 14; -fx-background-color: rgba(59, 130, 246, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" GridPane.columnIndex="1" />
+                                        <HBox alignment="CENTER_LEFT" spacing="8.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                            <children>
+                                                <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="From:" />
+                                                <Label fx:id="staffNamelabel" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 12;" text="label" wrapText="true" />
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" spacing="8.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                            <children>
+                                                <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Customer:" />
+                                                <Label fx:id="customerNamelabel" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 12;" text="label" wrapText="true" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets top="10.0" />
+                                    </VBox.margin>
+                                </GridPane>
+                            </children>
+                        </VBox>
                     </children>
-                </HBox>
+                </VBox>
             </children>
-        </VBox>
-    </children>
-</HBox>
+            <BorderPane.margin>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="30.0" />
+            </BorderPane.margin>
+        </HBox>
+    </center>
+</BorderPane>

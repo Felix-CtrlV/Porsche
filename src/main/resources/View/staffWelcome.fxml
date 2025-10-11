@@ -93,7 +93,7 @@
                         <HBox alignment="CENTER_LEFT">
                             <children>
                                 <Label text="Looking for :" textFill="WHITE" />
-                                <Button styleClass="transparent-button" text="Accessories" />
+                                <Button fx:id="accessorybtn" onAction="#clickaccessorybtn" styleClass="transparent-button" text="Accessories" />
                             </children>
                             <padding>
                                 <Insets left="15.0" />

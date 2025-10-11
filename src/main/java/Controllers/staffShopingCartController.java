@@ -87,10 +87,6 @@ public class staffShopingCartController {
         carModel = "S 500 4MATIC";
         basePrice = 115000.00;
 
-        accessories.add(new Accessory("Leather Interior Upgrade", 1800.00));
-        accessories.add(new Accessory("Advanced Driver Assistance", 1200.00));
-        accessories.add(new Accessory("Panoramic Sunroof", 1500.00));
-        accessories.add(new Accessory("Custom Alloy Wheels", 800.00));
 
         accessoriesTable.setItems(accessories);
     }

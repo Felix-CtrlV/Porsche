@@ -27,6 +27,8 @@ public class staffWelcomeController {
     @FXML private Button logoutbtn;
     @FXML private ImageView backgroundImage;
     @FXML private StackPane imageContainer;
+    @FXML
+    private Button accessorybtn;
 
     public void initialize() {
         // Load background image
@@ -71,5 +73,12 @@ public class staffWelcomeController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.show();
+    }
+    @FXML
+    void clickaccessorybtn(ActionEvent event) throws IOException {
+    Parent root=FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/staffasset.fxml")));
+    Stage stage=(Stage) ((Node) event.getSource()).getScene().getWindow();
+    stage.setScene(new Scene(root));
+    stage.show();
     }
 }
