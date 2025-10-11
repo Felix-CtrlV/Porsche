@@ -31,7 +31,7 @@
                     <children>
                         <HBox prefHeight="132.0" prefWidth="780.0" spacing="8.0">
                             <children>
-                                <HBox alignment="CENTER_LEFT" prefHeight="108.0" prefWidth="208.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4);" HBox.hgrow="ALWAYS">
+                                <HBox alignment="CENTER_LEFT" maxWidth="365.0" prefHeight="108.0" prefWidth="208.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4);" HBox.hgrow="ALWAYS">
                                     <children>
                                         <StackPane minWidth="60.0" prefHeight="80.0" prefWidth="80.0">
                                             <children>
@@ -84,7 +84,7 @@
                                         </VBox>
                                     </children>
                                 </HBox>
-                                <VBox alignment="CENTER" maxWidth="300.0" minWidth="200.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
+                                <VBox alignment="CENTER" maxWidth="204.0" minWidth="200.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
                                     <padding>
                                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                                     </padding>
@@ -110,7 +110,7 @@
                                         </HBox>
                                     </children>
                                 </VBox>
-                                <VBox alignment="CENTER" maxWidth="300.0" minWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
+                                <VBox alignment="CENTER" maxWidth="204.0" minWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
                                     <padding>
                                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                                     </padding>
@@ -159,7 +159,7 @@
                                 </HBox>
                             </children>
                         </VBox>
-                        <TableView fx:id="orderTable" onMouseClicked="#orderTableClick" minHeight="0.0" minWidth="780.0" prefHeight="215.0" prefWidth="780.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="orderTable" minHeight="0.0" minWidth="780.0" prefHeight="215.0" prefWidth="780.0" style="-fx-background-color: transparent; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e9ecef; -fx-border-width: 1.5; -fx-font-size: 12;" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="orderDateCol" minWidth="130.0" prefWidth="110.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text=" Order Date" />
                                 <TableColumn fx:id="customerNameCol" minWidth="130.0" prefWidth="130.4000244140625" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0;" text="Customer" />
