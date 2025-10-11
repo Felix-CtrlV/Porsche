@@ -1,127 +1,226 @@
-/* Customize option names */
-.customize_options {
-    -fx-font-family: "Arial";
-    -fx-font-size: 18px;
-    -fx-font-weight: 700;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+.root-pane {
+    -fx-background-color: #ffffff;
+    -fx-font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
 }
 
-.nav-button-highlight{
-    -fx-background-color: black;
-    -fx-text-fill: white;
-    -fx-background-radius: 20;
+.center-showcase {
+    -fx-background-color: #fafafa;
 }
 
-/* Car model name */
-.car_model_name {
-    -fx-font-family: "Arial";
-    -fx-font-size: 32px;
-    -fx-font-weight: 700;
+.car-image-view {
+    -fx-opacity: 0;
 }
 
-/* Car frame number */
-.car_frame_num {
-    -fx-font-family: "Times New Roman";
-    -fx-font-size: 48px;
-    -fx-font-style: italic;
+.car-image-view:hover {
+    -fx-opacity: 1;
 }
 
-/* Navigation Button */
-.navbutton {
+.info-panel {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 0 1;
+}
+
+.description-card {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e8e8e8;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+}
+
+.porsche-accent-line {
+    -fx-background-color: #d32f2f;
+    -fx-background-radius: 0;
+}
+
+.car-description-label {
+    -fx-text-fill: #424242;
+    -fx-font-size: 13px;
+    -fx-font-weight: 400;
+    -fx-line-spacing: 4px;
+}
+
+.confirm-button {
+    -fx-background-color: #d32f2f;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 0.8px;
+    -fx-background-radius: 4px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+.confirm-button:hover {
+    -fx-background-color: #b71c1c;
+}
+
+.confirm-button:pressed {
+    -fx-background-color: #8b0000;
+}
+
+.customization-panel {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e8e8e8;
+    -fx-border-width: 1 0 0 0;
+}
+
+.glass-panel {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+}
+
+.glass-panel:hover {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #d32f2f;
+}
+
+.panel-header {
     -fx-background-color: transparent;
-    -fx-text-fill: black;
-    -fx-font-size: 16px;
-    -fx-padding: 5 10;
-    -fx-background-radius: 8;
-    -fx-cursor: hand;
+    -fx-border-color: #e8e8e8;
+    -fx-border-width: 0 0 1 0;
 }
 
-.navbutton:hover {
-    -fx-background-color: black;
-    -fx-text-fill: white;
-    -fx-background-radius: 20;
+.customize-title {
+    -fx-text-fill: #212121;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1.5px;
 }
 
-/* Confirm Order Button */
-.confirmorderbtn {
-    -fx-background-color: #fe6579;  /* original color */
-    -fx-text-fill: black;
-    -fx-font-size: 16px;
-    -fx-padding: 5 10;
-    -fx-background-radius: 24;
-    -fx-cursor: hand;
-}
-
-.confirmorderbtn:hover {
-    -fx-background-color: #e0556b;  /* darken on hover */
-    -fx-text-fill: white;
-    -fx-background-radius: 24;
-}
-
-/* Glassmorphism main panel */
-.glass_main {
-    -fx-background-color:
-        rgba(255,255,255,0.9),
-        linear-gradient(to bottom right, rgba(255,255,255,0.35), rgba(255,255,255,0.06));
-    -fx-background-insets: 0, 0;
-    -fx-background-radius: 20 20 0 0;
-
-    -fx-border-color: rgba(255,255,255,0.45);
-    -fx-border-width: 1;
-    -fx-border-radius: 20 20 0 0;
-
-    -fx-padding: 16;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 24, 0.35, 0, 10);
-}
-
-.transparent-button {
+.custom-scroll-pane {
     -fx-background-color: transparent;
-    -fx-text-fill: rgba(0, 0, 0, 0.7);
-    -fx-underline: true;
-    -fx-font-size: 14px;
-    -fx-cursor: hand;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.custom-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.custom-scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 6px;
+}
+
+.custom-scroll-pane .scroll-bar:horizontal .thumb {
+    -fx-background-color: #d32f2f;
+    -fx-background-radius: 3px;
+}
+
+.custom-scroll-pane .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #b71c1c;
+}
+
+.custom-scroll-pane .scroll-bar:horizontal .track {
+    -fx-background-color: #e8e8e8;
+    -fx-background-radius: 3px;
+}
+
+.custom-scroll-pane .scroll-bar .increment-button,
+.custom-scroll-pane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.item-flow {
+    -fx-padding: 5px;
 }
 
 .arrow-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #444444;
+    -fx-background-color: #ffffff;
     -fx-font-size: 18px;
+    -fx-font-weight: 300;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-max-width: 36px;
+    -fx-max-height: 36px;
+    -fx-background-radius: 50%;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 50%;
     -fx-cursor: hand;
-    -fx-padding: 4;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
 }
+
 .arrow-button:hover {
-    -fx-text-fill: #222222;
+    -fx-background-color: #d32f2f;
+    -fx-border-color: #d32f2f;
 }
 
 .arrow-button:pressed {
-    -fx-text-fill: #fe6579;
+    -fx-background-color: #b71c1c;
 }
 
-.arrow-button_options {
-    -fx-background-color: transparent;
-    -fx-text-fill: #444444;
-    -fx-font-size: 26px;
-    -fx-cursor: hand;
-    -fx-padding: 4;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
+.model-number {
+    -fx-text-fill: #212121;
+    -fx-font-size: 52px;
+    -fx-font-weight: 700;
 }
 
-.arrow-button_options:hover {
-    -fx-text-fill: #222222;
-}
-.arrow-button_options:pressed {
-    -fx-text-fill: #fe6579;
-}
-
-/* Fuel type */
-.fuel_type {
-    -fx-background-color: transparent;
-    -fx-border-color: #444444;
+.fuel-badge {
+    -fx-text-fill: #757575;
+    -fx-font-size: 9px;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 1.2px;
+    -fx-background-color: #f5f5f5;
+    -fx-background-radius: 3px;
+    -fx-padding: 4px 8px 4px 8px;
+    -fx-border-color: #e0e0e0;
     -fx-border-width: 1px;
-    -fx-border-radius: 12px;
-    -fx-padding: 4 12 4 12;
-    -fx-text-fill: #222222;
-    -fx-font-family: "Times New Roman";
+    -fx-border-radius: 3px;
+}
+
+.model-name {
+    -fx-text-fill: #424242;
+    -fx-font-size: 26px;
+    -fx-font-weight: 300;
+    -fx-letter-spacing: 0.5px;
+}
+
+.accent-line {
+    -fx-background-color: #d32f2f;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #757575;
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 0.5px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 10px 18px 10px 18px;
+    -fx-cursor: hand;
+}
+
+.back-button:hover {
+    -fx-background-color: #fafafa;
+    -fx-text-fill: #d32f2f;
+    -fx-border-color: #d32f2f;
+}
+
+.back-button:pressed {
+    -fx-background-color: #f5f5f5;
+}
+
+.separator {
+    -fx-background-color: #e8e8e8;
+}
+
+.glass-panel,
+.arrow-button,
+.confirm-button,
+.back-button,
+.car-image-view {
+    -fx-transition: all 0.2s ease;
 }

@@ -1,0 +1,8 @@
+2025-10-10 09:29:39.955 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-10 09:29:40.212 [Thread-977] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-10 09:29:45.336 [Thread-977] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@55cea98a
+2025-10-10 09:29:45.343 [Thread-977] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-10 09:29:45.344 [Thread-977] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-10 09:29:45.803 [Thread-977] WARN  Controllers.loginController - Failed login attempt for username: staff
+2025-10-10 09:29:53.675 [Thread-977] WARN  Controllers.loginController - Failed login attempt for username: staff
+2025-10-10 09:30:02.787 [Thread-977] WARN  Controllers.loginController - Failed login attempt for username: staff
