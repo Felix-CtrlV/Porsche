@@ -1,5 +1,6 @@
 package Controllers;
 
+import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -204,14 +205,14 @@ public class managerOrderManagementController {
     }
     
     @FXML
-    void orderTableClick(MouseEvent event) {
+    void orderTableClick(MouseEvent event) throws IOException {
         managerOrderView selectedOrder = orderTable.getSelectionModel().getSelectedItem();
         
         if (selectedOrder == null) {
             clearOrderDetails();
             return;
         }
-        showOrderDetails(selectedOrder);
+        orderDetails(selectedOrder);
     }
 
     @FXML
@@ -229,20 +230,6 @@ public class managerOrderManagementController {
         statusCol.setCellValueFactory(new PropertyValueFactory<>("is_installmenat"));
         
         // Set up installment table columns
-        installmentNameCol.setCellValueFactory(cellData -> {
-            String[] parts = cellData.getValue().split("\\|");
-            return new SimpleStringProperty(parts.length > 0 ? parts[0] : "");
-        });
-        
-        installmentQtyCol.setCellValueFactory(cellData -> {
-            String[] parts = cellData.getValue().split("\\|");
-            return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
-        });
-        
-        installmentPriceCol.setCellValueFactory(cellData -> {
-            String[] parts = cellData.getValue().split("\\|");
-            return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
-        });
         
         // Connect search button to searchOrder method
         if (Searchbtn != null) {
@@ -556,27 +543,44 @@ public class managerOrderManagementController {
         // Reload orders for the selected month/year
         loadOrder();
     }
-    
-    private void showOrderDetails(managerOrderView order) {
+
+    private void orderDetails(managerOrderView orders) throws IOException {
+
         // Load order details
-        String[] names = order.getCarsandparts_name();
-        String[] qty = order.getCarsandparts_qty();
-        String[] price = order.getCarsandparts_perprice();
-        
-        totalPriceLabel.setText(String.valueOf(order.getTotal_amount()));
-        paidAmountlbl.setText(String.valueOf(order.getPayed_amount()));
-        remainAmountlbl.setText(String.valueOf(order.getRemain_amount()));
-        customerNamelabel.setText(order.getCus_name());
-        staffNamelabel.setText(order.getStaff_name());
-        
+        String[] names = orders.getCarsandparts_name();
+        String[] qty = orders.getCarsandparts_qty();
+        String[] price = orders.getCarsandparts_perprice();
+
+        totalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
+        remainAmountlbl.setText(String.valueOf(orders.getRemain_amount()));
+        paidAmountlbl.setText(String.valueOf(orders.getPayed_amount()));
+        customerNamelabel.setText(orders.getCus_name());
+        staffNamelabel.setText(orders.getStaff_name());
+
         // Clear and populate the installment table
         installmentTable.getItems().clear();
-        
+
         for (int i = 0; i < names.length; i++) {
             // Create a formatted string for the table row (no need to trim if data is clean)
-            String rowData = String.format("%s|%s|%s", names[i], qty[i], price[i]);
+            String rowData = String.format("%s|%s|%s", names[i].trim(), qty[i].trim(), price[i].trim());
             installmentTable.getItems().add(rowData);
         }
+
+        // Set up table columns to display the data properly
+        installmentNameCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 0 ? parts[0] : "");
+        });
+
+        installmentQtyCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
+        });
+
+        installmentPriceCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
+        });
     }
     
     private void clearOrderDetails() {

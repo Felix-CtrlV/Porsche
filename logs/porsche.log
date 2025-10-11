@@ -443,3 +443,19 @@ java.sql.SQLException: Column 'carsandparts_price' not found.
 2025-10-12 02:57:52.844 [Thread-1005] INFO  Controllers.loginController - User manager logged in successfully with role: manager
 2025-10-12 02:57:59.206 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 0 orders successfully
 2025-10-12 02:58:01.244 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 1 orders successfully
+2025-10-12 03:04:41.823 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-12 03:04:41.855 [Thread-1822] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-12 03:04:43.169 [Thread-1822] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@bcdf92
+2025-10-12 03:04:43.173 [Thread-1822] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-12 03:04:43.173 [Thread-1822] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-12 03:04:43.323 [Thread-1822] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-12 03:04:55.485 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 0 orders successfully
+2025-10-12 03:12:33.826 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-12 03:12:33.845 [Thread-1473] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-12 03:12:35.052 [Thread-1473] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@709c81fb
+2025-10-12 03:12:35.061 [Thread-1473] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-12 03:12:35.061 [Thread-1473] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-12 03:12:35.214 [Thread-1473] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-12 03:12:47.259 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 0 orders successfully
+2025-10-12 03:12:49.128 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 1 orders successfully
+2025-10-12 03:13:03.399 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
