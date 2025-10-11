@@ -1,21 +1,55 @@
 package Controllers;
 
-import java.sql.Date;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
+import Database.Porsche_DB;
 import Model.managerOrderView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Side;
 import javafx.scene.chart.BarChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+import javafx.beans.property.SimpleStringProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class managerOrderManagementController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(managerOrderManagementController.class);
+    private Connection con;
+    private ObservableList<managerOrderView> allOrdersData = FXCollections.observableArrayList();
+    private ObservableList<managerOrderView> searchResultData = FXCollections.observableArrayList();
+    private ContextMenu searchSuggestions = new ContextMenu();
+    
+    private LocalDate today = LocalDate.now();
+    private int currentMonth;
+    private int currentYear;
+    private boolean listenersInitialized = false;
+    private boolean updatingMonthBox = false;
 
     @FXML
     private Button PreviousMonthbtn;
@@ -45,16 +79,16 @@ public class managerOrderManagementController {
     private Label customerNamelabel;
 
     @FXML
-    private TableColumn<managerOrderView, String> installmentNameCol;
+    private TableColumn<String, String> installmentNameCol;
 
     @FXML
-    private TableColumn<managerOrderView, Double> installmentPriceCol;
+    private TableColumn<String, String> installmentPriceCol;
 
     @FXML
-    private TableColumn<managerOrderView, Integer> installmentQtyCol;
+    private TableColumn<String, String> installmentQtyCol;
 
     @FXML
-    private TableView<managerOrderView> installmentTable;
+    private TableView<String> installmentTable;
 
     @FXML
     private ChoiceBox<String> monthBox;
@@ -129,44 +163,429 @@ public class managerOrderManagementController {
 
     @FXML
     void clickNextMonthbtn(ActionEvent event) {
-
+        currentMonth++;
+        if (currentMonth > 12) {
+            currentMonth = 1;
+            currentYear++;
+        }
+        updateYearMonthLabel();
     }
 
     @FXML
     void clickNextYearbn(ActionEvent event) {
-
+        currentYear++;
+        if (today.getYear() == currentYear) {
+            if (currentMonth > today.getMonthValue()) {
+                currentMonth = today.getMonthValue();
+            }
+        }
+        updateYearMonthLabel();
     }
 
     @FXML
     void clickPreviousMonthbtn(ActionEvent event) {
-
+        currentMonth--;
+        if (currentMonth < 1) {
+            currentMonth = 12;
+            currentYear--;
+        }
+        updateYearMonthLabel();
     }
 
     @FXML
     void clickPreviousYearbtn(ActionEvent event) {
-
+        currentYear--;
+        updateYearMonthLabel();
     }
 
     @FXML
     void clickWeeklyRevenue(ActionEvent event) {
 
     }
-
-    void searchTextAction(ActionEvent event) {
-
+    
+    @FXML
+    void orderTableClick(MouseEvent event) {
+        managerOrderView selectedOrder = orderTable.getSelectionModel().getSelectedItem();
+        
+        if (selectedOrder == null) {
+            clearOrderDetails();
+            return;
+        }
+        showOrderDetails(selectedOrder);
     }
+
+    @FXML
+    void searchTextAction(ActionEvent event) {
+        handleSearch();
+    }
+
     @FXML
     public void initialize(){
         orderDateCol.setCellValueFactory(new PropertyValueFactory<>("order_date"));
         customerNameCol.setCellValueFactory(new PropertyValueFactory<>("cus_name"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("total_amount"));
         staffNameCol.setCellValueFactory(new PropertyValueFactory<>("staff_name"));
+        qtyCol.setCellValueFactory(new PropertyValueFactory<>("totalQty"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("is_installmenat"));
         
-        // Installment table columns
-        installmentNameCol.setCellValueFactory(new PropertyValueFactory<>("carsandparts_name"));
-        installmentPriceCol.setCellValueFactory(new PropertyValueFactory<>("carsandparts_perprice"));
-        installmentQtyCol.setCellValueFactory(new PropertyValueFactory<>("carsandparts_qty"));
+        // Set up installment table columns
+        installmentNameCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 0 ? parts[0] : "");
+        });
+        
+        installmentQtyCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
+        });
+        
+        installmentPriceCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
+        });
+        
+        // Connect search button to searchOrder method
+        if (Searchbtn != null) {
+            Searchbtn.setOnAction(event -> handleSearch());
+        }
+        
+        // Setup search bar with auto-complete
+        setupSearchBar();
+        
+        // Initialize current date
+        currentDateSelect();
+        
+        // Initialize month and year choice boxes
+        initializeMonthYearBoxes();
+        
+        // Set up listeners for month/year boxes (only once)
+        if (!listenersInitialized) {
+            yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    currentYear = newVal;
+                    updateYearMonthLabel();
+                }
+            });
+            
+            monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (!updatingMonthBox && newVal != null) {
+                    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
+                    Month parsedMonth = Month.from(fmt.parse(newVal));
+                    currentMonth = parsedMonth.getValue();
+                    updateYearMonthLabel();
+                }
+            });
+            
+            listenersInitialized = true;
+        }
+    }
+
+    public void loadOrder(){
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        
+        try {
+            // Establish database connection
+            Porsche_DB db = new Porsche_DB();
+            con = db.connect();
+            
+            List<managerOrderView> ordersList = new ArrayList<>();
+            
+            // Call stored procedure to get all orders
+            // Adjust the stored procedure name based on your database schema
+            cs = con.prepareCall("CALL getAllOrders(?,?)");
+            cs.setInt(1, currentMonth);
+            cs.setInt(2, currentYear);
+            rs = cs.executeQuery();
+            
+            while (rs.next()) {
+                Integer order_id = rs.getInt(1);
+                Date order_date = rs.getDate(2);
+                String cus_name = rs.getString(3);
+                String staff_name = rs.getString(4);
+                Integer totalQty = rs.getInt(5);
+                double total_amount = rs.getDouble(6);
+                boolean installment = rs.getBoolean(7);
+                double payed_amount = rs.getDouble(8);
+                double remain_amount = rs.getDouble(9);
+                Date due_date = rs.getDate(10);
+                String carsandparts_name = rs.getString(11);
+                String carsandparts_qty = rs.getString(12);
+                String carsandparts_price = rs.getString(13);
+                
+                String is_installment = installment ? "Yes" : "No";
+                managerOrderView order = new managerOrderView(
+                    order_id, order_date, cus_name, staff_name, 
+                    totalQty, total_amount, is_installment, payed_amount, 
+                    remain_amount, due_date, carsandparts_name, 
+                    carsandparts_qty, carsandparts_price
+                );
+                
+                ordersList.add(order);
+            }
+            
+            // Store in allOrdersData and populate the table
+            allOrdersData.clear();
+            allOrdersData.addAll(ordersList);
+            orderTable.setItems(allOrdersData);
+            
+            logger.info("Loaded {} orders successfully", ordersList.size());
+            
+        } catch (SQLException e) {
+            logger.error("Error loading orders from database", e);
+            // You might want to show an alert to the user here
+        } finally {
+            // Clean up resources
+            try {
+                if (rs != null) rs.close();
+                if (cs != null) cs.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                logger.error("Error closing database resources", e);
+            }
+        }
+    }
+
+    private void setupSearchBar() {
+        // Set up key listener for Enter key
+        SearchText.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleSearch();
+            }
+        });
+        
+        // Set up text change listener for suggestions
+        SearchText.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.isEmpty()) {
+                searchSuggestions.hide();
+                return;
+            }
+            
+            // Clear previous suggestions
+            searchSuggestions.getItems().clear();
+            
+            // Find matching orders
+            List<MenuItem> matches = new ArrayList<>();
+            String searchText = newText.toLowerCase();
+            
+            for (managerOrderView order : allOrdersData) {
+                String orderId = String.valueOf(order.getOrder_id());
+                String cusName = order.getCus_name().toLowerCase();
+                String staffName = order.getStaff_name().toLowerCase();
+                
+                if (orderId.contains(searchText) || cusName.contains(searchText) || staffName.contains(searchText)) {
+                    String suggestionText = "Order #" + orderId + " - " + order.getCus_name();
+                    MenuItem item = new MenuItem(suggestionText);
+                    
+                    // Set action for when suggestion is clicked
+                    item.setOnAction(e -> {
+                        SearchText.setText(suggestionText);
+                        searchSuggestions.hide();
+                        searchResultData.clear();
+                        searchResultData.add(order);
+                        orderTable.setItems(searchResultData);
+                    });
+                    
+                    matches.add(item);
+                    
+                    // Limit suggestions to 10
+                    if (matches.size() >= 10) {
+                        break;
+                    }
+                }
+            }
+            
+            // Show suggestions if matches found
+            if (!matches.isEmpty()) {
+                searchSuggestions.getItems().addAll(matches);
+                searchSuggestions.show(SearchText, Side.BOTTOM, 0, 0);
+            } else {
+                searchSuggestions.hide();
+            }
+        });
+        
+        // Hide suggestions when text field loses focus
+        SearchText.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                searchSuggestions.hide();
+            }
+        });
+    }
+    
+    private void handleSearch() {
+        String searchText = SearchText.getText().trim();
+        
+        // If search text is empty, show all orders
+        if (searchText.isEmpty()) {
+            orderTable.setItems(allOrdersData);
+            return;
+        }
+        
+        // Search through all orders
+        searchResultData.clear();
+        String searchLower = searchText.toLowerCase();
+        
+        for (managerOrderView order : allOrdersData) {
+            String orderId = String.valueOf(order.getOrder_id());
+            String cusName = order.getCus_name();
+            String staffName = order.getStaff_name();
+            String installment = order.getIs_installmenat();
+            
+            // Check if search text matches order ID, customer name, staff name, or full suggestion format
+            if (searchText.equalsIgnoreCase(orderId) ||
+                searchText.equalsIgnoreCase(cusName) ||
+                searchText.equalsIgnoreCase(staffName) ||
+                searchText.equalsIgnoreCase("Order #" + orderId + " - " + cusName) ||
+                orderId.contains(searchLower) ||
+                cusName.toLowerCase().contains(searchLower) ||
+                staffName.toLowerCase().contains(searchLower) ||
+                (installment != null && installment.toLowerCase().contains(searchLower))) {
+                searchResultData.add(order);
+            }
+        }
+        
+        // Update table with search results
+        orderTable.setItems(searchResultData);
+        logger.info("Search completed: found {} orders matching '{}'", searchResultData.size(), searchText);
+    }
+    
+    private void currentDateSelect() {
+        currentMonth = today.getMonthValue();
+        currentYear = today.getYear();
+        nextMonthbtn.setDisable(true);
+        nextMonthbtn.setVisible(false);
+        nextYearbtn.setDisable(true);
+        nextYearbtn.setVisible(false);
+    }
+    
+    private void initializeMonthYearBoxes() {
+        // Populate year box (e.g., from 2020 to current year)
+        yearBox.getItems().clear();
+        int startYear = 2020; // Adjust based on your business needs
+        for (int y = startYear; y <= today.getYear(); y++) {
+            yearBox.getItems().add(y);
+        }
+        yearBox.setValue(currentYear);
+        
+        // Populate month box
+        updateMonthBoxForYear(currentYear);
+    }
+    
+    private void updateMonthBoxForYear(int year) {
+        int startMonth = 1;
+        int endMonth = 12;
+        
+        // If current year, limit to current month
+        if (year == today.getYear()) {
+            endMonth = today.getMonthValue();
+        }
+        
+        List<String> months = new ArrayList<>();
+        for (int m = startMonth; m <= endMonth; m++) {
+            months.add(Month.of(m).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+        }
+        
+        updatingMonthBox = true;
+        monthBox.setItems(FXCollections.observableArrayList(months));
+        
+        // Make sure currentMonth is valid
+        String currentMonthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        if (!months.contains(currentMonthName)) {
+            currentMonth = endMonth; // default to last available month
+            currentMonthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        }
+        
+        monthBox.setValue(currentMonthName);
+        updatingMonthBox = false;
+    }
+    
+    private void updateYearMonthLabel() {
+        Month nmonth = Month.of(currentMonth);
+        int curyear = today.getYear();
+        int curmonth = today.getMonthValue();
+        
+        // Control next year/month button visibility
+        if (currentYear >= curyear) {
+            nextYearbtn.setDisable(true);
+            nextYearbtn.setVisible(false);
+            if (currentMonth >= curmonth) {
+                nextMonthbtn.setDisable(true);
+                nextMonthbtn.setVisible(false);
+            } else {
+                nextMonthbtn.setDisable(false);
+                nextMonthbtn.setVisible(true);
+            }
+        } else {
+            nextYearbtn.setDisable(false);
+            nextYearbtn.setVisible(true);
+            nextMonthbtn.setDisable(false);
+            nextMonthbtn.setVisible(true);
+        }
+        
+        // Control previous year/month button visibility
+        int startYear = 2020; // Should match initializeMonthYearBoxes
+        if (currentYear <= startYear) {
+            previousYearbth.setDisable(true);
+            previousYearbth.setVisible(false);
+            if (currentMonth <= 1) {
+                PreviousMonthbtn.setDisable(true);
+                PreviousMonthbtn.setVisible(false);
+            } else {
+                PreviousMonthbtn.setDisable(false);
+                PreviousMonthbtn.setVisible(true);
+            }
+        } else {
+            previousYearbth.setDisable(false);
+            previousYearbth.setVisible(true);
+            PreviousMonthbtn.setDisable(false);
+            PreviousMonthbtn.setVisible(true);
+        }
+        
+        // Sync ComboBoxes with updated currentMonth/currentYear
+        String monthName = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        if (monthBox.getItems().contains(monthName)) {
+            updatingMonthBox = true;
+            monthBox.setValue(monthName);
+            updatingMonthBox = false;
+        }
+        
+        if (yearBox.getItems().contains(currentYear)) {
+            yearBox.setValue(currentYear);
+        }
+        
+        // Reload orders for the selected month/year
+        loadOrder();
+    }
+    
+    private void showOrderDetails(managerOrderView order) {
+        // Load order details
+        String[] names = order.getCarsandparts_name();
+        String[] qty = order.getCarsandparts_qty();
+        String[] price = order.getCarsandparts_perprice();
+        
+        totalPriceLabel.setText(String.valueOf(order.getTotal_amount()));
+        paidAmountlbl.setText(String.valueOf(order.getPayed_amount()));
+        remainAmountlbl.setText(String.valueOf(order.getRemain_amount()));
+        customerNamelabel.setText(order.getCus_name());
+        staffNamelabel.setText(order.getStaff_name());
+        
+        // Clear and populate the installment table
+        installmentTable.getItems().clear();
+        
+        for (int i = 0; i < names.length; i++) {
+            // Create a formatted string for the table row (no need to trim if data is clean)
+            String rowData = String.format("%s|%s|%s", names[i], qty[i], price[i]);
+            installmentTable.getItems().add(rowData);
+        }
+    }
+    
+    private void clearOrderDetails() {
+        customerNamelabel.setText("");
+        staffNamelabel.setText("");
+        totalPriceLabel.setText("0.00");
+        paidAmountlbl.setText("0.00");
+        remainAmountlbl.setText("0.00");
+        installmentTable.getItems().clear();
     }
 
 }
