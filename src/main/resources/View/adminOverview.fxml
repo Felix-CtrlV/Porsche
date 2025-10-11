@@ -23,19 +23,19 @@
     <center>
         <VBox minHeight="750.0" minWidth="1250.0" spacing="20.0" style="-fx-border-radius: 2;" BorderPane.alignment="CENTER">
             <children>
-                <HBox alignment="CENTER_RIGHT" prefHeight="40.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                <HBox alignment="CENTER_RIGHT" prefHeight="40.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;" VBox.vgrow="ALWAYS">
                     <children>
                         <Region prefHeight="62.0" prefWidth="889.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="PreviousMonthbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="◀" />
-                        <ChoiceBox fx:id="monthBox" minHeight="25.0" minWidth="60.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-font-size: 12;" />
-                        <Button fx:id="NextMonthbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="▶" />
-                        <Region prefWidth="5.0" HBox.hgrow="NEVER" />
-                        <Button fx:id="PreviousYearbth" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="◀" />
-                        <ChoiceBox fx:id="yearBox" minHeight="25.0" minWidth="60.0" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 12;" />
-                        <Button fx:id="NextYearbtn" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14; -fx-font-weight: bold;" text="▶" />
+                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                        <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0;" />
+                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
+                        <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
+                        <Button fx:id="PreviousYearbtn" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                        <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" />
+                        <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                     </children>
                     <padding>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                     </padding>
                 </HBox>
                 <!-- Enhanced Top Stats Cards with improved hierarchy -->
@@ -65,7 +65,7 @@
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="169.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="totalSalesLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="17 SOLD" />
-                                                <Label fx:id="totalSalesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="\$28,000" />
+                                                <Label fx:id="totalSalesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="0" />
                                             </children>
                                             <padding>
                                                 <Insets left="15.0" />
@@ -100,7 +100,7 @@
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="170.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="partsSoldLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="42 SOLD" />
-                                                <Label fx:id="partsValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="\$15,500" />
+                                                <Label fx:id="partsValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="0" />
                                             </children>
                                             <padding>
                                                 <Insets left="15.0" />
@@ -135,7 +135,7 @@
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="180.0" spacing="6.0">
                                             <children>
                                                 <Label fx:id="servicesLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="36 DONE" />
-                                                <Label fx:id="servicesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="\$9,800" />
+                                                <Label fx:id="servicesValueLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="0" />
                                             </children>
                                             <padding>
                                                 <Insets left="15.0" />
@@ -169,7 +169,7 @@
                                         </Label>
                                         <VBox alignment="CENTER_LEFT" minHeight="100.0" minWidth="100.0" prefHeight="104.0" prefWidth="192.0" spacing="6.0">
                                             <children>
-                                                <Label fx:id="revenueLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="\$53,300" />
+                                                <Label fx:id="revenueLbl" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bolder;" text="0" />
                                                 <Label fx:id="revenueGrowthLbl" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 19;" text="+12.5% Growth" />
                                             </children>
                                             <padding>
@@ -207,7 +207,7 @@
                                         </Button>
                                     </children>
                                 </HBox>
-                                <BarChart style="-fx-background-color: transparent; -fx-padding: 20;">
+                                <BarChart fx:id="barChart" style="-fx-background-color: transparent; -fx-padding: 20;">
                                     <xAxis>
                                         <CategoryAxis side="BOTTOM" />
                                     </xAxis>
@@ -229,7 +229,7 @@
                                         <Label style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-font-size: 20; -fx-padding: 18;" text="📈 Revenue Analysis" />
                                     </children>
                                 </HBox>
-                                <AreaChart>
+                                <AreaChart fx:id="areaChart">
                                     <xAxis>
                                         <CategoryAxis side="BOTTOM" />
                                     </xAxis>
@@ -260,13 +260,13 @@
                                     <children>
                                         <StackPane alignment="CENTER" prefHeight="150.0" prefWidth="150.0">
                                             <children>
-                                                <Circle fill="TRANSPARENT" radius="70.0" stroke="#f1f5f9" strokeWidth="4.0" />
-                                                <Circle fill="transparent" radius="70.0" stroke="#6d8196" strokeWidth="4.0" />
-                                                <Circle fill="transparent" radius="62.0" stroke="#f1f5f9" strokeWidth="4.0" />
-                                                <Circle fill="transparent" radius="62.0" stroke="#e67e22" strokeWidth="4.0" />
+                                                <Circle fill="TRANSPARENT" radius="70.0" stroke="#f1f5f9" strokeWidth="8.0" />
+                                                <Circle fx:id="carRevenueCircle" fill="transparent" radius="70.0" stroke="#6d8196" strokeLineCap="ROUND" strokeWidth="8.0" />
+                                                <Circle fill="transparent" radius="54.0" stroke="#f1f5f9" strokeWidth="8.0" />
+                                                <Circle fx:id="partRevenueCircle" fill="transparent" radius="54.0" stroke="#e67e22" strokeLineCap="ROUND" strokeWidth="8.0" />
                                                 <VBox alignment="CENTER" spacing="3">
                                                     <children>
-                                                        <Label style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="/$53,300" />
+                                                        <Label fx:id="totalRevenueLbl" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="0" />
                                                         <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="Total Revenue" />
                                                     </children>
                                                     <StackPane.margin>
@@ -288,7 +288,7 @@
                                                                 <VBox spacing="3">
                                                                     <children>
                                                                         <Label style="-fx-font-size: 15; -fx-font-weight: 700; -fx-text-fill: #1e293b;" text="🚘 Cars Revenue" />
-                                                                        <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="/$28,000 • 52.5%" />
+                                                                        <Label fx:id="carRevenueDistLbl" style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="0 • 0%" />
                                                                     </children>
                                                                 </VBox>
                                                             </children>
@@ -299,7 +299,7 @@
                                                                 <VBox spacing="3">
                                                                     <children>
                                                                         <Label style="-fx-font-size: 15; -fx-font-weight: 700; -fx-text-fill: #1e293b;" text="🔧 Parts Revenue" />
-                                                                        <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="/$15,500 • 29.1%" />
+                                                                        <Label fx:id="partRevenueDistLbl" style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="0 • 0%" />
                                                                     </children>
                                                                 </VBox>
                                                             </children>
@@ -316,17 +316,17 @@
                             </children>
                         </VBox>
 
-                        <!-- Pie Chart - Sales Distribution -->
-                        <VBox prefHeight="250.0" prefWidth="620.0" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-radius: 14; -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);">
+                        <!-- Pie Chart - Car's Sale -->
+                        <VBox prefHeight="250.0" prefWidth="370.0" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-radius: 14; -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 14 14 0 0;">
                                     <children>
-                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b;" text="📈 Sales Distribution" />
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b;" text="🚗 Car's Sale" />
                                     </children>
                                 </HBox>
                                 <StackPane prefHeight="200.0" prefWidth="300.0" VBox.vgrow="SOMETIMES">
                                     <children>
-                                        <PieChart fx:id="pieChart" labelsVisible="true" legendVisible="false" style="-fx-background-color: transparent;" />
+                                        <PieChart fx:id="pieCar" labelsVisible="true" legendVisible="false" style="-fx-background-color: transparent;" />
                                     </children>
                                     <padding>
                                         <Insets bottom="15.0" top="15.0" />
@@ -335,19 +335,22 @@
                             </children>
                         </VBox>
 
-                        <!-- Notifications -->
-                        <VBox prefHeight="250.0" prefWidth="550.0" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-radius: 14; -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);">
+                        <!-- Pie Chart - Accessories Sale -->
+                        <VBox prefHeight="250.0" prefWidth="370.0" style="-fx-background-color: white; -fx-background-radius: 14; -fx-border-radius: 14; -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 14 14 0 0;">
+                                <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 14 14 0 0;">
                                     <children>
-                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b; -fx-padding: 18;" text="🔔 Notifications" />
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b;" text="🔧 Accessories Sale" />
                                     </children>
                                 </HBox>
-                                <ScrollPane hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
-                                    <content>
-                                        <VBox fx:id="notiPanel" spacing="12" style="-fx-padding: 18;" />
-                                    </content>
-                                </ScrollPane>
+                                <StackPane prefHeight="200.0" prefWidth="300.0" VBox.vgrow="SOMETIMES">
+                                    <children>
+                                        <PieChart fx:id="piePart" labelsVisible="true" legendVisible="false" style="-fx-background-color: transparent;" />
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="15.0" top="15.0" />
+                                    </padding>
+                                </StackPane>
                             </children>
                         </VBox>
                     </children>

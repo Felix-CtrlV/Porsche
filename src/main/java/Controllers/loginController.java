@@ -22,6 +22,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
+import javafx.stage.Modality;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,9 @@ public class loginController {
     private Button clear;
 
     @FXML
+    private Button forgotPasswordBtn;
+
+    @FXML
     private ImageView usericon_image;
 
     @FXML
@@ -77,6 +81,26 @@ public class loginController {
         nametxt.clear();
         pwtxt.clear();
         nametxt.requestFocus();
+    }
+
+    @FXML
+    void clickForgotPassword(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/forgotPassword.fxml"));
+            Parent root = loader.load();
+            
+            Stage forgotPasswordStage = new Stage();
+            forgotPasswordStage.setScene(new Scene(root));
+            forgotPasswordStage.setTitle("Reset Password - Porsche System");
+            forgotPasswordStage.initModality(Modality.APPLICATION_MODAL);
+            forgotPasswordStage.initOwner(((Node) event.getSource()).getScene().getWindow());
+            forgotPasswordStage.setResizable(false);
+            forgotPasswordStage.show();
+            
+        } catch (IOException e) {
+            logger.error("Failed to load forgot password dialog", e);
+            slideError("Failed to open password reset dialog. Please try again.");
+        }
     }
 
     private SequentialTransition currentAnimation;
