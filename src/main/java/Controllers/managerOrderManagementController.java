@@ -230,6 +230,20 @@ public class managerOrderManagementController {
         statusCol.setCellValueFactory(new PropertyValueFactory<>("is_installmenat"));
         
         // Set up installment table columns
+        installmentNameCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 0 ? parts[0] : "");
+        });
+        
+        installmentQtyCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
+        });
+        
+        installmentPriceCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
+        });
         
         // Connect search button to searchOrder method
         if (Searchbtn != null) {
@@ -565,22 +579,6 @@ public class managerOrderManagementController {
             String rowData = String.format("%s|%s|%s", names[i].trim(), qty[i].trim(), price[i].trim());
             installmentTable.getItems().add(rowData);
         }
-
-        // Set up table columns to display the data properly
-        installmentNameCol.setCellValueFactory(cellData -> {
-            String[] parts = cellData.getValue().split("\\|");
-            return new SimpleStringProperty(parts.length > 0 ? parts[0] : "");
-        });
-
-        installmentQtyCol.setCellValueFactory(cellData -> {
-            String[] parts = cellData.getValue().split("\\|");
-            return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
-        });
-
-        installmentPriceCol.setCellValueFactory(cellData -> {
-            String[] parts = cellData.getValue().split("\\|");
-            return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
-        });
     }
     
     private void clearOrderDetails() {
