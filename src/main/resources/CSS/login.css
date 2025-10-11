@@ -15,3 +15,177 @@
     -fx-padding: 16;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 24, 0.35, 0, 10);
     }
+
+/* Porsche Forgot Password Styles */
+.forgot-password-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #d5001c;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-underline: false;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.forgot-password-link:hover {
+    -fx-text-fill: #ff1744;
+    -fx-underline: true;
+    -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.3), 5, 0.5, 0, 1);
+}
+
+.forgot-password-dialog {
+    -fx-background-color: 
+        rgba(0,0,0,0.85),
+        linear-gradient(to bottom right, rgba(240,230,210,0.15), rgba(0,0,0,0.1));
+    -fx-background-insets: 0, 0;
+    -fx-background-radius: 30;
+    -fx-border-color: rgba(240,230,210,0.3);
+    -fx-border-width: 2;
+    -fx-border-radius: 30;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 30, 0.6, 0, 15);
+}
+
+.stage-indicator {
+    -fx-fill: #d5001c;
+    -fx-stroke: #d5001c;
+    -fx-stroke-width: 2;
+}
+
+.stage-indicator.active {
+    -fx-fill: #d5001c;
+    -fx-stroke: #d5001c;
+}
+
+.stage-indicator.completed {
+    -fx-fill: #d5001c;
+    -fx-stroke: #d5001c;
+}
+
+.stage-indicator.inactive {
+    -fx-fill: #cccccc;
+    -fx-stroke: #cccccc;
+}
+
+.progress-bar-porsche {
+    -fx-accent: #d5001c;
+    -fx-background-color: rgba(255,255,255,0.2);
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
+
+.input-field-porsche {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: transparent;
+    -fx-border-width: 2;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-padding: 10 15 10 15;
+}
+
+.input-field-porsche:focused {
+    -fx-border-color: #d5001c;
+    -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.2), 8, 0.3, 0, 2);
+}
+
+.button-porsche-primary {
+    -fx-background-color: #d5001c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-cursor: hand;
+    -fx-padding: 10 20 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.3, 0, 2);
+}
+
+.button-porsche-primary:hover {
+    -fx-background-color: #ff1744;
+    -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.4), 8, 0.4, 0, 3);
+}
+
+.button-porsche-primary:pressed {
+    -fx-background-color: #b71c1c;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 3, 0.2, 0, 1);
+}
+
+.button-porsche-secondary {
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-cursor: hand;
+    -fx-padding: 10 20 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.3, 0, 2);
+}
+
+.button-porsche-secondary:hover {
+    -fx-background-color: #555555;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.4, 0, 3);
+}
+
+.button-porsche-secondary:pressed {
+    -fx-background-color: #222222;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 3, 0.2, 0, 1);
+}
+
+.message-success {
+    -fx-background-color: #2e7d32;
+    -fx-text-fill: #f0e6d2;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #4caf50;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(46,125,50,0.3), 10, 0.4, 0, 3);
+}
+
+.message-error {
+    -fx-background-color: #d5001c;
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #ff5722;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.3), 10, 0.4, 0, 3);
+}
+
+.title-porsche {
+    -fx-text-fill: black;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.subtitle-porsche {
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+/* Animation keyframes for smooth transitions */
+@keyframes slideIn {
+    from { -fx-translate-y: 42; -fx-opacity: 0; }
+    to { -fx-translate-y: 4; -fx-opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { -fx-translate-y: 4; -fx-opacity: 1; }
+    to { -fx-translate-y: 42; -fx-opacity: 0; }
+}
+
+/* Close button styling */
+.close-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0.3, 0, 1);
+}
+
+.close-button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.3), 5, 0.4, 0, 2);
+}

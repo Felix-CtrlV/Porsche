@@ -247,16 +247,17 @@ public class ChangePasswordController {
     }
 
     private boolean updatePasswordInDatabase(int userId, String newPassword) {
-        String sql = "UPDATE user_info SET password = ? WHERE user_id = ?";
+        String sql = "UPDATE user_info SET password = SHA2(?,256) WHERE user_id = ?";
 
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            // MySQL will hash the password using SHA-2 (256-bit)
             ps.setString(1, newPassword);
             ps.setInt(2, userId);
 
             int rowsAffected = ps.executeUpdate();
-            logger.info("Password updated for user ID: {}", userId);
+            logger.info("Password updated (SHA-2 hashed) for user ID: {}", userId);
             return rowsAffected > 0;
 
         } catch (SQLException e) {

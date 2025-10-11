@@ -202,6 +202,7 @@ public class adminDashboardController {
             editPhone.setVisible(false);
             editAddress.setVisible(false);
             editBack.setVisible(false);
+            backButton.setVisible(true);
             editButton.setVisible(true);
             editRevert.setVisible(false);
             editConfirm.setVisible(false);
@@ -279,6 +280,7 @@ public class adminDashboardController {
             profileEmail.setText(current.getEmail());
             profilePhone.setText(current.getPhone());
             profileEmail.setEditable(false);
+            backButton.setVisible(true);
             profileAddress.setEditable(false);
             profilePhone.setEditable(false);
         });
@@ -292,15 +294,14 @@ public class adminDashboardController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Authentication.fxml"));
                 Parent root = loader.load();
                 authenticationController controller = loader.getController();
-                controller.init(this);
+                controller.init(this, false); // false = not password change flow, just view profile
                 controller.setStep("password");
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.initStyle(StageStyle.UNDECORATED);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
-            } catch (
-                    IOException ex) {
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         });
@@ -446,9 +447,9 @@ public class adminDashboardController {
         overlayPane.setVisible(false);
     }
 
-    public void setProfile
-            () {
+    public void setProfile() {
         profilePane.setVisible(true);
+        overlayPane.setVisible(true);
     }
 
 
