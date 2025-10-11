@@ -1,5 +1,7 @@
 package Controllers;
 
+import java.sql.Date;
+
 import Model.managerOrderView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,16 +39,16 @@ public class managerOrderManagementController {
     private Circle confrimQtyCircle;
 
     @FXML
-    private TableColumn<?, ?> customerNameCol;
+    private TableColumn<managerOrderView, String> customerNameCol;
 
     @FXML
     private Label customerNamelabel;
 
     @FXML
-    private TableColumn<managerOrderView, ?> installmentNameCol;
+    private TableColumn<managerOrderView, String> installmentNameCol;
 
     @FXML
-    private TableColumn<managerOrderView, ?> installmentPriceCol;
+    private TableColumn<managerOrderView, Double> installmentPriceCol;
 
     @FXML
     private TableColumn<managerOrderView, Integer> installmentQtyCol;
@@ -67,7 +69,7 @@ public class managerOrderManagementController {
     private Button nextYearbtn;
 
     @FXML
-    private TableColumn<?, ?> orderDateCol;
+    private TableColumn<managerOrderView, Date> orderDateCol;
 
     @FXML
     private TableView<managerOrderView> orderTable;
@@ -91,10 +93,10 @@ public class managerOrderManagementController {
     private Button previousYearbth;
 
     @FXML
-    private TableColumn<?, ?> priceCol;
+    private TableColumn<managerOrderView, Double> priceCol;
 
     @FXML
-    private TableColumn<?, ?> qtyCol;
+    private TableColumn<managerOrderView, String> qtyCol;
 
     @FXML
     private Label remainAmountlbl;
@@ -103,13 +105,13 @@ public class managerOrderManagementController {
     private BarChart<?, ?> revenueChart;
 
     @FXML
-    private TableColumn<?, ?> staffNameCol;
+    private TableColumn<managerOrderView, String> staffNameCol;
 
     @FXML
     private Label staffNamelabel;
 
     @FXML
-    private TableColumn<?, ?> statusCol;
+    private TableColumn<managerOrderView, String> statusCol;
 
     @FXML
     private Label totalPriceLabel;
@@ -118,7 +120,7 @@ public class managerOrderManagementController {
     private Button weeklyRevenue;
 
     @FXML
-    private ChoiceBox<?> yearBox;
+    private ChoiceBox<Integer> yearBox;
 
     @FXML
     void clickMonthlyRevenue(ActionEvent event) {
@@ -150,13 +152,21 @@ public class managerOrderManagementController {
 
     }
 
-    @FXML
     void searchTextAction(ActionEvent event) {
 
     }
     @FXML
     public void initialize(){
-//        orderDateCol.setCellValueFactory(new PropertyValueFactory<>());
+        orderDateCol.setCellValueFactory(new PropertyValueFactory<>("order_date"));
+        customerNameCol.setCellValueFactory(new PropertyValueFactory<>("cus_name"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("total_amount"));
+        staffNameCol.setCellValueFactory(new PropertyValueFactory<>("staff_name"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("is_installmenat"));
+        
+        // Installment table columns
+        installmentNameCol.setCellValueFactory(new PropertyValueFactory<>("carsandparts_name"));
+        installmentPriceCol.setCellValueFactory(new PropertyValueFactory<>("carsandparts_perprice"));
+        installmentQtyCol.setCellValueFactory(new PropertyValueFactory<>("carsandparts_qty"));
     }
 
 }
