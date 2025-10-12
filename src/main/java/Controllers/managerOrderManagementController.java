@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import Database.Porsche_DB;
 import Model.managerOrderView;
+import Utils.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,10 +31,12 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.beans.property.SimpleStringProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +47,7 @@ public class managerOrderManagementController {
     private Connection con;
     private ObservableList<managerOrderView> allOrdersData = FXCollections.observableArrayList();
     private ObservableList<managerOrderView> searchResultData = FXCollections.observableArrayList();
+    private int managerId;
     private ContextMenu searchSuggestions = new ContextMenu();
     
     private LocalDate today = LocalDate.now();
@@ -173,10 +177,11 @@ public class managerOrderManagementController {
             currentYear++;
         }
         updateYearMonthLabel();
+        loadOrder(); // Reload with new month/year
     }
 
     @FXML
-    void clickNextYearbn(ActionEvent event) {
+    void clickNextYearbtn(ActionEvent event) {
         currentYear++;
         if (today.getYear() == currentYear) {
             if (currentMonth > today.getMonthValue()) {
@@ -184,6 +189,7 @@ public class managerOrderManagementController {
             }
         }
         updateYearMonthLabel();
+        loadOrder(); // Reload with new year
     }
 
     @FXML
@@ -194,12 +200,14 @@ public class managerOrderManagementController {
             currentYear--;
         }
         updateYearMonthLabel();
+        loadOrder(); // Reload with new month/year
     }
 
     @FXML
     void clickPreviousYearbtn(ActionEvent event) {
         currentYear--;
         updateYearMonthLabel();
+        loadOrder(); // Reload with new year
     }
 
     @FXML
@@ -238,6 +246,29 @@ public class managerOrderManagementController {
             return new SimpleStringProperty(parts.length > 0 ? parts[0] : "");
         });
         
+        // Add text wrapping to name column
+        installmentNameCol.setCellFactory(column -> {
+            TableCell<String, String> cell = new TableCell<String, String>() {
+                private final Text text = new Text();
+                
+                {
+                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                    setGraphic(text);
+                }
+                
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        text.setText(null);
+                    } else {
+                        text.setText(item);
+                    }
+                }
+            };
+            return cell;
+        });
+        
         installmentQtyCol.setCellValueFactory(cellData -> {
             String[] parts = cellData.getValue().split("\\|");
             return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
@@ -256,11 +287,17 @@ public class managerOrderManagementController {
         // Setup search bar with auto-complete
         setupSearchBar();
         
-        // Initialize current date
+        // Initialize current date first (sets month/year to today)
         currentDateSelect();
         
-        // Initialize month and year choice boxes
+        // Initialize month and year choice boxes with today's date
         initializeMonthYearBoxes();
+        
+        // Load all orders initially (will be filtered by current month/year)
+        loadOrder();
+        
+        // Calculate sold quantities for current month/year
+        calculateSoldQuantities();
         
         // Set up listeners for month/year boxes (only once)
         if (!listenersInitialized) {
@@ -268,6 +305,8 @@ public class managerOrderManagementController {
                 if (newVal != null) {
                     currentYear = newVal;
                     updateYearMonthLabel();
+                    loadOrder(); // Reload with filter
+                    calculateSoldQuantities(); // Recalculate sold quantities
                 }
             });
             
@@ -277,6 +316,8 @@ public class managerOrderManagementController {
                     Month parsedMonth = Month.from(fmt.parse(newVal));
                     currentMonth = parsedMonth.getValue();
                     updateYearMonthLabel();
+                    loadOrder(); // Reload with filter
+                    calculateSoldQuantities(); // Recalculate sold quantities
                 }
             });
             
@@ -295,11 +336,8 @@ public class managerOrderManagementController {
             
             List<managerOrderView> ordersList = new ArrayList<>();
             
-            // Call stored procedure to get all orders
-            // Adjust the stored procedure name based on your database schema
-            cs = con.prepareCall("CALL getAllOrders(?,?)");
-            cs.setInt(1, currentMonth);
-            cs.setInt(2, currentYear);
+            // Always call stored procedure to get ALL orders
+            cs = con.prepareCall("CALL getAllOrders()");
             rs = cs.executeQuery();
             
             while (rs.next()) {
@@ -328,10 +366,46 @@ public class managerOrderManagementController {
                 ordersList.add(order);
             }
             
-            // Store in allOrdersData and populate the table
+            // Store all orders in allOrdersData
             allOrdersData.clear();
             allOrdersData.addAll(ordersList);
-            orderTable.setItems(allOrdersData);
+            
+            // Filter orders based on selected month/year
+            List<managerOrderView> filteredOrders = new ArrayList<>();
+            if (currentMonth > 0 && currentYear > 0) {
+                // Filter by month and year
+                for (managerOrderView order : allOrdersData) {
+                    if (order.getOrder_date() != null) {
+                        // Convert java.sql.Date to LocalDate
+                        LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
+                        if (orderDate.getMonthValue() == currentMonth && orderDate.getYear() == currentYear) {
+                            filteredOrders.add(order);
+                        }
+                    }
+                }
+                orderTable.setItems(FXCollections.observableArrayList(filteredOrders));
+                
+                // Auto-select first row if data exists and display details
+                if (!filteredOrders.isEmpty()) {
+                    orderTable.getSelectionModel().selectFirst();
+                    displaySelectedOrderDetails();
+                } else {
+                    orderTable.getSelectionModel().clearSelection();
+                    clearOrderDetails();
+                }
+            } else {
+                // Show all orders
+                orderTable.setItems(allOrdersData);
+                
+                // Auto-select first row if data exists and display details
+                if (!allOrdersData.isEmpty()) {
+                    orderTable.getSelectionModel().selectFirst();
+                    displaySelectedOrderDetails();
+                } else {
+                    orderTable.getSelectionModel().clearSelection();
+                    clearOrderDetails();
+                }
+            }
             
             logger.info("Loaded {} orders successfully", ordersList.size());
             
@@ -376,18 +450,47 @@ public class managerOrderManagementController {
                 String orderId = String.valueOf(order.getOrder_id());
                 String cusName = order.getCus_name().toLowerCase();
                 String staffName = order.getStaff_name().toLowerCase();
+                String orderDate = order.getOrder_date() != null ? order.getOrder_date().toString() : "";
                 
-                if (orderId.contains(searchText) || cusName.contains(searchText) || staffName.contains(searchText)) {
-                    String suggestionText = "Order #" + orderId + " - " + order.getCus_name();
+                // Get car/part names from the order
+                String[] itemNames = order.getCarsandparts_name();
+                StringBuilder allItemNames = new StringBuilder();
+                if (itemNames != null) {
+                    for (String name : itemNames) {
+                        allItemNames.append(name.toLowerCase()).append(" ");
+                    }
+                }
+                String itemNamesStr = allItemNames.toString();
+                
+                // Check if search text matches any field
+                if (orderId.contains(searchText) 
+                    || cusName.contains(searchText) 
+                    || staffName.contains(searchText)
+                    || orderDate.contains(searchText)
+                    || itemNamesStr.contains(searchText)) {
+                    
+                    // Create suggestion text with matched field
+                    String matchType = "";
+                    if (cusName.contains(searchText)) {
+                        matchType = "Customer: " + order.getCus_name();
+                    } else if (staffName.contains(searchText)) {
+                        matchType = "Staff: " + order.getStaff_name();
+                    } else if (orderDate.contains(searchText)) {
+                        matchType = "Date: " + orderDate;
+                    } else if (itemNamesStr.contains(searchText)) {
+                        matchType = "Items: " + (itemNames.length > 0 ? itemNames[0] : "");
+                    } else {
+                        matchType = "Order #" + orderId;
+                    }
+                    
+                    String suggestionText = matchType + " - $" + String.format("%.2f", order.getTotal_amount());
                     MenuItem item = new MenuItem(suggestionText);
                     
                     // Set action for when suggestion is clicked
                     item.setOnAction(e -> {
-                        SearchText.setText(suggestionText);
+                        SearchText.setText(newText);
                         searchSuggestions.hide();
-                        searchResultData.clear();
-                        searchResultData.add(order);
-                        orderTable.setItems(searchResultData);
+                        handleSearch();
                     });
                     
                     matches.add(item);
@@ -434,15 +537,24 @@ public class managerOrderManagementController {
             String cusName = order.getCus_name();
             String staffName = order.getStaff_name();
             String installment = order.getIs_installmenat();
+            String orderDate = order.getOrder_date() != null ? order.getOrder_date().toString() : "";
             
-            // Check if search text matches order ID, customer name, staff name, or full suggestion format
-            if (searchText.equalsIgnoreCase(orderId) ||
-                searchText.equalsIgnoreCase(cusName) ||
-                searchText.equalsIgnoreCase(staffName) ||
-                searchText.equalsIgnoreCase("Order #" + orderId + " - " + cusName) ||
-                orderId.contains(searchLower) ||
+            // Get car/part names from the order
+            String[] itemNames = order.getCarsandparts_name();
+            StringBuilder allItemNames = new StringBuilder();
+            if (itemNames != null) {
+                for (String name : itemNames) {
+                    allItemNames.append(name.toLowerCase()).append(" ");
+                }
+            }
+            String itemNamesStr = allItemNames.toString();
+            
+            // Check if search text matches any field
+            if (orderId.contains(searchLower) ||
                 cusName.toLowerCase().contains(searchLower) ||
                 staffName.toLowerCase().contains(searchLower) ||
+                orderDate.contains(searchLower) ||
+                itemNamesStr.contains(searchLower) ||
                 (installment != null && installment.toLowerCase().contains(searchLower))) {
                 searchResultData.add(order);
             }
@@ -450,6 +562,19 @@ public class managerOrderManagementController {
         
         // Update table with search results
         orderTable.setItems(searchResultData);
+        
+        // Auto-select first result if exists
+        if (!searchResultData.isEmpty()) {
+            orderTable.getSelectionModel().selectFirst();
+            displaySelectedOrderDetails();
+        } else {
+            orderTable.getSelectionModel().clearSelection();
+            clearOrderDetails();
+        }
+        
+        // Recalculate sold quantities based on search results
+        calculateSoldQuantities();
+        
         logger.info("Search completed: found {} orders matching '{}'", searchResultData.size(), searchText);
     }
     
@@ -600,6 +725,126 @@ public class managerOrderManagementController {
         remainAmountlbl.setText("0.00");
         dueDateLabel.setText("N/A");
         installmentTable.getItems().clear();
+    }
+    
+    private void displaySelectedOrderDetails() {
+        managerOrderView selectedOrder = orderTable.getSelectionModel().getSelectedItem();
+        if (selectedOrder != null) {
+            try {
+                orderDetails(selectedOrder);
+            } catch (IOException e) {
+                logger.error("Error displaying order details", e);
+            }
+        }
+    }
+    
+    private void calculateSoldQuantities() {
+        int totalCarsSold = 0;
+        int totalPartsSold = 0;
+        double totalCarsPrice = 0.0;
+        double totalPartsPrice = 0.0;
+        
+        // Get the currently displayed orders (filtered by month/year or search)
+        ObservableList<managerOrderView> currentOrders = orderTable.getItems();
+        
+        for (managerOrderView order : currentOrders) {
+            String[] itemNames = order.getCarsandparts_name();
+            String[] itemQtys = order.getCarsandparts_qty();
+            String[] itemPrices = order.getCarsandparts_perprice();
+            
+            if (itemNames != null && itemQtys != null && itemPrices != null) {
+                for (int i = 0; i < itemNames.length && i < itemQtys.length && i < itemPrices.length; i++) {
+                    String itemName = itemNames[i].toLowerCase();
+                    int qty = 0;
+                    double price = 0.0;
+                    
+                    try {
+                        qty = Integer.parseInt(itemQtys[i].trim());
+                        price = Double.parseDouble(itemPrices[i].trim());
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                    
+                    double totalItemPrice = qty * price;
+                    
+                    // Check if item is a car or part
+                    // Assuming cars have model names like "911", "Cayenne", "Taycan", etc.
+                    // and parts have names like "Engine", "Brake", "Tire", etc.
+                    // You may need to adjust this logic based on your data structure
+                    if (itemName.contains("911") || itemName.contains("cayenne") || 
+                        itemName.contains("taycan") || itemName.contains("macan") ||
+                        itemName.contains("panamera") || itemName.contains("boxster") ||
+                        itemName.contains("cayman")) {
+                        totalCarsSold += qty;
+                        totalCarsPrice += totalItemPrice;
+                    } else {
+                        totalPartsSold += qty;
+                        totalPartsPrice += totalItemPrice;
+                    }
+                }
+            }
+        }
+        
+        setCarCircle(totalCarsSold);
+        setPartCircle(totalPartsSold);
+        setCarPrice(totalCarsPrice);
+        setPartPrice(totalPartsPrice);
+    }
+    
+    private void setCarCircle(int soldQty) {
+        // Show only sold quantity (sold cars)
+        confrimQty.setText(String.valueOf(soldQty));
+        confrimQtyCircle.setVisible(true);
+        
+        // Set text style
+        if (soldQty == 0) {
+            confrimQty.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
+        } else {
+            confrimQty.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold;");
+        }
+        
+        // No stroke animation - clear dash array
+        confrimQtyCircle.getStrokeDashArray().clear();
+    }
+    
+    private void setPartCircle(int soldQty) {
+        // Show only sold quantity (sold parts)
+        pendingQty.setText(String.valueOf(soldQty));
+        pendingQtyCircle.setVisible(true);
+        
+        // Set text style
+        if (soldQty == 0) {
+            pendingQty.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
+        } else {
+            pendingQty.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold;");
+        }
+        
+        // No stroke animation - clear dash array
+        pendingQtyCircle.getStrokeDashArray().clear();
+    }
+    
+    private void setCarPrice(double totalPrice) {
+        // Format and display total car sales price
+        confrimPriceLabel.setText(String.format("$%.2f", totalPrice));
+        
+        // Set text style
+        if (totalPrice == 0) {
+            confrimPriceLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
+        } else {
+            confrimPriceLabel.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold;");
+        }
+    }
+    
+    private void setPartPrice(double totalPrice) {
+        // Format and display total parts sales price
+        pendingPriceRateLabel.setText(String.format("$%.2f", totalPrice));
+        
+        // Set text style
+        if (totalPrice == 0) {
+            pendingPriceRateLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
+        } else {
+            pendingPriceRateLabel.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold;");
+        }
     }
 
 }
