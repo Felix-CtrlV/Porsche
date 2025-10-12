@@ -137,6 +137,9 @@ public class managerOrderManagementController {
     private Label remainAmountlbl;
 
     @FXML
+    private Label dueDateLabel;
+
+    @FXML
     private BarChart<?, ?> revenueChart;
 
     @FXML
@@ -570,6 +573,14 @@ public class managerOrderManagementController {
         paidAmountlbl.setText(String.valueOf(orders.getPayed_amount()));
         customerNamelabel.setText(orders.getCus_name());
         staffNamelabel.setText(orders.getStaff_name());
+        
+        // Set due date
+        if (orders.getDue_date() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            dueDateLabel.setText(new java.sql.Date(orders.getDue_date().getTime()).toLocalDate().format(formatter));
+        } else {
+            dueDateLabel.setText("N/A");
+        }
 
         // Clear and populate the installment table
         installmentTable.getItems().clear();
@@ -587,6 +598,7 @@ public class managerOrderManagementController {
         totalPriceLabel.setText("0.00");
         paidAmountlbl.setText("0.00");
         remainAmountlbl.setText("0.00");
+        dueDateLabel.setText("N/A");
         installmentTable.getItems().clear();
     }
 

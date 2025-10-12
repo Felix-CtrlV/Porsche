@@ -720,7 +720,17 @@ public class managerInventoryController {
             carTaycan.setSelected(check);
             modelsSelectAll.setSelected(check);
 
-        }else{
+        } else if (in == modelsSelectAll) {
+            // When "Models Select All" is clicked, select/deselect all model checkboxes
+            in.setSelected(check);
+            for (javafx.scene.Node node : modelsShowBox.getChildren()) {
+                if (node instanceof CheckBox) {
+                    CheckBox cb = (CheckBox) node;
+                    cb.setSelected(check);
+                }
+            }
+            
+        } else {
             seriesSelectAll.setSelected(false);
 
             modelsSelectAll.setSelected(true);
@@ -1256,31 +1266,89 @@ public class managerInventoryController {
 
         if(selectAll){
             filterData.addAll(carsData);
+            // Hide models pane when "Select All" is checked
+            if(modelsPane.isVisible()) {
+                fadeInOut(false, modelsPane, null);
+            }
         }else{
+            // First filter by series
+            ObservableList<inventory> seriesFilteredData = FXCollections.observableArrayList();
             for(inventory i : carsData){
-
-                if(     (c911.contains(i.getSeries()) && !c911.isBlank()) ||
-                        (c718.contains(i.getSeries()) && !c718.isBlank()) ||
-                        (cCayenne.contains(i.getSeries()) && !cCayenne.isBlank()) ||
-                        (cMacan.contains(i.getSeries()) && !cMacan.isBlank()) ||
-                        (cPanamera.contains(i.getSeries()) && !cPanamera.isBlank()) ||
-                        (cTaycan.contains(i.getSeries()) && !cTaycan.isBlank())
+                String series = i.getSeries().toLowerCase().trim();
+                
+                if(     (c911.equals(series) && !c911.isBlank()) ||
+                        (c718.equals(series) && !c718.isBlank()) ||
+                        (cCayenne.equals(series) && !cCayenne.isBlank()) ||
+                        (cMacan.equals(series) && !cMacan.isBlank()) ||
+                        (cPanamera.equals(series) && !cPanamera.isBlank()) ||
+                        (cTaycan.equals(series) && !cTaycan.isBlank())
                     ){
-                    filterData.add(i);
-
+                    seriesFilteredData.add(i);
                 }
             }
+            
+            // Show models pane when individual series are selected
+            if(!modelsPane.isVisible()) {
+                fadeInOut(true, modelsPane, null);
+            }
+            
+            // Filter by models - only show selected models
+            HashSet<String> selectedModels = new HashSet<>();
+            boolean hasModelCheckboxes = false;
+            
+            for (javafx.scene.Node node : modelsShowBox.getChildren()) {
+                if (node instanceof CheckBox) {
+                    hasModelCheckboxes = true;
+                    CheckBox cb = (CheckBox) node;
+                    if (cb.isSelected()) {
+                        selectedModels.add(cb.getText().toLowerCase().trim());
+                    }
+                }
+            }
+            
+            // Only filter by models if model checkboxes exist and some are selected
+            if(hasModelCheckboxes && !selectedModels.isEmpty()) {
+                // Show only cars with selected models
+                for(inventory i : seriesFilteredData) {
+                    String model = i.getModels().toLowerCase().trim();
+                    if(selectedModels.contains(model)) {
+                        filterData.add(i);
+                    }
+                }
+            } else {
+                // If no model checkboxes yet or no models selected, show all from selected series
+                filterData.addAll(seriesFilteredData);
+            }
         }
-        ArrayList<CheckBox> in = new ArrayList<>();
+        
+        // Collect all selected series from the filtered data (case-insensitive)
+        HashSet<String> selectedSeries = new HashSet<>();
         for(inventory i : filterData) {
-            for (HashMap.Entry<CheckBox, String> entry : models.entrySet()) {
-                if(i.getModels().contains(entry.getValue())) {
-                    in.add(entry.getKey());
-
-                }
+            selectedSeries.add(i.getSeries().toLowerCase().trim());
+        }
+        
+        // Add model checkboxes that belong to the selected series (avoid duplicates)
+        ArrayList<CheckBox> in = new ArrayList<>();
+        HashSet<String> addedModels = new HashSet<>();
+        
+        for (HashMap.Entry<CheckBox, String> entry : models.entrySet()) {
+            String modelName = entry.getKey().getText();
+            String seriesName = entry.getValue().toLowerCase().trim();
+            
+            // Only add if the series is selected and model hasn't been added yet
+            if(selectedSeries.contains(seriesName) && !addedModels.contains(modelName)) {
+                in.add(entry.getKey());
+                addedModels.add(modelName);
             }
         }
-        setModels(in);
+        
+        // Only update models if not in "Select All" mode
+        if(!selectAll) {
+            setModels(in);
+            // Set modelsSelectAll to true when models are first displayed
+            modelsSelectAll.setSelected(true);
+        }
+        
         inventoryTable.setItems(filterData);
         return  filterData.size();
     }
@@ -1535,14 +1603,43 @@ public class managerInventoryController {
             int col = i % 2;
 
             CheckBox newBox = new CheckBox(in.get(i).getText());
-            newBox.setSelected(in.get(i).isSelected());
+            // Select all models by default
+            newBox.setSelected(true);
+            
+            // Enable text wrapping for long model names
+            newBox.setWrapText(true);
+            newBox.setMaxWidth(Double.MAX_VALUE);
+            
+            // Add action handler for individual model checkbox
             newBox.setOnAction(e->{
-
+                updateModelsSelectAll();
             });
             modelsShowBox.add(newBox, col, row);
         }
 
         modelsShowBox.setVisible(true);
+    }
+    
+    // Update modelsSelectAll based on individual model selections
+    private void updateModelsSelectAll() {
+        boolean allSelected = true;
+        
+        // Check if all model checkboxes are selected
+        for (javafx.scene.Node node : modelsShowBox.getChildren()) {
+            if (node instanceof CheckBox) {
+                CheckBox cb = (CheckBox) node;
+                if (!cb.isSelected()) {
+                    allSelected = false;
+                    break;
+                }
+            }
+        }
+        
+        // Update modelsSelectAll checkbox
+        modelsSelectAll.setSelected(allSelected);
+        
+        // Refresh the table to apply model filter
+        showTable("cars");
     }
 
     private void handleImageSelection(ImageView targetImageView) {
