@@ -296,17 +296,13 @@ public class managerOrderManagementController {
         // Load all orders initially (will be filtered by current month/year)
         loadOrder();
         
-        // Calculate sold quantities for current month/year
-        calculateSoldQuantities();
-        
         // Set up listeners for month/year boxes (only once)
         if (!listenersInitialized) {
             yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null) {
                     currentYear = newVal;
                     updateYearMonthLabel();
-                    loadOrder(); // Reload with filter
-                    calculateSoldQuantities(); // Recalculate sold quantities
+                    loadOrder(); // Reload with filter (also recalculates quantities)
                 }
             });
             
@@ -316,8 +312,7 @@ public class managerOrderManagementController {
                     Month parsedMonth = Month.from(fmt.parse(newVal));
                     currentMonth = parsedMonth.getValue();
                     updateYearMonthLabel();
-                    loadOrder(); // Reload with filter
-                    calculateSoldQuantities(); // Recalculate sold quantities
+                    loadOrder(); // Reload with filter (also recalculates quantities)
                 }
             });
             
@@ -422,6 +417,9 @@ public class managerOrderManagementController {
                 logger.error("Error closing database resources", e);
             }
         }
+        
+        // Calculate quantities and prices after loading orders
+        calculateSoldQuantities();
     }
 
     private void setupSearchBar() {
@@ -739,56 +737,46 @@ public class managerOrderManagementController {
     }
     
     private void calculateSoldQuantities() {
-        int totalCarsSold = 0;
-        int totalPartsSold = 0;
-        double totalCarsPrice = 0.0;
-        double totalPartsPrice = 0.0;
+        // Confirm = Paid in full (No installment)
+        int confirmQty = 0;
+        double confirmPrice = 0.0;
+        
+        // Pending = Installment orders (Yes installment)
+        int pendingQty = 0;
+        double pendingPrice = 0.0;
         
         // Get the currently displayed orders (filtered by month/year or search)
         ObservableList<managerOrderView> currentOrders = orderTable.getItems();
         
-        for (managerOrderView order : currentOrders) {
-            String[] itemNames = order.getCarsandparts_name();
-            String[] itemQtys = order.getCarsandparts_qty();
-            String[] itemPrices = order.getCarsandparts_perprice();
-            
-            if (itemNames != null && itemQtys != null && itemPrices != null) {
-                for (int i = 0; i < itemNames.length && i < itemQtys.length && i < itemPrices.length; i++) {
-                    String itemName = itemNames[i].toLowerCase();
-                    int qty = 0;
-                    double price = 0.0;
-                    
-                    try {
-                        qty = Integer.parseInt(itemQtys[i].trim());
-                        price = Double.parseDouble(itemPrices[i].trim());
-                    } catch (NumberFormatException e) {
-                        continue;
-                    }
-                    
-                    double totalItemPrice = qty * price;
-                    
-                    // Check if item is a car or part
-                    // Assuming cars have model names like "911", "Cayenne", "Taycan", etc.
-                    // and parts have names like "Engine", "Brake", "Tire", etc.
-                    // You may need to adjust this logic based on your data structure
-                    if (itemName.contains("911") || itemName.contains("cayenne") || 
-                        itemName.contains("taycan") || itemName.contains("macan") ||
-                        itemName.contains("panamera") || itemName.contains("boxster") ||
-                        itemName.contains("cayman")) {
-                        totalCarsSold += qty;
-                        totalCarsPrice += totalItemPrice;
-                    } else {
-                        totalPartsSold += qty;
-                        totalPartsPrice += totalItemPrice;
-                    }
+        // Only calculate if there are orders
+        if (currentOrders != null && !currentOrders.isEmpty()) {
+            for (managerOrderView order : currentOrders) {
+                // Check if order is installment
+                boolean isInstallment = order.getIs_installmenat().equalsIgnoreCase("Yes");
+                
+                // Get total quantity and amount for this order
+                int orderQty = order.getTotalQty();
+                double orderAmount = order.getTotal_amount();
+                
+                if (isInstallment) {
+                    // Pending (Installment orders)
+                    pendingQty += orderQty;
+                    pendingPrice += orderAmount;
+                } else {
+                    // Confirm (Paid in full)
+                    confirmQty += orderQty;
+                    confirmPrice += orderAmount;
                 }
             }
         }
         
-        setCarCircle(totalCarsSold);
-        setPartCircle(totalPartsSold);
-        setCarPrice(totalCarsPrice);
-        setPartPrice(totalPartsPrice);
+        // Always set values (will be 0 if no data)
+        setCarCircle(confirmQty);
+        setCarPrice(confirmPrice);
+        
+        // Set pending (installment) values
+        setPartCircle(pendingQty);
+        setPartPrice(pendingPrice);
     }
     
     private void setCarCircle(int soldQty) {

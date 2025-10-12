@@ -1039,3 +1039,57 @@ java.sql.SQLException: Column 'carsandparts_price' not found.
 2025-10-12 23:03:33.466 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
 2025-10-12 23:03:33.554 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
 2025-10-12 23:03:34.769 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-12 23:30:11.461 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-12 23:30:11.509 [Thread-5010] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-12 23:30:13.821 [Thread-5010] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@e794814
+2025-10-12 23:30:13.830 [Thread-5010] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-12 23:30:13.832 [Thread-5010] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-12 23:30:14.055 [Thread-5010] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-12 23:30:19.725 [Thread-6374] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:30:50.712 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-12 23:39:32.178 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-12 23:39:32.227 [Thread-1131] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-12 23:39:34.023 [Thread-1131] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1713e5f1
+2025-10-12 23:39:34.028 [Thread-1131] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-12 23:39:34.028 [Thread-1131] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-12 23:39:34.262 [Thread-1131] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-12 23:39:42.260 [Thread-2866] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:06.641 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:06.746 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:08.832 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:08.919 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:11.068 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:11.263 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:12.427 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:12.516 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:15.020 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:15.105 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:16.915 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:17.004 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:18.230 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:18.320 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:19.555 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:19.638 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:20.999 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:21.088 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:22.466 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:22.550 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:23.996 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:24.084 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:40:33.531 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-12 23:43:27.513 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-12 23:43:27.563 [Thread-1419] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-12 23:43:30.854 [Thread-1419] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@48e471f4
+2025-10-12 23:43:30.864 [Thread-1419] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-12 23:43:30.864 [Thread-1419] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-12 23:43:31.284 [Thread-1419] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-12 23:43:34.691 [Thread-2625] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:43:49.064 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:43:49.165 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:43:53.207 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:43:53.321 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:43:58.188 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:43:58.280 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:44:01.028 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:44:01.130 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-12 23:44:03.490 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
