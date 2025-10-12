@@ -467,41 +467,10 @@ java.sql.SQLException: Column 'carsandparts_price' not found.
 2025-10-12 03:16:58.103 [Thread-933] INFO  Controllers.loginController - User manager logged in successfully with role: manager
 2025-10-12 03:17:07.712 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 0 orders successfully
 2025-10-12 03:17:09.996 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 1 orders successfully
-2025-10-12 03:21:24.505 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-12 03:21:24.536 [Thread-964] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-12 03:21:25.679 [Thread-964] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2b1717da
-2025-10-12 03:21:25.683 [Thread-964] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-12 03:21:25.683 [Thread-964] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-12 03:21:26.051 [Thread-964] INFO  Controllers.loginController - User manager logged in successfully with role: manager
-2025-10-12 03:21:36.189 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 0 orders successfully
-2025-10-12 03:21:38.295 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 1 orders successfully
-2025-10-12 03:28:16.675 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-12 03:28:16.701 [Thread-1038] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-12 03:28:18.185 [Thread-1038] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6aa8cea
-2025-10-12 03:28:18.189 [Thread-1038] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-12 03:28:18.189 [Thread-1038] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-12 03:28:18.360 [Thread-1038] INFO  Controllers.loginController - User manager logged in successfully with role: manager
-2025-10-12 03:28:27.807 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 0 orders successfully
-2025-10-12 03:28:29.431 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 1 orders successfully
-2025-10-12 03:28:41.419 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
-2025-10-12 03:29:08.443 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-12 03:29:08.474 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-12 03:29:09.651 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@318e77f3
-2025-10-12 03:29:09.654 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-12 03:29:09.654 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-12 03:29:09.785 [Thread-5077] INFO  Controllers.loginController - User manager logged in successfully with role: manager
-2025-10-12 03:29:17.285 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 0 orders successfully
-2025-10-12 03:29:18.834 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 1 orders successfully
-2025-10-12 03:29:51.185 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
-2025-10-12 11:51:03.111 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-12 11:51:03.139 [Thread-5842] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-12 11:51:04.528 [Thread-5842] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1d0eb6c6
-2025-10-12 11:51:04.532 [Thread-5842] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-12 11:51:04.532 [Thread-5842] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-12 11:51:05.189 [Thread-5842] INFO  Controllers.loginController - User manager logged in successfully with role: manager
-2025-10-12 11:51:56.662 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
-2025-10-12 11:52:05.189 [Thread-5842] INFO  Controllers.loginController - User manager logged in successfully with role: manager
-2025-10-12 11:55:00.093 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 0 orders successfully
-2025-10-12 11:55:02.962 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 0 orders successfully
-2025-10-12 11:55:05.337 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 1 orders successfully
-2025-10-12 11:56:06.799 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-12 03:39:19.645 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-12 03:39:19.668 [Thread-1816] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-12 03:39:20.865 [Thread-1816] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3f29dab
+2025-10-12 03:39:20.868 [Thread-1816] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-12 03:39:20.868 [Thread-1816] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-12 03:39:21.003 [Thread-1816] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-12 03:40:27.598 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
