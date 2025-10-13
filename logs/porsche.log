@@ -168,3 +168,25 @@
 2025-10-13 20:48:26.452 [Thread-6503] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
 2025-10-13 20:48:26.727 [Thread-6503] INFO  Controllers.loginController - User manager logged in successfully with role: manager
 2025-10-13 20:51:20.132 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 23:17:12.125 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 23:17:12.166 [Thread-1905] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 23:17:13.739 [Thread-1905] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@36e67608
+2025-10-13 23:17:13.744 [Thread-1905] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 23:17:13.744 [Thread-1905] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 23:17:14.014 [Thread-1905] INFO  Utils.OTPService - Attempting to send OTP to: kaungswan59@gmail.com
+2025-10-13 23:17:17.132 [Thread-1905] WARN  Utils.RealEmailService - Gmail sending failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d9443c01a7336-29034e175f3sm138093705ad.29 - gsmtp
+
+2025-10-13 23:17:19.813 [Thread-1905] WARN  Utils.RealEmailService - Alternative auth failed: 534-5.7.9 Application-specific password required. For more information, go to
+534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 41be03b00d2f7-b67c6040d23sm3247249a12.38 - gsmtp
+
+2025-10-13 23:17:19.814 [Thread-1905] INFO  Utils.OTPService - OTP sent successfully to: kaungswan59@gmail.com
+2025-10-13 23:17:25.880 [Thread-1905] INFO  Utils.OTPService - OTP verified successfully for: kaungswan59@gmail.com
+2025-10-13 23:17:37.482 [Thread-1905] INFO  Controllers.loginController - User admin logged in successfully with role: admin
+2025-10-13 23:18:52.636 [Thread-33733] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized with connection from pool
+2025-10-13 23:19:20.401 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 23:19:20.453 [Thread-513] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 23:19:22.403 [Thread-513] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4cc0d6d0
+2025-10-13 23:19:22.405 [Thread-513] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 23:19:22.405 [Thread-513] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 23:19:22.585 [Thread-513] INFO  Controllers.loginController - User admin logged in successfully with role: admin
