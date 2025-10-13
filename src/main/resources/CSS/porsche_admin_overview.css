@@ -35,6 +35,15 @@
     -fx-background-radius: 8;
 }
 
+/* Ensure displayed text inside ChoiceBox/ComboBox is white */
+.choice-box .label { -fx-text-fill: white; }
+.combo-box .list-cell { -fx-text-fill: white; }
+.combo-box .text-field { -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.6); }
+
+/* Dropdown item text */
+.choice-box .menu-item .label { -fx-text-fill: white; }
+.combo-box .list-view .list-cell { -fx-text-fill: white; }
+
 .stat-row { }
 
 .stat-card {
