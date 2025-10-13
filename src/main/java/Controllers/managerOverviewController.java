@@ -722,9 +722,9 @@ public class managerOverviewController {
             if (besti.equals("car") || besti.equals("part")) {
                 while (rs.next()) {
                     int rank = rs.getInt(1);
-                    int targetQty = rs.getInt(2);
-                    int soldQty = rs.getInt(3);
-                    String inventoryName = rs.getString(4);
+                    String inventoryName = rs.getString(2);
+                    int targetQty = rs.getInt(3);
+                    int soldQty = rs.getInt(4);
                     managerOverview item = new managerOverview(
                             rank, targetQty, soldQty, inventoryName
                     );
