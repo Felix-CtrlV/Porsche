@@ -2112,6 +2112,10 @@ public class managerInventoryController {
         int qty = Integer.parseInt(editCarQty.getText().trim());
         double price = Double.parseDouble(editCarPrice.getText().trim());
         
+        // Combine model name and trim name into full car name
+        // The procedure will parse this: "911 Carrera T" -> model="911 Carrera", trim="T"
+        String fullCarName = modelName + " " + trimName;
+        
         // Handle image
         String photoPath = editPath.getPhoto(); // Keep existing photo by default
         if (!file.isEmpty()) {
@@ -2119,18 +2123,17 @@ public class managerInventoryController {
         }
         
         // Call updateFullCar stored procedure
-        // This handles: model update, photo update, and car update
-        CallableStatement cs = con.prepareCall("{CALL updateFullCar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+        // This handles: model parsing, photo overwrite, and car update
+        CallableStatement cs = con.prepareCall("{CALL updateFullCar(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
         cs.setInt(1, editPath.getId());           // in_car_id
-        cs.setString(2, modelName);                // in_model_name
-        cs.setString(3, trimName);                 // in_trim_name
-        cs.setString(4, extColor);                 // in_car_color
-        cs.setString(5, intColor);                 // in_interior_color
-        cs.setString(6, fuelType);                 // in_fuel_type (procedure handles conversion)
-        cs.setInt(7, year);                        // in_production_year
-        cs.setInt(8, qty);                         // in_car_qty
-        cs.setDouble(9, price);                    // in_price
-        cs.setString(10, photoPath);               // in_photo_url
+        cs.setString(2, fullCarName);              // in_car_name (will be parsed by procedure)
+        cs.setString(3, extColor);                 // in_car_color
+        cs.setString(4, intColor);                 // in_interior_color
+        cs.setString(5, fuelType);                 // in_fuel_type (procedure handles conversion)
+        cs.setInt(6, year);                        // in_production_year
+        cs.setInt(7, qty);                         // in_car_qty
+        cs.setDouble(8, price);                    // in_price
+        cs.setString(9, photoPath);                // in_photo_url
         
         cs.execute();
         System.out.println("Car updated successfully via updateFullCar procedure for car_id: " + editPath.getId());
