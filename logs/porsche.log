@@ -168,3 +168,20 @@
 2025-10-13 20:48:26.452 [Thread-6503] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
 2025-10-13 20:48:26.727 [Thread-6503] INFO  Controllers.loginController - User manager logged in successfully with role: manager
 2025-10-13 20:51:20.132 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 22:43:52.344 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 22:43:52.395 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 22:43:53.627 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5d59653f
+2025-10-13 22:43:53.631 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 22:43:53.631 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 22:43:53.776 [Thread-5077] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-13 22:44:26.562 [Thread-5081] INFO  C.managerOrderManagementController - Loaded 112 orders successfully
+2025-10-13 22:44:49.638 [Thread-5083] INFO  C.managerOrderManagementController - Loaded 112 orders successfully
+2025-10-13 22:45:16.694 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 22:45:46.120 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 22:45:46.140 [Thread-1672] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 22:45:47.205 [Thread-1672] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5a63d0f0
+2025-10-13 22:45:47.208 [Thread-1672] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 22:45:47.209 [Thread-1672] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 22:45:47.373 [Thread-1672] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-13 22:45:57.953 [Thread-2456] INFO  C.managerOrderManagementController - Loaded 112 orders successfully
+2025-10-13 22:46:47.259 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
