@@ -199,33 +199,3 @@ Caused by: java.lang.NullPointerException: null
 	at Controllers.staffWelcomeController.initialize(staffWelcomeController.java:35)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	... 35 common frames omitted
-2025-10-11 19:50:08.069 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-11 19:50:08.110 [Thread-1078] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-11 19:50:10.416 [Thread-1078] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4ce2ada4
-2025-10-11 19:50:10.421 [Thread-1078] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-11 19:50:10.421 [Thread-1078] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-11 19:50:10.675 [Thread-1078] INFO  Controllers.loginController - User staff logged in successfully with role: staff
-2025-10-11 19:54:11.512 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-11 19:54:11.552 [Thread-14573] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-11 19:54:13.637 [Thread-14573] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@61f9173d
-2025-10-11 19:54:13.650 [Thread-14573] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-11 19:54:13.651 [Thread-14573] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-11 19:54:13.952 [Thread-14573] INFO  Controllers.loginController - User staff logged in successfully with role: staff
-2025-10-11 19:55:29.733 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-11 19:55:29.774 [Thread-1793] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-11 19:55:31.945 [Thread-1793] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4bd423a6
-2025-10-11 19:55:31.954 [Thread-1793] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-11 19:55:31.954 [Thread-1793] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-11 19:55:32.227 [Thread-1793] INFO  Controllers.loginController - User staff logged in successfully with role: staff
-2025-10-11 20:00:42.831 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-11 20:00:42.868 [Thread-11454] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-11 20:00:44.972 [Thread-11454] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3ce862ee
-2025-10-11 20:00:44.978 [Thread-11454] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-11 20:00:44.978 [Thread-11454] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-11 20:00:45.225 [Thread-11454] INFO  Controllers.loginController - User staff logged in successfully with role: staff
-2025-10-11 20:04:21.752 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-11 20:04:21.789 [Thread-22110] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-11 20:04:23.901 [Thread-22110] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@63531d72
-2025-10-11 20:04:23.906 [Thread-22110] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-11 20:04:23.906 [Thread-22110] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-11 20:04:24.176 [Thread-22110] INFO  Controllers.loginController - User staff logged in successfully with role: staff
