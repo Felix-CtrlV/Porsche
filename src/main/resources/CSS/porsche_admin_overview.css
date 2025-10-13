@@ -1,0 +1,123 @@
+/* Porsche Admin Overview Theme */
+
+.dashboard-root {
+    -fx-background-color: linear-gradient(to bottom, #0f0f10, #151517);
+}
+
+.topbar {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 12, 0.3, 0, 4);
+}
+
+.title {
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Segoe UI Semibold", "Arial";
+    -fx-font-size: 22px;
+    -fx-opacity: 0.9;
+}
+
+.control-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+.control-btn:disabled { -fx-opacity: 0.5; }
+.filter-choice {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255,255,255,0.12);
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.stat-row { }
+
+.stat-card {
+    -fx-background-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0.25, 0, 3);
+}
+.stat-card.primary { /* deep graphite */
+    -fx-background-color: linear-gradient(to right, #1c1f23, #2a2f35);
+}
+.stat-card.accent { /* Porsche orange for parts */
+    -fx-background-color: linear-gradient(to right, #b55b0d, #e67e22);
+}
+.stat-card.red { /* Porsche red for customization */
+    -fx-background-color: linear-gradient(to right, #8f0e18, #C21E2B);
+}
+.stat-card.green { /* revenue */
+    -fx-background-color: linear-gradient(to right, #1f6f3a, #2ecc71);
+}
+.stat-title {
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+.stat-main {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+}
+.stat-sub {
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-size: 16px;
+}
+.emoji {
+    -fx-text-fill: white;
+}
+
+.panel {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0.25, 0, 3);
+}
+.panel-header {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-background-radius: 14 14 0 0;
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-width: 0 0 1 0;
+}
+.panel-title {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+/* Toggle buttons in chart header */
+.car, .part {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9ca3af;
+}
+.car.active { -fx-text-fill: #6D8196; }
+.part.active { -fx-text-fill: #e67e22; }
+.car:hover { -fx-text-fill: #6D8196; }
+.part:hover { -fx-text-fill: #e67e22; }
+
+/* Charts default colors tuned to theme */
+.chart-plot-background { -fx-background-color: transparent; }
+.default-color0.chart-series-line { -fx-stroke: #C21E2B; }
+.default-color1.chart-series-line { -fx-stroke: #6D8196; }
+.default-color0.chart-bar { -fx-bar-fill: #6D8196; }
+.default-color1.chart-bar { -fx-bar-fill: #e67e22; }
+.chart-legend { -fx-text-fill: #e5e7eb; }
+.axis .tick-label { -fx-text-fill: #cbd5e1; }
+.axis .axis-label { -fx-text-fill: #e5e7eb; }
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines { -fx-stroke: rgba(255,255,255,0.08); }
+
+/* Progress Rings */
+.ring-bg { -fx-stroke: rgba(255,255,255,0.12); }
+.ring-car { -fx-stroke: #6D8196; }
+.ring-part { -fx-stroke: #e67e22; }
+
+/* Revenue labels */
+.value-primary { -fx-text-fill: #C21E2B; -fx-font-weight: bold; }
+
+
