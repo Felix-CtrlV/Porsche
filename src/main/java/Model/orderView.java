@@ -6,15 +6,13 @@ import java.time.format.DateTimeFormatter;
 public class orderView {
     private int orderId;
     private String customername;
-    private String carName;
     private LocalDateTime orderDate;
     private String status;
     private String total;
 
-    public orderView(int orderId, String customername, String carName, LocalDateTime orderDate, String status, String total) {
+    public orderView(int orderId, String customername, LocalDateTime orderDate, String status, String total) {
         this.orderId = orderId;
         this.customername = customername;
-        this.carName = carName;
         this.orderDate = orderDate;
         this.status = status;
         this.total = total;
@@ -28,12 +26,8 @@ public class orderView {
         return customername;
     }
 
-    public String getCarName() {
-        return carName != null ? carName : "N/A";
-    }
-
     public String getDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
         return orderDate.format(formatter);
     }
 

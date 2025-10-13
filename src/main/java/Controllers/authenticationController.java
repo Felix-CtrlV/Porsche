@@ -98,8 +98,7 @@ public class authenticationController {
         String step = null;
         setStep(step);
 
-        // Image is already set in FXML, no need to set it again
-        // closeImg.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/closeRemoved.png"))));
+        closeImg.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/closeRemoved.png"))));
 
         closeImg.setOnMouseClicked(e -> {
             Stage stage = (Stage) closeImg.getScene().getWindow();
