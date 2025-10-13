@@ -276,3 +276,16 @@
 2025-10-13 22:58:58.612 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
 2025-10-13 22:59:03.244 [Thread-6156] INFO  Controllers.loginController - User manager logged in successfully with role: manager
 2025-10-13 23:03:10.430 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 23:21:45.034 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 23:21:45.079 [Thread-1411] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 23:21:46.446 [Thread-1411] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3cc1491e
+2025-10-13 23:21:46.452 [Thread-1411] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 23:21:46.453 [Thread-1411] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 23:21:46.615 [Thread-1411] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-13 23:30:31.892 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 23:32:17.758 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 23:32:17.776 [Thread-1645] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 23:32:19.062 [Thread-1645] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@534efabc
+2025-10-13 23:32:19.067 [Thread-1645] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 23:32:19.067 [Thread-1645] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 23:32:19.219 [Thread-1645] INFO  Controllers.loginController - User manager logged in successfully with role: manager
