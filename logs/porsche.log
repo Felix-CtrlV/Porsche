@@ -132,3 +132,17 @@
 2025-10-13 11:29:42.407 [Thread-2419] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
 2025-10-13 11:29:43.019 [Thread-2419] INFO  Controllers.loginController - User manager logged in successfully with role: manager
 2025-10-13 11:30:26.141 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 11:32:59.026 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 11:32:59.049 [Thread-1803] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 11:33:02.567 [Thread-1803] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2a7d75eb
+2025-10-13 11:33:02.571 [Thread-1803] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 11:33:02.571 [Thread-1803] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 11:33:03.122 [Thread-1803] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-13 11:33:49.748 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 11:36:15.318 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 11:36:15.354 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 11:36:18.618 [Thread-5077] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@331bdd0d
+2025-10-13 11:36:18.622 [Thread-5077] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 11:36:18.622 [Thread-5077] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 11:36:19.157 [Thread-5077] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-13 11:37:20.338 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
