@@ -449,15 +449,8 @@ public class adminAccountController {
         monthBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (updatingDateBox || newVal == null)
                 return;
-            // Parse short month name (Jan, Feb, etc.) to month number
-            int selectedMonth = -1;
-            for (int i = 1; i <= 12; i++) {
-                if (Month.of(i).getDisplayName(TextStyle.SHORT, Locale.ENGLISH).equals(newVal)) {
-                    selectedMonth = i;
-                    break;
-                }
-            }
-            if (selectedMonth != -1 && selectedMonth != currentMonth) {
+            int selectedMonth = Month.valueOf(newVal.toUpperCase(Locale.ENGLISH)).getValue();
+            if (selectedMonth != currentMonth) {
                 currentMonth = selectedMonth;
                 updateDateControls();
                 loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
@@ -503,20 +496,13 @@ public class adminAccountController {
 
         List<String> months = new ArrayList<>();
 
-        // Limit months to current month if viewing current year
-        int maxMonth = (currentYear == today.getYear()) ? today.getMonthValue() : 12;
-        
-        for (int i = 1; i <= maxMonth; i++)
+        // Optional: Limit months by staff start/end if needed
+        for (int i = 1; i <= 12; i++)
             months.add(Month.of(i).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
 
         monthBox.setItems(FXCollections.observableArrayList(months));
-        
-        // If current month exceeds max available, reset to max
-        if (currentMonth > maxMonth)
-            currentMonth = maxMonth;
-        if (currentMonth < 1)
+        if (currentMonth < 1 || currentMonth > 12)
             currentMonth = 1;
-            
         monthBox.setValue(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
 
         updatingDateBox = false;

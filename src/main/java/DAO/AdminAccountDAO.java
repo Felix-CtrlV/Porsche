@@ -11,9 +11,11 @@ import java.util.List;
 
 public class AdminAccountDAO {
     private static final Logger logger = LoggerFactory.getLogger(AdminAccountDAO.class);
+    private final Connection conn;
 
-    public AdminAccountDAO() {
-        logger.debug("AdminAccountDAO initialized");
+    public AdminAccountDAO() throws SQLException {
+        this.conn = DatabaseConnectionManager.getInstance().getConnection();
+        logger.debug("AdminAccountDAO initialized with connection from pool");
     }
 
     public List<user> getStaffCards(String status, String role) throws SQLException {
@@ -25,8 +27,7 @@ public class AdminAccountDAO {
         """;
 
         List<user> list = new ArrayList<>();
-        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, role.toLowerCase());
             ps.setInt(2, status.equalsIgnoreCase("Active") ? 1 : 0);
 
@@ -67,8 +68,7 @@ public class AdminAccountDAO {
             GROUP BY wk
         """;
 
-        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, staffId);
             ps.setInt(2, staffId);
             ps.setInt(3, month);
@@ -86,8 +86,7 @@ public class AdminAccountDAO {
     public double getMonthlyAttendance(int staffId, int month, int year) throws SQLException {
         String sql = "CALL getMonthlyAttendance(?,?,?)";
         
-        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
-             CallableStatement cs = conn.prepareCall(sql)) {
+        try (CallableStatement cs = conn.prepareCall(sql)) {
             cs.setInt(1, staffId);
             cs.setInt(2, month);
             cs.setInt(3, year);
@@ -105,8 +104,7 @@ public class AdminAccountDAO {
     public int[][] getTargetData(int staffId, int month, int year) throws SQLException {
         String sql = "CALL targetviewchart(?,?,?)";
         
-        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
-             CallableStatement cs = conn.prepareCall(sql)) {
+        try (CallableStatement cs = conn.prepareCall(sql)) {
             cs.setInt(1, staffId);
             cs.setInt(2, month);
             cs.setInt(3, year);
@@ -124,5 +122,16 @@ public class AdminAccountDAO {
             }
         }
         return new int[][]{{0, 0}, {0, 0}};
+    }
+
+    public void close() {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+                logger.debug("Connection returned to pool");
+            }
+        } catch (SQLException e) {
+            logger.error("Error closing connection", e);
+        }
     }
 }
