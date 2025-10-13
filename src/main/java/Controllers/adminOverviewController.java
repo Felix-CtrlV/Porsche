@@ -143,22 +143,47 @@ public class adminOverviewController implements Initializable {
                     LocalDate startDate = LocalDate.of(currentYear, currentMonth, 1);
                     LocalDate endDate = startDate.plusMonths(1);
                     
-                    // Simplified: Get total orders and revenue
-                    String orderQuery = "SELECT COUNT(DISTINCT o.order_id) as qty, COALESCE(SUM(d.total_price), 0) as amount " +
+                    // Get car sales (quantity and value)
+                    String carQuery = "SELECT COUNT(d.detail_id) as qty, COALESCE(SUM(d.total_price), 0) as amount " +
                             "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
-                            "WHERE o.order_date >= ? AND o.order_date < ?";
-                    try (PreparedStatement ps = con.prepareStatement(orderQuery)) {
+                            "WHERE o.order_date >= ? AND o.order_date < ? AND d.car_id IS NOT NULL";
+                    try (PreparedStatement ps = con.prepareStatement(carQuery)) {
                         ps.setString(1, startDate.toString());
                         ps.setString(2, endDate.toString());
                         try (ResultSet rs = ps.executeQuery()) {
                             if (rs.next()) {
                                 metrics.put("carQty", rs.getInt("qty"));
                                 metrics.put("carAmount", rs.getDouble("amount"));
-                                // Use same values for parts and custom for now
-                                metrics.put("partQty", 0);
-                                metrics.put("partAmount", 0.0);
-                                metrics.put("customQty", 0);
-                                metrics.put("customAmount", 0.0);
+                            }
+                        }
+                    }
+                    
+                    // Get part sales (quantity and value)
+                    String partQuery = "SELECT SUM(d.qty) as qty, COALESCE(SUM(d.total_price), 0) as amount " +
+                            "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
+                            "WHERE o.order_date >= ? AND o.order_date < ? AND d.part_id IS NOT NULL";
+                    try (PreparedStatement ps = con.prepareStatement(partQuery)) {
+                        ps.setString(1, startDate.toString());
+                        ps.setString(2, endDate.toString());
+                        try (ResultSet rs = ps.executeQuery()) {
+                            if (rs.next()) {
+                                metrics.put("partQty", rs.getInt("qty"));
+                                metrics.put("partAmount", rs.getDouble("amount"));
+                            }
+                        }
+                    }
+                    
+                    // Get customize sales (quantity and value)
+                    String customQuery = "SELECT COUNT(d.detail_id) as qty, COALESCE(SUM(d.total_price), 0) as amount " +
+                            "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
+                            "WHERE o.order_date >= ? AND o.order_date < ? AND d.is_customize = 1";
+                    try (PreparedStatement ps = con.prepareStatement(customQuery)) {
+                        ps.setString(1, startDate.toString());
+                        ps.setString(2, endDate.toString());
+                        try (ResultSet rs = ps.executeQuery()) {
+                            if (rs.next()) {
+                                metrics.put("customQty", rs.getInt("qty"));
+                                metrics.put("customAmount", rs.getDouble("amount"));
                             }
                         }
                     }
@@ -197,18 +222,21 @@ public class adminOverviewController implements Initializable {
             double totalRevenue = carAmount + partAmount + customAmount;
             
             totalSalesLbl.setText(carQty + " SOLD");
-            totalSalesValueLbl.setText(String.format("$%.0f", carAmount));
+            totalSalesValueLbl.setText(String.format("$%,.2f", carAmount));
             partsSoldLbl.setText(partQty + " SOLD");
-            partsValueLbl.setText(String.format("$%.0f", partAmount));
+            partsValueLbl.setText(String.format("$%,.2f", partAmount));
             servicesLbl.setText(customQty + " DONE");
-            servicesValueLbl.setText(String.format("$%.0f", customAmount));
-            revenueLbl.setText(String.format("$%.0f", totalRevenue));
+            servicesValueLbl.setText(String.format("$%,.2f", customAmount));
+            revenueLbl.setText(String.format("$%,.2f", totalRevenue));
             
             if (prevRevenue > 0) {
                 double growth = ((totalRevenue - prevRevenue) / prevRevenue) * 100;
-                revenueGrowthLbl.setText(String.format("%+.1f%% Growth", growth));
+                String sign = growth >= 0 ? "+" : "";
+                revenueGrowthLbl.setText(String.format("%s%.1f%%", sign, growth));
+            } else if (totalRevenue > 0) {
+                revenueGrowthLbl.setText("+100%");
             } else {
-                revenueGrowthLbl.setText("N/A");
+                revenueGrowthLbl.setText("0%");
             }
         });
         
@@ -230,16 +258,25 @@ public class adminOverviewController implements Initializable {
                         LocalDate startDate = LocalDate.of(currentYear, month, 1);
                         LocalDate endDate = startDate.plusMonths(1);
                         
-                        String query = "SELECT COALESCE(SUM(d.total_price), 0) as total " +
-                                "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
-                                "WHERE o.order_date >= ? AND o.order_date < ?";
+                        String query;
+                        if ("car".equals(currentBarChartType)) {
+                            // Count car sales quantity
+                            query = "SELECT COUNT(d.detail_id) as qty " +
+                                    "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
+                                    "WHERE o.order_date >= ? AND o.order_date < ? AND d.car_id IS NOT NULL";
+                        } else {
+                            // Sum part sales quantity
+                            query = "SELECT COALESCE(SUM(d.qty), 0) as qty " +
+                                    "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
+                                    "WHERE o.order_date >= ? AND o.order_date < ? AND d.part_id IS NOT NULL";
+                        }
                         
                         try (PreparedStatement ps = con.prepareStatement(query)) {
                             ps.setString(1, startDate.toString());
                             ps.setString(2, endDate.toString());
                             try (ResultSet rs = ps.executeQuery()) {
                                 if (rs.next()) {
-                                    values[month - 1] = rs.getDouble("total");
+                                    values[month - 1] = rs.getDouble("qty");
                                 }
                             }
                         }
@@ -256,7 +293,7 @@ public class adminOverviewController implements Initializable {
             barChart.getData().clear();
             
             XYChart.Series<String, Number> series = new XYChart.Series<>();
-            series.setName("Monthly Revenue");
+            series.setName("car".equals(currentBarChartType) ? "Car Sales (Quantity)" : "Part Sales (Quantity)");
             
             String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
             double[] values = data.get(currentBarChartType);
@@ -278,43 +315,45 @@ public class adminOverviewController implements Initializable {
         Task<Map<Integer, Double>> task = new Task<>() {
             @Override
             protected Map<Integer, Double> call() throws Exception {
-                Map<Integer, Double> dailyRevenue = new HashMap<>();
+                Map<Integer, Double> monthlyRevenue = new HashMap<>();
                 
                 try (Connection con = DatabaseConnectionManager.getInstance().getConnection()) {
-                    LocalDate startDate = LocalDate.of(currentYear, currentMonth, 1);
-                    LocalDate endDate = startDate.plusMonths(1);
-                    
-                    String query = "SELECT DAY(o.order_date) as day, COALESCE(SUM(d.total_price), 0) as total " +
-                            "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
-                            "WHERE o.order_date >= ? AND o.order_date < ? " +
-                            "GROUP BY DAY(o.order_date) ORDER BY day";
-                    
-                    try (PreparedStatement ps = con.prepareStatement(query)) {
-                        ps.setString(1, startDate.toString());
-                        ps.setString(2, endDate.toString());
-                        try (ResultSet rs = ps.executeQuery()) {
-                            while (rs.next()) {
-                                dailyRevenue.put(rs.getInt("day"), rs.getDouble("total"));
+                    // Get revenue for each month of the selected year
+                    for (int month = 1; month <= 12; month++) {
+                        LocalDate startDate = LocalDate.of(currentYear, month, 1);
+                        LocalDate endDate = startDate.plusMonths(1);
+                        
+                        String query = "SELECT COALESCE(SUM(d.total_price), 0) as total " +
+                                "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
+                                "WHERE o.order_date >= ? AND o.order_date < ?";
+                        
+                        try (PreparedStatement ps = con.prepareStatement(query)) {
+                            ps.setString(1, startDate.toString());
+                            ps.setString(2, endDate.toString());
+                            try (ResultSet rs = ps.executeQuery()) {
+                                if (rs.next()) {
+                                    monthlyRevenue.put(month, rs.getDouble("total"));
+                                }
                             }
                         }
                     }
                 }
                 
-                return dailyRevenue;
+                return monthlyRevenue;
             }
         };
         
         task.setOnSucceeded(e -> {
-            Map<Integer, Double> dailyRevenue = task.getValue();
+            Map<Integer, Double> monthlyRevenue = task.getValue();
             areaChart.getData().clear();
             
             XYChart.Series<String, Number> series = new XYChart.Series<>();
-            series.setName("Total Revenue");
+            series.setName("Revenue Analysis");
             
-            int daysInMonth = LocalDate.of(currentYear, currentMonth, 1).lengthOfMonth();
-            for (int day = 1; day <= daysInMonth; day++) {
-                double revenue = dailyRevenue.getOrDefault(day, 0.0);
-                series.getData().add(new XYChart.Data<>(String.valueOf(day), revenue));
+            String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+            for (int month = 1; month <= 12; month++) {
+                double revenue = monthlyRevenue.getOrDefault(month, 0.0);
+                series.getData().add(new XYChart.Data<>(monthNames[month - 1], revenue));
             }
             
             areaChart.getData().add(series);
@@ -336,25 +375,32 @@ public class adminOverviewController implements Initializable {
                     LocalDate startDate = LocalDate.of(currentYear, currentMonth, 1);
                     LocalDate endDate = startDate.plusMonths(1);
                     
-                    // Get top customers by order count
-                    String query = "SELECT c.customer_name, COUNT(o.order_id) as qty " +
-                            "FROM orders o JOIN customer_info c ON o.customer_id = c.customer_id " +
-                            "WHERE o.order_date >= ? AND o.order_date < ? " +
-                            "GROUP BY c.customer_name ORDER BY qty DESC LIMIT 5";
+                    // Get car sales by model name
+                    String query = "SELECT CONCAT(cm.model_name, ' ', COALESCE(cm.trim_name, '')) as car_model, " +
+                            "COUNT(od.detail_id) as qty " +
+                            "FROM orders o " +
+                            "JOIN order_details od ON o.order_id = od.order_id " +
+                            "JOIN cars c ON od.car_id = c.car_id " +
+                            "JOIN car_models cm ON c.model_id = cm.model_id " +
+                            "WHERE o.order_date >= ? AND o.order_date < ? AND od.car_id IS NOT NULL " +
+                            "GROUP BY cm.model_id, cm.model_name, cm.trim_name " +
+                            "ORDER BY qty DESC";
                     
                     try (PreparedStatement ps = con.prepareStatement(query)) {
                         ps.setString(1, startDate.toString());
                         ps.setString(2, endDate.toString());
                         try (ResultSet rs = ps.executeQuery()) {
                             while (rs.next()) {
-                                pieData.add(new PieChart.Data(rs.getString("customer_name"), rs.getInt("qty")));
+                                String modelName = rs.getString("car_model").trim();
+                                int qty = rs.getInt("qty");
+                                pieData.add(new PieChart.Data(modelName, qty));
                             }
                         }
                     }
                 }
                 
                 if (pieData.isEmpty()) {
-                    pieData.add(new PieChart.Data("No Data", 1));
+                    pieData.add(new PieChart.Data("No Sales", 1));
                 }
                 
                 return pieData;
@@ -378,25 +424,30 @@ public class adminOverviewController implements Initializable {
                     LocalDate startDate = LocalDate.of(currentYear, currentMonth, 1);
                     LocalDate endDate = startDate.plusMonths(1);
                     
-                    // Get order status distribution
-                    String query = "SELECT o.order_status, COUNT(o.order_id) as qty " +
+                    // Get part sales by part name
+                    String query = "SELECT cp.part_name, SUM(od.qty) as qty " +
                             "FROM orders o " +
-                            "WHERE o.order_date >= ? AND o.order_date < ? " +
-                            "GROUP BY o.order_status ORDER BY qty DESC";
+                            "JOIN order_details od ON o.order_id = od.order_id " +
+                            "JOIN car_parts cp ON od.part_id = cp.part_id " +
+                            "WHERE o.order_date >= ? AND o.order_date < ? AND od.part_id IS NOT NULL " +
+                            "GROUP BY cp.part_id, cp.part_name " +
+                            "ORDER BY qty DESC";
                     
                     try (PreparedStatement ps = con.prepareStatement(query)) {
                         ps.setString(1, startDate.toString());
                         ps.setString(2, endDate.toString());
                         try (ResultSet rs = ps.executeQuery()) {
                             while (rs.next()) {
-                                pieData.add(new PieChart.Data(rs.getString("order_status"), rs.getInt("qty")));
+                                String partName = rs.getString("part_name");
+                                int qty = rs.getInt("qty");
+                                pieData.add(new PieChart.Data(partName, qty));
                             }
                         }
                     }
                 }
                 
                 if (pieData.isEmpty()) {
-                    pieData.add(new PieChart.Data("No Data", 1));
+                    pieData.add(new PieChart.Data("No Sales", 1));
                 }
                 
                 return pieData;
@@ -409,58 +460,89 @@ public class adminOverviewController implements Initializable {
     }
 
     private void loadRevenueDistribution() {
-        Task<Map<String, Double>> task = new Task<>() {
+        Task<Map<String, Object>> task = new Task<>() {
             @Override
-            protected Map<String, Double> call() throws Exception {
-                Map<String, Double> revenue = new HashMap<>();
+            protected Map<String, Object> call() throws Exception {
+                Map<String, Object> data = new HashMap<>();
                 
                 try (Connection con = DatabaseConnectionManager.getInstance().getConnection()) {
                     LocalDate startDate = LocalDate.of(currentYear, currentMonth, 1);
                     LocalDate endDate = startDate.plusMonths(1);
                     
-                    String query = "SELECT COALESCE(SUM(d.total_price), 0) as amount " +
+                    // Get car sales quantity and revenue
+                    String carQuery = "SELECT COUNT(d.detail_id) as qty, COALESCE(SUM(d.total_price), 0) as amount " +
                             "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
-                            "WHERE o.order_date >= ? AND o.order_date < ?";
-                    try (PreparedStatement ps = con.prepareStatement(query)) {
+                            "WHERE o.order_date >= ? AND o.order_date < ? AND d.car_id IS NOT NULL";
+                    try (PreparedStatement ps = con.prepareStatement(carQuery)) {
                         ps.setString(1, startDate.toString());
                         ps.setString(2, endDate.toString());
                         try (ResultSet rs = ps.executeQuery()) {
                             if (rs.next()) {
-                                double total = rs.getDouble("amount");
-                                revenue.put("car", total * 0.7);  // Simulated split
-                                revenue.put("part", total * 0.3);
+                                data.put("carQty", rs.getInt("qty"));
+                                data.put("carRevenue", rs.getDouble("amount"));
+                            }
+                        }
+                    }
+                    
+                    // Get part sales quantity and revenue
+                    String partQuery = "SELECT SUM(d.qty) as qty, COALESCE(SUM(d.total_price), 0) as amount " +
+                            "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
+                            "WHERE o.order_date >= ? AND o.order_date < ? AND d.part_id IS NOT NULL";
+                    try (PreparedStatement ps = con.prepareStatement(partQuery)) {
+                        ps.setString(1, startDate.toString());
+                        ps.setString(2, endDate.toString());
+                        try (ResultSet rs = ps.executeQuery()) {
+                            if (rs.next()) {
+                                data.put("partQty", rs.getInt("qty"));
+                                data.put("partRevenue", rs.getDouble("amount"));
                             }
                         }
                     }
                 }
                 
-                return revenue;
+                return data;
             }
         };
         
         task.setOnSucceeded(e -> {
-            Map<String, Double> revenue = task.getValue();
-            double carRevenue = revenue.getOrDefault("car", 0.0);
-            double partRevenue = revenue.getOrDefault("part", 0.0);
-            double total = carRevenue + partRevenue;
+            Map<String, Object> data = task.getValue();
+            int carQty = (int) data.getOrDefault("carQty", 0);
+            double carRevenue = (double) data.getOrDefault("carRevenue", 0.0);
+            int partQty = (int) data.getOrDefault("partQty", 0);
+            double partRevenue = (double) data.getOrDefault("partRevenue", 0.0);
             
-            totalRevenueLbl.setText(String.format("$%.0f", total));
+            double totalRevenue = carRevenue + partRevenue;
             
-            if (total > 0) {
-                double carPercent = (carRevenue / total) * 100;
-                double partPercent = (partRevenue / total) * 100;
+            // Display total revenue in center
+            totalRevenueLbl.setText(String.format("$%,.0f", totalRevenue));
+            
+            // Display revenue values with percentage of total
+            if (totalRevenue > 0) {
+                double carPercentOfTotal = (carRevenue / totalRevenue) * 100;
+                double partPercentOfTotal = (partRevenue / totalRevenue) * 100;
                 
-                carRevenueDistLbl.setText(String.format("$%.0f • %.1f%%", carRevenue, carPercent));
-                partRevenueDistLbl.setText(String.format("$%.0f • %.1f%%", partRevenue, partPercent));
-                
-                updateCircleProgress(carRevenueCircle, carPercent, 70.0);
-                updateCircleProgress(partRevenueCircle, partPercent, 54.0);
+                carRevenueDistLbl.setText(String.format("$%,.0f • %.1f%%", carRevenue, carPercentOfTotal));
+                partRevenueDistLbl.setText(String.format("$%,.0f • %.1f%%", partRevenue, partPercentOfTotal));
             } else {
                 carRevenueDistLbl.setText("$0 • 0%");
                 partRevenueDistLbl.setText("$0 • 0%");
-                updateCircleProgress(carRevenueCircle, 0, 70.0);
-                updateCircleProgress(partRevenueCircle, 0, 54.0);
             }
+            
+            // Set monthly targets (these can be made configurable later)
+            int carSalesTarget = 10;    // Target: 10 cars per month
+            int partSalesTarget = 50;   // Target: 50 parts per month
+            
+            // Calculate percentage of target achieved based on quantity sold
+            double carTargetPercent = carSalesTarget > 0 ? (carQty * 100.0 / carSalesTarget) : 0;
+            double partTargetPercent = partSalesTarget > 0 ? (partQty * 100.0 / partSalesTarget) : 0;
+            
+            // Cap at 100% for circle display
+            double carCirclePercent = Math.min(carTargetPercent, 100);
+            double partCirclePercent = Math.min(partTargetPercent, 100);
+            
+            // Update circles to show progress toward sales target
+            updateCircleProgress(carRevenueCircle, carCirclePercent, 70.0);
+            updateCircleProgress(partRevenueCircle, partCirclePercent, 54.0);
         });
         
         task.setOnFailed(e -> logger.error("Failed to load revenue distribution", task.getException()));
@@ -469,10 +551,22 @@ public class adminOverviewController implements Initializable {
 
     private void updateCircleProgress(Circle circle, double percent, double radius) {
         if (circle == null) return;
+        
+        // Calculate circumference
         double circumference = 2 * Math.PI * radius;
+        
+        // Calculate dash length based on percentage
         double dashLength = (percent / 100.0) * circumference;
-        circle.getStrokeDashArray().setAll(dashLength, circumference);
+        double gapLength = circumference - dashLength;
+        
+        // Set stroke dash array (filled portion, gap portion)
+        circle.getStrokeDashArray().setAll(dashLength, gapLength);
+        
+        // Rotate to start from top (12 o'clock position)
         circle.setRotate(-90);
+        
+        // Set stroke dash offset to 0 to ensure consistent starting point
+        circle.setStrokeDashOffset(0);
     }
 
     @FXML
@@ -524,12 +618,16 @@ public class adminOverviewController implements Initializable {
     @FXML
     void clickCarbtn(ActionEvent event) {
         currentBarChartType = "car";
+        carbtn.getStyleClass().add("active");
+        partbtn.getStyleClass().remove("active");
         loadBarChart();
     }
     
     @FXML
     void clickPartbtn(ActionEvent event) {
         currentBarChartType = "part";
+        partbtn.getStyleClass().add("active");
+        carbtn.getStyleClass().remove("active");
         loadBarChart();
     }
 }
