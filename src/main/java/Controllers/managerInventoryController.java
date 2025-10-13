@@ -975,7 +975,7 @@ public class managerInventoryController {
                 alert.setContentText("Successfully Edited The Part");
             }else if(in.contains("partsUpdate")){
                 alert.setContentText("Successfully Updated The Part");
-            }else if(in.contains("carsUpadate")){
+            }else if(in.contains("carsUpdate")){
                 alert.setContentText("Successfully Updated The Car");
             }
             alert.showAndWait();
@@ -1107,6 +1107,10 @@ public class managerInventoryController {
                     addCarbtn.setDisable(true);
                     addPartbtn.setDisable(false);
                     fadeInOut(true, addCar, addPart);
+                } else if (in.equals("carsUpdate") || in.equals("partsUpdate")) {
+                    // Close edit pane after update
+                    editPane.setVisible(false);
+                    fadeInOut(false, extraPane, inventoryPane);
                 } else {
                     fadeInOut(false, extraPane, inventoryPane);
                 }
@@ -1766,12 +1770,28 @@ public class managerInventoryController {
             editPart.setVisible(false);
             editTitle.setText("(Car)");
             setEditCar();
+            // Clear previous event handlers to prevent stacking
+            editCarRevert.setOnAction(null);
+            editCarApply.setOnAction(null);
+            
             editCarRevert.setOnAction(e->{
-
                 setEditCar();
             });
             editCarApply.setOnAction(e->{
-                tableAddUpdateDelete(true);
+                try {
+                    boolean success = tableAddUpdateDelete(true);
+                    if (success) {
+                        // Show success alert
+                        alertForm(true, "carsUpdate");
+                    } else {
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Update Failed");
+                        errorAlert.setContentText("Failed to update the car. Please check all fields.");
+                        errorAlert.showAndWait();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             });
         }else{
             editCar.setVisible(false);
@@ -1779,11 +1799,28 @@ public class managerInventoryController {
             editTitle.setText("(Part)");
             setEditPart();
             populateEditPartCarNames();
+            // Clear previous event handlers to prevent stacking
+            editPartRevert.setOnAction(null);
+            editPartApply.setOnAction(null);
+            
             editPartRevert.setOnAction(e->{
                 setEditPart();
             });
             editPartApply.setOnAction(e->{
-                tableAddUpdateDelete(true);
+                try {
+                    boolean success = tableAddUpdateDelete(true);
+                    if (success) {
+                        // Show success alert
+                        alertForm(true, "partsUpdate");
+                    } else {
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Update Failed");
+                        errorAlert.setContentText("Failed to update the part. Please check all fields.");
+                        errorAlert.showAndWait();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             });
         }
         fadeInOut(true,extraPane,inventoryPane);
@@ -1888,17 +1925,22 @@ public class managerInventoryController {
             file.clear();
         }
     }
-    private void tableAddUpdateDelete(boolean check){
+    private boolean tableAddUpdateDelete(boolean check){
         try {
             // Check if this is an edit operation (from edit pane) or restore/delete
             if (editPane.isVisible() && check) {
                 // EDIT/UPDATE operation
+                boolean updateSuccess = false;
                 if (editPath.getInventoryId().contains("C")) {
                     // Update Car
-                    updateCar();
+                    updateSuccess = updateCar();
                 } else {
                     // Update Part
-                    updatePart();
+                    updateSuccess = updatePart();
+                }
+                
+                if (!updateSuccess) {
+                    return false;
                 }
                 
                 // Refresh table data
@@ -1915,10 +1957,9 @@ public class managerInventoryController {
                     showTable("parts");
                 }
                 
-                // Close edit pane
-                fadeInOut(false, extraPane, inventoryPane);
-                editPane.setVisible(false);
-                clearCarPartForm(editPath.getInventoryId().contains("C") ? "carsEdit" : "partsEdit");
+                // Don't close edit pane here - let alertForm handle it after showing success message
+                // fadeInOut and clearCarPartForm will be called from alertForm
+                return true;
                 
             } else if (check) {
                 // Restore - Mark as available
@@ -1946,6 +1987,7 @@ public class managerInventoryController {
                 inventoryData.clear();
                 inventoryData.addAll(carsData);
                 inventoryData.addAll(partsData);
+                return true;
 
             } else {
                 // Delete/Mark as unavailable
@@ -1980,16 +2022,18 @@ public class managerInventoryController {
                 fadeInOut(false, extraPane, inventoryPane);
                 editPane.setVisible(false);
                 clearCarPartForm(editPath.getInventoryId().contains("C") ? "carsEdit" : "partsEdit");
-
+                
+                // Refresh the displayed table
+                if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                    showTable("cars");
+                }else{
+                    showTable("parts");
+                }
+                return true;
             }
-            // Refresh the displayed table
-            if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
-                showTable("cars");
-            }else{
-                showTable("parts");
-            }
-        } catch ( SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -2045,9 +2089,22 @@ public class managerInventoryController {
         System.out.println("Insert part not yet implemented");
     }
     
-    private void updateCar() throws SQLException {
-        // Get values from edit form
-        String name = editCarName.getText().trim();
+    private boolean updateCar() throws SQLException {
+        // Get values from edit form with null safety checks
+        if (editCarName == null || editCarName.getText() == null ||
+            editCarSeries == null || editCarSeries.getText() == null ||
+            editCarExtColor == null || editCarExtColor.getText() == null ||
+            editCarIntColor == null || editCarIntColor.getText() == null ||
+            editCarUsage == null || editCarUsage.getText() == null ||
+            editCarProductAt == null || editCarProductAt.getText() == null ||
+            editCarQty == null || editCarQty.getText() == null ||
+            editCarPrice == null || editCarPrice.getText() == null) {
+            System.err.println("Error: One or more edit car fields are null");
+            return false;
+        }
+        
+        String modelName = editCarName.getText().trim();
+        String trimName = editCarSeries.getText().trim();
         String extColor = editCarExtColor.getText().trim();
         String intColor = editCarIntColor.getText().trim();
         String fuelType = editCarUsage.getText().trim();
@@ -2055,55 +2112,58 @@ public class managerInventoryController {
         int qty = Integer.parseInt(editCarQty.getText().trim());
         double price = Double.parseDouble(editCarPrice.getText().trim());
         
-        // Convert fuel type display name back to database abbreviation
-        String fuelCode = "";
-        switch(fuelType) {
-            case "Petrol":
-                fuelCode = "PET";
-                break;
-            case "Hybrid (Petrol+Electric)":
-                fuelCode = "HYB";
-                break;
-            case "Electric":
-                fuelCode = "ELEC";
-                break;
-            case "Diesel":
-                fuelCode = "DSL";
-                break;
-            default:
-                fuelCode = fuelType; // Use as-is if not recognized
-                break;
-        }
-        
         // Handle image
         String photoPath = editPath.getPhoto(); // Keep existing photo by default
         if (!file.isEmpty()) {
             photoPath = file.get(0).getAbsolutePath();
         }
         
-        // Update database
-        String sql = "UPDATE cars SET car_name = ?, ext_color = ?, int_color = ?, fuel_type = ?, product_year = ?, qty = ?, price = ?, photo_url = ? WHERE car_id = ?";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, name);
-        ps.setString(2, extColor);
-        ps.setString(3, intColor);
-        ps.setString(4, fuelCode);
-        ps.setInt(5, year);
-        ps.setInt(6, qty);
-        ps.setDouble(7, price);
-        ps.setString(8, photoPath);
-        ps.setInt(9, editPath.getId());
+        // Call updateFullCar stored procedure
+        // This handles: model update, photo update, and car update
+        CallableStatement cs = con.prepareCall("{CALL updateFullCar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+        cs.setInt(1, editPath.getId());           // in_car_id
+        cs.setString(2, modelName);                // in_model_name
+        cs.setString(3, trimName);                 // in_trim_name
+        cs.setString(4, extColor);                 // in_car_color
+        cs.setString(5, intColor);                 // in_interior_color
+        cs.setString(6, fuelType);                 // in_fuel_type (procedure handles conversion)
+        cs.setInt(7, year);                        // in_production_year
+        cs.setInt(8, qty);                         // in_car_qty
+        cs.setDouble(9, price);                    // in_price
+        cs.setString(10, photoPath);               // in_photo_url
         
-        int rowsAffected = ps.executeUpdate();
-        System.out.println("Car updated: " + rowsAffected + " rows affected for car_id: " + editPath.getId());
-        ps.close();
+        cs.execute();
+        System.out.println("Car updated successfully via updateFullCar procedure for car_id: " + editPath.getId());
+        cs.close();
+        return true;
     }
     
-    private void updatePart() throws SQLException {
-        // Get values from edit form
-        String name = editPartName.getText().trim();
+    private boolean updatePart() throws SQLException {
+        // Get values from edit form with null safety checks
+        if (editPartName == null || editPartName.getText() == null) {
+            System.err.println("Error: editPartName is null");
+            return false;
+        }
+        if (editPartDescription == null || editPartDescription.getText() == null) {
+            System.err.println("Error: editPartDescription is null");
+            return false;
+        }
+        if (editPartForCar == null || editPartForCar.getText() == null) {
+            System.err.println("Error: editPartForCar is null");
+            return false;
+        }
+        if (editPartQty == null || editPartQty.getText() == null) {
+            System.err.println("Error: editPartQty is null");
+            return false;
+        }
+        if (editPartPrice == null || editPartPrice.getText() == null) {
+            System.err.println("Error: editPartPrice is null");
+            return false;
+        }
+        
+        String partName = editPartName.getText().trim();
         String description = editPartDescription.getText().trim();
-        String forCar = editPartForCar.getText().trim();
+        String forCarModel = editPartForCar.getText().trim();
         int qty = Integer.parseInt(editPartQty.getText().trim());
         double price = Double.parseDouble(editPartPrice.getText().trim());
         
@@ -2113,20 +2173,21 @@ public class managerInventoryController {
             photoPath = file.get(0).getAbsolutePath();
         }
         
-        // Update database
-        String sql = "UPDATE car_parts SET part_name = ?, description = ?, for_car = ?, qty = ?, price = ?, photo_url = ? WHERE part_id = ?";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, name);
-        ps.setString(2, description);
-        ps.setString(3, forCar);
-        ps.setInt(4, qty);
-        ps.setDouble(5, price);
-        ps.setString(6, photoPath);
-        ps.setInt(7, editPath.getId());
+        // Call updateFullPart stored procedure
+        // This handles: car lookup by model, photo update, and part update
+        CallableStatement cs = con.prepareCall("{CALL updateFullPart(?, ?, ?, ?, ?, ?, ?)}");
+        cs.setInt(1, editPath.getId());           // in_part_id
+        cs.setString(2, partName);                 // in_part_name
+        cs.setString(3, description);              // in_description
+        cs.setString(4, forCarModel);              // in_for_car_model
+        cs.setInt(5, qty);                         // in_part_qty
+        cs.setDouble(6, price);                    // in_price
+        cs.setString(7, photoPath);                // in_photo_url
         
-        int rowsAffected = ps.executeUpdate();
-        System.out.println("Part updated: " + rowsAffected + " rows affected for part_id: " + editPath.getId());
-        ps.close();
+        cs.execute();
+        System.out.println("Part updated successfully via updateFullPart procedure for part_id: " + editPath.getId());
+        cs.close();
+        return true;
     }
 
     private void handleImageSelection(ImageView targetImageView) {
