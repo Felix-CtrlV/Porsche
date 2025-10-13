@@ -261,7 +261,7 @@
                                                                       </StackPane>
                                                                   </children>
                                                    <VBox.margin>
-                                                      <Insets left="15.0" right="15.0" />
+                                                      <Insets left="15.0" right="15.0" top="10.0" />
                                                    </VBox.margin>
                                                               </HBox>
                                                           </children>
@@ -405,9 +405,9 @@
                                                 </StackPane>
                                              </children>
                                           </HBox>
-                                          <StackPane alignment="CENTER_LEFT" maxHeight="70.0" minHeight="70.0" prefHeight="90.0" prefWidth="393.0">
+                                          <StackPane alignment="CENTER_LEFT" maxHeight="70.0" minHeight="35.2" prefHeight="90.0" prefWidth="393.0">
                                              <children>
-                                                <TextField fx:id="partDescriptionText" maxHeight="70.0" minHeight="70.0" prefHeight="90.0" prefWidth="393.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                <TextField fx:id="partDescriptionText" maxHeight="35.2" minHeight="35.2" prefHeight="90.0" prefWidth="393.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                 <Label fx:id="partDescriptionLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="DESCRIPTION *">
                                                    <StackPane.margin>
                                                       <Insets left="15.0" />
