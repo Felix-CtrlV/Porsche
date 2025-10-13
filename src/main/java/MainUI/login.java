@@ -39,7 +39,7 @@ public class login extends Application {
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         });
-        stage.initStyle(StageStyle.DECORATED);
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setOnShown(e -> stage.centerOnScreen());

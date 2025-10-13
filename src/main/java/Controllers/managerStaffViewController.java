@@ -3,6 +3,7 @@ package Controllers;
 import Database.Porsche_DB;
 import Model.managerOrderView;
 import Model.user;
+import Utils.Session;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -15,12 +16,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.CallableStatement;
@@ -57,26 +55,9 @@ public class managerStaffViewController {
     @FXML
     private TableColumn<managerOrderView, Date> DateCol;
 
-    @FXML
-    private Label IsInstallPaidAmountLabel;
-
-    @FXML
-    private Label IsInstallRemainAmountLabel;
-
-    @FXML
-    private BorderPane IsInstallmentBorderPane;
 
     @FXML
     private TableColumn<managerOrderView, String> IsInstallmentCol;
-
-    @FXML
-    private VBox IsInstallorderItemsContainer;
-
-    @FXML
-    private Label IsInstalltotalPriceLabel;
-
-    @FXML
-    private BorderPane IsNotInstallBorderPane;
 
     @FXML
     private Button NextMonthbtn;
@@ -86,12 +67,6 @@ public class managerStaffViewController {
 
     @FXML
     private TableColumn<managerOrderView, Integer> NoCol;
-
-    @FXML
-    private Label NoInstallTotalPriceLabel;
-
-    @FXML
-    private VBox NoInstallorderItemsContainer;
 
     @FXML
     private Label PendOrderlbl;
@@ -139,10 +114,6 @@ public class managerStaffViewController {
     private VBox staffListContainer;
 
     @FXML
-    private Label DueDateLabel;
-
-
-    @FXML
     private Circle partCircle;
 
     @FXML
@@ -180,6 +151,35 @@ public class managerStaffViewController {
 
     @FXML
     private ChoiceBox<Integer> yearBox;
+
+    @FXML
+    private BorderPane installmentPane ;
+
+    @FXML
+    private Label remainAmountLabel;
+
+    @FXML
+    private Label paidAmountLabel;
+
+    @FXML
+    private Label dueDateLabel ;
+
+    @FXML
+    private Label totalPriceLabel ;
+
+    @FXML
+    private TableView<String> installmentTable;
+
+    @FXML
+    private TableColumn<String,String> installmentNameCol;
+
+    @FXML
+    private TableColumn<String,String> installmentQtyCol;
+
+    @FXML
+    private TableColumn<String,String> installmentPriceCol;
+
+
 
     @FXML
     void SwitchMouseClick(MouseEvent event) throws SQLException, IOException {
@@ -243,8 +243,7 @@ public class managerStaffViewController {
 
         if (selectorder == null) {
             // Show target overview when no order is selected or table is empty
-            IsInstallmentBorderPane.setVisible(false);
-            IsNotInstallBorderPane.setVisible(false);
+            installmentPane.setVisible(false);
             targetlayer.setVisible(true);
             return;
         }
@@ -254,6 +253,11 @@ public class managerStaffViewController {
 
     @FXML
     private void initialize() throws SQLException, IOException {
+        // Get the manager id from session
+        Session current = Session.getInstance();
+        if (current != null) {
+            managerId = current.getUserid();
+        }
 
         //for creating the month and year of this month
         currentDateSelect();
@@ -270,25 +274,29 @@ public class managerStaffViewController {
         TotalAmountCol.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
         IsInstallmentCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getIs_installmenat()));
 
-        yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                currentYear = newVal;
-                updateYearMonthLabel();
-            }
-        });
+        // Initialize listeners only once
+        if (!listenersInitialized) {
+            yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    currentYear = newVal;
+                    updateYearMonthLabel();
+                }
+            });
 
-        monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (!updatingMonthBox && newVal != null) {
-                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
-                Month parsedMonth = Month.from(fmt.parse(newVal));
-                currentMonth = parsedMonth.getValue();
-                updateYearMonthLabel();
-            }
-        });
+            monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (!updatingMonthBox && newVal != null) {
+                    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
+                    Month parsedMonth = Month.from(fmt.parse(newVal));
+                    currentMonth = parsedMonth.getValue();
+                    updateYearMonthLabel();
+                }
+            });
+            
+            listenersInitialized = true;
+        }
 
         //for car and parts of the show circle
-        IsInstallmentBorderPane.setVisible(false);
-        IsNotInstallBorderPane.setVisible(false);
+       installmentPane.setVisible(false);
         targetlayer.setVisible(true);
         setTarget();
         setupSearchBar();
@@ -299,15 +307,13 @@ public class managerStaffViewController {
     private boolean cardtype = true;
 
     private LocalDate today = LocalDate.now();
-    private DateTimeFormatter fmonth = DateTimeFormatter.ofPattern("MMM");
-
-    private DateTimeFormatter fyear = DateTimeFormatter.ofPattern("yyyy");
 
     private int currentMonth;
     private int currentYear;
 
+    private int managerId;
     private int selectedStaffId = 0;
-
+    private boolean listenersInitialized = false;
 
     private List<user> staffInfoList = new ArrayList<user>();
 
@@ -332,23 +338,21 @@ public class managerStaffViewController {
         highlightSelectedCard(staff.getId());
         selectedStaffId = staff.getId();
 
-        System.out.println(selectedStaffId);
         currentDateSelect();
         try {
+            insertMonthYearChoiceBox(staff);
+            updateChoiceBoxes();
             refreshOrdersTable();
             monthlyOrdersStatus(selectedStaffId, currentMonth, currentYear);
             setTarget();
             monthlyAttendance();
-            insertMonthYearChoiceBox(staff);
-            updateChoiceBoxes();
         } catch (
                 SQLException e) {
             throw new RuntimeException(e);
         }
 
         targetlayer.setVisible(true);
-        IsInstallmentBorderPane.setVisible(false);
-        IsNotInstallBorderPane.setVisible(false);
+        installmentPane.setVisible(false);
     }
 
     //for the staff of monthly sold out the order table
@@ -363,124 +367,108 @@ public class managerStaffViewController {
     }
 
     private void showOrdersTable(int staffId, int month, int year) throws SQLException {
-        List<managerOrderView> managerordersList = new ArrayList<>();
-        CallableStatement cs = con.prepareCall("CALL getordersbyuserid(?,?,?)");
-        cs.setInt(1, staffId);
-        cs.setInt(2, month);
-        cs.setInt(3, year);
-        ResultSet rs = cs.executeQuery();
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        try {
+            List<managerOrderView> managerordersList = new ArrayList<>();
+            cs = con.prepareCall("CALL getOrdersByUserId(?,?,?)");
+            cs.setInt(1, staffId);
+            cs.setInt(2, month);
+            cs.setInt(3, year);
+            rs = cs.executeQuery();
 
-        ordersTable.getItems().clear();
-        managerordersList.clear();
+            while (rs.next()) {
+                int no = rs.getInt(1);
+                int order_id = rs.getInt(2);
+                String cus_name = rs.getString(3);
+                Date date = rs.getDate(4);
+                Double total_amount = rs.getDouble(5);
+                boolean installment = rs.getBoolean(6);
+                String carsandparts_name = rs.getString(7);
+                String carsandparts_qty = rs.getString(8);
+                String carsandparts_price = rs.getString(9);
+                Double payed_amount = rs.getDouble(10);
+                Double remain_amount = rs.getDouble(11);
+                Date due_date = rs.getDate(12);
 
-        while (rs.next()) {
-            int no = rs.getInt(1);
-            int order_id = rs.getInt(2);
-            String cus_name = rs.getString(3);
-            Date date = rs.getDate(4);
-            Double total_amount = rs.getDouble(5);
-            boolean installment = rs.getBoolean(6);
-            String carsandparts_name = rs.getString(7);
-            String carsandparts_qty = rs.getString(8);
-            String carsandparts_price = rs.getString(9);
-            Double payed_amount = rs.getDouble(10);
-            Double remain_amount = rs.getDouble(11);
-            Date due_date = rs.getDate(12);
+                String is_installment = installment ? "Yes" : "No";
 
-            String is_installment = "No";
-            if (installment == true) {
-                is_installment = "Yes";
-            } else {
-                is_installment = "No";
+                managerOrderView od = new managerOrderView(no, order_id, cus_name, date, total_amount, 
+                    is_installment, carsandparts_name, carsandparts_qty, carsandparts_price, 
+                    payed_amount, remain_amount, due_date);
+
+                managerordersList.add(od);
             }
 
-            managerOrderView od = new managerOrderView(no, order_id, cus_name, date, total_amount, is_installment, carsandparts_name, carsandparts_qty, carsandparts_price, payed_amount, remain_amount, due_date);
-
-            managerordersList.add(od);
-
+            ordersTable.getItems().addAll(managerordersList);
+        } finally {
+            if (rs != null) rs.close();
+            if (cs != null) cs.close();
         }
-
-        ordersTable.getItems().addAll(managerordersList);
-
-//        if (!managerordersList.isEmpty()) {
-//            ordersTable.getSelectionModel().select(0);
-//        }
     }
 
     //to see like a slip of the order table
     private void orderDetails(managerOrderView orders) throws IOException {
-
-        NoInstallorderItemsContainer.getChildren().clear();
-        IsInstallorderItemsContainer.getChildren().clear();
         targetlayer.setVisible(false);
-        //to load the orders detail in the page like slip
+        installmentPane.setVisible(true);
+
+        // Load order details
         String[] names = orders.getCarsandparts_name();
         String[] qty = orders.getCarsandparts_qty();
         String[] price = orders.getCarsandparts_perprice();
 
-        if (orders.getIs_installmenat().equalsIgnoreCase("yes")) {
+        totalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
+        dueDateLabel.setText(String.valueOf(orders.getDue_date()));
+        remainAmountLabel.setText(String.valueOf(orders.getRemain_amount()));
+        paidAmountLabel.setText(String.valueOf(orders.getPayed_amount()));
 
+        // Clear and populate the installment table
+        installmentTable.getItems().clear();
 
-            IsNotInstallBorderPane.setVisible(false);
-            IsInstallmentBorderPane.setVisible(true);
-            IsInstalltotalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
-            DueDateLabel.setText(String.valueOf(orders.getDue_date()));
-            IsInstallRemainAmountLabel.setText(String.valueOf(orders.getRemain_amount()));
-            IsInstallPaidAmountLabel.setText(String.valueOf(orders.getPayed_amount()));
-
-            for (int i = 0; i < names.length; i++) {
-                File fxmlFile = new File("src/main/resources/View/managerStaffInstallment.fxml");
-                FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-                Node orderItem = loader.load();
-
-                managerStaffInstallmentController controller = loader.getController();
-                controller.setData(names[i], qty[i], price[i]);
-
-                System.out.println(names[i] + " " + qty[i] + " " + price[i]);
-                IsInstallorderItemsContainer.getChildren().add(orderItem);
-            }
-
-        } else {
-
-            IsNotInstallBorderPane.setVisible(true);
-            IsInstallmentBorderPane.setVisible(false);
-            NoInstallTotalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
-
-            for (int i = 0; i < names.length; i++) {
-                File fxmlFile = new File("src/main/resources/View/managerStaffInstallment.fxml");
-                FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
-                Node orderItem = loader.load();
-
-                managerStaffInstallmentController controller = loader.getController();
-                controller.setData(names[i], qty[i], price[i]);
-
-                System.out.println(names[i] + " " + qty[i] + " " + price[i]);
-                NoInstallorderItemsContainer.getChildren().add(orderItem);
-
-            }
+        for (int i = 0; i < names.length; i++) {
+            // Create a formatted string for the table row (no need to trim if data is clean)
+            String rowData = String.format("%s|%s|%s", names[i].trim(), qty[i].trim(), price[i].trim());
+            installmentTable.getItems().add(rowData);
         }
 
+        // Set up table columns to display the data properly
+        installmentNameCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 0 ? parts[0] : "");
+        });
 
+        installmentQtyCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
+        });
+
+        installmentPriceCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
+        });
     }
 
     // for monthly order status box
     private void monthlyOrdersStatus(int staffid, int month, int year) throws SQLException {
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        try {
+            cs = con.prepareCall("CALL getMonthlyOrderStatus(?,?,?)");
+            cs.setInt(1, staffid);
+            cs.setInt(2, month);
+            cs.setInt(3, year);
 
-        CallableStatement cs = con.prepareCall("CALL monthlyorderstatus(?,?,?)");
-        cs.setInt(1, staffid);
-        cs.setInt(2, month);
-        cs.setInt(3, year);
+            rs = cs.executeQuery();
 
-        ResultSet rs = cs.executeQuery();
-
-
-        if (rs.next()) {
-            TotalOrderlbl.setText(String.valueOf(rs.getInt(1)));
-            CompleOrderlbl.setText(String.valueOf(rs.getInt(2)));
-            PendOrderlbl.setText(String.valueOf(rs.getInt(3)));
+            if (rs.next()) {
+                TotalOrderlbl.setText(String.valueOf(rs.getInt(1)));
+                CompleOrderlbl.setText(String.valueOf(rs.getInt(2)));
+                PendOrderlbl.setText(String.valueOf(rs.getInt(3)));
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (cs != null) cs.close();
         }
-        rs.close();
-        cs.close();
     }
 
     // for staff card add and highlight the select card
@@ -502,24 +490,21 @@ public class managerStaffViewController {
     }
 
     private void addStaffCard(boolean check) throws IOException, SQLException {
-
         staffListContainer.getChildren().clear();
         staffInfoList.clear();
 
-        CallableStatement cs = con.prepareCall("CALL createcards(?,?)");
-        if (check) {
-            cs.setString(1, "active");
-        } else {
-            cs.setString(1, "inactive");
-        }
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        
+        try {
+            cs = con.prepareCall("CALL createCards(?,?)");
+            cs.setInt(1, managerId);
+            cs.setString(2, check ? "active" : "inactive");
 
-        cs.setString(2, "manager");
+            rs = cs.executeQuery();
 
-        ResultSet rs = cs.executeQuery();
-
-        while (rs.next()) {
+            while (rs.next()) {
             int id = rs.getInt("user_id");
-
             String name = rs.getString("user_name");
             String phone = rs.getString("user_phone");
             String email = rs.getString("user_email");
@@ -535,16 +520,13 @@ public class managerStaffViewController {
             user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status, str, end);
             staffInfoList.add(staff);
 
-
-            File fxmlFile = new File("src/main/resources/View/userCards.fxml");
-
-            FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
+            // Use cached loader or create new one
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/userCards.fxml"));
             Node staffCard = loader.load();
 
             cardController cardController = loader.getController();
 
             staffCard.setUserData(staff.getId());
-
 
             cardController.setData(
                     staff.getId(),
@@ -552,18 +534,14 @@ public class managerStaffViewController {
                     staff.getIs_active()
             );
 
-
             final user currentStaff = staff;
             staffCard.setOnMouseClicked(event -> {
-
                 showStaffDetails(currentStaff);
-
-
             });
             staffListContainer.getChildren().add(staffCard);
-        }
+            }
 
-        boolean selectedExists = false;
+            boolean selectedExists = false;
         for (user u : staffInfoList) {
             if (u.getId() == selectedStaffId) {
                 selectedExists = true;
@@ -594,33 +572,37 @@ public class managerStaffViewController {
             StaffAddressLabel.setText("");
             StaffDOBLabel.setText("");
             ordersTable.getItems().clear();
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (cs != null) cs.close();
         }
-
-
-        rs.close();
-        cs.close();
-
     }
 
     //target side
     private void setTarget() throws SQLException {
-        CallableStatement cs = con.prepareCall("CALL targetviewchart(?,?,?)");
-        cs.setInt(1,selectedStaffId);
-        cs.setInt(2,currentMonth);
-        cs.setInt(3,currentYear);
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        try {
+            cs = con.prepareCall("CALL targetviewchart(?,?,?)");
+            cs.setInt(1, selectedStaffId);
+            cs.setInt(2, currentMonth);
+            cs.setInt(3, currentYear);
 
-        ResultSet rs = cs.executeQuery();
-        if(rs.next()){
-            int target_car = rs.getInt(1);
-            int target_part = rs.getInt(2);
-            int achieve_car = rs.getInt(3);
-            int achieve_part = rs.getInt(4);
+            rs = cs.executeQuery();
+            if (rs.next()) {
+                int target_car = rs.getInt(1);
+                int target_part = rs.getInt(2);
+                int achieve_car = rs.getInt(3);
+                int achieve_part = rs.getInt(4);
 
-            setCarCircle(target_car,achieve_car);
-            setPartCircle(target_part,achieve_part);
+                setCarCircle(target_car, achieve_car);
+                setPartCircle(target_part, achieve_part);
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (cs != null) cs.close();
         }
-        cs.close();
-        rs.close();
     }
     private void setCarCircle(int target,int achieve){
         carCircle.setVisible(true);
@@ -708,46 +690,42 @@ public class managerStaffViewController {
 
     // for monthly attendance circle
     private void monthlyAttendance() throws SQLException {
-        attendanceBackCircle.setVisible(true);
-        attendanceCircle.setVisible(true);
-        CallableStatement cs = con.prepareCall("CALL getMonthlyAttendance(?,?,?)");
-        cs.setInt(1, selectedStaffId);
-        cs.setInt(2, currentMonth);
-        cs.setInt(3, currentYear);
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        try {
+            attendanceBackCircle.setVisible(true);
+            attendanceCircle.setVisible(true);
+            
+            cs = con.prepareCall("CALL getMonthlyAttendance(?,?,?)");
+            cs.setInt(1, selectedStaffId);
+            cs.setInt(2, currentMonth);
+            cs.setInt(3, currentYear);
 
-        ResultSet rs = cs.executeQuery();
+            rs = cs.executeQuery();
 
-        if (rs.next()) {
-            int present_day = rs.getInt(1);
-            int absent_day = rs.getInt(2);
-            double attendance_percentage = rs.getDouble(4);
+            if (rs.next()) {
+                int present_day = rs.getInt(1);
+                int absent_day = rs.getInt(2);
+                double attendance_percentage = rs.getDouble(4);
 
-            // FIX: Use attendanceCircle's radius instead of partCircle's radius
-            double attendCircle = 2 * Math.PI * attendanceCircle.getRadius();
-            double progress = attendance_percentage / 100;
+                // Use attendanceCircle's radius
+                double attendCircle = 2 * Math.PI * attendanceCircle.getRadius();
+                double progress = attendance_percentage / 100;
 
-            // Set up the dash array for smooth circular progress
-            attendanceCircle.getStrokeDashArray().setAll(attendCircle, attendCircle);
-            attendanceCircle.setStrokeDashOffset(attendCircle * (1 - progress));
+                // Set up the dash array for smooth circular progress
+                attendanceCircle.getStrokeDashArray().setAll(attendCircle, attendCircle);
+                attendanceCircle.setStrokeDashOffset(attendCircle * (1 - progress));
 
-            // Show/hide circles based on data
-            if (present_day == 0) {
-                attendanceCircle.setVisible(false);
-            } else {
-                attendanceCircle.setVisible(true);
+                // Show/hide circles based on data
+                attendanceCircle.setVisible(present_day > 0);
+                attendanceBackCircle.setVisible(absent_day > 0);
+
+                attendancePercent.setText(String.format("%.1f%%", attendance_percentage));
             }
-
-            if (absent_day == 0) {
-                attendanceBackCircle.setVisible(false);
-            } else {
-                attendanceBackCircle.setVisible(true);
-            }
-
-            attendancePercent.setText(String.format("%.1f%%", attendance_percentage));
+        } finally {
+            if (rs != null) rs.close();
+            if (cs != null) cs.close();
         }
-
-        rs.close();
-        cs.close();
     }
     // for search bar
     private ContextMenu searchSuggestions = new ContextMenu();
@@ -841,8 +819,7 @@ public class managerStaffViewController {
         Year nyear = Year.of(currentYear);
         int curyear = today.getYear();
         targetlayer.setVisible(true);
-        IsNotInstallBorderPane.setVisible(false);
-        IsInstallmentBorderPane.setVisible(false);
+        installmentPane.setVisible(false);
 
         Month nmonth = Month.of(currentMonth);
         String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
@@ -942,15 +919,6 @@ public class managerStaffViewController {
 
         yearBox.setValue(currentYear);
         updateMonthBoxForYear(currentYear, staff);
-
-        // Add year listener only once
-        yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                currentYear = newVal;
-                updateMonthBoxForYear(currentYear, staff);
-                updateYearMonthLabel();
-            }
-        });
     }
 
 

@@ -247,7 +247,7 @@ public class ChangePasswordController {
     }
 
     private boolean updatePasswordInDatabase(int userId, String newPassword) {
-        String sql = "UPDATE user_info SET user_password = ? WHERE user_id = ?";
+        String sql = "UPDATE user_info SET password = ? WHERE user_id = ?";
 
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

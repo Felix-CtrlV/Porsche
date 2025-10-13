@@ -23,7 +23,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.control.ToggleButton?>
 <BorderPane stylesheets="@../CSS/general.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
     <center>
         <VBox spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10;" BorderPane.alignment="CENTER">
@@ -32,13 +31,13 @@
                 <HBox prefHeight="601.0" prefWidth="691.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
                         <!-- Left Side: CAR/PART Content Area -->
-                        <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e1e5e9;" HBox.hgrow="ALWAYS">
+                        <VBox maxWidth="550.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e1e5e9;" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="20.0" style="-fx-background-color: white;">
                                     <children>
-                                        <Button  id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" styleClass="car" text="CAR" />
-                                        <Button  id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" styleClass="part" text="PART" />
-                                        <Button  id="staff" fx:id="staffbtn" mnemonicParsing="false" onAction="#clickStaffbtn" styleClass="staff" text="STAFF" />
+                                        <Button id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" styleClass="car" text="CAR" />
+                                        <Button id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" styleClass="part" text="PART" />
+                                        <Button id="staff" fx:id="staffbtn" mnemonicParsing="false" onAction="#clickStaffbtn" styleClass="staff" text="STAFF" />
                                     </children>
                                     <VBox.margin>
                                         <Insets left="10.0" right="10.0" top="10.0" />
@@ -46,7 +45,7 @@
                                 </HBox>
                                 <ScrollPane hbarPolicy="NEVER" style="-fx-background-color: white; -fx-border-color: white;" VBox.vgrow="ALWAYS">
                                     <content>
-                                        <VBox fx:id="scrollPane" alignment="CENTER"  spacing="10.0" style="-fx-background-color: white; -fx-border-color: white;">
+                                        <VBox fx:id="scrollPane" alignment="CENTER" spacing="10.0" style="-fx-background-color: white; -fx-border-color: white;">
                                  <padding>
                                     <Insets right="10.0" top="20.0" />
                                  </padding></VBox>
@@ -288,14 +287,17 @@
                      <children>
                          <HBox alignment="CENTER_LEFT" prefHeight="65.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" VBox.vgrow="NEVER">
                              <children>
-                                 <HBox alignment="CENTER_LEFT" spacing="15">
+                                 <HBox alignment="CENTER_LEFT" minHeight="40.0" spacing="15">
                                      <children>
                                          <Circle fill="#3498db" radius="8" />
                                          <Label style="-fx-font-family: 'Segoe UI'; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Sales Performance" />
                                      </children>
                                  </HBox>
                                  <Region HBox.hgrow="ALWAYS" />
-                                 <ComboBox fx:id="saleComboBox" onAction="#ClickSaleComboBox" prefWidth="150.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-padding: 6 12; -fx-font-weight: 500;" />
+                                 <ComboBox fx:id="saleComboBox" onAction="#ClickSaleComboBox" prefHeight="23.0" prefWidth="150.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-padding: 6 12; -fx-font-weight: 500;">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" top="5.0" />
+                                 </HBox.margin></ComboBox>
                              </children>
                              <padding>
                                  <Insets left="20.0" right="20.0" />

@@ -3,8 +3,8 @@ package Model;
 import java.util.Date;
 
 public class managerOrderView {
-    private Integer no,order_id;
-    private String cus_name,is_installmenat,carsandparts_name,carsandparts_qty,carsandparts_perprice;
+    private Integer no,order_id,totalQty;
+    private String cus_name,is_installmenat,carsandparts_name,carsandparts_qty,carsandparts_perprice,staff_name;
 
 
     private double total_amount,payed_amount,remain_amount;
@@ -26,34 +26,86 @@ public class managerOrderView {
         this.due_date = due_date;
     }
 
+    //for manager order management
+    public managerOrderView(Integer order_id, Date order_date, String cus_name, String staff_name, Integer totalQty, double total_amount, String is_installmenat, double payed_amount, double remain_amount, Date due_date, String carsandparts_name, String carsandparts_qty, String carsandparts_perprice) {
+        this.order_id = order_id;
+        this.order_date = order_date;
+        this.cus_name = cus_name;
+        this.staff_name = staff_name;
+        this.totalQty = totalQty;
+        this.total_amount = total_amount;
+        this.is_installmenat = is_installmenat;
+        this.payed_amount = payed_amount;
+        this.remain_amount = remain_amount;
+        this.due_date = due_date;
+        this.carsandparts_name = carsandparts_name;
+        this.carsandparts_qty = carsandparts_qty;
+        this.carsandparts_perprice = carsandparts_perprice;
+    }
+
+    public Integer getTotalQty() {
+        return totalQty;
+    }
+
+    public void setTotalQty(Integer totalQty) {
+        this.totalQty = totalQty;
+    }
+
+    public void setOrder_id(Integer order_id) {
+        this.order_id = order_id;
+    }
+
+    public Integer getNo() {
+        return no;
+    }
+
+    public void setNo(Integer no) {
+        this.no = no;
+    }
+
+    public String getStaff_name() {
+        return staff_name;
+    }
+
+    public void setStaff_name(String staff_name) {
+        this.staff_name = staff_name;
+    }
+
     public String[] getCarsandparts_name() {
+        if (carsandparts_name == null || carsandparts_name.isEmpty()) {
+            return new String[0];
+        }
         String[] result = carsandparts_name.split(",");
-        return  result;
+        for (int i = 0; i < result.length; i++) {
+            result[i] = result[i].trim();
+        }
+        return result;
     }
 
     public String[] getCarsandparts_perprice() {
-        String []price = this.carsandparts_perprice.split(",");
-
+        if (carsandparts_perprice == null || carsandparts_perprice.isEmpty()) {
+            return new String[0];
+        }
+        String[] price = this.carsandparts_perprice.split(",");
+        for (int i = 0; i < price.length; i++) {
+            price[i] = price[i].trim();
+        }
         return price;
     }
     public String[] getCarsandparts_qty() {
-        String [] qty = carsandparts_qty.split(",");
-
+        if (carsandparts_qty == null || carsandparts_qty.isEmpty()) {
+            return new String[0];
+        }
+        String[] qty = carsandparts_qty.split(",");
+        for (int i = 0; i < qty.length; i++) {
+            qty[i] = qty[i].trim();
+        }
         return qty;
     }
 
     public void setCarsandparts_perprice(String carsandparts_perprice) {
         this.carsandparts_perprice = carsandparts_perprice;
     }
-
-    public int getNo() {
-        return no;
-    }
-
-    public void setNo(int no) {
-        this.no = no;
-    }
-
     public int getOrder_id() {
         return order_id;
     }

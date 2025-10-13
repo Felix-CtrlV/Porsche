@@ -171,11 +171,11 @@
                                         <Button fx:id="NextYearbtn" mnemonicParsing="false" onMouseClicked="#nextYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                                     </children>
                                 </HBox>
-                                <HBox prefHeight="340.0" prefWidth="549.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                                <HBox maxWidth="1.7976931348623157E308" prefHeight="340.0" prefWidth="549.0" spacing="10.0" VBox.vgrow="ALWAYS">
                                     <children>
 
                                         <!-- Performance Chart -->
-                                        <VBox prefHeight="361.0" prefWidth="491.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;">
+                                        <VBox prefHeight="361.0" prefWidth="491.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
                                             <padding>
                                                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                             </padding>
