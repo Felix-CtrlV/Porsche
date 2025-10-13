@@ -301,6 +301,7 @@ public class managerOrderManagementController {
             yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null) {
                     currentYear = newVal;
+                    updateMonthBoxForYear(currentYear); // Update available months based on selected year
                     updateYearMonthLabel();
                     loadOrder(); // Reload with filter (also recalculates quantities)
                 }
@@ -601,10 +602,20 @@ public class managerOrderManagementController {
     private void updateMonthBoxForYear(int year) {
         int startMonth = 1;
         int endMonth = 12;
+        int currentYearNow = LocalDate.now().getYear();
+        int currentMonthNow = LocalDate.now().getMonthValue();
         
-        // If current year, limit to current month
-        if (year == today.getYear()) {
-            endMonth = today.getMonthValue();
+        // If selected year is THIS YEAR, show months from January to current month only
+        if (year == currentYearNow) {
+            endMonth = currentMonthNow;
+        }
+        // If selected year is PREVIOUS YEAR (or older), show all 12 months
+        else if (year < currentYearNow) {
+            endMonth = 12;
+        }
+        // If selected year is FUTURE YEAR (shouldn't happen, but handle it)
+        else {
+            endMonth = 12;
         }
         
         List<String> months = new ArrayList<>();
@@ -615,10 +626,11 @@ public class managerOrderManagementController {
         updatingMonthBox = true;
         monthBox.setItems(FXCollections.observableArrayList(months));
         
-        // Make sure currentMonth is valid
+        // Make sure currentMonth is valid for the selected year
         String currentMonthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
         if (!months.contains(currentMonthName)) {
-            currentMonth = endMonth; // default to last available month
+            // If current month is not available, default to last available month
+            currentMonth = endMonth;
             currentMonthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
         }
         
@@ -737,46 +749,73 @@ public class managerOrderManagementController {
     }
     
     private void calculateSoldQuantities() {
-        // Confirm = Paid in full (No installment)
+        // Current month values
         int confirmQty = 0;
         double confirmPrice = 0.0;
-        
-        // Pending = Installment orders (Yes installment)
         int pendingQty = 0;
         double pendingPrice = 0.0;
+        
+        // Previous month values for rate calculation
+        double prevConfirmPrice = 0.0;
+        double prevPendingPrice = 0.0;
         
         // Get the currently displayed orders (filtered by month/year or search)
         ObservableList<managerOrderView> currentOrders = orderTable.getItems();
         
-        // Only calculate if there are orders
+        // Calculate current month totals
         if (currentOrders != null && !currentOrders.isEmpty()) {
             for (managerOrderView order : currentOrders) {
-                // Check if order is installment
                 boolean isInstallment = order.getIs_installmenat().equalsIgnoreCase("Yes");
-                
-                // Get total quantity and amount for this order
                 int orderQty = order.getTotalQty();
                 double orderAmount = order.getTotal_amount();
                 
                 if (isInstallment) {
-                    // Pending (Installment orders)
                     pendingQty += orderQty;
                     pendingPrice += orderAmount;
                 } else {
-                    // Confirm (Paid in full)
                     confirmQty += orderQty;
                     confirmPrice += orderAmount;
                 }
             }
         }
         
-        // Always set values (will be 0 if no data)
+        // Calculate previous month totals
+        int prevMonth = currentMonth - 1;
+        int prevYear = currentYear;
+        if (prevMonth < 1) {
+            prevMonth = 12;
+            prevYear--;
+        }
+        
+        // Filter allOrdersData for previous month
+        for (managerOrderView order : allOrdersData) {
+            if (order.getOrder_date() != null) {
+                // Convert java.sql.Date to LocalDate
+                LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
+                
+                // Check if order is from previous month/year
+                if (orderDate.getMonthValue() == prevMonth && orderDate.getYear() == prevYear) {
+                    boolean isInstallment = order.getIs_installmenat().equalsIgnoreCase("Yes");
+                    double orderAmount = order.getTotal_amount();
+                    
+                    if (isInstallment) {
+                        prevPendingPrice += orderAmount;
+                    } else {
+                        prevConfirmPrice += orderAmount;
+                    }
+                }
+            }
+        }
+        
+        // Set current values
         setCarCircle(confirmQty);
         setCarPrice(confirmPrice);
-        
-        // Set pending (installment) values
         setPartCircle(pendingQty);
         setPartPrice(pendingPrice);
+        
+        // Calculate and set rates
+        setConfirmPriceRate(confirmPrice, prevConfirmPrice);
+        setPendingPriceRate(pendingPrice, prevPendingPrice);
     }
     
     private void setCarCircle(int soldQty) {
@@ -824,15 +863,79 @@ public class managerOrderManagementController {
     }
     
     private void setPartPrice(double totalPrice) {
-        // Format and display total parts sales price
-        pendingPriceRateLabel.setText(String.format("$%.2f", totalPrice));
+        // Format and display total pending (installment) price
+        pendingPriceLabel.setText(String.format("$%.2f", totalPrice));
         
         // Set text style
         if (totalPrice == 0) {
-            pendingPriceRateLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
+            pendingPriceLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
         } else {
-            pendingPriceRateLabel.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold;");
+            pendingPriceLabel.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold;");
         }
+    }
+    
+    private void setConfirmPriceRate(double currentPrice, double previousPrice) {
+        // Calculate percentage change from previous month to current month
+        double rate = 0.0;
+        String rateText = "0.0%";
+        String style = "-fx-text-fill: #94a3b8; -fx-font-weight: normal;";
+        
+        if (previousPrice > 0) {
+            rate = ((currentPrice - previousPrice) / previousPrice) * 100;
+            
+            if (rate > 0) {
+                // Positive growth - green
+                rateText = String.format("+%.1f%%", rate);
+                style = "-fx-text-fill: #10b981; -fx-font-weight: bold;";
+            } else if (rate < 0) {
+                // Negative growth - red
+                rateText = String.format("%.1f%%", rate);
+                style = "-fx-text-fill: #ef4444; -fx-font-weight: bold;";
+            } else {
+                // No change - gray
+                rateText = "0.0%";
+                style = "-fx-text-fill: #94a3b8; -fx-font-weight: normal;";
+            }
+        } else if (currentPrice > 0) {
+            // No previous data but have current data - show as new
+            rateText = "New";
+            style = "-fx-text-fill: #3b82f6; -fx-font-weight: bold;";
+        }
+        
+        confirmPriceRateLabel.setText(rateText);
+        confirmPriceRateLabel.setStyle(style);
+    }
+    
+    private void setPendingPriceRate(double currentPrice, double previousPrice) {
+        // Calculate percentage change from previous month to current month
+        double rate = 0.0;
+        String rateText = "0.0%";
+        String style = "-fx-text-fill: #94a3b8; -fx-font-weight: normal;";
+        
+        if (previousPrice > 0) {
+            rate = ((currentPrice - previousPrice) / previousPrice) * 100;
+            
+            if (rate > 0) {
+                // Positive growth - green
+                rateText = String.format("+%.1f%%", rate);
+                style = "-fx-text-fill: #10b981; -fx-font-weight: bold;";
+            } else if (rate < 0) {
+                // Negative growth - red
+                rateText = String.format("%.1f%%", rate);
+                style = "-fx-text-fill: #ef4444; -fx-font-weight: bold;";
+            } else {
+                // No change - gray
+                rateText = "0.0%";
+                style = "-fx-text-fill: #94a3b8; -fx-font-weight: normal;";
+            }
+        } else if (currentPrice > 0) {
+            // No previous data but have current data - show as new
+            rateText = "New";
+            style = "-fx-text-fill: #3b82f6; -fx-font-weight: bold;";
+        }
+        
+        pendingPriceRateLabel.setText(rateText);
+        pendingPriceRateLabel.setStyle(style);
     }
 
 }
