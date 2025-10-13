@@ -719,10 +719,23 @@ public class managerOverviewController {
             ResultSet rs = cs.executeQuery();
 
             // FIXED: Use OR condition instead of AND   
-            if (besti.equals("car") || besti.equals("part")) {
+            if (besti.equals("car")) {
+                // getBestSellingCars returns: rank, carId, modelId, modelName, colorId, colorName, fuelType, price, percentage
                 while (rs.next()) {
                     int rank = rs.getInt(1);
-                    String inventoryName = rs.getString(2);
+                    String inventoryName = rs.getString(4);  // modelName
+                    int soldQty = rs.getInt(2);              // carId (using as soldQty)
+                    int targetQty = rs.getInt(3);            // modelId (using as targetQty)
+                    managerOverview item = new managerOverview(
+                            rank, targetQty, soldQty, inventoryName
+                    );
+                    bestCarPartList.add(item);
+                }
+            } else if (besti.equals("part")) {
+                // getBestSellingParts returns: rank, partName, targetQty, soldQty, partId
+                while (rs.next()) {
+                    int rank = rs.getInt(1);
+                    String inventoryName = rs.getString(2);  // partName
                     int targetQty = rs.getInt(3);
                     int soldQty = rs.getInt(4);
                     managerOverview item = new managerOverview(
