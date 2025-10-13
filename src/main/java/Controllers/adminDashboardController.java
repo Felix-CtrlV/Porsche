@@ -280,7 +280,6 @@ public class adminDashboardController {
             profileEmail.setText(current.getEmail());
             profilePhone.setText(current.getPhone());
             profileEmail.setEditable(false);
-            backButton.setVisible(true);
             profileAddress.setEditable(false);
             profilePhone.setEditable(false);
         });

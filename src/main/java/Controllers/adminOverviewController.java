@@ -278,43 +278,44 @@ public class adminOverviewController implements Initializable {
         Task<Map<Integer, Double>> task = new Task<>() {
             @Override
             protected Map<Integer, Double> call() throws Exception {
-                Map<Integer, Double> dailyRevenue = new HashMap<>();
+                Map<Integer, Double> monthlyRevenue = new HashMap<>();
                 
                 try (Connection con = DatabaseConnectionManager.getInstance().getConnection()) {
-                    LocalDate startDate = LocalDate.of(currentYear, currentMonth, 1);
-                    LocalDate endDate = startDate.plusMonths(1);
-                    
-                    String query = "SELECT DAY(o.order_date) as day, COALESCE(SUM(d.total_price), 0) as total " +
-                            "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
-                            "WHERE o.order_date >= ? AND o.order_date < ? " +
-                            "GROUP BY DAY(o.order_date) ORDER BY day";
-                    
-                    try (PreparedStatement ps = con.prepareStatement(query)) {
-                        ps.setString(1, startDate.toString());
-                        ps.setString(2, endDate.toString());
-                        try (ResultSet rs = ps.executeQuery()) {
-                            while (rs.next()) {
-                                dailyRevenue.put(rs.getInt("day"), rs.getDouble("total"));
+                    for (int month = 1; month <= 12; month++) {
+                        LocalDate startDate = LocalDate.of(currentYear, month, 1);
+                        LocalDate endDate = startDate.plusMonths(1);
+                        
+                        String query = "SELECT COALESCE(SUM(d.total_price), 0) as total " +
+                                "FROM orders o JOIN order_details d ON o.order_id = d.order_id " +
+                                "WHERE o.order_date >= ? AND o.order_date < ?";
+                        
+                        try (PreparedStatement ps = con.prepareStatement(query)) {
+                            ps.setString(1, startDate.toString());
+                            ps.setString(2, endDate.toString());
+                            try (ResultSet rs = ps.executeQuery()) {
+                                if (rs.next()) {
+                                    monthlyRevenue.put(month, rs.getDouble("total"));
+                                }
                             }
                         }
                     }
                 }
                 
-                return dailyRevenue;
+                return monthlyRevenue;
             }
         };
         
         task.setOnSucceeded(e -> {
-            Map<Integer, Double> dailyRevenue = task.getValue();
+            Map<Integer, Double> monthlyRevenue = task.getValue();
             areaChart.getData().clear();
             
             XYChart.Series<String, Number> series = new XYChart.Series<>();
-            series.setName("Total Revenue");
+            series.setName("Monthly Sales");
             
-            int daysInMonth = LocalDate.of(currentYear, currentMonth, 1).lengthOfMonth();
-            for (int day = 1; day <= daysInMonth; day++) {
-                double revenue = dailyRevenue.getOrDefault(day, 0.0);
-                series.getData().add(new XYChart.Data<>(String.valueOf(day), revenue));
+            String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+            for (int month = 1; month <= 12; month++) {
+                double revenue = monthlyRevenue.getOrDefault(month, 0.0);
+                series.getData().add(new XYChart.Data<>(monthNames[month - 1], revenue));
             }
             
             areaChart.getData().add(series);

@@ -76,12 +76,12 @@
    <center>
       <HBox spacing="20.0" BorderPane.alignment="CENTER">
          <children>
-            <!-- Main Table -->
-            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+            <!-- Main Table and Detail Pane -->
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0" HBox.hgrow="ALWAYS">
                <children>
                   <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="orders_col" prefWidth="75.0" text="Order ID" />
+                      <TableColumn fx:id="orders_col" prefWidth="180.0" text="Order" />
                       <TableColumn fx:id="customer_col" prefWidth="150.0" text="Customer" />
                         <TableColumn fx:id="date_col" prefWidth="100.0" text="Date" />
                         <TableColumn fx:id="status_col" prefWidth="100.0" text="Status" />
@@ -91,6 +91,29 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
+                  
+                  <!-- Order Detail Pane (Hidden by default) -->
+                  <VBox fx:id="detailPane" managed="false" maxHeight="300.0" prefHeight="0.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1;" visible="false">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                           <children>
+                              <Label style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #1e293b;" text="Order Details">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button mnemonicParsing="false" onAction="#closeDetailPane" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 18; -fx-cursor: hand;" text="✕" />
+                           </children>
+                        </HBox>
+                        <VBox fx:id="detailContent" spacing="10.0" VBox.vgrow="ALWAYS">
+                           <!-- Dynamic content will be added here -->
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+                     </padding>
+                  </VBox>
                </children>
             </VBox>
             
