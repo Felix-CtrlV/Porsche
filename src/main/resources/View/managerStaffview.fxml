@@ -131,9 +131,9 @@
                                         <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onMouseClicked="#prevMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
                               <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
                                         <Button fx:id="NextMonthbtn" mnemonicParsing="false" onMouseClicked="#nextMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
-      
+
                                                     <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
-      
+
                                                     <Button fx:id="PreviousYearbth" mnemonicParsing="false" onMouseClicked="#prevYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
                               <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
                                         <Button fx:id="NextYearbtn" mnemonicParsing="false" onMouseClicked="#nextYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
@@ -141,7 +141,7 @@
                                 </HBox>
                         <HBox prefHeight="340.0" prefWidth="549.0" spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
-                  
+
                                                 <!-- Performance Chart -->
                                     <VBox prefHeight="361.0" prefWidth="491.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;">
                                         <padding>
@@ -181,7 +181,7 @@
                                        </font></Label>
                                         </children>
                                     </VBox>
-                  
+
                                     <!-- Stats Panel -->
                                     <VBox prefHeight="361.0" prefWidth="298.0" spacing="15.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8;">
                                         <padding>
@@ -189,7 +189,7 @@
                                         </padding>
                                         <children>
                                             <Label style="-fx-font-weight: bold; -fx-font-size: 14; -fx-alignment: CENTER;" styleClass="topic_font" text="📊 Monthly Stats" />
-                  
+
                                             <VBox alignment="CENTER" prefHeight="97.0" prefWidth="115.0" spacing="15.0">
                                                 <VBox alignment="CENTER" spacing="5.0">
                                                     <Label fx:id="TotalOrderlbl" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="125" />
@@ -199,9 +199,9 @@
                                           </VBox.margin>
                                                 </VBox>
                                             </VBox>
-                  
+
                                             <Region prefHeight="22.0" prefWidth="125.0" VBox.vgrow="ALWAYS" />
-                  
+
                                             <VBox spacing="10.0">
                                                 <HBox>
                                                     <Label style="-fx-font-weight: bold; -fx-opacity: 0.65;" text="Completed:" />
