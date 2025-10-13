@@ -16,13 +16,13 @@ import java.util.Locale;
 
 import Database.Porsche_DB;
 import Model.managerOrderView;
-import Utils.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
-import javafx.scene.chart.BarChart;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
@@ -144,7 +144,7 @@ public class managerOrderManagementController {
     private Label dueDateLabel;
 
     @FXML
-    private BarChart<?, ?> revenueChart;
+    private AreaChart<String, Number> revenueChart;
 
     @FXML
     private TableColumn<managerOrderView, String> staffNameCol;
@@ -166,7 +166,18 @@ public class managerOrderManagementController {
 
     @FXML
     void clickMonthlyRevenue(ActionEvent event) {
-
+        System.out.println("Monthly Revenue button clicked");
+        
+        // Update button styles - Monthly is active
+        monthlyRevenue.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 8; -fx-cursor: hand;");
+        weeklyRevenue.setStyle("-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        
+        try {
+            showMonthlyRevenueChart();
+        } catch (Exception e) {
+            System.err.println("Error showing monthly revenue chart: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -212,7 +223,18 @@ public class managerOrderManagementController {
 
     @FXML
     void clickWeeklyRevenue(ActionEvent event) {
-
+        System.out.println("Weekly Revenue button clicked");
+        
+        // Update button styles - Weekly is active
+        weeklyRevenue.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 8; -fx-cursor: hand;");
+        monthlyRevenue.setStyle("-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        
+        try {
+            showWeeklyRevenueChart();
+        } catch (Exception e) {
+            System.err.println("Error showing weekly revenue chart: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @FXML
@@ -936,6 +958,149 @@ public class managerOrderManagementController {
         
         pendingPriceRateLabel.setText(rateText);
         pendingPriceRateLabel.setStyle(style);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void showWeeklyRevenueChart() {
+        System.out.println("=== WEEKLY REVENUE CHART ===");
+        System.out.println("Current Month: " + currentMonth + ", Current Year: " + currentYear);
+        
+        // Check if chart is null
+        if (revenueChart == null) {
+            System.err.println("ERROR: revenueChart is null! Check FXML fx:id='revenueChart'");
+            return;
+        }
+        
+        System.out.println("Chart found: " + revenueChart.getClass().getName());
+        System.out.println("All orders data size: " + allOrdersData.size());
+        
+        try {
+            // Clear existing chart data
+            revenueChart.getData().clear();
+            revenueChart.setTitle("Weekly Revenue - " + Month.of(currentMonth).getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + currentYear);
+            
+            // Create series for the chart (using raw type to match FXML)
+            XYChart.Series series = new XYChart.Series();
+            series.setName("Revenue");
+        
+        // Get the number of days in the selected month
+        LocalDate firstDayOfMonth = LocalDate.of(currentYear, currentMonth, 1);
+        int daysInMonth = firstDayOfMonth.lengthOfMonth();
+        
+        // Calculate revenue for each week (Week 1, Week 2, Week 3, Week 4, Week 5 if exists)
+        int numberOfWeeks = (int) Math.ceil(daysInMonth / 7.0);
+        
+        for (int week = 1; week <= numberOfWeeks; week++) {
+            int startDay = (week - 1) * 7 + 1;
+            int endDay = Math.min(week * 7, daysInMonth);
+            
+            double weekRevenue = 0.0;
+            
+            // Calculate revenue for this week
+            for (managerOrderView order : allOrdersData) {
+                if (order.getOrder_date() != null) {
+                    LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
+                    
+                    // Check if order is in current month/year and within this week
+                    if (orderDate.getYear() == currentYear && 
+                        orderDate.getMonthValue() == currentMonth &&
+                        orderDate.getDayOfMonth() >= startDay && 
+                        orderDate.getDayOfMonth() <= endDay) {
+                        weekRevenue += order.getTotal_amount();
+                    }
+                }
+            }
+            
+            // Add data to chart
+            String weekLabel = "Week " + week;
+            series.getData().add(new XYChart.Data(weekLabel, weekRevenue));
+            System.out.println(weekLabel + " (Days " + startDay + "-" + endDay + "): $" + String.format("%.2f", weekRevenue));
+        }
+        
+        System.out.println("Total data points: " + series.getData().size());
+        
+        if (series.getData().isEmpty()) {
+            System.err.println("WARNING: No data to display in chart!");
+        }
+        
+        revenueChart.getData().add(series);
+        revenueChart.setLegendVisible(false);
+        revenueChart.setAnimated(true);
+        revenueChart.setCreateSymbols(false); // Remove dots on the line
+        
+        System.out.println("✓ Weekly chart updated successfully");
+        System.out.println("============================\n");
+        
+        } catch (Exception e) {
+            System.err.println("ERROR in showWeeklyRevenueChart: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void showMonthlyRevenueChart() {
+        System.out.println("=== MONTHLY REVENUE CHART ===");
+        System.out.println("Current Year: " + currentYear);
+        
+        // Check if chart is null
+        if (revenueChart == null) {
+            System.err.println("ERROR: revenueChart is null! Check FXML fx:id='revenueChart'");
+            return;
+        }
+        
+        System.out.println("Chart found: " + revenueChart.getClass().getName());
+        System.out.println("All orders data size: " + allOrdersData.size());
+        
+        try {
+            // Clear existing chart data
+            revenueChart.getData().clear();
+            revenueChart.setTitle("Monthly Revenue - " + currentYear);
+            
+            // Create series for the chart (using raw type to match FXML)
+            XYChart.Series series = new XYChart.Series();
+            series.setName("Revenue");
+        
+        // Calculate revenue for each month of the selected year
+        for (int month = 1; month <= 12; month++) {
+            double monthRevenue = 0.0;
+            
+            // Calculate revenue for this month
+            for (managerOrderView order : allOrdersData) {
+                if (order.getOrder_date() != null) {
+                    LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
+                    
+                    // Check if order is in current year and this month
+                    if (orderDate.getYear() == currentYear && 
+                        orderDate.getMonthValue() == month) {
+                        monthRevenue += order.getTotal_amount();
+                    }
+                }
+            }
+            
+            // Add data to chart
+            String monthLabel = Month.of(month).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+            series.getData().add(new XYChart.Data(monthLabel, monthRevenue));
+            System.out.println(monthLabel + ": $" + String.format("%.2f", monthRevenue));
+        }
+        
+        System.out.println("Total data points: " + series.getData().size());
+        
+        if (series.getData().isEmpty()) {
+            System.err.println("WARNING: No data to display in chart!");
+        }
+        
+        revenueChart.getData().add(series);
+        revenueChart.setLegendVisible(false);
+        revenueChart.setAnimated(true);
+        revenueChart.setCreateSymbols(false); // Remove dots on the line
+        
+        System.out.println("✓ Monthly chart updated successfully");
+        System.out.println("============================\n");
+        
+        } catch (Exception e) {
+            System.err.println("ERROR in showMonthlyRevenueChart: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }
