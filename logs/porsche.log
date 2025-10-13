@@ -125,3 +125,10 @@
 2025-10-13 09:37:46.677 [Thread-77966] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized
 2025-10-13 09:38:12.801 [Thread-82657] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized
 2025-10-13 09:38:32.463 [Thread-85305] DEBUG DAO.AdminAccountDAO - AdminAccountDAO initialized
+2025-10-13 11:29:38.929 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 11:29:39.055 [Thread-2419] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 11:29:42.403 [Thread-2419] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@41a52766
+2025-10-13 11:29:42.406 [Thread-2419] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 11:29:42.407 [Thread-2419] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 11:29:43.019 [Thread-2419] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-13 11:30:26.141 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
