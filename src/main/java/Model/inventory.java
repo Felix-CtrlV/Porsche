@@ -9,6 +9,7 @@ public class inventory {
 
     //for car table
     public inventory(int id ,String inventoryId, String name, String extColor, String intColor, String fuelType, int productYear, int qty, double price, String status,String photo) {
+        this.id = id;
         this.inventoryId = inventoryId;
         this.name = name;
         this.setSeries(name);

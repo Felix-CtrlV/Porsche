@@ -307,9 +307,6 @@ public class managerStaffViewController {
     private boolean cardtype = true;
 
     private LocalDate today = LocalDate.now();
-    private DateTimeFormatter fmonth = DateTimeFormatter.ofPattern("MMM");
-
-    private DateTimeFormatter fyear = DateTimeFormatter.ofPattern("yyyy");
 
     private int currentMonth;
     private int currentYear;
@@ -317,7 +314,6 @@ public class managerStaffViewController {
     private int managerId;
     private int selectedStaffId = 0;
     private boolean listenersInitialized = false;
-    private FXMLLoader cardLoader = null;
 
     private List<user> staffInfoList = new ArrayList<user>();
 
