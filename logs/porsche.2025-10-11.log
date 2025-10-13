@@ -1,8 +1,0 @@
-2025-10-11 18:43:36.955 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
-2025-10-11 18:43:36.997 [Thread-1668] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-10-11 18:43:38.536 [Thread-1668] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4f2471ce
-2025-10-11 18:43:38.540 [Thread-1668] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-10-11 18:43:38.540 [Thread-1668] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
-2025-10-11 18:43:38.767 [Thread-1668] WARN  Controllers.loginController - Failed login attempt for username: zaw lin
-2025-10-11 18:55:28.521 [Thread-128565] WARN  Controllers.loginController - Failed login attempt for username: zaw linn
-2025-10-11 18:55:36.310 [Thread-128565] WARN  Controllers.loginController - Failed login attempt for username: zaw lin
