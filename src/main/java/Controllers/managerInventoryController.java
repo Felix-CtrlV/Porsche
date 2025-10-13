@@ -1833,10 +1833,10 @@ public class managerInventoryController {
         // Handle image loading with proper null/empty checks
         if (editPath.getPhoto() != null && !editPath.getPhoto().trim().isEmpty()) {
             file.clear();
-            File imageFile = new File(editPath.getPhoto());
+            File imageFile = resolveImagePath(editPath.getPhoto());
             
             // Check if file exists before trying to load it
-            if (imageFile.exists() && imageFile.isFile()) {
+            if (imageFile != null && imageFile.exists() && imageFile.isFile()) {
                 file.add(imageFile);
                 try {
                     Image img = new Image(new FileInputStream(imageFile));
@@ -1900,10 +1900,10 @@ public class managerInventoryController {
         // Handle image loading with proper null/empty checks
         if (editPath.getPhoto() != null && !editPath.getPhoto().trim().isEmpty()) {
             file.clear();
-            File imageFile = new File(editPath.getPhoto());
+            File imageFile = resolveImagePath(editPath.getPhoto());
             
             // Check if file exists before trying to load it
-            if (imageFile.exists() && imageFile.isFile()) {
+            if (imageFile != null && imageFile.exists() && imageFile.isFile()) {
                 file.add(imageFile);
                 try {
                     Image img = new Image(new FileInputStream(imageFile));
@@ -2103,8 +2103,9 @@ public class managerInventoryController {
             return false;
         }
         
-        String modelName = editCarName.getText().trim();
-        String trimName = editCarSeries.getText().trim();
+        // editCarName contains the FULL car name that user entered
+        // Don't combine with editCarSeries - just use editCarName directly
+        String fullCarName = editCarName.getText().trim();
         String extColor = editCarExtColor.getText().trim();
         String intColor = editCarIntColor.getText().trim();
         String fuelType = editCarUsage.getText().trim();
@@ -2112,9 +2113,7 @@ public class managerInventoryController {
         int qty = Integer.parseInt(editCarQty.getText().trim());
         double price = Double.parseDouble(editCarPrice.getText().trim());
         
-        // Combine model name and trim name into full car name
-        // The procedure will parse this: "911 Carrera T" -> model="911 Carrera", trim="T"
-        String fullCarName = modelName + " " + trimName;
+        // The procedure will parse fullCarName: "911 Carrera T" -> model="911 Carrera", trim="T"
         
         // Handle image
         String photoPath = editPath.getPhoto(); // Keep existing photo by default
@@ -2211,6 +2210,46 @@ public class managerInventoryController {
                 e.printStackTrace();
             }
         }
+    }
+    
+    /**
+     * Resolves image path - handles both absolute and relative paths
+     * Relative paths like "/Image/..." are resolved relative to project directory
+     */
+    private File resolveImagePath(String photoPath) {
+        if (photoPath == null || photoPath.trim().isEmpty()) {
+            return null;
+        }
+        
+        File imageFile = new File(photoPath);
+        
+        // If it's already an absolute path and exists, return it
+        if (imageFile.isAbsolute() && imageFile.exists()) {
+            return imageFile;
+        }
+        
+        // Try to resolve as relative path from project directory
+        // Get the project root directory (where src folder is located)
+        String projectRoot = System.getProperty("user.dir");
+        
+        // Remove leading slash if present for relative path construction
+        String relativePath = photoPath.startsWith("/") || photoPath.startsWith("\\") 
+                              ? photoPath.substring(1) 
+                              : photoPath;
+        
+        File relativeFile = new File(projectRoot, relativePath);
+        if (relativeFile.exists()) {
+            return relativeFile;
+        }
+        
+        // If still not found, try from src/main/resources
+        File resourceFile = new File(projectRoot, "src/main/resources/" + relativePath);
+        if (resourceFile.exists()) {
+            return resourceFile;
+        }
+        
+        // Return original file object even if it doesn't exist (for error handling)
+        return imageFile;
     }
 
 
