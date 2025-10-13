@@ -1093,3 +1093,33 @@ java.sql.SQLException: Column 'carsandparts_price' not found.
 2025-10-12 23:44:01.028 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
 2025-10-12 23:44:01.130 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
 2025-10-12 23:44:03.490 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 08:58:23.546 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 08:58:23.571 [Thread-1586] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 08:58:25.301 [Thread-1586] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@52543950
+2025-10-13 08:58:25.305 [Thread-1586] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 08:58:25.305 [Thread-1586] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 08:58:25.489 [Thread-1586] WARN  Controllers.loginController - Failed login attempt for username: manager
+2025-10-13 08:58:42.549 [Thread-1586] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-13 08:58:47.916 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 08:59:12.877 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 08:59:12.902 [Thread-1138] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 08:59:14.383 [Thread-1138] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@62a23a3
+2025-10-13 08:59:14.386 [Thread-1138] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 08:59:14.388 [Thread-1138] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 08:59:14.958 [Thread-1138] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-13 09:00:34.861 [Thread-15777] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-13 09:00:49.463 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-13 09:00:49.846 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-13 09:00:53.376 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-13 09:00:53.644 [JavaFX Application Thread] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-13 09:02:48.954 [Thread-39621] INFO  C.managerOrderManagementController - Loaded 10 orders successfully
+2025-10-13 09:03:35.563 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 09:03:50.621 [Thread-50725] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-13 09:05:41.049 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
+2025-10-13 09:15:41.830 [JavaFX Application Thread] INFO  Utils.ThreadPoolManager - Thread pool manager initialized
+2025-10-13 09:15:41.853 [Thread-1467] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-13 09:15:43.673 [Thread-1467] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4ae8b330
+2025-10-13 09:15:43.675 [Thread-1467] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-13 09:15:43.676 [Thread-1467] INFO  Database.DatabaseConnectionManager - Database connection pool initialized successfully
+2025-10-13 09:15:43.927 [Thread-1467] INFO  Controllers.loginController - User manager logged in successfully with role: manager
+2025-10-13 09:23:09.189 [JavaFX Application Thread] INFO  Utils.LogoutHelper - User 2 logged out successfully
