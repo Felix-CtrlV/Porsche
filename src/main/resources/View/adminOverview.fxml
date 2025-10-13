@@ -9,7 +9,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -207,7 +206,7 @@
                                         </Button>
                                     </children>
                                 </HBox>
-                                <BarChart fx:id="barChart" style="-fx-background-color: transparent; -fx-padding: 20;">
+                                <BarChart fx:id="barChart" animated="false" style="-fx-background-color: transparent; -fx-padding: 20;">
                                     <xAxis>
                                         <CategoryAxis side="BOTTOM" />
                                     </xAxis>
@@ -229,7 +228,7 @@
                                         <Label style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-font-size: 20; -fx-padding: 18;" text="📈 Revenue Analysis" />
                                     </children>
                                 </HBox>
-                                <AreaChart fx:id="areaChart">
+                                <AreaChart fx:id="areaChart" animated="false">
                                     <xAxis>
                                         <CategoryAxis side="BOTTOM" />
                                     </xAxis>

@@ -23,7 +23,7 @@
             <Button fx:id="clear" layoutX="192.0" layoutY="239.0" mnemonicParsing="false" onAction="#clickClear" prefHeight="35.0" prefWidth="83.0" style="-fx-background-color: rgb(57, 57, 57); -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="Clear" />
             <Button fx:id="forgotPasswordBtn" layoutX="58.0" layoutY="276.0" mnemonicParsing="false" onAction="#clickForgotPassword" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: #d5001c; -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand; -fx-underline: false;" text="Forgot Password?" />
             <Label layoutX="20.0" layoutY="186.0" prefHeight="18.0" prefWidth="67.0" style="-fx-alignment: center; -fx-text-fill: black; -fx-font-size: 13;" styleClass="selected_dash_font" stylesheets="@../CSS/DashBoard_general.css" text="Password" />
-            <Label layoutX="16.0" layoutY="113.0" prefHeight="18.0" prefWidth="74.0" style="-fx-alignment: center; -fx-text-fill: black; -fx-font-size: 13;" styleClass="selected_dash_font" stylesheets="@../CSS/DashBoard_general.css" text="UserName" />
+            <Label layoutX="16.0" layoutY="113.0" prefHeight="18.0" prefWidth="74.0" style="-fx-alignment: center; -fx-text-fill: black; -fx-font-size: 13;" styleClass="selected_dash_font" stylesheets="@../CSS/DashBoard_general.css" text="Username" />
             <ImageView fx:id="usericon_image" fitHeight="86.0" fitWidth="90.0" layoutX="114.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Image/usericon.png" />
