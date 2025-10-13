@@ -26,13 +26,13 @@
                 <children>
 
                     <!-- Vehicle Image Section -->
-                    <StackPane prefHeight="250.0" prefWidth="500.0" styleClass="image-container">
+                    <StackPane prefHeight="250.0" prefWidth="500.0">
                         <VBox.margin>
                             <Insets top="10.0" />
                         </VBox.margin>
-                        <ImageView fx:id="selected_model_image" fitHeight="240.0" fitWidth="480.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="selected_model_image" fitHeight="170.0" fitWidth="480.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
                             <image>
-                                <Image url="" />
+                                <Image url="@../Image/911_select_model.png" />
                             </image>
                         </ImageView>
                     </StackPane>
@@ -40,7 +40,7 @@
                     <!-- Vehicle Details Section -->
                     <VBox spacing="12.0">
                         <VBox.margin>
-                            <Insets top="10.0" />
+                            <Insets />
                         </VBox.margin>
 
                         <Line fx:id="line1" endX="400.0" opacity="0.5" startX="0.0" strokeWidth="2.0" styleClass="divider-line" />

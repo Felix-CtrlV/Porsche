@@ -63,7 +63,7 @@ public class staffFinalizeController {
     @FXML
     void confirmOrder(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/staffShoppingcart.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/staffShopingcart.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
         } catch (IOException e) {
