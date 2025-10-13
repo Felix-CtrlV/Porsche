@@ -2213,18 +2213,34 @@ public class managerInventoryController {
     }
     
     /**
-     * Resolves image path - handles both absolute and relative paths
-     * Relative paths like "/Image/..." are resolved relative to project directory
+     * Resolves image path - handles absolute, relative, and network (UNC) paths
+     * Supports:
+     * - Network paths: \\ServerName\SharedFolder\Image\car.png
+     * - Absolute paths: D:\Porsche\Image\car.png
+     * - Relative paths: /Image/car.png or Image/car.png
      */
     private File resolveImagePath(String photoPath) {
         if (photoPath == null || photoPath.trim().isEmpty()) {
             return null;
         }
         
+        // Handle network (UNC) paths: \\ServerName\SharedFolder\...
+        if (photoPath.startsWith("\\\\") || photoPath.startsWith("//")) {
+            File networkFile = new File(photoPath);
+            if (networkFile.exists()) {
+                System.out.println("Found image on network path: " + photoPath);
+                return networkFile;
+            } else {
+                System.err.println("Network path not accessible: " + photoPath);
+                return networkFile; // Return anyway for error handling
+            }
+        }
+        
         File imageFile = new File(photoPath);
         
         // If it's already an absolute path and exists, return it
         if (imageFile.isAbsolute() && imageFile.exists()) {
+            System.out.println("Found image at absolute path: " + photoPath);
             return imageFile;
         }
         
@@ -2239,15 +2255,18 @@ public class managerInventoryController {
         
         File relativeFile = new File(projectRoot, relativePath);
         if (relativeFile.exists()) {
+            System.out.println("Found image at relative path: " + relativeFile.getAbsolutePath());
             return relativeFile;
         }
         
         // If still not found, try from src/main/resources
         File resourceFile = new File(projectRoot, "src/main/resources/" + relativePath);
         if (resourceFile.exists()) {
+            System.out.println("Found image in resources: " + resourceFile.getAbsolutePath());
             return resourceFile;
         }
         
+        System.err.println("Image not found at any location: " + photoPath);
         // Return original file object even if it doesn't exist (for error handling)
         return imageFile;
     }
