@@ -80,7 +80,7 @@
                   <HBox fx:id="optionProfile" alignment="CENTER_LEFT" spacing="8.0" styleClass="hoversmth">
                      <children>
                         <Label prefHeight="30.0" prefWidth="35.0" style="-fx-font-size: 25; -fx-alignment: center;" styleClass="slipFont" text="👤" />
-                        <Label styleClass="slipFont" text="View Profile" />
+                        <Label text="View Profile" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="17.0" top="10.0" />
@@ -97,7 +97,7 @@
                               <Insets right="2.0" />
                            </HBox.margin>
                         </Label>
-                        <Label styleClass="slipFont" text="Target" />
+                        <Label text="Target" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="17.0" top="10.0" />
@@ -114,8 +114,8 @@
                               <Insets right="16.0" />
                            </HBox.margin>
                         </Label>
-                        <Label prefHeight="17.0" prefWidth="219.0" styleClass="slipFont" text="Switch to Light" />
-                        <ToggleButton fx:id="Mode" minWidth="43.0" mnemonicParsing="false" prefWidth="43.0" styleClass="toggle-switch" text="Dark">
+                        <Label prefHeight="17.0" prefWidth="219.0" text="Switch to Light" />
+                        <ToggleButton fx:id="Mode" minWidth="43.0" mnemonicParsing="false" prefWidth="43.0" text="Dark">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

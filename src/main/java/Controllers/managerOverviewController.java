@@ -42,7 +42,8 @@ import java.util.Locale;
 
 public class managerOverviewController {
 
-    private int managerId ;
+    private int managerId;
+    private boolean listenersInitialized = false;
 
     @FXML
     private Button NextMonthbtn;
@@ -418,7 +419,7 @@ public class managerOverviewController {
 
     //target side
     private void setTarget() throws SQLException {
-        CallableStatement cs = con.prepareCall("CALL targetviewchart(?,?,?)");
+        CallableStatement cs = con.prepareCall("CALL targetViewChart(?,?,?)");
         cs.setInt(1,managerId);
         cs.setInt(2,currentMonth);
         cs.setInt(3,currentYear);
@@ -524,7 +525,7 @@ public class managerOverviewController {
     private ObservableList<ManagerOfAttendanceView> setAttendanceTable() throws SQLException {
         ObservableList<ManagerOfAttendanceView> temporylist = FXCollections.observableArrayList();
 
-        CallableStatement cs =con.prepareCall("CALL managerattendanceview()");
+        CallableStatement cs =con.prepareCall("CALL getAttendanceView()");
         ResultSet rs = cs.executeQuery();
 
         while(rs.next()) {
@@ -544,7 +545,7 @@ public class managerOverviewController {
         ObservableList<PieChart.Data> piechartdata = FXCollections.observableArrayList();
         String rating ="0 %";
 
-        CallableStatement cs = con.prepareCall("call attendancepercentage_managerview();");
+        CallableStatement cs = con.prepareCall("call getAttendancePercentage();");
         ResultSet rs = cs.executeQuery();
 
         while(rs.next()){
@@ -660,8 +661,8 @@ public class managerOverviewController {
         }
     }
     private void styleCharts() {
-        // Style bar chart
-        qtyBarChart.setLegendVisible(true);
+        // Style bar chart - hide default legend, we have custom legend in FXML
+        qtyBarChart.setLegendVisible(false);
         qtyBarChart.setAnimated(false);
         qtyBarChart.setCategoryGap(20);
 
@@ -669,10 +670,13 @@ public class managerOverviewController {
         revenueAreaChart.setLegendVisible(true);
         revenueAreaChart.setAnimated(false);
 
-        // Set colors for series (optional)
-        String carColor = "-fx-bar-fill:  #6D8196;";
-        String partColor = "-fx-bar-fill: #ffa500;";
-        String revenueColor = "-fx-background-color: #3498db, linear-gradient(to bottom, #3498db 0%, #2980b9 100%);";
+        // Apply custom colors to match the custom legend
+        Platform.runLater(() -> {
+            // Apply car series color (#6D8196)
+            carSeries.getNode().setStyle("-fx-bar-fill: #6D8196;");
+            // Apply part series color (#ffa500)
+            partSeries.getNode().setStyle("-fx-bar-fill: #ffa500;");
+        });
     }
 
     //for besti of cars,parts and staff
@@ -718,27 +722,41 @@ public class managerOverviewController {
             ResultSet rs = cs.executeQuery();
 
             // FIXED: Use OR condition instead of AND   
-            if (besti.equals("car") || besti.equals("part")) {
+            if (besti.equals("car")) {
+                // getBestSellingCars returns: rank, carId, modelId, modelName, colorId, colorName, fuelType, price, percentage
                 while (rs.next()) {
                     int rank = rs.getInt(1);
-                    int targetQty = rs.getInt(2);
-                    int soldQty = rs.getInt(3);
-                    String inventoryName = rs.getString(4);
+                    String inventoryName = rs.getString(4);  // modelName
+                    int soldQty = rs.getInt(2);              // carId (using as soldQty)
+                    int targetQty = rs.getInt(3);            // modelId (using as targetQty)
+                    managerOverview item = new managerOverview(
+                            rank, targetQty, soldQty, inventoryName
+                    );
+                    bestCarPartList.add(item);
+                }
+            } else if (besti.equals("part")) {
+                // getBestSellingParts returns: rank, partName, targetQty, soldQty, partId
+                while (rs.next()) {
+                    int rank = rs.getInt(1);
+                    String inventoryName = rs.getString(2);  // partName
+                    int targetQty = rs.getInt(3);
+                    int soldQty = rs.getInt(4);
                     managerOverview item = new managerOverview(
                             rank, targetQty, soldQty, inventoryName
                     );
                     bestCarPartList.add(item);
                 }
             } else {
+                // getBestStaff returns: rank, staffId, staffName, staffPhoto, totalSale, prevTotalSale, workHour, prevWorkHour
                 while (rs.next()) {
                     int rank = rs.getInt(1);
                     int staffId = rs.getInt(2);
-                    int workHour = rs.getInt(3);
-                    int prevWorkHour = rs.getInt(4);
-                    String staffPhoto = rs.getString(5);
-                    String staffName = rs.getString(6);
-                    Double totalSale = rs.getDouble(7);
-                    Double prevTotalSale = rs.getDouble(8);
+                    String staffName = rs.getString(3);
+                    String staffPhoto = rs.getString(4);
+                    Double totalSale = rs.getDouble(5);
+                    Double prevTotalSale = rs.getDouble(6);
+                    int workHour = rs.getInt(7);
+                    int prevWorkHour = rs.getInt(8);
 
                     managerOverview seller = new managerOverview(
                             rank, staffId, workHour, prevWorkHour,

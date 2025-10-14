@@ -19,7 +19,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="690.0" maxWidth="1366.0" minHeight="690.0" style="-fx-background-color: linear-gradient(to bottom right, #f0f2f5, #e1e5eb);" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerInventoryController">
@@ -48,10 +47,13 @@
                                  <StackPane minHeight="45.0" prefHeight="65.0" prefWidth="280.0">
                                      <children>
                                          <TextField fx:id="searchBar" minHeight="45.0" prefHeight="35.0" prefWidth="300.0" promptText="Search by model, VIN, or ID..." style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #e0e0e0; -fx-background-color: #fafafa; -fx-padding: 0 15 0 15; -fx-font-size: 13; -fx-border-width: 1.5;" StackPane.alignment="CENTER" />
-                                         <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#clickSearchBtn" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: #d5001c; -fx-background-radius: 16; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.4), 8, 0, 0, 2); -fx-text-fill: white;" text="🔍" StackPane.alignment="CENTER_RIGHT">
+                                         <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#clickSearchBtn" prefHeight="43.0" prefWidth="62.0" style="-fx-background-color: transparent; -fx-background-radius: 18; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.4), 8, 0, 0, 2); -fx-text-fill: red; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 6, 0, 0, 2);" text="🔍" StackPane.alignment="CENTER_RIGHT">
                                              <StackPane.margin>
-                                                 <Insets right="8.0" />
+                                                 <Insets />
                                              </StackPane.margin>
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
                                          </Button>
                                      </children>
                                      <VBox.margin>
@@ -110,42 +112,6 @@
                                         <Insets left="20.0" right="20.0" />
                                     </VBox.margin>
                                 </VBox>
-
-                                <!-- Models Section -->
-                                <VBox fx:id="modelsPane" prefHeight="321.0" prefWidth="260.0" spacing="15.0" style="-fx-padding: 20 0 0 0; -fx-background-color: #fafafa; -fx-border-color: #f0f0f0; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 1;" VBox.vgrow="ALWAYS">
-                                    <HBox alignment="CENTER_LEFT" spacing="60.0">
-                                        <children>
-                                            <Label style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-font-size: 14; -fx-font-family: 'Arial';" text="MODELS" underline="true">
-                                                <HBox.margin>
-                                                    <Insets left="15.0" />
-                                                </HBox.margin>
-                                            </Label>
-                                            <CheckBox fx:id="modelsSelectAll" mnemonicParsing="false" onAction="#clickModelsSelectAll" style="-fx-font-weight: bold; -fx-text-four: #d5001c; -fx-font-size: 12; -fx-cursor: hand;" text="Select All" />
-                                        </children>
-                                    </HBox>
-                                    <GridPane fx:id="modelsShowBox" style="-fx-padding: 15;">
-                                        <columnConstraints>
-                                            <ColumnConstraints fx:id="modelsCol1" hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
-                                            <ColumnConstraints fx:id="modelsCol2" hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
-                                        </columnConstraints>
-                                        <rowConstraints>
-                                            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
-                                            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
-                                            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
-                                        </rowConstraints>
-                                        <children>
-                                            <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="911 Turbo S" GridPane.rowIndex="0" />
-                                            <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="Cayenne Turbo" GridPane.rowIndex="1" />
-                                            <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="Taycan Turbo" GridPane.rowIndex="2" />
-                                            <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="Panamera 4S" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
-                                            <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="Macan GTS" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                            <CheckBox mnemonicParsing="false" style="-fx-text-fill: #2c3e50; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand;" text="718 Cayman" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                        </children>
-                                    </GridPane>
-                                    <VBox.margin>
-                                        <Insets left="20.0" right="20.0" />
-                                    </VBox.margin>
-                                </VBox>
                             </children>
                         </VBox>
 
@@ -165,6 +131,11 @@
                                         <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-family: 'Arial Black';" text="INVENTORY" />
                                         <Label style="-fx-text-fill: #6c757d; -fx-font-size: 12; -fx-font-style: italic;" text="Real-time Porsche vehicle stock management" />
                                     </VBox>
+                           <Button fx:id="switchTable" onAction="#clickSwitchTable" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-size: 12; -fx-font-weight: bold; -fx-cursor: hand; -fx-pref-height: 35; -fx-padding: 0 15 0 15;" text="Available">
+                              <HBox.margin>
+                                 <Insets left="650.0" />
+                              </HBox.margin>
+                           </Button>
                                 </HBox>
                         <StackPane VBox.vgrow="ALWAYS">
                            <children>
@@ -216,7 +187,7 @@
                                       </HBox>
                               <StackPane maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0">
                                  <children>
-                                              <VBox fx:id="addCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="15.0" style="-fx-padding: 20;" visible="false">
+                                              <VBox fx:id="addCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="15.0" style="-fx-padding: 20;">
                                                   <children>
                                                         <StackPane maxHeight="125.0" minHeight="125.0" onDragDropped="#carHandlerDrop" onDragOver="#carHandlerOver" prefHeight="120.0" prefWidth="200.0" style="-fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-border-width: 2; -fx-border-style: dashed; -fx-background-color: #f9fafb; -fx-background-radius: 6;">
                                                             <children>
@@ -290,14 +261,14 @@
                                                                       </StackPane>
                                                                   </children>
                                                    <VBox.margin>
-                                                      <Insets left="15.0" right="15.0" />
+                                                      <Insets left="15.0" right="15.0" top="10.0" />
                                                    </VBox.margin>
                                                               </HBox>
                                                           </children>
                                                       </VBox>
                                                         <VBox maxHeight="66.0" minHeight="66.0" prefHeight="70.0" prefWidth="434.0" spacing="10" style="-fx-border-color: #e2e8f0; -fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12;">
                                                             <children>
-                                                                <Label style="-fx-text-fill: #374151; -fx-font-weight: bold; -fx-font-size: 13;" text="FUEL TYPE *">
+                                                                <Label fx:id="fuelTypeLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold; -fx-font-size: 13;" text="FUEL TYPE *">
                                                                     <VBox.margin>
                                                                         <Insets left="15.0" top="8.0" />
                                                                     </VBox.margin>
@@ -309,14 +280,9 @@
                                                                                     <ToggleGroup fx:id="fuelTypeGroup" />
                                                                                 </toggleGroup>
                                                                             </RadioButton>
-                                                                            <RadioButton fx:id="hybridRadio" style="-fx-text-fill: #374151;" text="Hybrid" toggleGroup="$fuelTypeGroup" />
                                                                             <RadioButton fx:id="dieselRadio" style="-fx-text-fill: #374151;" text="Diesel" toggleGroup="$fuelTypeGroup" />
-                                                                    <Line endX="241.99996948242188" endY="32.0000114440918" startX="241.99996948242188" startY="56.0000114440918" style="-fx-opacity: 0.3;" />
-                                                                            <CheckBox fx:id="electricCheckBox" mnemonicParsing="false" text="Electric">
-                                                                                <HBox.margin>
-                                                                                    <Insets />
-                                                                                </HBox.margin>
-                                                                            </CheckBox>
+                                                                            <RadioButton fx:id="hybridRadio" style="-fx-text-fill: #374151;" text="Hybrid" toggleGroup="$fuelTypeGroup" />
+                                                                            <RadioButton fx:id="electricRadio" style="-fx-text-fill: #374151;" text="Electric" toggleGroup="$fuelTypeGroup" />
                                                                         </children>
                                                    <VBox.margin>
                                                       <Insets left="15.0" />
@@ -374,7 +340,7 @@
                                                   </HBox>
                                                   </children>
                                               </VBox>
-                                    <VBox fx:id="addPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="20.0" style="-fx-padding: 20;">
+                                    <VBox fx:id="addPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="20.0" style="-fx-padding: 20;" visible="false">
                                        <children>
                                           <VBox prefHeight="188.0" prefWidth="393.0" spacing="8">
                                              <children>
@@ -403,20 +369,16 @@
                                                       </Label>
                                                    </children>
                                                 </StackPane>
-                                                <VBox prefHeight="78.0" prefWidth="150.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                                                <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                                                    <children>
-                                                      <Label style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Compatible With">
-                                                         <VBox.margin>
-                                                            <Insets left="30.0" />
-                                                         </VBox.margin>
+                                                      <TextField fx:id="partRelativeComboBox" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                      <Label fx:id="partRelativeLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Compatible With">
+                                                         <StackPane.margin>
+                                                            <Insets left="15.0" />
+                                                         </StackPane.margin>
                                                       </Label>
-                                                      <ComboBox fx:id="partRelativeComboBox" minHeight="20.0" prefHeight="30.0" prefWidth="162.0" VBox.vgrow="ALWAYS">
-                                                         <VBox.margin>
-                                                            <Insets left="30.0" />
-                                                         </VBox.margin>
-                                                      </ComboBox>
                                                    </children>
-                                                </VBox>
+                                                </StackPane>
                                              </children>
                                           </HBox>
                                           <HBox spacing="12">
@@ -443,9 +405,9 @@
                                                 </StackPane>
                                              </children>
                                           </HBox>
-                                          <StackPane alignment="CENTER_LEFT" maxHeight="70.0" minHeight="70.0" prefHeight="90.0" prefWidth="393.0">
+                                          <StackPane alignment="CENTER_LEFT" maxHeight="70.0" minHeight="35.2" prefHeight="90.0" prefWidth="393.0">
                                              <children>
-                                                <TextField fx:id="partDescriptionText" maxHeight="70.0" minHeight="70.0" prefHeight="90.0" prefWidth="393.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                <TextField fx:id="partDescriptionText" maxHeight="35.2" minHeight="35.2" prefHeight="90.0" prefWidth="393.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                 <Label fx:id="partDescriptionLbl" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="DESCRIPTION *">
                                                    <StackPane.margin>
                                                       <Insets left="15.0" />

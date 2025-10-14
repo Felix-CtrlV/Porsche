@@ -74,3 +74,12 @@
 .staff.active{
     -fx-text-fill:skyblue;
 }
+
+/* Bar Chart Series Colors */
+.default-color0.chart-bar {
+    -fx-bar-fill: #6D8196;
+}
+
+.default-color1.chart-bar {
+    -fx-bar-fill: #ffa500;
+}

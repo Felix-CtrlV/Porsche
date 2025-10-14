@@ -1,7 +1,8 @@
 package Controllers;
 
-import Database.Porsche_DB;
+import Database.DatabaseConnectionManager;
 import MainUI.login;
+import Utils.OTPService;
 import Utils.Session;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -118,17 +119,15 @@ public class adminDashboardController {
     }
 
     private void updateDatabase(){
-        Porsche_DB connect = new Porsche_DB();
         try {
-            Connection con = connect.connect();
+            Connection con = DatabaseConnectionManager.getInstance().getConnection();
             PreparedStatement p = con.prepareStatement("Update user_info set user_email = ?, user_phone = ?, user_address = ? where user_id = ?");
             p.setString(1, profileEmail.getText());
             p.setString(2, profilePhone.getText());
             p.setString(3, profileAddress.getText());
             p.setInt(4, current.getUserid());
             p.execute();
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
         current.setEmail(profileEmail.getText());
@@ -153,17 +152,14 @@ public class adminDashboardController {
 
         optionChange.setOnMouseClicked(e -> {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Authentication.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/ChangePassword.fxml"));
                 Parent root = loader.load();
-                authenticationController controller = loader.getController();
-                controller.setStep("factor");
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.initStyle(StageStyle.UNDECORATED);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
-            } catch (
-                    IOException ex) {
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         });
@@ -327,15 +323,14 @@ public class adminDashboardController {
                         Stage stage = (Stage) newWin;
                         stage.setOnCloseRequest(event -> {
                             try {
-                                Porsche_DB connect = new Porsche_DB();
-                                Connection con = connect.connect();
+                                Connection con = DatabaseConnectionManager.getInstance().getConnection();
                                 CallableStatement check_out = con.prepareCall("call logout(?, ?)");
                                 if (current != null) {
                                     check_out.setInt(1, current.getUserid());
                                     check_out.setString(2, String.valueOf(LocalDateTime.now()));
                                     check_out.execute();
                                 }
-                                connect.disconnect();
+                                con.close();
                                 Session.clearSession();
                             } catch (
                                     Exception ex) {
@@ -374,18 +369,22 @@ public class adminDashboardController {
         Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
         home.close();
 
-        Porsche_DB connect = new Porsche_DB();
-        Connection con = connect.connect();
-        CallableStatement check_out = con.prepareCall("call logout(?, ?)");
-        Session current = Session.getInstance();
-        if (current != null) {
-            adminid = current.getUserid();
+        try {
+            Connection con = DatabaseConnectionManager.getInstance().getConnection();
+            CallableStatement check_out = con.prepareCall("call logout(?, ?)");
+            Session current = Session.getInstance();
+            if (current != null) {
+                adminid = current.getUserid();
+            }
+            check_out.setInt(1, adminid);
+            check_out.setString(2, String.valueOf(LocalDateTime.now()));
+            check_out.execute();
+            con.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-        check_out.setInt(1, adminid);
-        check_out.setString(2, String.valueOf(LocalDateTime.now()));
-        check_out.execute();
         login log_in = new login();
-        log_in.start(new Stage());
+        log_in.startDirectLogin(new Stage());
         Session.clearSession();
     }
 
@@ -450,6 +449,99 @@ public class adminDashboardController {
     public void setProfile
             () {
         profilePane.setVisible(true);
+    }
+
+
+    /**
+     * Sends OTP and opens change password dialog
+     */
+    public void proceedWithOTP() {
+        try {
+            // Send OTP to user's email
+            OTPService otpService = OTPService.getInstance();
+            String userEmail = current.getEmail();
+            
+            
+            // Send OTP in background
+            javafx.concurrent.Task<Boolean> sendOtpTask = new javafx.concurrent.Task<>() {
+                @Override
+                protected Boolean call() {
+                    return otpService.sendOTP(userEmail);
+                }
+            };
+            
+            sendOtpTask.setOnSucceeded(e -> {
+                if (sendOtpTask.getValue()) {
+                    // OTP sent successfully, open change password dialog
+                    openChangePasswordDialog();
+                } else {
+                    showErrorMessage("Failed to send OTP. Please check email configuration in OTPService.java\n\n" +
+                                   "1. Update SENDER_EMAIL with your Gmail address\n" +
+                                   "2. Update SENDER_PASSWORD with Gmail App Password\n" +
+                                   "3. Enable 2-Factor Authentication in Google Account\n" +
+                                   "4. Generate App Password in Google Account settings");
+                }
+            });
+            
+            sendOtpTask.setOnFailed(e -> {
+                showErrorMessage("Error sending OTP: " + sendOtpTask.getException().getMessage());
+            });
+            
+            new Thread(sendOtpTask).start();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showErrorMessage("Error initializing OTP system");
+        }
+    }
+
+    /**
+     * Opens the change password dialog
+     */
+    private void openChangePasswordDialog() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/ChangePassword.fxml"));
+            Parent root = loader.load();
+            
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showErrorMessage("Failed to open change password dialog");
+        }
+    }
+
+
+    /**
+     * Shows error message
+     */
+    private void showErrorMessage(String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * Masks email for privacy
+     */
+    private String maskEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            return email;
+        }
+        String[] parts = email.split("@");
+        String username = parts[0];
+        String domain = parts[1];
+
+        if (username.length() <= 2) {
+            return username.charAt(0) + "***@" + domain;
+        }
+
+        return username.charAt(0) + "***" + username.charAt(username.length() - 1) + "@" + domain;
     }
 
 }

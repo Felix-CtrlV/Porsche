@@ -73,7 +73,7 @@ public class bestSellerController {
             }
         } else {
 
-//            image.setImage(new Image(getClass().getResource("/Image/usericon.png").toExternalForm()));
+            image.setImage(new Image(getClass().getResource("/Image/usericon.png").toExternalForm()));
         }
 
     }

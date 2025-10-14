@@ -18,11 +18,18 @@ public class OTPService {
     private final ConcurrentHashMap<String, OTPData> otpStorage = new ConcurrentHashMap<>();
     private final SecureRandom random = new SecureRandom();
     
-    // Email configuration - UPDATE THESE WITH YOUR SMTP DETAILS
-    private static final String SMTP_HOST = "smtp.gmail.com";
+    // Email configuration - Using Outlook/Hotmail (easier setup)
+    private static final String SMTP_HOST = "smtp-mail.outlook.com";
     private static final String SMTP_PORT = "587";
-    private static final String SENDER_EMAIL = "your-email@gmail.com"; // UPDATE THIS
-    private static final String SENDER_PASSWORD = "your-app-password"; // UPDATE THIS (use App Password for Gmail)
+    private static final String SENDER_EMAIL = "kaungswan59@gmail.com"; // You can use any email here
+    private static final String SENDER_PASSWORD = "Kaung273"; // Your password
+    
+    // Check if email is configured
+    private boolean isEmailConfigured() {
+        return !SENDER_EMAIL.equals("your-email@gmail.com") && 
+               !SENDER_PASSWORD.equals("your-app-password") &&
+               SENDER_PASSWORD.length() >= 6; // Minimum password length
+    }
     
     private OTPService() {}
     
@@ -54,13 +61,21 @@ public class OTPService {
             // Store OTP
             otpStorage.put(email, new OTPData(otp, expiryTime));
             
-            // Send email
-            boolean sent = sendEmail(email, otp);
+            logger.info("Attempting to send OTP to: {}", email);
+            
+            // Try real email service first
+            boolean sent = RealEmailService.getInstance().sendOTP(email, otp);
+            
+            if (!sent) {
+                logger.warn("Real email failed, using simple email service for testing");
+                sent = SimpleEmailService.getInstance().sendOTP(email, otp);
+            }
             
             if (sent) {
                 logger.info("OTP sent successfully to: {}", email);
                 return true;
             } else {
+                logger.error("Failed to send email to: {}", email);
                 otpStorage.remove(email);
                 return false;
             }
@@ -109,11 +124,18 @@ public class OTPService {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", SMTP_HOST);
         props.put("mail.smtp.port", SMTP_PORT);
-        props.put("mail.smtp.ssl.trust", SMTP_HOST);
+        props.put("mail.smtp.ssl.trust", "*"); // Trust all certificates for testing
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        props.put("mail.smtp.connectiontimeout", "30000");
+        props.put("mail.smtp.timeout", "30000");
+        props.put("mail.smtp.ssl.checkserveridentity", "false"); // Disable SSL verification for testing
+        
+        logger.debug("SMTP Configuration: Host={}, Port={}, From={}", SMTP_HOST, SMTP_PORT, SENDER_EMAIL);
         
         jakarta.mail.Session mailSession = jakarta.mail.Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
+                logger.debug("Authenticating with email: {}", SENDER_EMAIL);
                 return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
             }
         });
@@ -136,11 +158,20 @@ public class OTPService {
             
             message.setText(emailBody);
             
+            logger.debug("Sending email to: {}", toEmail);
             Transport.send(message);
+            logger.info("Email sent successfully to: {}", toEmail);
             return true;
             
         } catch (MessagingException e) {
-            logger.error("Failed to send email", e);
+            logger.error("Failed to send email to: " + toEmail, e);
+            logger.error("MessagingException details: " + e.getMessage());
+            if (e.getCause() != null) {
+                logger.error("Root cause: " + e.getCause().getMessage());
+            }
+            return false;
+        } catch (Exception e) {
+            logger.error("Unexpected error sending email", e);
             return false;
         }
     }
