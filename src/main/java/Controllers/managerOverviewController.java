@@ -322,7 +322,7 @@ public class managerOverviewController {
         NextYearbtn.setDisable(true);
         NextYearbtn.setVisible(false);
 
-        for (int y = 2000; y <= currentYear ; y++) {
+        for (int y = 2020; y <= currentYear ; y++) {
             yearBox.getItems().add(y);
         }
         yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
