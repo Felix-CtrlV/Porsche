@@ -487,10 +487,16 @@ public class managerInventoryController {
         inventoryData.addAll(carsData);
         inventoryData.addAll(partsData);
         setupSearchBar();
-        if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
-            showTable("cars");
-        }else{
-            showTable("parts");
+        
+        // Preserve the current view state (Available or Unavailable)
+        if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
+            showUnavailableItems();
+        } else {
+            if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                showTable("cars");
+            }else{
+                showTable("parts");
+            }
         }
     }
 
@@ -585,7 +591,7 @@ public class managerInventoryController {
             setSelect(true,seriesSelectAll);
             fadeInOut(true, seriesPane, null);
             // Check if we're in unavailable view
-            if (switchTable.getText().contains("Unavailable")) {
+            if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
                 showUnavailableItems();
             } else {
                 showTable("cars");
@@ -593,7 +599,7 @@ public class managerInventoryController {
         } else if ("Parts".equals(selectedValue)) {
             fadeInOut(false, seriesPane, null);
             // Check if we're in unavailable view
-            if (switchTable.getText().contains("Unavailable")) {
+            if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
                 showUnavailableItems();
             } else {
                 showTable("parts");
@@ -757,7 +763,7 @@ public class managerInventoryController {
         }
         
         // Check current view state and maintain it
-        if (switchTable.getText().contains("Unavailable")) {
+        if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
             showUnavailableItems();
         } else {
             showTable("cars");
@@ -1937,9 +1943,52 @@ public class managerInventoryController {
             file.clear();
         }
     }
+    private void restoreItem() {
+        try {
+            // Restore - Mark as available (no validation needed)
+            if (editPath.getInventoryId().contains("C")) {
+                String sql = "UPDATE cars SET car_status = ? WHERE car_id = ?";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setBoolean(1, true);
+                ps.setInt(2, editPath.getId());
+                int rowsAffected = ps.executeUpdate();
+                System.out.println("Cars restored: " + rowsAffected + " rows affected for car_id: " + editPath.getId());
+                ps.close();
+            } else {
+                String sql = "UPDATE car_parts SET part_status = ? WHERE part_id = ?";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setBoolean(1, true);
+                ps.setInt(2, editPath.getId());
+                int rowsAffected = ps.executeUpdate();
+                System.out.println("Parts restored: " + rowsAffected + " rows affected for part_id: " + editPath.getId());
+                ps.close();
+            }
+            
+            // Refresh table data from database
+            setCarsTable();
+            setPartsTable();
+            inventoryData.clear();
+            inventoryData.addAll(carsData);
+            inventoryData.addAll(partsData);
+            
+            // Refresh the displayed table - preserve current view state
+            if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
+                showUnavailableItems();
+            } else {
+                if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                    showTable("cars");
+                }else{
+                    showTable("parts");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     private boolean tableAddUpdateDelete(boolean check){
         try {
-            // Check if this is an edit operation (from edit pane) or restore/delete
+            // Check if this is an edit operation (from edit pane) or delete
             if (editPane.isVisible() && check) {
                 // EDIT/UPDATE operation
                 boolean updateSuccess = false;
@@ -1955,18 +2004,22 @@ public class managerInventoryController {
                     return false;
                 }
                 
-                // Refresh table data
+                // Refresh table data from database
                 setCarsTable();
                 setPartsTable();
                 inventoryData.clear();
                 inventoryData.addAll(carsData);
                 inventoryData.addAll(partsData);
                 
-                // Refresh the displayed table
-                if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
-                    showTable("cars");
-                }else{
-                    showTable("parts");
+                // Refresh the displayed table - preserve current view state
+                if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
+                    showUnavailableItems();
+                } else {
+                    if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                        showTable("cars");
+                    }else{
+                        showTable("parts");
+                    }
                 }
                 
                 // Don't close edit pane here - let alertForm handle it after showing success message
@@ -1999,6 +2052,17 @@ public class managerInventoryController {
                 inventoryData.clear();
                 inventoryData.addAll(carsData);
                 inventoryData.addAll(partsData);
+                
+                // Refresh the displayed table - preserve current view state
+                if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
+                    showUnavailableItems();
+                } else {
+                    if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                        showTable("cars");
+                    }else{
+                        showTable("parts");
+                    }
+                }
                 return true;
 
             } else {
@@ -2090,9 +2154,15 @@ public class managerInventoryController {
         inventoryData.addAll(carsData);
         inventoryData.addAll(partsData);
         
-        // Refresh the displayed table
-        if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
-            showTable("cars");
+        // Refresh the displayed table - preserve current view state
+        if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
+            showUnavailableItems();
+        } else {
+            if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                showTable("cars");
+            }else{
+                showTable("parts");
+            }
         }
     }
     
@@ -2121,6 +2191,21 @@ public class managerInventoryController {
         String extColor = editCarExtColor.getText().trim();
         String intColor = editCarIntColor.getText().trim();
         String fuelType = editCarUsage.getText().trim();
+        
+        // Validate and parse numeric fields
+        if (editCarProductAt.getText().trim().isEmpty()) {
+            System.err.println("Error: Production year is empty");
+            return false;
+        }
+        if (editCarQty.getText().trim().isEmpty()) {
+            System.err.println("Error: Quantity is empty");
+            return false;
+        }
+        if (editCarPrice.getText().trim().isEmpty()) {
+            System.err.println("Error: Price is empty");
+            return false;
+        }
+        
         int year = Integer.parseInt(editCarProductAt.getText().trim());
         int qty = Integer.parseInt(editCarQty.getText().trim());
         double price = Double.parseDouble(editCarPrice.getText().trim());
