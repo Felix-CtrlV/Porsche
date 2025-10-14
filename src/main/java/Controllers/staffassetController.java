@@ -98,7 +98,6 @@ public class staffassetController {
 
                 cardContainer.getChildren().add(card);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
