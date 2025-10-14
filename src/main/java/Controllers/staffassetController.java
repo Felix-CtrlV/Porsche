@@ -95,7 +95,6 @@ public class staffassetController {
 
                 staffexternalcartController controller = loader.getController();
                 controller.setData("External Item " + i, 200.0 + i);
-
                 cardContainer.getChildren().add(card);
             }
         } catch (IOException e) {
