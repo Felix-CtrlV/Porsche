@@ -6,14 +6,27 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
-import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
@@ -39,13 +52,39 @@ public class adminUserRegisterController {
     private TextField phonetx;
 
     @FXML
-    private PasswordField password;
+    private ImageView photoPreview;
+    
+    @FXML
+    private Button uploadPhotoBtn;
+    
+    @FXML
+    private Label photoPathLabel;
+    
+    private String selectedPhotoPath = null;
 
     @FXML
     private DatePicker dob;
 
     @FXML
-    private ComboBox<?> rolecombo;
+    private ComboBox<String> rolecombo;
+    
+    @FXML
+    private TextField salarytx;
+    
+    @FXML
+    private ComboBox<String> managerCombo;
+    
+    @FXML
+    private VBox managerSection;
+    
+    @FXML
+    private HBox toastNotification;
+    
+    @FXML
+    private Label toastIcon, toastTitle, toastMessage;
+    
+    @FXML
+    private Label ageLbl;
 
     @FXML
     private ComboBox<String> nrc_first;
@@ -65,13 +104,96 @@ public class adminUserRegisterController {
         emailtx.clear();
         addresstx.clear();
         phonetx.clear();
-        password.clear();
         dob.setValue(null);
         nrc_first.getSelectionModel().clearSelection();
         nrc_second.getSelectionModel().clearSelection();
         nrc_third.getSelectionModel().clearSelection();
         nrc_number.clear();
+        rolecombo.getSelectionModel().clearSelection();
+        salarytx.clear();
+        managerCombo.getSelectionModel().clearSelection();
+        selectedPhotoPath = null;
+        photoPreview.setImage(null);
+        photoPathLabel.setText("No file selected");
     }
+    
+    @FXML
+    void clickUploadPhoto(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Photo");
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
+        );
+        
+        Stage stage = (Stage) uploadPhotoBtn.getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        
+        if (selectedFile != null) {
+            selectedPhotoPath = selectedFile.toURI().toString();
+            photoPathLabel.setText(selectedFile.getName());
+            
+            try {
+                Image image = new Image(selectedPhotoPath);
+                photoPreview.setImage(image);
+            } catch (Exception e) {
+                showToast("Error", "Failed to load image. Please select a valid image file.", "error");
+            }
+        }
+    }
+    
+    private void loadManagers() {
+        try {
+            Porsche_DB connect = new Porsche_DB();
+            Connection con = connect.connect();
+            
+            // Only load users with Manager role
+            String query = "SELECT user_name FROM user_info WHERE user_role = 'Manager'";
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            
+            managerCombo.getItems().clear();
+            while (rs.next()) {
+                managerCombo.getItems().add(rs.getString("user_name"));
+            }
+            
+            connect.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Old showNotification method removed - now using showToast
+    
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        return email.matches(emailRegex);
+    }
+    
+    private boolean isValidPhone(String phone) {
+        // Myanmar phone format: 09XXXXXXXXX (11 digits starting with 09)
+        String phoneRegex = "^09\\d{7,9}$";
+        return phone.matches(phoneRegex);
+    }
+    
+    private void updateAge() {
+        if (dob.getValue() != null) {
+            LocalDate birthDate = dob.getValue();
+            LocalDate now = LocalDate.now();
+            int age = now.getYear() - birthDate.getYear();
+            
+            // Adjust if birthday hasn't occurred yet this year
+            if (now.getMonthValue() < birthDate.getMonthValue() || 
+                (now.getMonthValue() == birthDate.getMonthValue() && now.getDayOfMonth() < birthDate.getDayOfMonth())) {
+                age--;
+            }
+            
+            ageLbl.setText(age + " Y/O");
+            ageLbl.setStyle("-fx-text-fill: #3b82f6; -fx-font-size: 13; -fx-font-weight: bold;");
+        } else {
+            ageLbl.setText("");
+        }
+    }
+    
     @FXML
     public void errorshow() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/View/error.fxml"));
@@ -85,75 +207,120 @@ public class adminUserRegisterController {
         stage.show();
     }
 
-//    private errorController error;
-//
-//    public void setError(errorController error){
-//        this.error = error;
-//    }
 
     @FXML
     void clickregister(ActionEvent event) throws SQLException, ClassNotFoundException, IOException {
 
-        if (usernametx.getText().isBlank() || emailtx.getText().isBlank() || nrc_first.getValue() == null || nrc_second.getValue() == null || nrc_third.getValue() == null || nrc_number.getText().isBlank() || addresstx.getText().isBlank() || phonetx.getText().isBlank() || rolecombo.getValue() == null || dob.getValue() == null || password.getText().isBlank()) {
+        // Validation
+        boolean isStaff = "Staff".equals(rolecombo.getValue());
+        
+        if (usernametx.getText().isBlank() || emailtx.getText().isBlank() || nrc_first.getValue() == null || nrc_second.getValue() == null || nrc_third.getValue() == null || nrc_number.getText().isBlank() || addresstx.getText().isBlank() || phonetx.getText().isBlank() || rolecombo.getValue() == null || dob.getValue() == null || salarytx.getText().isBlank() || (isStaff && managerCombo.getValue() == null)) {
 
+            String errorMsg = "";
+            
             if (usernametx.getText().isBlank()) {
-//                error.setErrortxt(new Label("Please Fill your Name"));
-                errorshow();
+                errorMsg = "Please fill in the username";
             } else if (emailtx.getText().isBlank()) {
-//                error.setErrortxt(new Label("Please Fill your Email"));
-                errorshow();
+                errorMsg = "Please fill in the email";
+            } else if (!isValidEmail(emailtx.getText())) {
+                errorMsg = "Please enter a valid email address (e.g., user@example.com)";
             } else if (nrc_first.getValue() == null || nrc_second.getValue() == null || nrc_third.getValue() == null || nrc_number.getText().isBlank()) {
-//                error.setErrortxt(new Label("Please Fill your Full NRC"));
-                errorshow();
+                errorMsg = "Please fill in the complete NRC";
             } else if (addresstx.getText().isBlank()) {
-//                error.setErrortxt(new Label("Please Fill your Address"));
-                errorshow();
+                errorMsg = "Please fill in the address";
             } else if (phonetx.getText().isBlank()) {
-//                error.setErrortxt(new Label("Please Fill your Phone Number"));
-                errorshow();
+                errorMsg = "Please fill in the phone number";
+            } else if (!isValidPhone(phonetx.getText())) {
+                errorMsg = "Please enter a valid Myanmar phone number (e.g., 09XXXXXXXXX)";
             } else if (rolecombo.getValue() == null) {
-//                error.setErrortxt(new Label("Please Fill your Role"));
-                errorshow();
+                errorMsg = "Please select a role";
             } else if (dob.getValue() == null) {
-//                error.setErrortxt(new Label("Please Fill your BirthDay"));
-                errorshow();
-            } else if (password.getText().isBlank()) {
-//                error.setErrortxt(new Label("Please Fill your Password"));
-                errorshow();
+                errorMsg = "Please select date of birth";
+            } else if (salarytx.getText().isBlank()) {
+                errorMsg = "Please enter salary amount";
+            } else if (isStaff && managerCombo.getValue() == null) {
+                errorMsg = "Please select a manager for this staff member";
             }
+            
+            showToast("Validation Error", errorMsg, "error");
         } else {
             String name = usernametx.getText();
             String email = emailtx.getText();
             String Nrc = nrc_first.getValue() + "/" + nrc_second.getValue() + "(" + nrc_third.getValue() + ")" + nrc_number.getText();
             String address = addresstx.getText();
             String phone = phonetx.getText();
-            String role = (String) rolecombo.getSelectionModel().getSelectedItem();
+            String role = rolecombo.getValue();
             String date_of_birth = String.valueOf(dob.getValue());
-            String pw = password.getText();
+            String defaultPassword = "123456";
+            double salary = Double.parseDouble(salarytx.getText().replace("$", "").replace(",", ""));
+            String managerName = isStaff ? managerCombo.getValue() : null;
+            
             Porsche_DB connect = new Porsche_DB();
             Connection con = connect.connect();
-            CallableStatement c = con.prepareCall("call create_user(?,?,?,?,?,?,?,?)");
-            c.setString(1, name);
-            c.setString(2, email);
-            c.setString(3, Nrc);
-            c.setString(4, address);
-            c.setString(5, phone);
-            c.setString(6, role);
-            c.setString(7, date_of_birth);
-            c.setString(8, pw);
+            
+            // Call the stored procedure
+            CallableStatement cs = con.prepareCall("{call createUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+            cs.setString(1, selectedPhotoPath != null ? selectedPhotoPath : "");
+            cs.setString(2, name);
+            cs.setString(3, email);
+            cs.setString(4, Nrc);
+            cs.setString(5, address);
+            cs.setString(6, phone);
+            cs.setString(7, role);
+            cs.setString(8, date_of_birth);
+            cs.setString(9, defaultPassword);
+            cs.setDouble(10, salary);
+            cs.setString(11, managerName);
 
-            int r = c.executeUpdate();
-            if (r > 0) {
-                Alert success = new Alert(Alert.AlertType.INFORMATION);
-                success.setContentText("Register Successfully");
-                success.setTitle("Success");
-                success.show();
-            }
+            cs.execute();
+            
+            showToast("Success", "User registered successfully! Default password: 123456", "success");
+            
+            // Clear form after successful registration
+            clickClear(null);
+            
             connect.disconnect();
         }
     }
 
     public void initialize() {
+        // Load managers for the dropdown
+        loadManagers();
+        
+        // Setup role change listener to update salary and show/hide manager field
+        rolecombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                switch (newVal) {
+                    case "Staff":
+                        salarytx.setText("1000");
+                        managerSection.setVisible(true);
+                        managerSection.setManaged(true);
+                        break;
+                    case "Manager":
+                        salarytx.setText("2500");
+                        managerSection.setVisible(false);
+                        managerSection.setManaged(false);
+                        break;
+                    case "Admin":
+                        salarytx.setText("5000");
+                        managerSection.setVisible(false);
+                        managerSection.setManaged(false);
+                        break;
+                }
+            }
+        });
+        
+        // Format salary input
+        salarytx.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                salarytx.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+        
+        // Update age when date of birth changes
+        dob.valueProperty().addListener((observable, oldValue, newValue) -> {
+            updateAge();
+        });
 
         dob.setEditable(false);
         dob.setDayCellFactory(picker -> new DateCell() {
@@ -251,6 +418,59 @@ public class adminUserRegisterController {
                 nrc_number.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
+    }
+    
+    private void showToast(String title, String message, String type) {
+        toastTitle.setText(title);
+        toastMessage.setText(message);
+        
+        // Set icon and color based on type
+        StackPane iconContainer = (StackPane) toastIcon.getParent();
+        if (type.equals("success")) {
+            toastIcon.setText("✓");
+            iconContainer.setStyle("-fx-background-color: #10b981; -fx-background-radius: 18;");
+        } else if (type.equals("error")) {
+            toastIcon.setText("✕");
+            iconContainer.setStyle("-fx-background-color: #ef4444; -fx-background-radius: 18;");
+        } else if (type.equals("info")) {
+            toastIcon.setText("ℹ");
+            iconContainer.setStyle("-fx-background-color: #3b82f6; -fx-background-radius: 18;");
+        }
+        
+        toastNotification.setVisible(true);
+        toastNotification.setTranslateY(-100);
+        
+        // Slide in animation from top
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), toastNotification);
+        slideIn.setFromY(-100);
+        slideIn.setToY(0);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), toastNotification);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        ParallelTransition showToast = new ParallelTransition(slideIn, fadeIn);
+        
+        // Auto hide after 3 seconds
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        pause.setOnFinished(e -> hideToast());
+        
+        SequentialTransition sequence = new SequentialTransition(showToast, pause);
+        sequence.play();
+    }
+    
+    private void hideToast() {
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), toastNotification);
+        slideOut.setFromY(0);
+        slideOut.setToY(-100);
+        
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), toastNotification);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        
+        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+        hide.setOnFinished(e -> toastNotification.setVisible(false));
+        hide.play();
     }
 }
 

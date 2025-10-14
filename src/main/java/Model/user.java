@@ -8,11 +8,12 @@ public class user {
     private LocalDate dob;
     private LocalDate start_date, end_date;
     private String imagePath;
+    private String reason;
 
     public user(){}
 
     //admin account and manager staff view (userCard)
-    public user(int id, String name, String phone, String email, String address, LocalDate dob, String is_active,LocalDate start_date ,LocalDate end_date){
+    public user(int id, String name, String phone, String email, String address, LocalDate dob, String is_active,LocalDate start_date ,LocalDate end_date, String reason){
         this.id = id;
         this.username = name;
         this.phone = phone;
@@ -22,6 +23,7 @@ public class user {
         this.is_active = is_active;
         this.start_date = start_date;
         this.end_date = end_date;
+        this.reason = reason;
     }
 
     //session
@@ -149,6 +151,14 @@ public class user {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
 }
