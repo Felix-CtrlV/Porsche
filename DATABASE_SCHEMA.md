@@ -287,6 +287,8 @@ Stores employee/user account information.
 | end_date    | DATE     | Employment end date (if applicable)      |
 | password    | VARCHAR  | Hashed password (SHA-256)                |
 | user_photo  | INT      | Foreign key to photos                    |
+| reason      | VARCHAR  | Fired Reason                             |
+
 
 **Total Records:** 10 users
 
@@ -303,16 +305,27 @@ Stores employee/user account information.
 
 **Table:** `user_target`
 
-Stores sales targets for users (currently empty).
+Stores monthly sales targets and achievements for users.
 
-| Column Name    | Type    | Description                          |
-|---------------|---------|--------------------------------------|
-| target_id     | INT     | Primary key                          |
-| effective_date| DATE    | Date target becomes effective        |
-| target        | DECIMAL | Target amount/value                  |
-| achieve       | DECIMAL | Achieved amount/value                |
+| Column Name    | Type    | Description                                      |
+|---------------|---------|--------------------------------------------------|
+| target_id     | INT     | Primary key                                      |
+| user_id       | INT     | Foreign key to user_info                         |
+| effective_date| DATE    | Date target becomes effective (YYYY-MM-01)       |
+| target        | VARCHAR | Target in format "cars-X,parts-Y"                |
+| achieve       | VARCHAR | Achievement in format "cars-X,parts-Y" (nullable)|
 
-**Total Records:** 0 (feature not yet implemented)
+**Total Records:** 32 target entries
+
+**Sample Data:**
+- Manager (user_id=2): Monthly targets ranging from 10-20 cars, 50 parts
+- Staff (user_id=3-11): Monthly targets of 1-2 cars, 5 parts each
+- Targets set from January 2020 onwards
+- Some entries include achievement data (e.g., November 2020)
+
+**Format Examples:**
+- Target: `"cars-10,parts-50"` (10 cars, 50 parts)
+- Achieve: `"cars-1,parts-2"` (1 car sold, 2 parts sold)
 
 ---
 
@@ -328,15 +341,19 @@ Stores employment and compensation details.
 | user_id       | INT     | Foreign key to user_info             |
 | manager       | INT     | Foreign key to user_info (manager)   |
 | salary_amount | DECIMAL | Monthly salary                       |
-| target        | DECIMAL | Sales target (if applicable)         |
 | bonous        | DECIMAL | Bonus amount                         |
 
-**Total Records:** 10 work info entries
+**Total Records:** 11 work info entries
 
 **Salary Structure:**
-- Admin: $450,000
-- Manager: $300,000
-- Staff: $200,000 each
+- Admin (user_id=1): 450,000 MMK
+- Manager (user_id=2): 2,500 MMK
+- Staff (user_id=3-11): 1,000 MMK each
+
+**Reporting Structure:**
+- Admin has no manager
+- Manager reports to Admin (manager=1)
+- All staff report to Manager (manager=2)
 
 **Note:** All bonuses currently set to 0
 

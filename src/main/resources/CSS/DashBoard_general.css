@@ -6,6 +6,10 @@
     -fx-margin: 0;
 }
 
+.settings-item-hover:hover {
+    -fx-background-color: #f1f5f9;
+}
+
 .square-button {
     -fx-background-color: #C21E2B;
     -fx-text-fill: white;

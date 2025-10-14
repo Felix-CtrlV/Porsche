@@ -59,7 +59,7 @@ public class RealEmailService {
             jakarta.mail.Session session = jakarta.mail.Session.getInstance(props, new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("kaungswan59@gmail.com", "Kaung273");
+                    return new PasswordAuthentication("kaungswan59@gmail.com", "yrdbkwnxexjhzuoa");
                 }
             });
             
@@ -103,7 +103,7 @@ public class RealEmailService {
             jakarta.mail.Session session = jakarta.mail.Session.getInstance(props, new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("kaungswan59@gmail.com", "Kaung273");
+                    return new PasswordAuthentication("kaungswan59@gmail.com", "yrdbkwnxexjhzuoa");
                 }
             });
             
