@@ -447,7 +447,7 @@
                                     <Label fx:id="editTitle" style="-fx-text-fill: white;" text="(Car)" />
                                     <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onMouseClicked="#clickBackBtn" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: #ff4757; -fx-border-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="✕">
                                        <font>
-                                          <Font name="Arial Black" size="12.2" />
+                                          <Font name="Arial Black" size="10.0" />
                                        </font>
                                        <HBox.margin>
                                           <Insets left="220.0" />
