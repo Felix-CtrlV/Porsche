@@ -9,6 +9,7 @@ public class orderView {
     private LocalDateTime orderDate;
     private String status;
     private String total;
+    private String orderItems;
 
     public orderView(int orderId, String customername, LocalDateTime orderDate, String status, String total) {
         this.orderId = orderId;
@@ -26,11 +27,9 @@ public class orderView {
         return customername;
     }
 
-    public String getDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
-        return orderDate.format(formatter);
+    public LocalDateTime getDate() {
+        return orderDate;
     }
-
 
     public String getStatus() {
         return status;
@@ -38,5 +37,13 @@ public class orderView {
 
     public String getTotal() {
         return total;
+    }
+    
+    public String getOrderItems() {
+        return orderItems;
+    }
+    
+    public void setOrderItems(String orderItems) {
+        this.orderItems = orderItems;
     }
 }

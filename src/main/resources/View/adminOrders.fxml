@@ -2,86 +2,154 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../CSS/DashBoard_general.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOrderController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #f8fafc;" stylesheets="@../CSS/porsche_admin_overview.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOrderController">
    <top>
-      <HBox alignment="CENTER_LEFT" prefHeight="76.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
+      <VBox spacing="15.0" BorderPane.alignment="CENTER">
          <children>
-            <Label maxWidth="1.7976931348623157E308" styleClass="topic_font" text="Orders" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </Label>
-            <StackPane alignment="TOP_LEFT" prefHeight="76.0" prefWidth="322.0" HBox.hgrow="NEVER">
+            <!-- Date Controls Bar -->
+            <HBox alignment="CENTER_RIGHT" prefHeight="50.0" spacing="10.0">
                <children>
-                  <ComboBox fx:id="dateBox" prefHeight="38.0" prefWidth="249.0" styleClass="combobox" StackPane.alignment="CENTER_RIGHT" />
-                  <HBox fx:id="dateContainer" alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                  <Label styleClass="heading" stylesheets="@../CSS/DashBoard_general.css" text="Orders" />
+                  <Region prefHeight="38.0" prefWidth="889.0" HBox.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;">
                      <children>
-                        <GridPane alignment="CENTER" maxHeight="38.0" prefHeight="38.0" prefWidth="249.0" style="-fx-background-color: rgba(100, 100, 100, 0.6); -fx-background-radius: 12; -fx-border-width: 1; -fx-cursor: hand; -fx-border-color: rgba(255, 255, 255, 0.4);" HBox.hgrow="NEVER">
-                          <columnConstraints>
-                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Button fx:id="monthPrev" maxHeight="24.0" maxWidth="31.0" mnemonicParsing="false" onAction="#clickMonthPrev" prefHeight="24.0" prefWidth="31.0" styleClass="arrow-button" text="&lt;" />
-                              <Button fx:id="monthNext" maxHeight="24.0" maxWidth="31.0" mnemonicParsing="false" onAction="#clickMonthNext" prefHeight="24.0" prefWidth="31.0" styleClass="arrow-button" text="&gt;" GridPane.columnIndex="2" />
-                              <Button fx:id="yearPrev" maxHeight="24.0" maxWidth="31.0" mnemonicParsing="false" onAction="#clickYearPrev" prefHeight="24.0" prefWidth="31.0" styleClass="arrow-button" text="&lt;" GridPane.columnIndex="3" />
-                              <Button fx:id="yearNext" maxHeight="24.0" maxWidth="31.0" mnemonicParsing="false" onAction="#clickYearNext" prefHeight="24.0" prefWidth="31.0" styleClass="arrow-button" text="&gt;" GridPane.columnIndex="5" />
-                              <Label fx:id="monthlbl" prefHeight="18.0" prefWidth="107.0" style="-fx-alignment: center;" styleClass="selected_dash_font" text="month" GridPane.columnIndex="1" />
-                              <Label fx:id="yearlbl" prefHeight="18.0" prefWidth="68.0" style="-fx-alignment: center;" styleClass="selected_dash_font" text="year" GridPane.columnIndex="4" />
-                           </children>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </GridPane>
+                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                        <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
+                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
+                        <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
+                        <Button fx:id="PreviousYearbtn" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
+                        <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
+                        <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                      </children>
                   </HBox>
                </children>
-            </StackPane>
-            <Button fx:id="switchbtn" maxWidth="79.0" mnemonicParsing="false" onAction="#clickSwitch" prefHeight="32.0" prefWidth="97.0" styleClass="glassy-button" text="Switch" HBox.hgrow="ALWAYS" />
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+            </HBox>
+            
+            <!-- Search Bar -->
+            <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="15.0">
+               <children>
+                  <StackPane HBox.hgrow="ALWAYS">
+                     <children>
+                        <TextField fx:id="searchField" promptText="Search by Customer Name, Order Items, or Status..." style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-padding: 12 20 12 45; -fx-font-size: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);" />
+                        <Label style="-fx-font-size: 18; -fx-text-fill: #94a3b8;" text="🔍" StackPane.alignment="CENTER_LEFT">
+                           <StackPane.margin>
+                              <Insets left="15.0" />
+                           </StackPane.margin>
+                        </Label>
+                     </children>
+                  </StackPane>
+               </children>
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+            </HBox>
          </children>
          <padding>
-            <Insets right="30.0" />
+            <Insets bottom="10.0" top="10.0" />
          </padding>
-      </HBox>
+      </VBox>
    </top>
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="200.0" prefWidth="100.0" spacing="15.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-              <columns>
-                <TableColumn fx:id="orders_col" prefWidth="75.0" text="Orders" />
-                <TableColumn fx:id="customer_col" prefWidth="75.0" text="Customer" />
-                  <TableColumn fx:id="date_col" prefWidth="75.0" text="Date" />
-                  <TableColumn fx:id="status_col" prefWidth="75.0" text="Status" />
-                  <TableColumn fx:id="total_col" prefWidth="75.0" text="Total" />
-              </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-               <VBox.margin>
-                  <Insets left="20.0" right="20.0" />
-               </VBox.margin>
-            </TableView>
+            <!-- Table and Detail Pane -->
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="orders_col" prefWidth="200.0" text="Order" />
+                      <TableColumn fx:id="customer_col" prefWidth="150.0" text="Customer" />
+                        <TableColumn fx:id="date_col" prefWidth="120.0" text="Date" />
+                        <TableColumn fx:id="status_col" prefWidth="100.0" text="Status" />
+                        <TableColumn fx:id="total_col" prefWidth="100.0" text="Total" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+                  
+                  <!-- Order Detail Pane (Hidden by default) -->
+                  <VBox fx:id="detailPane" managed="false" maxHeight="280" prefHeight="280" spacing="0.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);" visible="false">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="10.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 12 12 0 0; -fx-padding: 10 15;">
+                           <children>
+                              <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Order Details" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="closeDetailBtn" mnemonicParsing="false" onAction="#closeDetailPane" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 16; -fx-cursor: hand;" text="✕" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="240.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="detailContent" spacing="10.0" style="-fx-padding: 15;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </children>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </VBox>
+            
+            <!-- Summary Cards on Right -->
+            <VBox prefHeight="200.0" prefWidth="220.0" spacing="15.0" HBox.hgrow="NEVER">
+               <children>
+                  <!-- Total Orders Card -->
+                  <VBox alignment="CENTER" minHeight="160.0" prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);">
+                     <children>
+                        <Label style="-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;" text="TOTAL ORDERS" />
+                        <Label fx:id="totalOrdersLbl" style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: #8b5cf6;" text="0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="12.0" top="12.0" />
+                     </padding>
+                  </VBox>
+                  
+                  <!-- Results Count Card -->
+                  <VBox alignment="CENTER" minHeight="160.0" prefHeight="100.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);">
+                     <children>
+                        <Label style="-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;" text="RESULTS FOUND" />
+                        <Label fx:id="resultCountLbl" style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: #3b82f6;" text="0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="12.0" top="12.0" />
+                     </padding>
+                  </VBox>
+                  
+                  <!-- Total Amount Card -->
+                  <VBox alignment="CENTER" minHeight="160.0" prefHeight="100.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);">
+                     <children>
+                        <Label style="-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;" text="TOTAL AMOUNT" />
+                        <Label fx:id="totalAmountLbl" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #10b981;" text="0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="12.0" top="12.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </VBox>
          </children>
-      </VBox>
+         <padding>
+            <Insets bottom="20.0" top="10.0" />
+         </padding>
+      </HBox>
    </center>
 </BorderPane>

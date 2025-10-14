@@ -513,11 +513,12 @@ public class managerStaffViewController {
             String status = rs.getInt("user_status") == 1 ? "Active" : "Inactive";
             java.sql.Date sqlStart = rs.getDate("start_date");
             java.sql.Date sqlEnd = rs.getDate("end_date");
+            String reason = rs.getString("reason");
 
             LocalDate str = (sqlStart != null) ? sqlStart.toLocalDate() : null;
             LocalDate end = (sqlEnd != null) ? sqlEnd.toLocalDate() : null;
 
-            user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status, str, end);
+            user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status, str, end, reason);
             staffInfoList.add(staff);
 
             // Use cached loader or create new one

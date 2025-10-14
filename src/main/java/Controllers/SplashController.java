@@ -132,7 +132,7 @@ public class SplashController {
             fadeToBlack.setToValue(1.0);
             fadeToBlack.setOnFinished(e -> {
                 // Wait a moment in black, then show login
-                PauseTransition pause = new PauseTransition(Duration.millis(200));
+                PauseTransition pause = new PauseTransition(Duration.millis(0));
                 pause.setOnFinished(ev -> showLoginScreen());
                 pause.play();
             });
@@ -152,9 +152,9 @@ public class SplashController {
                 stage.centerOnScreen();
                 
                 // Small pause while in black, then fade in login
-                PauseTransition pause = new PauseTransition(Duration.millis(100));
+                PauseTransition pause = new PauseTransition(Duration.millis(0));
                 pause.setOnFinished(e -> {
-                    FadeTransition fadeIn = new FadeTransition(Duration.millis(600), root);
+                    FadeTransition fadeIn = new FadeTransition(Duration.millis(100), root);
                     fadeIn.setFromValue(0.0);
                     fadeIn.setToValue(1.0);
                     fadeIn.play();

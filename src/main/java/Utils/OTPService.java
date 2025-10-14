@@ -18,11 +18,11 @@ public class OTPService {
     private final ConcurrentHashMap<String, OTPData> otpStorage = new ConcurrentHashMap<>();
     private final SecureRandom random = new SecureRandom();
     
-    // Email configuration - Using Outlook/Hotmail (easier setup)
-    private static final String SMTP_HOST = "smtp-mail.outlook.com";
+    // Email configuration - Using Gmail
+    private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
-    private static final String SENDER_EMAIL = "kaungswan59@gmail.com"; // You can use any email here
-    private static final String SENDER_PASSWORD = "Kaung273"; // Your password
+    private static final String SENDER_EMAIL = "kaungswan59@gmail.com";
+    private static final String SENDER_PASSWORD = "yrdbkwnxexjhzuoa"; // Gmail App Password
     
     // Check if email is configured
     private boolean isEmailConfigured() {
