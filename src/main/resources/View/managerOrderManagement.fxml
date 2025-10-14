@@ -141,12 +141,12 @@
                                 </HBox>
                                 <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <AreaChart fx:id="revenueChart" prefHeight="150.0" prefWidth="213.0" style="-fx-background-color: transparent; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                                        <AreaChart fx:id="revenueChart" animated="false" prefHeight="150.0" prefWidth="213.0" style="-fx-background-color: transparent; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" tickLabelRotation="0" />
                                             </xAxis>
                                             <yAxis>
-                                                <NumberAxis side="LEFT" autoRanging="true" forceZeroInRange="false" />
+                                                <NumberAxis autoRanging="true" forceZeroInRange="false" side="LEFT" />
                                             </yAxis>
                                         </AreaChart>
                                     </children>

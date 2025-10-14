@@ -875,7 +875,10 @@ public class managerInventoryController {
                                                 && !editPath.getPhoto().trim().equalsIgnoreCase("null");
                     boolean hasNewPhoto = !file.isEmpty();
                     
-                    if (hasOriginalPhoto && hasNewPhoto) {
+                    if (!hasNewPhoto) {
+                        // No new photo selected - image hasn't changed
+                        sameImage = true;
+                    } else if (hasOriginalPhoto && hasNewPhoto) {
                         // Both have photos - compare them
                         File selectedFile = file.get(0);
                         try {
@@ -885,11 +888,8 @@ public class managerInventoryController {
                         } catch (IOException e) {
                             sameImage = false;
                         }
-                    } else if (!hasOriginalPhoto && !hasNewPhoto) {
-                        // Both don't have photos - same
-                        sameImage = true;
-                    } else {
-                        // One has photo, other doesn't - different
+                    } else if (!hasOriginalPhoto && hasNewPhoto) {
+                        // Original had no photo, but new photo selected - different
                         sameImage = false;
                     }
                     allEmpty = sameImage &&
@@ -905,7 +905,14 @@ public class managerInventoryController {
                 }else if(path.equalsIgnoreCase("partsEdit")){
                     String photoPath = editPath.getPhoto();
                     boolean sameImage = true;
-                    if (!file.isEmpty() && photoPath != null) {
+                    boolean hasOriginalPhoto = photoPath != null && !photoPath.trim().isEmpty() && !photoPath.trim().equalsIgnoreCase("null");
+                    boolean hasNewPhoto = !file.isEmpty();
+                    
+                    if (!hasNewPhoto) {
+                        // No new photo selected - image hasn't changed
+                        sameImage = true;
+                    } else if (hasOriginalPhoto && hasNewPhoto) {
+                        // Both have photos - compare them
                         File selectedFile = file.get(0);
                         try {
                             String selectedPath = selectedFile.getCanonicalPath();
@@ -914,9 +921,8 @@ public class managerInventoryController {
                         } catch (IOException e) {
                             sameImage = false;
                         }
-                    } else if ((file.isEmpty() || file.get(0) == null) && (photoPath == null || photoPath.isEmpty())) {
-                        sameImage = true;
-                    } else {
+                    } else if (!hasOriginalPhoto && hasNewPhoto) {
+                        // Original had no photo, but new photo selected - different
                         sameImage = false;
                     }
                     allEmpty =
