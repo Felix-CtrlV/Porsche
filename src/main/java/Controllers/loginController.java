@@ -73,6 +73,9 @@ public class loginController {
     private Label errorlbl;
 
     @FXML
+    private Label forgotPasswordLink;
+
+    @FXML
     void clickClear(ActionEvent event) {
         nametxt.clear();
         pwtxt.clear();
@@ -257,6 +260,19 @@ public class loginController {
 
         closeimg.setOnMouseClicked(e -> {
             System.exit(0);
+        });
+
+        forgotPasswordLink.setOnMouseClicked(e -> {
+            try {
+                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/forgotPassword.fxml")));
+                Stage stage = (Stage) forgotPasswordLink.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.centerOnScreen();
+            } catch (Exception ex) {
+                logger.error("Failed to load forgot password screen");
+                ex.printStackTrace();
+                slideError("Failed to load forgot password screen: " + ex.getMessage());
+            }
         });
     }
 }

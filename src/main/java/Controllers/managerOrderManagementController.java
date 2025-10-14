@@ -16,13 +16,13 @@ import java.util.Locale;
 
 import Database.Porsche_DB;
 import Model.managerOrderView;
-import Utils.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
-import javafx.scene.chart.BarChart;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
@@ -144,7 +144,7 @@ public class managerOrderManagementController {
     private Label dueDateLabel;
 
     @FXML
-    private BarChart<?, ?> revenueChart;
+    private AreaChart<String, Number> revenueChart;
 
     @FXML
     private TableColumn<managerOrderView, String> staffNameCol;
@@ -166,7 +166,18 @@ public class managerOrderManagementController {
 
     @FXML
     void clickMonthlyRevenue(ActionEvent event) {
-
+        System.out.println("Monthly Revenue button clicked");
+        
+        // Update button styles - Monthly is active
+        monthlyRevenue.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 8; -fx-cursor: hand;");
+        weeklyRevenue.setStyle("-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        
+        try {
+            showMonthlyRevenueChart();
+        } catch (Exception e) {
+            System.err.println("Error showing monthly revenue chart: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -212,7 +223,18 @@ public class managerOrderManagementController {
 
     @FXML
     void clickWeeklyRevenue(ActionEvent event) {
-
+        System.out.println("Weekly Revenue button clicked");
+        
+        // Update button styles - Weekly is active
+        weeklyRevenue.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 8; -fx-cursor: hand;");
+        monthlyRevenue.setStyle("-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        
+        try {
+            showWeeklyRevenueChart();
+        } catch (Exception e) {
+            System.err.println("Error showing weekly revenue chart: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @FXML
@@ -301,6 +323,7 @@ public class managerOrderManagementController {
             yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null) {
                     currentYear = newVal;
+                    updateMonthBoxForYear(currentYear); // Update available months based on selected year
                     updateYearMonthLabel();
                     loadOrder(); // Reload with filter (also recalculates quantities)
                 }
@@ -601,10 +624,20 @@ public class managerOrderManagementController {
     private void updateMonthBoxForYear(int year) {
         int startMonth = 1;
         int endMonth = 12;
+        int currentYearNow = LocalDate.now().getYear();
+        int currentMonthNow = LocalDate.now().getMonthValue();
         
-        // If current year, limit to current month
-        if (year == today.getYear()) {
-            endMonth = today.getMonthValue();
+        // If selected year is THIS YEAR, show months from January to current month only
+        if (year == currentYearNow) {
+            endMonth = currentMonthNow;
+        }
+        // If selected year is PREVIOUS YEAR (or older), show all 12 months
+        else if (year < currentYearNow) {
+            endMonth = 12;
+        }
+        // If selected year is FUTURE YEAR (shouldn't happen, but handle it)
+        else {
+            endMonth = 12;
         }
         
         List<String> months = new ArrayList<>();
@@ -615,10 +648,11 @@ public class managerOrderManagementController {
         updatingMonthBox = true;
         monthBox.setItems(FXCollections.observableArrayList(months));
         
-        // Make sure currentMonth is valid
+        // Make sure currentMonth is valid for the selected year
         String currentMonthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
         if (!months.contains(currentMonthName)) {
-            currentMonth = endMonth; // default to last available month
+            // If current month is not available, default to last available month
+            currentMonth = endMonth;
             currentMonthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
         }
         
@@ -737,46 +771,73 @@ public class managerOrderManagementController {
     }
     
     private void calculateSoldQuantities() {
-        // Confirm = Paid in full (No installment)
+        // Current month values
         int confirmQty = 0;
         double confirmPrice = 0.0;
-        
-        // Pending = Installment orders (Yes installment)
         int pendingQty = 0;
         double pendingPrice = 0.0;
+        
+        // Previous month values for rate calculation
+        double prevConfirmPrice = 0.0;
+        double prevPendingPrice = 0.0;
         
         // Get the currently displayed orders (filtered by month/year or search)
         ObservableList<managerOrderView> currentOrders = orderTable.getItems();
         
-        // Only calculate if there are orders
+        // Calculate current month totals
         if (currentOrders != null && !currentOrders.isEmpty()) {
             for (managerOrderView order : currentOrders) {
-                // Check if order is installment
                 boolean isInstallment = order.getIs_installmenat().equalsIgnoreCase("Yes");
-                
-                // Get total quantity and amount for this order
                 int orderQty = order.getTotalQty();
                 double orderAmount = order.getTotal_amount();
                 
                 if (isInstallment) {
-                    // Pending (Installment orders)
                     pendingQty += orderQty;
                     pendingPrice += orderAmount;
                 } else {
-                    // Confirm (Paid in full)
                     confirmQty += orderQty;
                     confirmPrice += orderAmount;
                 }
             }
         }
         
-        // Always set values (will be 0 if no data)
+        // Calculate previous month totals
+        int prevMonth = currentMonth - 1;
+        int prevYear = currentYear;
+        if (prevMonth < 1) {
+            prevMonth = 12;
+            prevYear--;
+        }
+        
+        // Filter allOrdersData for previous month
+        for (managerOrderView order : allOrdersData) {
+            if (order.getOrder_date() != null) {
+                // Convert java.sql.Date to LocalDate
+                LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
+                
+                // Check if order is from previous month/year
+                if (orderDate.getMonthValue() == prevMonth && orderDate.getYear() == prevYear) {
+                    boolean isInstallment = order.getIs_installmenat().equalsIgnoreCase("Yes");
+                    double orderAmount = order.getTotal_amount();
+                    
+                    if (isInstallment) {
+                        prevPendingPrice += orderAmount;
+                    } else {
+                        prevConfirmPrice += orderAmount;
+                    }
+                }
+            }
+        }
+        
+        // Set current values
         setCarCircle(confirmQty);
         setCarPrice(confirmPrice);
-        
-        // Set pending (installment) values
         setPartCircle(pendingQty);
         setPartPrice(pendingPrice);
+        
+        // Calculate and set rates
+        setConfirmPriceRate(confirmPrice, prevConfirmPrice);
+        setPendingPriceRate(pendingPrice, prevPendingPrice);
     }
     
     private void setCarCircle(int soldQty) {
@@ -824,14 +885,221 @@ public class managerOrderManagementController {
     }
     
     private void setPartPrice(double totalPrice) {
-        // Format and display total parts sales price
-        pendingPriceRateLabel.setText(String.format("$%.2f", totalPrice));
+        // Format and display total pending (installment) price
+        pendingPriceLabel.setText(String.format("$%.2f", totalPrice));
         
         // Set text style
         if (totalPrice == 0) {
-            pendingPriceRateLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
+            pendingPriceLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
         } else {
-            pendingPriceRateLabel.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold;");
+            pendingPriceLabel.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold;");
+        }
+    }
+    
+    private void setConfirmPriceRate(double currentPrice, double previousPrice) {
+        // Calculate percentage change from previous month to current month
+        double rate = 0.0;
+        String rateText = "0.0%";
+        String style = "-fx-text-fill: #94a3b8; -fx-font-weight: normal;";
+        
+        if (previousPrice > 0) {
+            rate = ((currentPrice - previousPrice) / previousPrice) * 100;
+            
+            if (rate > 0) {
+                // Positive growth - green
+                rateText = String.format("+%.1f%%", rate);
+                style = "-fx-text-fill: #10b981; -fx-font-weight: bold;";
+            } else if (rate < 0) {
+                // Negative growth - red
+                rateText = String.format("%.1f%%", rate);
+                style = "-fx-text-fill: #ef4444; -fx-font-weight: bold;";
+            } else {
+                // No change - gray
+                rateText = "0.0%";
+                style = "-fx-text-fill: #94a3b8; -fx-font-weight: normal;";
+            }
+        } else if (currentPrice > 0) {
+            // No previous data but have current data - show as new
+            rateText = "New";
+            style = "-fx-text-fill: #3b82f6; -fx-font-weight: bold;";
+        }
+        
+        confirmPriceRateLabel.setText(rateText);
+        confirmPriceRateLabel.setStyle(style);
+    }
+    
+    private void setPendingPriceRate(double currentPrice, double previousPrice) {
+        // Calculate percentage change from previous month to current month
+        double rate = 0.0;
+        String rateText = "0.0%";
+        String style = "-fx-text-fill: #94a3b8; -fx-font-weight: normal;";
+        
+        if (previousPrice > 0) {
+            rate = ((currentPrice - previousPrice) / previousPrice) * 100;
+            
+            if (rate > 0) {
+                // Positive growth - green
+                rateText = String.format("+%.1f%%", rate);
+                style = "-fx-text-fill: #10b981; -fx-font-weight: bold;";
+            } else if (rate < 0) {
+                // Negative growth - red
+                rateText = String.format("%.1f%%", rate);
+                style = "-fx-text-fill: #ef4444; -fx-font-weight: bold;";
+            } else {
+                // No change - gray
+                rateText = "0.0%";
+                style = "-fx-text-fill: #94a3b8; -fx-font-weight: normal;";
+            }
+        } else if (currentPrice > 0) {
+            // No previous data but have current data - show as new
+            rateText = "New";
+            style = "-fx-text-fill: #3b82f6; -fx-font-weight: bold;";
+        }
+        
+        pendingPriceRateLabel.setText(rateText);
+        pendingPriceRateLabel.setStyle(style);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void showWeeklyRevenueChart() {
+        System.out.println("=== WEEKLY REVENUE CHART ===");
+        System.out.println("Current Month: " + currentMonth + ", Current Year: " + currentYear);
+        
+        // Check if chart is null
+        if (revenueChart == null) {
+            System.err.println("ERROR: revenueChart is null! Check FXML fx:id='revenueChart'");
+            return;
+        }
+        
+        System.out.println("Chart found: " + revenueChart.getClass().getName());
+        System.out.println("All orders data size: " + allOrdersData.size());
+        
+        try {
+            // Clear existing chart data
+            revenueChart.getData().clear();
+            revenueChart.setTitle("Weekly Revenue - " + Month.of(currentMonth).getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + currentYear);
+            
+            // Create series for the chart (using raw type to match FXML)
+            XYChart.Series series = new XYChart.Series();
+            series.setName("Revenue");
+        
+        // Get the number of days in the selected month
+        LocalDate firstDayOfMonth = LocalDate.of(currentYear, currentMonth, 1);
+        int daysInMonth = firstDayOfMonth.lengthOfMonth();
+        
+        // Calculate revenue for each week (Week 1, Week 2, Week 3, Week 4, Week 5 if exists)
+        int numberOfWeeks = (int) Math.ceil(daysInMonth / 7.0);
+        
+        for (int week = 1; week <= numberOfWeeks; week++) {
+            int startDay = (week - 1) * 7 + 1;
+            int endDay = Math.min(week * 7, daysInMonth);
+            
+            double weekRevenue = 0.0;
+            
+            // Calculate revenue for this week
+            for (managerOrderView order : allOrdersData) {
+                if (order.getOrder_date() != null) {
+                    LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
+                    
+                    // Check if order is in current month/year and within this week
+                    if (orderDate.getYear() == currentYear && 
+                        orderDate.getMonthValue() == currentMonth &&
+                        orderDate.getDayOfMonth() >= startDay && 
+                        orderDate.getDayOfMonth() <= endDay) {
+                        weekRevenue += order.getTotal_amount();
+                    }
+                }
+            }
+            
+            // Add data to chart
+            String weekLabel = "Week " + week;
+            series.getData().add(new XYChart.Data(weekLabel, weekRevenue));
+            System.out.println(weekLabel + " (Days " + startDay + "-" + endDay + "): $" + String.format("%.2f", weekRevenue));
+        }
+        
+        System.out.println("Total data points: " + series.getData().size());
+        
+        if (series.getData().isEmpty()) {
+            System.err.println("WARNING: No data to display in chart!");
+        }
+        
+        revenueChart.getData().add(series);
+        revenueChart.setLegendVisible(false);
+        revenueChart.setAnimated(true);
+        revenueChart.setCreateSymbols(false); // Remove dots on the line
+        
+        System.out.println("✓ Weekly chart updated successfully");
+        System.out.println("============================\n");
+        
+        } catch (Exception e) {
+            System.err.println("ERROR in showWeeklyRevenueChart: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void showMonthlyRevenueChart() {
+        System.out.println("=== MONTHLY REVENUE CHART ===");
+        System.out.println("Current Year: " + currentYear);
+        
+        // Check if chart is null
+        if (revenueChart == null) {
+            System.err.println("ERROR: revenueChart is null! Check FXML fx:id='revenueChart'");
+            return;
+        }
+        
+        System.out.println("Chart found: " + revenueChart.getClass().getName());
+        System.out.println("All orders data size: " + allOrdersData.size());
+        
+        try {
+            // Clear existing chart data
+            revenueChart.getData().clear();
+            revenueChart.setTitle("Monthly Revenue - " + currentYear);
+            
+            // Create series for the chart (using raw type to match FXML)
+            XYChart.Series series = new XYChart.Series();
+            series.setName("Revenue");
+        
+        // Calculate revenue for each month of the selected year
+        for (int month = 1; month <= 12; month++) {
+            double monthRevenue = 0.0;
+            
+            // Calculate revenue for this month
+            for (managerOrderView order : allOrdersData) {
+                if (order.getOrder_date() != null) {
+                    LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
+                    
+                    // Check if order is in current year and this month
+                    if (orderDate.getYear() == currentYear && 
+                        orderDate.getMonthValue() == month) {
+                        monthRevenue += order.getTotal_amount();
+                    }
+                }
+            }
+            
+            // Add data to chart
+            String monthLabel = Month.of(month).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+            series.getData().add(new XYChart.Data(monthLabel, monthRevenue));
+            System.out.println(monthLabel + ": $" + String.format("%.2f", monthRevenue));
+        }
+        
+        System.out.println("Total data points: " + series.getData().size());
+        
+        if (series.getData().isEmpty()) {
+            System.err.println("WARNING: No data to display in chart!");
+        }
+        
+        revenueChart.getData().add(series);
+        revenueChart.setLegendVisible(false);
+        revenueChart.setAnimated(true);
+        revenueChart.setCreateSymbols(false); // Remove dots on the line
+        
+        System.out.println("✓ Monthly chart updated successfully");
+        System.out.println("============================\n");
+        
+        } catch (Exception e) {
+            System.err.println("ERROR in showMonthlyRevenueChart: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

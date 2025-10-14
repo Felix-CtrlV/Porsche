@@ -1,0 +1,18 @@
+/* Splash Screen Styles */
+
+.porsche-progress {
+    -fx-background-color: #1a1a1a;
+}
+
+.porsche-progress .bar {
+    -fx-background-color: #d5001c;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
+.porsche-progress .track {
+    -fx-background-color: #1a1a1a;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}

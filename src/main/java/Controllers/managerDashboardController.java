@@ -211,7 +211,7 @@ public class managerDashboardController {
                                     LogoutHelper.performLogout(current.getUserid());
                                 }
                                 login log_in = new login();
-                                log_in.start(new Stage());
+                                log_in.startDirectLogin(new Stage());
                             } catch (Exception ex) {
                                 logger.error("Error during window close logout", ex);
                             }
@@ -254,7 +254,7 @@ public class managerDashboardController {
         }
         LogoutHelper.performLogout(adminid);
         login log_in = new login();
-        log_in.start(new Stage());
+        log_in.startDirectLogin(new Stage());
     }
 
 

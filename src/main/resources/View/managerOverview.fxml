@@ -310,7 +310,7 @@
                            <children>
                                     <!-- Combined Chart Container -->
                                     <!-- Replace the chart section in your FXML with this -->
-                                    <VBox prefHeight="464.0" prefWidth="382.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                                    <VBox maxWidth="700.0" prefHeight="464.0" prefWidth="350.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
                                         <children>
                                             <HBox alignment="CENTER_LEFT" prefHeight="35.0" style="-fx-background-color: #3498db; -fx-background-radius: 12 12 0 0;">
                                                 <children>
@@ -324,24 +324,48 @@
                                                     </Label>
                                                 </children>
                                             </HBox>
-                                    <BarChart fx:id="qtyBarChart" legendSide="RIGHT" prefHeight="400.0" prefWidth="356.0">
-                                      <xAxis>
-                                        <CategoryAxis label="Month" side="BOTTOM" />
-                                      </xAxis>
-                                      <yAxis>
-                                        <NumberAxis label="Quantity" side="LEFT" />
-                                      </yAxis>
-                                       <padding>
-                                          <Insets top="5.0" />
-                                       </padding>
-                                    </BarChart>
+                                    <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <BarChart fx:id="qtyBarChart" legendVisible="false" prefHeight="400.0" prefWidth="280.0" HBox.hgrow="ALWAYS">
+                                            <xAxis>
+                                              <CategoryAxis label="Month" side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                              <NumberAxis label="Quantity" side="LEFT" />
+                                            </yAxis>
+                                             <padding>
+                                                <Insets top="5.0" />
+                                             </padding>
+                                          </BarChart>
+                                          <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 10;">
+                                             <children>
+                                                <VBox alignment="CENTER_LEFT" spacing="8.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                                         <children>
+                                                            <Circle fill="#6D8196" radius="6" stroke="#6D8196" strokeWidth="1" />
+                                                            <Label style="-fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12;" text="Cars Sold" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                                         <children>
+                                                            <Circle fill="#ffa500" radius="6" stroke="#ffa500" strokeWidth="1" />
+                                                            <Label style="-fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12;" text="Parts Sold" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
             
                                               </children>
                                         <HBox.margin>
                                             <Insets bottom="20.0" />
                                         </HBox.margin>
                                     </VBox>
-                              <VBox prefHeight="474.0" prefWidth="154.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                              <VBox maxWidth="750.0" prefHeight="474.0" prefWidth="154.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
                                  <children>
                                     <HBox alignment="CENTER_LEFT" prefHeight="35.0" style="-fx-background-color: #3498db; -fx-background-radius: 12 12 0 0;">
                                        <children>

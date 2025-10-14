@@ -384,7 +384,7 @@ public class adminDashboardController {
             ex.printStackTrace();
         }
         login log_in = new login();
-        log_in.start(new Stage());
+        log_in.startDirectLogin(new Stage());
         Session.clearSession();
     }
 

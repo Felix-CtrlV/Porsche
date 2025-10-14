@@ -72,6 +72,7 @@ public class staffWelcomeController {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/login.fxml")));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
+        stage.centerOnScreen();
         stage.show();
     }
     @FXML
