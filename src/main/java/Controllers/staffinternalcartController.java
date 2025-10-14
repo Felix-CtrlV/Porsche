@@ -6,9 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import javax.swing.*;
 import java.io.IOException;
+import java.util.Objects;
 
 public class staffinternalcartController {
 
@@ -99,5 +102,9 @@ public class staffinternalcartController {
     FXMLLoader loader = new FXMLLoader(getClass().getResource("staffShopingCart.fxml"));
     Parent root = loader.load();
     staffShopingCartController cartController = loader.getController();
+    @FXML
+    private void initialize() {
+
+     }
 
 }
