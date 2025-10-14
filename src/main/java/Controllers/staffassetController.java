@@ -84,6 +84,7 @@ public class staffassetController {
                 controller.setData("Internal Item " + i, 100.0 + i);
 
                 // Add to VBox
+
                 cardContainer.getChildren().add(card);
             }
 
