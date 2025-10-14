@@ -277,8 +277,16 @@ public class managerStaffViewController {
         // Initialize listeners only once
         if (!listenersInitialized) {
             yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal != null) {
+                if (newVal != null && selectedStaffId != 0) {
                     currentYear = newVal;
+                    // Update month box for the new year
+                    user selectedStaff = staffInfoList.stream()
+                            .filter(s -> s.getId() == selectedStaffId)
+                            .findFirst()
+                            .orElse(null);
+                    if (selectedStaff != null) {
+                        updateMonthBoxForYear(currentYear, selectedStaff);
+                    }
                     updateYearMonthLabel();
                 }
             });

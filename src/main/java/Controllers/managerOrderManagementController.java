@@ -168,9 +168,8 @@ public class managerOrderManagementController {
     void clickMonthlyRevenue(ActionEvent event) {
         System.out.println("Monthly Revenue button clicked");
         
-        // Update button styles - Monthly is active
-        monthlyRevenue.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 8; -fx-cursor: hand;");
-        weeklyRevenue.setStyle("-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        // Update button styles using CSS classes
+        activateRevenueButton(monthlyRevenue);
         
         try {
             showMonthlyRevenueChart();
@@ -225,9 +224,8 @@ public class managerOrderManagementController {
     void clickWeeklyRevenue(ActionEvent event) {
         System.out.println("Weekly Revenue button clicked");
         
-        // Update button styles - Weekly is active
-        weeklyRevenue.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 8; -fx-cursor: hand;");
-        monthlyRevenue.setStyle("-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        // Update button styles using CSS classes
+        activateRevenueButton(weeklyRevenue);
         
         try {
             showWeeklyRevenueChart();
@@ -770,6 +768,12 @@ public class managerOrderManagementController {
         }
     }
     
+    private void activateRevenueButton(Button activeBtn) {
+        weeklyRevenue.getStyleClass().remove("active");
+        monthlyRevenue.getStyleClass().remove("active");
+        activeBtn.getStyleClass().add("active");
+    }
+    
     private void calculateSoldQuantities() {
         // Current month values
         int confirmQty = 0;
@@ -975,9 +979,10 @@ public class managerOrderManagementController {
         System.out.println("All orders data size: " + allOrdersData.size());
         
         try {
-            // Clear existing chart data
+            // Clear existing chart data and force layout refresh
             revenueChart.getData().clear();
-            revenueChart.setTitle("Weekly Revenue - " + Month.of(currentMonth).getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + currentYear);
+            revenueChart.layout();
+            revenueChart.setTitle(null); // Remove title since info is shown in top boxes
             
             // Create series for the chart (using raw type to match FXML)
             XYChart.Series series = new XYChart.Series();
@@ -1025,8 +1030,11 @@ public class managerOrderManagementController {
         
         revenueChart.getData().add(series);
         revenueChart.setLegendVisible(false);
-        revenueChart.setAnimated(true);
+        revenueChart.setAnimated(false); // Disable animation to prevent label overlap issues
         revenueChart.setCreateSymbols(false); // Remove dots on the line
+        
+        // Force layout update after adding data
+        revenueChart.layout();
         
         System.out.println("✓ Weekly chart updated successfully");
         System.out.println("============================\n");
@@ -1052,9 +1060,10 @@ public class managerOrderManagementController {
         System.out.println("All orders data size: " + allOrdersData.size());
         
         try {
-            // Clear existing chart data
+            // Clear existing chart data and force layout refresh
             revenueChart.getData().clear();
-            revenueChart.setTitle("Monthly Revenue - " + currentYear);
+            revenueChart.layout();
+            revenueChart.setTitle(null); // Remove title since info is shown in top boxes
             
             // Create series for the chart (using raw type to match FXML)
             XYChart.Series series = new XYChart.Series();
@@ -1091,8 +1100,11 @@ public class managerOrderManagementController {
         
         revenueChart.getData().add(series);
         revenueChart.setLegendVisible(false);
-        revenueChart.setAnimated(true);
+        revenueChart.setAnimated(false); // Disable animation to prevent label overlap issues
         revenueChart.setCreateSymbols(false); // Remove dots on the line
+        
+        // Force layout update after adding data
+        revenueChart.layout();
         
         System.out.println("✓ Monthly chart updated successfully");
         System.out.println("============================\n");
