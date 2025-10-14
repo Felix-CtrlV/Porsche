@@ -426,10 +426,10 @@ public class managerOverviewController {
 
         ResultSet rs = cs.executeQuery();
         if(rs.next()){
-            int target_car = rs.getInt(1);
-            int target_part = rs.getInt(2);
-            int achieve_car = rs.getInt(3);
-            int achieve_part = rs.getInt(4);
+            int target_car = rs.getInt(4);
+            int target_part = rs.getInt(5);
+            int achieve_car = rs.getInt(6);
+            int achieve_part = rs.getInt(7);
 
             setCarCircle(target_car,achieve_car);
             setPartCircle(target_part,achieve_part);

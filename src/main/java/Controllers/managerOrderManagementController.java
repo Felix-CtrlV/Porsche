@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import Database.Porsche_DB;
 import Model.managerOrderView;
+import Utils.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -253,6 +254,12 @@ public class managerOrderManagementController {
 
     @FXML
     public void initialize(){
+        // Get the manager id from session
+        Session current = Session.getInstance();
+        if (current != null) {
+            managerId = current.getUserid();
+        }
+        
         orderDateCol.setCellValueFactory(new PropertyValueFactory<>("order_date"));
         customerNameCol.setCellValueFactory(new PropertyValueFactory<>("cus_name"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("total_amount"));
@@ -788,7 +795,7 @@ public class managerOrderManagementController {
         // Get the currently displayed orders (filtered by month/year or search)
         ObservableList<managerOrderView> currentOrders = orderTable.getItems();
         
-        // Calculate current month totals
+        // Calculate current month totals for quantities and prices
         if (currentOrders != null && !currentOrders.isEmpty()) {
             for (managerOrderView order : currentOrders) {
                 boolean isInstallment = order.getIs_installmenat().equalsIgnoreCase("Yes");
@@ -833,10 +840,33 @@ public class managerOrderManagementController {
             }
         }
         
-        // Set current values
-        setCarCircle(confirmQty);
+        // Fetch target data from database
+        int targetCar = 0;
+        int targetPart = 0;
+        
+        try {
+            CallableStatement cs = con.prepareCall("CALL targetViewChart(?,?,?)");
+            cs.setInt(1, managerId);
+            cs.setInt(2, currentMonth);
+            cs.setInt(3, currentYear);
+            
+            ResultSet rs = cs.executeQuery();
+            if (rs.next()) {
+                targetCar = rs.getInt(4);    // Column 4: target_car
+                targetPart = rs.getInt(5);   // Column 5: target_part
+                // We use confirmQty and pendingQty from orders, not columns 6 & 7
+            }
+            rs.close();
+            cs.close();
+        } catch (SQLException e) {
+            logger.error("Error fetching target data", e);
+            // Continue with targets as 0
+        }
+        
+        // Set current values with targets and actual sold quantities from orders
+        setCarCircle(targetCar, confirmQty);
         setCarPrice(confirmPrice);
-        setPartCircle(pendingQty);
+        setPartCircle(targetPart, pendingQty);
         setPartPrice(pendingPrice);
         
         // Calculate and set rates
@@ -844,36 +874,72 @@ public class managerOrderManagementController {
         setPendingPriceRate(pendingPrice, prevPendingPrice);
     }
     
-    private void setCarCircle(int soldQty) {
-        // Show only sold quantity (sold cars)
-        confrimQty.setText(String.valueOf(soldQty));
+    private void setCarCircle(int target, int achieve) {
         confrimQtyCircle.setVisible(true);
+        confrimQty.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
         
-        // Set text style
-        if (soldQty == 0) {
+        double progressCar = 0;
+        if (achieve == 0 && target == 0) {
+            confrimQtyCircle.setVisible(false);
+            confrimQty.setText("0");
             confrimQty.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
+        } else if (target > 0) {
+            // Calculate progress (can exceed 1.0 if achievement > target)
+            progressCar = (double) achieve / target;
+            // Cap at 1.0 for display (full circle)
+            if (progressCar > 1.0) {
+                progressCar = 1.0;
+            }
+            confrimQty.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold; -fx-font-size: 16;");
         } else {
-            confrimQty.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold;");
+            // No target set, just show achievement
+            confrimQty.setText(String.valueOf(achieve));
+            confrimQty.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold; -fx-font-size: 16;");
+            progressCar = 0;
         }
         
-        // No stroke animation - clear dash array
-        confrimQtyCircle.getStrokeDashArray().clear();
+        // Set stroke color and width for car circle
+        confrimQtyCircle.setStyle("-fx-stroke: #6d8196; -fx-stroke-width: 8; -fx-fill: transparent;");
+        
+        // Set circular progress animation with car color #6d8196
+        double circumference = 2 * Math.PI * confrimQtyCircle.getRadius();
+        confrimQtyCircle.getStrokeDashArray().setAll(circumference, circumference);
+        // Offset decreases as progress increases (0 offset = full circle)
+        confrimQtyCircle.setStrokeDashOffset(circumference - (circumference * progressCar));
     }
     
-    private void setPartCircle(int soldQty) {
-        // Show only sold quantity (sold parts)
-        pendingQty.setText(String.valueOf(soldQty));
+    private void setPartCircle(int target, int achieve) {
         pendingQtyCircle.setVisible(true);
+        pendingQty.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
         
-        // Set text style
-        if (soldQty == 0) {
+        double progressPart = 0;
+        if (achieve == 0 && target == 0) {
+            pendingQtyCircle.setVisible(false);
+            pendingQty.setText("0");
             pendingQty.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
+        } else if (target > 0) {
+            // Calculate progress (can exceed 1.0 if achievement > target)
+            progressPart = (double) achieve / target;
+            // Cap at 1.0 for display (full circle)
+            if (progressPart > 1.0) {
+                progressPart = 1.0;
+            }
+            pendingQty.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 16;");
         } else {
-            pendingQty.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold;");
+            // No target set, just show achievement
+            pendingQty.setText(String.valueOf(achieve));
+            pendingQty.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 16;");
+            progressPart = 0;
         }
         
-        // No stroke animation - clear dash array
-        pendingQtyCircle.getStrokeDashArray().clear();
+        // Set stroke color and width for part circle
+        pendingQtyCircle.setStyle("-fx-stroke: #e67e22; -fx-stroke-width: 8; -fx-fill: transparent;");
+        
+        // Set circular progress animation with part color #e67e22
+        double circumference = 2 * Math.PI * pendingQtyCircle.getRadius();
+        pendingQtyCircle.getStrokeDashArray().setAll(circumference, circumference);
+        // Offset decreases as progress increases (0 offset = full circle)
+        pendingQtyCircle.setStrokeDashOffset(circumference - (circumference * progressPart));
     }
     
     private void setCarPrice(double totalPrice) {

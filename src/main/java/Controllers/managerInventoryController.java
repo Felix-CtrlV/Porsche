@@ -883,10 +883,13 @@ public class managerInventoryController {
                         File selectedFile = file.get(0);
                         try {
                             String selectedPath = selectedFile.getCanonicalPath();
-                            String originalPath = new File(editPath.getPhoto()).getCanonicalPath();
+                            // Resolve the original path to handle relative paths
+                            File originalFile = resolveImagePath(editPath.getPhoto());
+                            String originalPath = originalFile != null ? originalFile.getCanonicalPath() : editPath.getPhoto();
                             sameImage = selectedPath.equals(originalPath);
                         } catch (IOException e) {
-                            sameImage = false;
+                            // If we can't resolve paths, assume they're the same if file exists
+                            sameImage = true;
                         }
                     } else if (!hasOriginalPhoto && hasNewPhoto) {
                         // Original had no photo, but new photo selected - different
@@ -916,10 +919,13 @@ public class managerInventoryController {
                         File selectedFile = file.get(0);
                         try {
                             String selectedPath = selectedFile.getCanonicalPath();
-                            String originalPath = new File(photoPath).getCanonicalPath();
+                            // Resolve the original path to handle relative paths
+                            File originalFile = resolveImagePath(photoPath);
+                            String originalPath = originalFile != null ? originalFile.getCanonicalPath() : photoPath;
                             sameImage = selectedPath.equals(originalPath);
                         } catch (IOException e) {
-                            sameImage = false;
+                            // If we can't resolve paths, assume they're the same if file exists
+                            sameImage = true;
                         }
                     } else if (!hasOriginalPhoto && hasNewPhoto) {
                         // Original had no photo, but new photo selected - different
@@ -2259,20 +2265,34 @@ public class managerInventoryController {
                               ? photoPath.substring(1) 
                               : photoPath;
         
+        // First try from project root
         File relativeFile = new File(projectRoot, relativePath);
         if (relativeFile.exists()) {
             System.out.println("Found image at relative path: " + relativeFile.getAbsolutePath());
             return relativeFile;
         }
         
-        // If still not found, try from src/main/resources
+        // Try from src/main/resources
         File resourceFile = new File(projectRoot, "src/main/resources/" + relativePath);
         if (resourceFile.exists()) {
             System.out.println("Found image in resources: " + resourceFile.getAbsolutePath());
             return resourceFile;
         }
         
+        // Try from Images folder in project root (common location)
+        File imagesFolder = new File(projectRoot, "Images/" + relativePath);
+        if (imagesFolder.exists()) {
+            System.out.println("Found image in Images folder: " + imagesFolder.getAbsolutePath());
+            return imagesFolder;
+        }
+        
         System.err.println("Image not found at any location: " + photoPath);
+        System.err.println("Tried locations:");
+        System.err.println("  1. " + photoPath + " (absolute)");
+        System.err.println("  2. " + relativeFile.getAbsolutePath());
+        System.err.println("  3. " + resourceFile.getAbsolutePath());
+        System.err.println("  4. " + imagesFolder.getAbsolutePath());
+        
         // Return original file object even if it doesn't exist (for error handling)
         return imageFile;
     }
