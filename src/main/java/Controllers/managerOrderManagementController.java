@@ -723,9 +723,9 @@ public class managerOrderManagementController {
         String[] qty = orders.getCarsandparts_qty();
         String[] price = orders.getCarsandparts_perprice();
 
-        totalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
-        remainAmountlbl.setText(String.valueOf(orders.getRemain_amount()));
-        paidAmountlbl.setText(String.valueOf(orders.getPayed_amount()));
+        totalPriceLabel.setText("$" + String.format("%.2f", orders.getTotal_amount()));
+        remainAmountlbl.setText("$" + String.format("%.2f", orders.getRemain_amount()));
+        paidAmountlbl.setText("$" + String.format("%.2f", orders.getPayed_amount()));
         customerNamelabel.setText(orders.getCus_name());
         staffNamelabel.setText(orders.getStaff_name());
         
@@ -750,9 +750,9 @@ public class managerOrderManagementController {
     private void clearOrderDetails() {
         customerNamelabel.setText("");
         staffNamelabel.setText("");
-        totalPriceLabel.setText("0.00");
-        paidAmountlbl.setText("0.00");
-        remainAmountlbl.setText("0.00");
+        totalPriceLabel.setText("$0.00");
+        paidAmountlbl.setText("$0.00");
+        remainAmountlbl.setText("$0.00");
         dueDateLabel.setText("N/A");
         installmentTable.getItems().clear();
     }
