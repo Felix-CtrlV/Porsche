@@ -849,8 +849,9 @@ public class managerInventoryController {
                     String description = partDescriptionText.getText().trim();
                     String forCar = partRelativeComboBox.getText().trim();
 
+                    // forCar is optional, so don't include it in the empty check
                     allEmpty = img.isEmpty() && name.isEmpty() && qty.isEmpty() &&
-                            price.isEmpty() && description.isEmpty() && forCar.isEmpty();
+                            price.isEmpty() && description.isEmpty();
 
                 }else if(path.equalsIgnoreCase("carsEdit")){
                     // Convert database fuel type abbreviations to display names
@@ -1541,6 +1542,10 @@ public class managerInventoryController {
                 int id = rs.getInt(1);
                 String name = rs.getString(2);
                 String forCar = rs.getString(3);
+                // Display "Universal" if forCar is null
+                if (forCar == null || forCar.trim().isEmpty()) {
+                    forCar = "Universal";
+                }
                 String description = rs.getString(4);
                 int qty = rs.getInt(5);
                 Double price = rs.getDouble(6);
@@ -1554,6 +1559,7 @@ public class managerInventoryController {
                 if(check){
                     // Available items (check = true)
                     partsData.add(new inventory(id,inventoryId,name,forCar,description,qty,price,status,photoUrl));
+                    System.out.println("Added to partsData: " + inventoryId + " - " + name + " (qty: " + qty + ", status: " + status + ")");
                 }else{
                     // check = false
                     if(qty > 0){
@@ -1640,8 +1646,9 @@ public class managerInventoryController {
                 String id = String.valueOf(i.getInventoryId().toLowerCase());
                 String name = i.getName().toLowerCase();
 
-                if (id.contains(searchText) || name.contains(searchText)) {
-                    String suggestionText = i.getInventoryId() + " - " + i.getName();
+                String forCarInfo = (i.getForCar() != null && !i.getForCar().isEmpty()) ? i.getForCar() : "Universal";
+                if (id.contains(searchText) || name.contains(searchText) || forCarInfo.toLowerCase().contains(searchText)) {
+                    String suggestionText = i.getInventoryId() + " - " + i.getName() + " (" + forCarInfo + ")";
                     MenuItem item = new MenuItem(suggestionText);
 
                     // Set action for when suggestion is clicked
@@ -1683,9 +1690,10 @@ public class managerInventoryController {
             for (inventory i : partsOffDate) {
                 String id = String.valueOf(i.getInventoryId().toLowerCase());
                 String name = i.getName().toLowerCase();
+                String forCarInfo = (i.getForCar() != null && !i.getForCar().isEmpty()) ? i.getForCar() : "Universal";
 
-                if (id.contains(searchText) || name.contains(searchText)) {
-                    String suggestionText = i.getInventoryId() + " - " + i.getName() + " (Unavailable)";
+                if (id.contains(searchText) || name.contains(searchText) || forCarInfo.toLowerCase().contains(searchText)) {
+                    String suggestionText = i.getInventoryId() + " - " + i.getName() + " (" + forCarInfo + ", Unavailable)";
                     MenuItem item = new MenuItem(suggestionText);
 
                     // Set action for when suggestion is clicked
@@ -2167,8 +2175,49 @@ public class managerInventoryController {
     }
     
     private void insertPart() throws SQLException {
-        // TODO: Implement insert part logic
-        System.out.println("Insert part not yet implemented");
+        String partName = partNameText.getText().trim();
+        String forCarModel = partRelativeComboBox.getText().trim();
+        String description = partDescriptionText.getText().trim();
+        int qty = Integer.parseInt(partQtyText.getText().trim());
+        double price = Double.parseDouble(partPriceText.getText().trim());
+        
+        // Handle image
+        String photoPath = null;
+        if (!file.isEmpty()) {
+            photoPath = file.get(0).getAbsolutePath();
+        }
+        
+        // Set forCarModel to null if empty (universal part)
+        if (forCarModel.isEmpty()) {
+            forCarModel = null;
+        }
+        
+        // Call insertFullPart stored procedure
+        CallableStatement cs = con.prepareCall("{CALL insertFullPart(?, ?, ?, ?, ?, ?)}");
+        cs.setString(1, partName);                 // in_part_name
+        cs.setString(2, description);              // in_description
+        cs.setString(3, forCarModel);              // in_for_car_model (can be NULL)
+        cs.setInt(4, qty);                         // in_part_qty
+        cs.setDouble(5, price);                    // in_price
+        cs.setString(6, photoPath);                // in_photo_url
+        
+        cs.execute();
+        System.out.println("Part inserted successfully");
+        cs.close();
+        
+        // Refresh data
+        setCarsTable();
+        setPartsTable();
+        inventoryData.clear();
+        inventoryData.addAll(carsData);
+        inventoryData.addAll(partsData);
+        
+        // Refresh the displayed table
+        if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+            showTable("cars");
+        }else{
+            showTable("parts");
+        }
     }
     
     private boolean updateCar() throws SQLException {
@@ -2262,7 +2311,7 @@ public class managerInventoryController {
         
         String partName = editPartName.getText().trim();
         String description = editPartDescription.getText().trim();
-        String forCarModel = editPartForCar.getText().trim();
+        String forCarModel = (editPartForCar != null && editPartForCar.getText() != null && !editPartForCar.getText().trim().isEmpty()) ? editPartForCar.getText().trim() : null;
         int qty = Integer.parseInt(editPartQty.getText().trim());
         double price = Double.parseDouble(editPartPrice.getText().trim());
         
