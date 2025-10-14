@@ -171,7 +171,7 @@
                     <center>
                   <StackPane>
                      <children>
-                              <VBox fx:id="addPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                              <VBox fx:id="addPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
                                   <children>
                                       <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                           <children>
@@ -435,18 +435,18 @@
                               </StackPane>
                                   </children>
                               </VBox>
-                        <VBox fx:id="editPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
+                        <VBox fx:id="editPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
                            <children>
                               <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                  <children>
                                     <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-padding: 15;" text="EDIT INVENTORY" />
                                     <Label fx:id="editTitle" style="-fx-text-fill: white;" text="(Car)" />
-                                    <Button maxHeight="32.0" maxWidth="32.0" mnemonicParsing="false" onMouseClicked="#clickBackBtn" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: #ff4757; -fx-border-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="✕">
+                                    <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onMouseClicked="#clickBackBtn" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: #ff4757; -fx-border-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="✕">
                                        <font>
-                                          <Font name="Arial Black" size="18.0" />
+                                          <Font name="Arial Black" size="12.2" />
                                        </font>
                                        <HBox.margin>
-                                          <Insets left="200.0" />
+                                          <Insets left="220.0" />
                                        </HBox.margin>
                                     </Button>
                                  </children>
