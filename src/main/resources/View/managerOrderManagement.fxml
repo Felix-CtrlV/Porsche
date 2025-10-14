@@ -84,7 +84,7 @@
                                         </VBox>
                                     </children>
                                 </HBox>
-                                <VBox alignment="CENTER" maxWidth="300.0" minWidth="200.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
+                                <VBox alignment="CENTER" maxWidth="500.0" minWidth="200.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
                                     <padding>
                                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                                     </padding>
@@ -110,7 +110,7 @@
                                         </HBox>
                                     </children>
                                 </VBox>
-                                <VBox alignment="CENTER" maxWidth="300.0" minWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
+                                <VBox alignment="CENTER" maxWidth="500.0" minWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.5, 0, 4); -fx-border-color: #e2e8f0;" HBox.hgrow="ALWAYS">
                                     <padding>
                                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                                     </padding>
@@ -131,7 +131,7 @@
                         </HBox>
                         <VBox prefHeight="250.0" prefWidth="736.0" spacing="8.0" style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc); -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e2e8f0; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0.5, 0, 4);" VBox.vgrow="ALWAYS">
                             <padding>
-                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
                             </padding>
                             <children>
                                 <HBox>
@@ -139,19 +139,22 @@
                                         <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-family: 'Arial Black';" text="Revenue" />
                                     </children>
                                 </HBox>
-                                <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                                <HBox alignment="CENTER" prefHeight="240.0" prefWidth="748.0" VBox.vgrow="ALWAYS">
                                     <children>
                                         <AreaChart fx:id="revenueChart" prefHeight="150.0" prefWidth="213.0" style="-fx-background-color: transparent; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" tickLabelRotation="0" />
                                             </xAxis>
                                             <yAxis>
-                                                <NumberAxis side="LEFT" autoRanging="true" forceZeroInRange="false" />
+                                                <NumberAxis autoRanging="true" forceZeroInRange="false" side="LEFT" />
                                             </yAxis>
                                         </AreaChart>
                                     </children>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
                                 </HBox>
-                                <HBox alignment="CENTER" spacing="30.0">
+                                <HBox alignment="CENTER" prefHeight="26.0" prefWidth="748.0" spacing="30.0">
                                     <children>
                                         <Button fx:id="weeklyRevenue" mnemonicParsing="false" onAction="#clickWeeklyRevenue" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 8 16 8 16; -fx-background-radius: 8;" text="Weekly" />
                                         <Button fx:id="monthlyRevenue" mnemonicParsing="false" onAction="#clickMonthlyRevenue" style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 8 16 8 16; -fx-background-radius: 8;" text="Monthly" />
