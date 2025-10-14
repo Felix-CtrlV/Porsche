@@ -13,6 +13,7 @@ public class bestSellerController {
     @FXML
     private Label hourRate;
 
+
     @FXML
     private ImageView image;
 

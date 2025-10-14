@@ -32,7 +32,10 @@
          <content>
             <FlowPane prefHeight="200.0" prefWidth="585.0">
                <children>
-                  <HBox prefHeight="194.0" prefWidth="583.0" />
+                  <HBox prefHeight="194.0" prefWidth="583.0">
+                     <children>
+                        <VBox fx:id="cardContainer" prefHeight="194.0" prefWidth="592.0" HBox.hgrow="ALWAYS" />
+                     </children></HBox>
                </children>
             </FlowPane>
          </content>
