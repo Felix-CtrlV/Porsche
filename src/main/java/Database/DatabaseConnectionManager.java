@@ -66,7 +66,6 @@ public class DatabaseConnectionManager {
         }
         return instance;
     }
-
     /**
      * Gets a connection from the pool.
      * @return Database connection
