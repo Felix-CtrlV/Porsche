@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="10000.0" maxWidth="10000.0" minHeight="690.0" minWidth="1366.0" style="-fx-background-color: linear-gradient(to bottom right, #f0f2f5, #e1e5eb);" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerInventoryController">
+<BorderPane maxHeight="10000.0" maxWidth="10000.0" minHeight="690.0" minWidth="1366.0" style="-fx-background-color: linear-gradient(to bottom right, #f0f2f5, #e1e5eb);" stylesheets="@../CSS/manager.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerInventoryController">
 
     <center>
         <StackPane maxHeight="10000.0" maxWidth="10000.0" minHeight="690.0" minWidth="1366.0" BorderPane.alignment="CENTER">
@@ -181,8 +181,8 @@
                                           <children>
                                               <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-padding: 15;" text="ADD INVENTORY" />
                                               <Region prefHeight="56.0" prefWidth="69.0" />
-                                              <Button fx:id="addCarbtn" minHeight="32.0" minWidth="90.0" mnemonicParsing="false" onAction="#clickAddCarbtn" style="-fx-background-color: #334155; -fx-text-fill: white; -fx-background-radius: 6;" text="🚗 CAR" />
-                                              <Button fx:id="addPartbtn" minHeight="32.0" minWidth="90.0" mnemonicParsing="false" onAction="#clickAddPartbtn" style="-fx-background-color: #334155; -fx-text-fill: white; -fx-background-radius: 6;" text="🔧 PART">
+                                              <Button fx:id="addCarbtn" minHeight="32.0" minWidth="90.0" mnemonicParsing="false" onAction="#clickAddCarbtn" style="-fx-background-color: #334155; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand;" styleClass="car-add-btn" text="🚗 CAR" />
+                                              <Button fx:id="addPartbtn" minHeight="32.0" minWidth="90.0" mnemonicParsing="false" onAction="#clickAddPartbtn" style="-fx-background-color: #334155; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand;" styleClass="part-add-btn" text="🔧 PART">
                                                   <HBox.margin>
                                                       <Insets left="25.0" />
                                                   </HBox.margin>

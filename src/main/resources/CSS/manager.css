@@ -219,3 +219,48 @@
  .pie-chart-legend {
      -fx-background-color: transparent;
  }
+
+ /* Car and Part Add Button Styles */
+ .car-add-btn {
+     -fx-background-color: #334155;
+     -fx-text-fill: white;
+     -fx-background-radius: 6;
+     -fx-cursor: hand;
+     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+ }
+
+ .car-add-btn:hover {
+     -fx-background-color: #475569;
+     -fx-scale-x: 1.05;
+     -fx-scale-y: 1.05;
+     -fx-effect: dropshadow(gaussian, rgba(51,65,85,0.4), 8, 0, 0, 3);
+ }
+
+ .car-add-btn:pressed {
+     -fx-background-color: #1e293b;
+     -fx-scale-x: 0.95;
+     -fx-scale-y: 0.95;
+     -fx-effect: dropshadow(gaussian, rgba(30,41,59,0.6), 10, 0, 0, 4);
+ }
+
+ .part-add-btn {
+     -fx-background-color: #334155;
+     -fx-text-fill: white;
+     -fx-background-radius: 6;
+     -fx-cursor: hand;
+     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+ }
+
+ .part-add-btn:hover {
+     -fx-background-color: #475569;
+     -fx-scale-x: 1.05;
+     -fx-scale-y: 1.05;
+     -fx-effect: dropshadow(gaussian, rgba(51,65,85,0.4), 8, 0, 0, 3);
+ }
+
+ .part-add-btn:pressed {
+     -fx-background-color: #1e293b;
+     -fx-scale-x: 0.95;
+     -fx-scale-y: 0.95;
+     -fx-effect: dropshadow(gaussian, rgba(30,41,59,0.6), 10, 0, 0, 4);
+ }
