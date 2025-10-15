@@ -4,7 +4,6 @@ import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -29,6 +29,7 @@ public class staffCarsController implements Initializable {
     @FXML private ImageView macan_select_image;
     @FXML private ImageView taycan_select_image;
     @FXML private Button homebtn;
+
     private List<ImageView> allImages;
     private static final Color PORSCHE_RED = Color.web("#D5001C");
     private static final Duration FADE_DURATION = Duration.millis(400);
@@ -55,10 +56,16 @@ public class staffCarsController implements Initializable {
         );
         imageMap.forEach((imageView, path) -> {
             try (InputStream stream = getClass().getResourceAsStream(path)) {
-                if (stream == null) return;
+                if (stream == null) {
+                    System.err.println("Image not found: " + path);
+                    return;
+                }
                 Image image = new Image(stream, 0, 0, true, true);
                 imageView.setImage(image);
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) {
+                System.err.println("Failed to load image: " + path);
+                e.printStackTrace();
+            }
         });
     }
 
@@ -69,12 +76,12 @@ public class staffCarsController implements Initializable {
             imageView.setOnMouseEntered(e -> {
                 applyScale(imageView, 1.08);
                 imageView.setEffect(glowEffect);
-                imageView.getScene().setCursor(Cursor.HAND);
+                imageView.getScene().setCursor(javafx.scene.Cursor.HAND);
             });
             imageView.setOnMouseExited(e -> {
                 applyScale(imageView, 1.0);
                 imageView.setEffect(null);
-                imageView.getScene().setCursor(Cursor.DEFAULT);
+                imageView.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
             });
             imageView.setOnMouseClicked(this::redirect);
         }
@@ -108,6 +115,8 @@ public class staffCarsController implements Initializable {
     @FXML
     private void redirect(MouseEvent event) {
         ImageView clicked = (ImageView) event.getSource();
+        String modelId = clicked.getId();
+        System.out.println("Model selected: " + modelId);
         createClickFeedback(clicked);
         PauseTransition pause = new PauseTransition(Duration.millis(250));
         pause.setOnFinished(e -> navigate(event, "/View/staffModelSelect.fxml"));
@@ -132,8 +141,13 @@ public class staffCarsController implements Initializable {
         Node source = (Node) event.getSource();
         Scene currentScene = source.getScene();
         Parent root;
-        try { root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath))); }
-        catch (IOException | NullPointerException ex) { ex.printStackTrace(); return; }
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+        } catch (IOException | NullPointerException ex) {
+            System.err.println("⚠️ Failed to navigate: " + fxmlPath);
+            ex.printStackTrace();
+            return;
+        }
         root.setOpacity(0);
         Stage stage = (Stage) currentScene.getWindow();
         Scene newScene = new Scene(root);
@@ -151,8 +165,21 @@ public class staffCarsController implements Initializable {
     }
 
     @FXML
-    private void home(MouseEvent event) { navigate(event, "/View/staffWelcome.fxml"); }
+    private void home(MouseEvent event) {
+        System.out.println("🏠 Home button clicked");
+        navigate(event, "/View/staffWelcome.fxml");
+    }
 
     public String getSelectedModelId(ImageView imageView) { return imageView.getId(); }
-    public void preloadAllImages() { allImages.stream().map(ImageView::getImage).filter(Objects::nonNull).forEach(img -> {}); }
+
+    public void preloadAllImages() {
+        allImages.stream()
+                .map(ImageView::getImage)
+                .filter(Objects::nonNull)
+                .forEach(img -> {
+                    if (!img.isBackgroundLoading()) {
+                        System.out.println("Image loaded successfully");
+                    }
+                });
+    }
 }

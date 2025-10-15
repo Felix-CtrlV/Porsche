@@ -53,7 +53,8 @@
 
                         <Line fx:id="line2" endX="114.0" opacity="0.5" startX="0.0" strokeWidth="2.0" styleClass="divider-line" />
 
-                        <Label styleClass="model-name" text="911 Carrera GTS">
+                        <!-- Add fx:id for the model name label -->
+                        <Label fx:id="modelNameLabel" styleClass="model-name" text="911 Carrera GTS">
                             <font>
                                 <Font name="System Bold" size="18.0" />
                             </font>
@@ -124,7 +125,7 @@
                                                     <Font size="14.0" />
                                                 </font>
                                             </Label>
-                                            <Label fx:id="color_opt" styleClass="option-detail" text="Snow White">
+                                            <Label fx:id="colorLabel" styleClass="option-detail" text="Snow White">
                                                 <font>
                                                     <Font size="12.0" />
                                                 </font>
@@ -138,8 +139,6 @@
                                         </Label>
                                     </HBox>
 
-                                    <Line fx:id="line5" endX="480.0" opacity="0.4" startX="0.0" strokeWidth="1.5" styleClass="divider-line" />
-
                                     <!-- Wheels Option -->
                                     <HBox alignment="TOP_LEFT">
                                         <VBox spacing="4.0" HBox.hgrow="ALWAYS">
@@ -148,7 +147,7 @@
                                                     <Font size="14.0" />
                                                 </font>
                                             </Label>
-                                            <Label fx:id="wheels_opt" styleClass="option-detail" text="20-inch(fr) and 21-inch(rr) Rose Ceramic Spoke" wrapText="true">
+                                            <Label fx:id="wheelLabel" styleClass="option-detail" text="20-inch(fr) and 21-inch(rr) Rose Ceramic Spoke" wrapText="true">
                                                 <font>
                                                     <Font size="12.0" />
                                                 </font>
@@ -162,8 +161,6 @@
                                         </Label>
                                     </HBox>
 
-                                    <Line fx:id="line6" endX="480.0" opacity="0.4" startX="0.0" strokeWidth="1.5" styleClass="divider-line" />
-
                                     <!-- Interior Option -->
                                     <HBox alignment="TOP_LEFT">
                                         <VBox spacing="4.0" HBox.hgrow="ALWAYS">
@@ -172,7 +169,7 @@
                                                     <Font size="14.0" />
                                                 </font>
                                             </Label>
-                                            <Label fx:id="interior_opt" styleClass="option-detail" text="Black leather with GT-silver lining" wrapText="true">
+                                            <Label fx:id="interiorLabel" styleClass="option-detail" text="Black leather with GT-silver lining" wrapText="true">
                                                 <font>
                                                     <Font size="12.0" />
                                                 </font>
@@ -185,8 +182,6 @@
                                             </font>
                                         </Label>
                                     </HBox>
-
-                                    <Line fx:id="line7" endX="480.0" opacity="0.4" startX="0.0" strokeWidth="1.5" styleClass="divider-line" />
 
                                     <!-- Handling Costs -->
                                     <HBox alignment="CENTER_LEFT">
@@ -203,12 +198,6 @@
                                         </Label>
                                     </HBox>
 
-                                    <Line fx:id="line8" endX="480.0" opacity="0.5" startX="0.0" strokeWidth="2.0" styleClass="divider-line">
-                                        <VBox.margin>
-                                            <Insets top="5.0" />
-                                        </VBox.margin>
-                                    </Line>
-
                                     <!-- Total MSRP -->
                                     <HBox alignment="CENTER_LEFT">
                                         <VBox.margin>
@@ -220,7 +209,7 @@
                                             </font>
                                         </Label>
                                         <Region HBox.hgrow="ALWAYS" />
-                                        <Label fx:id="total_price" styleClass="total-price" text="Price here">
+                                        <Label fx:id="totalPriceLabel" styleClass="total-price" text="Price here">
                                             <font>
                                                 <Font name="System Bold" size="20.0" />
                                             </font>

@@ -45,15 +45,15 @@ public class staffinternalcartController {
 
     @FXML
     void clickcomfirmbtn(ActionEvent event) {
-        String name = namelbl.getText();
-        double price = Double.parseDouble(pricelbl.getText());
-
-        // Get instance of shopping cart controller and add accessory
-        if (staffShopingCartControllerInstance != null) {
-            staffShopingCartControllerInstance.addAccessory(name, price);
-        }
-
-        System.out.println("Accessory confirmed: " + name + " - " + price);
+//        String name = namelbl.getText();
+//        double price = Double.parseDouble(pricelbl.getText());
+//
+//        // Get instance of shopping cart controller and add accessory
+//        if (staffShopingCartControllerInstance != null) {
+//            staffShopingCartControllerInstance.addAccessory(name, price);
+//        }
+//
+//        System.out.println("Accessory confirmed: " + name + " - " + price);
     }
 
 
