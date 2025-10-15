@@ -25,6 +25,14 @@ public class staffShopingCartController {
         totalPriceLabel.setText(String.format("$%.2f", totalPrice));
     }
 
+    public void addAccessory(String name, double price) {
+        String item = name + " - Accessory";
+        cartItems.add(item);
+        totalPrice += price;
+        cartListView.setItems(cartItems);
+        totalPriceLabel.setText(String.format("$%.2f", totalPrice));
+    }
+
     public void removeFromCart(int index) {
         if (index >= 0 && index < cartItems.size()) {
             cartItems.remove(index);

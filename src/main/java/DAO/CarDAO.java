@@ -10,7 +10,7 @@ public class CarDAO {
     public List<car> getAllCars() {
         List<car> cars = new ArrayList<>();
         String query = "SELECT carid, modelid, category, current_price FROM cars";
-        try (Connection conn = DatabaseConnectionManager.getConnection();
+        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
@@ -30,7 +30,7 @@ public class CarDAO {
 
     public car getCarById(int carid) {
         String query = "SELECT * FROM cars WHERE carid = ?";
-        try (Connection conn = DatabaseConnectionManager.getConnection();
+        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, carid);
