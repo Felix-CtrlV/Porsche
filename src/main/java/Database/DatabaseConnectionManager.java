@@ -45,7 +45,6 @@ public class DatabaseConnectionManager {
         logger.info("Database connection pool initialized successfully");
     }
 
-
     private Properties loadProperties() {
         Properties props = new Properties();
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("application.properties")) {
