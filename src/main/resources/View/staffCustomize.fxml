@@ -24,7 +24,7 @@
                 <!-- Car Image with fade-in effect -->
                 <ImageView fx:id="model_image" fitHeight="320.0" fitWidth="640.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
                     <image>
-                        <Image url="@../Image/911_model.png" />
+                        <Image url="@../Image/911_select_model.png" />
                     </image>
                 </ImageView>
             </children>
@@ -209,6 +209,17 @@
                                 <Insets bottom="20.0" />
                             </VBox.margin>
                         </HBox>
+
+                        <!-- Price Section -->
+                        <VBox spacing="5.0" styleClass="price-section">
+                            <VBox.margin>
+                                <Insets bottom="10.0" top="5.0" />
+                            </VBox.margin>
+                            <children>
+                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="99.0" styleClass="glass-panel" text="Starting From" />
+                                <Label fx:id="model_price" styleClass="model-name" text="\$140000" />
+                            </children>
+                        </VBox>
 
                         <Region VBox.vgrow="ALWAYS" />
                         <Button fx:id="back_btn" mnemonicParsing="false" onAction="#back" styleClass="back-button" text="‹ BACK TO SELECTION">

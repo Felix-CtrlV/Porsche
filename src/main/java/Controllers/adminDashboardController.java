@@ -748,7 +748,7 @@ public class adminDashboardController {
         }
     }
     
-    private void showToast(String title, String message, String type) {
+    public void showToast(String title, String message, String type) {
         toastTitle.setText(title);
         toastMessage.setText(message);
         
@@ -827,6 +827,11 @@ public class adminDashboardController {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/adminTargetManagement.fxml"));
                 javafx.scene.Node targetContent = loader.load();
+                
+                // Get the controller and pass reference to this dashboard controller
+                adminTargetManagementController targetController = loader.getController();
+                targetController.setDashboardController(this);
+                
                 targetContentPane.getChildren().add(targetContent);
             } catch (IOException e) {
                 e.printStackTrace();

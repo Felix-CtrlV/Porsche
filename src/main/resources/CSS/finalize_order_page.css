@@ -110,7 +110,7 @@
 }
 
 .confirm_btn {
-    -fx-background-color: #d50000;
+    -fx-background-color: black;
     -fx-text-fill: #ffffff;
     -fx-background-radius: 8px;
     -fx-cursor: hand;
@@ -119,7 +119,6 @@
 }
 
 .confirm_btn:hover {
-    -fx-background-color: #ff0000;
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
 }
