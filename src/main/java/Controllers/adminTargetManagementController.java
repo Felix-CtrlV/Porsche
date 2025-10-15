@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import org.slf4j.Logger;
@@ -14,16 +13,17 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.format.TextStyle;
+import java.util.*;
 
 public class adminTargetManagementController {
     private static final Logger logger = LoggerFactory.getLogger(adminTargetManagementController.class);
     
+    // UI Panes
     @FXML private VBox setTargetPane;
     @FXML private VBox progressPane;
     
-    // Set Target Controls
+    // Set Target Form Controls
     @FXML private ComboBox<String> managerCombo;
     @FXML private ComboBox<String> monthCombo;
     @FXML private Spinner<Integer> yearSpinner;
@@ -40,12 +40,13 @@ public class adminTargetManagementController {
     @FXML private Label carAchieveLabel;
     @FXML private Label partAchieveLabel;
     
-    private Map<String, Integer> managerMap = new HashMap<>();
+    // Data Storage
+    private final Map<String, Integer> managerMap = new HashMap<>();
     private int currentManagerId = 0;
     private int currentMonth = 0;
     private int currentYear = 0;
     
-    // Reference to parent dashboard controller
+    // Parent controller reference
     private adminDashboardController dashboardController;
     
     public void setDashboardController(adminDashboardController controller) {
@@ -111,114 +112,73 @@ public class adminTargetManagementController {
     }
     
     private void checkExistingTarget() {
-        // Check if there's a target for current month
+        // Set current month and year
         LocalDate now = LocalDate.now();
         currentMonth = now.getMonthValue();
         currentYear = now.getYear();
         
-        // For now, show set target pane by default
-        // When manager is selected, we'll check if they have a target
-        managerCombo.setOnAction(e -> {
-            String selectedManager = managerCombo.getValue();
-            if (selectedManager != null) {
-                int managerId = managerMap.get(selectedManager);
-                checkManagerTarget(managerId, currentMonth, currentYear);
-            }
-        });
+        // When manager is selected, check if they have a target for the selected period
+        managerCombo.setOnAction(e -> onManagerSelected());
+        monthCombo.setOnAction(e -> onManagerSelected());
+        yearSpinner.valueProperty().addListener((obs, oldVal, newVal) -> onManagerSelected());
+    }
+    
+    private void onManagerSelected() {
+        String selectedManager = managerCombo.getValue();
+        String selectedMonth = monthCombo.getValue();
+        Integer selectedYear = yearSpinner.getValue();
+        
+        if (selectedManager != null && selectedMonth != null && selectedYear != null) {
+            int managerId = managerMap.get(selectedManager);
+            int month = monthCombo.getItems().indexOf(selectedMonth) + 1;
+            
+            // Check if target exists for this manager/period
+            checkManagerTarget(managerId, month, selectedYear);
+        }
     }
     
     private void checkManagerTarget(int managerId, int month, int year) {
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection()) {
-            String query = """
-                SELECT target 
-                FROM user_target 
-                WHERE user_id = ? 
-                AND MONTH(effective_date) = ? 
-                AND YEAR(effective_date) = ?
-                ORDER BY effective_date DESC 
-                LIMIT 1
-            """;
+            // Call targetViewChart stored procedure
+            String callProc = "{CALL targetViewChart(?, ?, ?)}";
+            CallableStatement cs = conn.prepareCall(callProc);
+            cs.setInt(1, managerId);
+            cs.setInt(2, month);
+            cs.setInt(3, year);
             
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1, managerId);
-            ps.setInt(2, month);
-            ps.setInt(3, year);
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = cs.executeQuery();
             
             if (rs.next()) {
-                // Target exists, calculate achievements from actual sales
-                String target = rs.getString("target");
-                String achieve = calculateAchievements(managerId, month, year);
+                int targetCar = rs.getInt("target_car");
+                int targetPart = rs.getInt("target_part");
+                int achieveCar = rs.getInt("achieve_car");
+                int achievePart = rs.getInt("achieve_part");
+                double carPercentage = rs.getDouble("car_achievement_percentage");
+                double partPercentage = rs.getDouble("part_achievement_percentage");
+                String userName = rs.getString("user_name");
+                String status = rs.getString("achievement_status");
                 
-                currentManagerId = managerId;
-                showProgressView(managerId, target, achieve, month, year);
+                // Check if target exists (target values > 0)
+                if (targetCar > 0 || targetPart > 0) {
+                    currentManagerId = managerId;
+                    showProgressView(managerId, userName, targetCar, targetPart, 
+                                   achieveCar, achievePart, carPercentage, partPercentage, 
+                                   month, year, status);
+                } else {
+                    // No target set, stay on set target pane
+                    showSetTargetPane();
+                }
             } else {
-                // No target, stay on set target pane
+                // No data found, stay on set target pane
                 showSetTargetPane();
             }
             
         } catch (SQLException e) {
             logger.error("Failed to check manager target", e);
+            showToast("Error", "Failed to load target data: " + e.getMessage(), "error");
         }
     }
     
-    private String calculateAchievements(int managerId, int month, int year) {
-        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection()) {
-            // Count car sales for the manager in the given month/year
-            String carQuery = """
-                SELECT COALESCE(COUNT(*), 0) as car_count
-                FROM orders o
-                JOIN order_details od ON o.order_id = od.order_id
-                WHERE o.user_id = ?
-                AND MONTH(o.order_date) = ?
-                AND YEAR(o.order_date) = ?
-                AND od.car_id IS NOT NULL
-            """;
-            
-            PreparedStatement carPs = conn.prepareStatement(carQuery);
-            carPs.setInt(1, managerId);
-            carPs.setInt(2, month);
-            carPs.setInt(3, year);
-            ResultSet carRs = carPs.executeQuery();
-            
-            int carCount = 0;
-            if (carRs.next()) {
-                carCount = carRs.getInt("car_count");
-            }
-            
-            logger.info("Car count for manager {} in {}/{}: {}", managerId, month, year, carCount);
-            
-            // Count part sales for the manager in the given month/year
-            String partQuery = """
-                SELECT COALESCE(SUM(od.qty), 0) as part_count
-                FROM orders o
-                JOIN order_details od ON o.order_id = od.order_id
-                WHERE o.user_id = ?
-                AND MONTH(o.order_date) = ?
-                AND YEAR(o.order_date) = ?
-                AND od.part_id IS NOT NULL
-            """;
-            
-            PreparedStatement partPs = conn.prepareStatement(partQuery);
-            partPs.setInt(1, managerId);
-            partPs.setInt(2, month);
-            partPs.setInt(3, year);
-            ResultSet partRs = partPs.executeQuery();
-            
-            int partCount = 0;
-            if (partRs.next()) {
-                partCount = partRs.getInt("part_count");
-            }
-            
-            logger.info("Part count for manager {} in {}/{}: {}", managerId, month, year, partCount);
-            
-            return "cars-" + carCount + ",parts-" + partCount;
-            
-        } catch (SQLException e) {
-            logger.error("Failed to calculate achievements", e);
-            return "cars-0,parts-0";
-        }
-    }
     
     @FXML
     private void onSetTarget() {
@@ -228,63 +188,131 @@ public class adminTargetManagementController {
         Integer carTarget = carTargetSpinner.getValue();
         Integer partTarget = partTargetSpinner.getValue();
         
+        // Validation
         if (selectedManager == null || selectedMonth == null) {
             showToast("Validation Error", "Please select a manager and month.", "error");
             return;
         }
         
+        if (carTarget == null || carTarget <= 0) {
+            showToast("Validation Error", "Car target must be greater than 0.", "error");
+            return;
+        }
+        
+        if (partTarget == null || partTarget <= 0) {
+            showToast("Validation Error", "Part target must be greater than 0.", "error");
+            return;
+        }
+        
+        // Show confirmation dialog with details
+        showTargetConfirmation(selectedManager, selectedMonth, year, carTarget, partTarget);
+    }
+    
+    private void showTargetConfirmation(String manager, String month, int year, int carTarget, int partTarget) {
+        // Create details node
+        VBox detailsBox = new VBox(12);
+        detailsBox.setStyle("-fx-alignment: center;");
+        
+        // Info card
+        VBox infoCard = new VBox(10);
+        infoCard.setStyle("-fx-background-color: #f8fafc; -fx-padding: 15; -fx-background-radius: 8;");
+        
+        // Manager
+        HBox managerRow = new HBox(10);
+        managerRow.setStyle("-fx-alignment: center-left;");
+        Label managerIcon = new Label("👤");
+        managerIcon.setStyle("-fx-font-size: 16;");
+        Label managerLabel = new Label("Manager:");
+        managerLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;");
+        Label managerValue = new Label(manager);
+        managerValue.setStyle("-fx-font-size: 13; -fx-text-fill: #1e293b; -fx-font-weight: bold;");
+        managerRow.getChildren().addAll(managerIcon, managerLabel, managerValue);
+        
+        // Period
+        HBox periodRow = new HBox(10);
+        periodRow.setStyle("-fx-alignment: center-left;");
+        Label periodIcon = new Label("📅");
+        periodIcon.setStyle("-fx-font-size: 16;");
+        Label periodLabel = new Label("Period:");
+        periodLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;");
+        Label periodValue = new Label(month + " " + year);
+        periodValue.setStyle("-fx-font-size: 13; -fx-text-fill: #1e293b; -fx-font-weight: bold;");
+        periodRow.getChildren().addAll(periodIcon, periodLabel, periodValue);
+        
+        infoCard.getChildren().addAll(managerRow, periodRow);
+        
+        // Targets card
+        HBox targetsCard = new HBox(10);
+        targetsCard.setStyle("-fx-alignment: center;");
+        
+        // Car target
+        VBox carBox = new VBox(8);
+        carBox.setStyle("-fx-background-color: #eff6ff; -fx-padding: 12; -fx-background-radius: 8; -fx-alignment: center;");
+        Label carIcon = new Label("🚗");
+        carIcon.setStyle("-fx-font-size: 20;");
+        Label carLabel = new Label("Car Target");
+        carLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #3b82f6; -fx-font-weight: 600;");
+        Label carValue = new Label(String.valueOf(carTarget));
+        carValue.setStyle("-fx-font-size: 18; -fx-text-fill: #1e293b; -fx-font-weight: bold;");
+        carBox.getChildren().addAll(carIcon, carLabel, carValue);
+        
+        // Part target
+        VBox partBox = new VBox(8);
+        partBox.setStyle("-fx-background-color: #f0fdf4; -fx-padding: 12; -fx-background-radius: 8; -fx-alignment: center;");
+        Label partIcon = new Label("🔧");
+        partIcon.setStyle("-fx-font-size: 20;");
+        Label partLabel = new Label("Part Target");
+        partLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #10b981; -fx-font-weight: 600;");
+        Label partValue = new Label(String.valueOf(partTarget));
+        partValue.setStyle("-fx-font-size: 18; -fx-text-fill: #1e293b; -fx-font-weight: bold;");
+        partBox.getChildren().addAll(partIcon, partLabel, partValue);
+        
+        targetsCard.getChildren().addAll(carBox, partBox);
+        
+        detailsBox.getChildren().addAll(infoCard, targetsCard);
+        
+        // Show confirmation dialog
+        if (dashboardController != null) {
+            dashboardController.showConfirmDialogWithDetails(
+                "Confirm Target Setting",
+                "🎯",
+                detailsBox,
+                () -> executeSetTarget(manager, month, year, carTarget, partTarget)
+            );
+        }
+    }
+    
+    private void executeSetTarget(String selectedManager, String selectedMonth, int year, int carTarget, int partTarget) {
         int managerId = managerMap.get(selectedManager);
         int month = monthCombo.getItems().indexOf(selectedMonth) + 1;
-        String targetString = "cars-" + carTarget + ",parts-" + partTarget;
         
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection()) {
-            // Check if target already exists for this manager/month/year
-            String checkQuery = """
-                SELECT target_id 
-                FROM user_target 
-                WHERE user_id = ? 
-                AND MONTH(effective_date) = ? 
-                AND YEAR(effective_date) = ?
-            """;
+            // Call the setTarget stored procedure
+            String callProc = "{CALL setTarget(?, ?, ?, ?, ?)}";
+            CallableStatement cs = conn.prepareCall(callProc);
+            cs.setInt(1, managerId);
+            cs.setInt(2, month);
+            cs.setInt(3, year);
+            cs.setInt(4, carTarget);
+            cs.setInt(5, partTarget);
             
-            PreparedStatement checkPs = conn.prepareStatement(checkQuery);
-            checkPs.setInt(1, managerId);
-            checkPs.setInt(2, month);
-            checkPs.setInt(3, year);
-            ResultSet checkRs = checkPs.executeQuery();
+            // Execute the procedure
+            boolean hasResults = cs.execute();
             
-            if (checkRs.next()) {
-                // Target exists, update it
-                int targetId = checkRs.getInt("target_id");
-                String updateQuery = """
-                    UPDATE user_target 
-                    SET target = ? 
-                    WHERE target_id = ?
-                """;
-                
-                PreparedStatement updatePs = conn.prepareStatement(updateQuery);
-                updatePs.setString(1, targetString);
-                updatePs.setInt(2, targetId);
-                updatePs.executeUpdate();
-                
-                logger.info("Target updated for manager {} - {}", managerId, targetString);
-                showToast("Success", "Target updated for " + selectedManager + " (Cars: " + carTarget + ", Parts: " + partTarget + ")", "success");
-            } else {
-                // Target doesn't exist, create new one
-                String insertQuery = """
-                    INSERT INTO user_target (user_id, effective_date, target) 
-                    VALUES (?, ?, ?)
-                """;
-                
-                PreparedStatement insertPs = conn.prepareStatement(insertQuery);
-                insertPs.setInt(1, managerId);
-                insertPs.setDate(2, java.sql.Date.valueOf(year + "-" + String.format("%02d", month) + "-01"));
-                insertPs.setString(3, targetString);
-                insertPs.executeUpdate();
-                
-                logger.info("Target created for manager {} - {}", managerId, targetString);
-                showToast("Success", "Target set for " + selectedManager + " (Cars: " + carTarget + ", Parts: " + partTarget + ")", "success");
+            // Get the result message from the procedure
+            String resultMessage = null;
+            if (hasResults) {
+                ResultSet rs = cs.getResultSet();
+                if (rs.next()) {
+                    resultMessage = rs.getString("result");
+                    logger.info("Procedure result: {}", resultMessage);
+                }
             }
+            
+            // Show success message and auto-close confirmation
+            showToast("Success", "Target set successfully!", "success");
+            logger.info("Target set for manager {} ({}/{}): cars-{}, parts-{}", 
+                       managerId, month, year, carTarget, partTarget);
             
             // Switch to progress view
             currentManagerId = managerId;
@@ -298,29 +326,18 @@ public class adminTargetManagementController {
         }
     }
     
-    private void showProgressView(int managerId, String target, String achieve, int month, int year) {
-        // Parse target: "cars-10,parts-50"
-        Map<String, Integer> targetMap = parseTargetString(target);
-        Map<String, Integer> achieveMap = parseTargetString(achieve);
+    private void showProgressView(int managerId, String userName, int carTarget, int partTarget,
+                                   int carAchieve, int partAchieve, double carPercent, double partPercent,
+                                   int month, int year, String status) {
         
-        int carTarget = targetMap.getOrDefault("cars", 0);
-        int partTarget = targetMap.getOrDefault("parts", 0);
-        int carAchieve = achieveMap.getOrDefault("cars", 0);
-        int partAchieve = achieveMap.getOrDefault("parts", 0);
-        
-        // Calculate percentages (cap at 100% for circle animation)
-        double carPercent = carTarget > 0 ? (carAchieve * 100.0 / carTarget) : 0;
-        double partPercent = partTarget > 0 ? (partAchieve * 100.0 / partTarget) : 0;
-        
-        // Update labels
-        String managerName = getManagerName(managerId);
-        managerNameLabel.setText(managerName);
+        // Update header labels
+        managerNameLabel.setText(userName);
         
         String[] months = {"January", "February", "March", "April", "May", "June",
                           "July", "August", "September", "October", "November", "December"};
         periodLabel.setText(months[month - 1] + " " + year);
         
-        // Update progress labels with excess indicator
+        // Update car progress
         if (carPercent >= 100) {
             int excess = carAchieve - carTarget;
             carProgressLabel.setText("100%");
@@ -330,10 +347,11 @@ public class adminTargetManagementController {
                 carAchieveLabel.setText(carAchieve + " / " + carTarget);
             }
         } else {
-            carProgressLabel.setText(String.format("%.0f%%", carPercent));
+            carProgressLabel.setText(String.format("%.1f%%", carPercent));
             carAchieveLabel.setText(carAchieve + " / " + carTarget);
         }
         
+        // Update part progress
         if (partPercent >= 100) {
             int excess = partAchieve - partTarget;
             partProgressLabel.setText("100%");
@@ -343,13 +361,16 @@ public class adminTargetManagementController {
                 partAchieveLabel.setText(partAchieve + " / " + partTarget);
             }
         } else {
-            partProgressLabel.setText(String.format("%.0f%%", partPercent));
+            partProgressLabel.setText(String.format("%.1f%%", partPercent));
             partAchieveLabel.setText(partAchieve + " / " + partTarget);
         }
         
-        // Animate progress circles (cap at 100%)
+        // Animate progress circles (cap at 100% for visual)
         animateProgress(carProgressCircle, Math.min(carPercent, 100));
         animateProgress(partProgressCircle, Math.min(partPercent, 100));
+        
+        // Log status
+        logger.info("Target status for {}: {}", userName, status);
         
         // Show progress pane
         setTargetPane.setVisible(false);
@@ -357,37 +378,14 @@ public class adminTargetManagementController {
     }
     
     private void animateProgress(Circle circle, double percent) {
-        double circumference = 2 * Math.PI * 65; // radius = 65
+        double circumference = 2 * Math.PI * 60; // radius = 60
         double offset = circumference - (circumference * percent / 100);
         
         Timeline timeline = new Timeline(
             new KeyFrame(Duration.ZERO, new KeyValue(circle.strokeDashOffsetProperty(), circumference)),
-            new KeyFrame(Duration.seconds(1.2), new KeyValue(circle.strokeDashOffsetProperty(), offset))
+            new KeyFrame(Duration.seconds(1.5), new KeyValue(circle.strokeDashOffsetProperty(), offset, Interpolator.EASE_OUT))
         );
         timeline.play();
-    }
-    
-    private Map<String, Integer> parseTargetString(String targetStr) {
-        Map<String, Integer> map = new HashMap<>();
-        if (targetStr == null || targetStr.isEmpty()) return map;
-        
-        String[] parts = targetStr.split(",");
-        for (String part : parts) {
-            String[] kv = part.split("-");
-            if (kv.length == 2) {
-                map.put(kv[0].trim(), Integer.parseInt(kv[1].trim()));
-            }
-        }
-        return map;
-    }
-    
-    private String getManagerName(int managerId) {
-        for (Map.Entry<String, Integer> entry : managerMap.entrySet()) {
-            if (entry.getValue() == managerId) {
-                return entry.getKey();
-            }
-        }
-        return "Manager";
     }
     
     private void showSetTargetPane() {

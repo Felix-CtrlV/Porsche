@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
@@ -128,6 +129,26 @@
                                             <children>
                                                 <Label style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Targets" />
                                                 <Label style="-fx-font-size: 12; -fx-text-fill: #6b7280;" text="Set and manage sales targets" />
+                                            </children>
+                                        </VBox>
+                                        <Label style="-fx-font-size: 18; -fx-text-fill: #9ca3af;" text="›" />
+                                    </children>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </HBox>
+                                
+                                <HBox fx:id="optionSalary" alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: transparent; -fx-background-radius: 10; -fx-padding: 14; -fx-cursor: hand;" styleClass="settings-item-hover">
+                                    <children>
+                                        <StackPane minHeight="48.0" minWidth="48.0" style="-fx-background-color: linear-gradient(to bottom right, #1a1a1a, #3d3d3d); -fx-background-radius: 12;">
+                                            <children>
+                                                <Label style="-fx-font-size: 22; -fx-text-fill: white;" text="💰" />
+                                            </children>
+                                        </StackPane>
+                                        <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Salary Management" />
+                                                <Label style="-fx-font-size: 12; -fx-text-fill: #6b7280;" text="Manage month-end salary processing" />
                                             </children>
                                         </VBox>
                                         <Label style="-fx-font-size: 18; -fx-text-fill: #9ca3af;" text="›" />
@@ -264,17 +285,17 @@
         </VBox>
         
         <!-- Profile View Pane -->
-        <VBox fx:id="profilePane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20;" translateX="420" visible="false" StackPane.alignment="CENTER_RIGHT">
+        <VBox fx:id="profilePane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20;" translateX="420" StackPane.alignment="CENTER_RIGHT">
             <children>
                 <!-- Header with Back Button -->
                 <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="53.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: linear-gradient(to right, #1a1a1a, #2d2d2d); -fx-padding: 20; -fx-background-radius: 20 0 0 0;">
                     <children>
-                        <Label fx:id="backToSettingsBtn" style="-fx-font-size: 24; -fx-text-fill: white; -fx-cursor: hand;" text="←">
+                        <Label fx:id="backToSettingsBtn" style="-fx-font-size: 24; -fx-text-fill: white; -fx-cursor: hand;" text="‹">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Label>
-                        <Label prefHeight="32.0" prefWidth="302.0" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI Semibold';" text="My Profile" HBox.hgrow="ALWAYS" />
+                        <Label prefHeight="32.0" prefWidth="317.0" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI Semibold';" text="My Profile" HBox.hgrow="ALWAYS" />
                         <Label fx:id="editProfileBtn" style="-fx-font-size: 20; -fx-text-fill: white; -fx-cursor: hand;" text="✏" visible="true">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
@@ -317,7 +338,7 @@
                                             <children>
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                     <children>
-                                                        <Label style="-fx-font-size: 18;" text="📧" />
+                                                        <Label style="-fx-font-size: 18; -fx-text-fill: #6b7280;" text="📧" />
                                                         <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280;" text="Email" />
                                                     </children>
                                                 </HBox>
@@ -330,7 +351,7 @@
                                             <children>
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                     <children>
-                                                        <Label style="-fx-font-size: 18;" text="📱" />
+                                                        <Label style="-fx-font-size: 18; -fx-text-fill: #6b7280;" text="📱" />
                                                         <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280;" text="Phone" />
                                                     </children>
                                                 </HBox>
@@ -343,7 +364,7 @@
                                             <children>
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                     <children>
-                                                        <Label style="-fx-font-size: 18;" text="🏠" />
+                                                        <Label style="-fx-font-size: 18; -fx-text-fill: #6b7280;" text="🏠" />
                                                         <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280;" text="Address" />
                                                     </children>
                                                 </HBox>
@@ -356,7 +377,7 @@
                                             <children>
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                     <children>
-                                                        <Label style="-fx-font-size: 18;" text="🎂" />
+                                                        <Label style="-fx-font-size: 18; -fx-text-fill: #6b7280;" text="🎂" />
                                                         <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280;" text="Date of Birth" />
                                                     </children>
                                                 </HBox>
@@ -374,7 +395,7 @@
                                                 <Cursor fx:constant="HAND" />
                                             </cursor>
                                         </Button>
-                                        <Button fx:id="changePasswordBtn" onAction="#onChangePassword" prefHeight="48.0" prefWidth="380.0" style="-fx-background-color: white; -fx-text-fill: #1f2937; -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: #e5e7eb; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;" text="🔐  Change Password">
+                                        <Button fx:id="changePasswordBtn" onAction="#showChangePasswordDialog" prefHeight="48.0" prefWidth="380.0" style="-fx-background-color: white; -fx-text-fill: #1f2937; -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: #e5e7eb; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;" text="🔐  Change Password">
                                             <cursor>
                                                 <Cursor fx:constant="HAND" />
                                             </cursor>
@@ -413,6 +434,27 @@
             </children>
         </VBox>
         
+        <!-- Salary Management Pane -->
+        <VBox fx:id="salaryPane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 25, 0, -8, 0);" translateX="420" visible="false" StackPane.alignment="CENTER_RIGHT">
+            <children>
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="53.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: linear-gradient(to right, #1a1a1a, #2d2d2d); -fx-padding: 15 25; -fx-background-radius: 20 0 0 0;">
+                    <children>
+                        <Label fx:id="backToSettingsFromSalary" style="-fx-font-size: 24; -fx-text-fill: white; -fx-cursor: hand;" text="‹">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Label>
+                        <Label style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI Semibold';" text="💰  Salary Management" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+                
+                <!-- Salary Content (will be loaded from adminSalaryManagement.fxml) -->
+                <StackPane fx:id="salaryContentPane" VBox.vgrow="ALWAYS">
+                </StackPane>
+            </children>
+        </VBox>
+        
         <!-- Toast Notification (top center) -->
         <HBox fx:id="toastNotification" alignment="CENTER_LEFT" maxHeight="60.0" maxWidth="360.0" spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 12 16; -fx-border-color: #e5e7eb; -fx-border-width: 2; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 15, 0, 0, 4);" translateY="-100" visible="false" StackPane.alignment="TOP_CENTER">
             <StackPane.margin>
@@ -432,5 +474,172 @@
                 </VBox>
             </children>
         </HBox>
+        
+        <!-- Confirmation Dialog Overlay -->
+        <Pane fx:id="confirmOverlay" style="-fx-background-color: rgba(0,0,0,0.4);" visible="false" />
+        
+        <!-- Confirmation Dialog (top center) -->
+        <VBox fx:id="confirmDialog" alignment="CENTER" maxWidth="420.0" maxHeight="-Infinity" spacing="0.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 25, 0, 0, 5);" translateY="-600" visible="false" StackPane.alignment="TOP_CENTER">
+            <StackPane.margin>
+                <Insets top="80.0" />
+            </StackPane.margin>
+            <children>
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 12 12 0 0; -fx-padding: 15 20;">
+                    <children>
+                        <StackPane minHeight="40.0" minWidth="40.0" style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 20;">
+                            <children>
+                                <Label fx:id="confirmIcon" style="-fx-font-size: 20; -fx-text-fill: white;" text="⚠" />
+                            </children>
+                        </StackPane>
+                        <Label fx:id="confirmTitle" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: white;" text="Confirm Action" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+                
+                <!-- Content -->
+                <VBox fx:id="confirmContent" spacing="12.0" style="-fx-padding: 18;">
+                    <children>
+                        <Label fx:id="confirmMessage" style="-fx-font-size: 13; -fx-text-fill: #374151; -fx-wrap-text: true;" text="Are you sure you want to proceed?" wrapText="true" />
+                    </children>
+                </VBox>
+                
+                <!-- Buttons -->
+                <HBox alignment="CENTER" spacing="10.0" style="-fx-padding: 0 18 18 18;">
+                    <children>
+                        <Button fx:id="confirmCancelBtn" onAction="#onConfirmCancel" prefHeight="42.0" prefWidth="180.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #64748b; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Cancel">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        <Button fx:id="confirmOkBtn" onAction="#onConfirmOk" prefHeight="42.0" prefWidth="180.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.3), 8, 0, 0, 2);" text="Confirm">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        
+        <!-- Change Password Dialog (slides from top) -->
+        <VBox fx:id="changePasswordDialog" alignment="CENTER" maxWidth="380.0" maxHeight="-Infinity" spacing="0.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 25, 0, 0, 5);" translateY="-700" visible="false" StackPane.alignment="TOP_CENTER">
+            <StackPane.margin>
+                <Insets top="40.0" />
+            </StackPane.margin>
+            <children>
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #1a1a1a, #2d2d2d); -fx-background-radius: 16 16 0 0; -fx-padding: 16 20;">
+                    <children>
+                        <StackPane minHeight="40.0" minWidth="40.0" style="-fx-background-color: rgba(255,255,255,0.1); -fx-background-radius: 12;">
+                            <Label style="-fx-font-size: 20; -fx-text-fill: white;" text="🔐" />
+                        </StackPane>
+                        <VBox spacing="1.0" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI Semibold';" text="Change Password" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: rgba(255,255,255,0.7);" text="Secure your account" />
+                        </VBox>
+                        <Label fx:id="closePasswordDialogBtn" onMouseClicked="#closePasswordDialog" style="-fx-font-size: 18; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 5;" text="✕">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Label>
+                    </children>
+                </HBox>
+                
+                <!-- Content Area -->
+                <StackPane style="-fx-padding: 20;">
+                    <!-- Step 1: Current Password -->
+                    <VBox fx:id="passwordVerificationPane" alignment="CENTER" spacing="14.0" visible="true">
+                        <VBox alignment="CENTER" spacing="4.0">
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Step 1: Verify Current Password" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: #6b7280; -fx-text-alignment: center;" text="Enter your current password to proceed" textAlignment="CENTER" wrapText="true" />
+                        </VBox>
+                        
+                        <VBox spacing="8.0" style="-fx-max-width: 300;">
+                            <Label style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #374151;" text="Current Password" />
+                            <PasswordField fx:id="currentPasswordField" promptText="Enter your current password" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 10; -fx-font-size: 13; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                        </VBox>
+                        
+                        <Button fx:id="verifyCurrentPasswordBtn" onAction="#onVerifyCurrentPassword" prefHeight="40.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #1a1a1a, #2d2d2d); -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Verify &amp; Send OTP">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        
+                        <Label fx:id="passwordVerifyStatus" style="-fx-font-size: 12; -fx-text-fill: #64748b; -fx-text-alignment: center;" textAlignment="CENTER" wrapText="true" />
+                    </VBox>
+                    
+                    <!-- Step 2: OTP Verification -->
+                    <VBox fx:id="otpVerificationPane" alignment="CENTER" spacing="14.0" visible="false">
+                        <VBox alignment="CENTER" spacing="4.0">
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Step 2: Verify OTP" />
+                            <Label fx:id="otpEmailLabel" style="-fx-font-size: 11; -fx-text-fill: #6b7280; -fx-text-alignment: center;" text="Enter the 6-digit code sent to your email" textAlignment="CENTER" wrapText="true" />
+                        </VBox>
+                        
+                        <VBox spacing="8.0" style="-fx-max-width: 300;">
+                            <Label style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #374151;" text="OTP Code" />
+                            <TextField fx:id="otpField" promptText="Enter 6-digit OTP" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 10; -fx-font-size: 13; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                        </VBox>
+                        
+                        <Button fx:id="verifyOtpBtn" onAction="#onVerifyOTP" prefHeight="40.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #1a1a1a, #2d2d2d); -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Verify OTP">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        
+                        <Button fx:id="resendOtpBtn" onAction="#onResendOTP" prefHeight="30.0" prefWidth="300.0" style="-fx-background-color: transparent; -fx-text-fill: #1a1a1a; -fx-font-size: 11; -fx-font-weight: 600; -fx-cursor: hand; -fx-underline: true;" text="Resend OTP">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        
+                        <Label fx:id="otpVerifyStatus" style="-fx-font-size: 12; -fx-text-fill: #64748b; -fx-text-alignment: center;" textAlignment="CENTER" wrapText="true" />
+                    </VBox>
+                    
+                    <!-- Step 3: New Password -->
+                    <VBox fx:id="newPasswordPane" alignment="CENTER" spacing="14.0" visible="false">
+                        <VBox alignment="CENTER" spacing="4.0">
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Step 3: Set New Password" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: #6b7280; -fx-text-alignment: center;" text="Create a strong password for your account" textAlignment="CENTER" wrapText="true" />
+                        </VBox>
+                        
+                        <VBox spacing="10.0" style="-fx-max-width: 300;">
+                            <VBox spacing="8.0">
+                                <Label style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #374151;" text="New Password" />
+                                <PasswordField fx:id="newPasswordField" promptText="Enter new password" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 10; -fx-font-size: 13; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                            </VBox>
+                            
+                            <VBox spacing="8.0">
+                                <Label style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #374151;" text="Confirm Password" />
+                                <PasswordField fx:id="confirmPasswordField" promptText="Confirm new password" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 10; -fx-font-size: 13; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                            </VBox>
+                        </VBox>
+                        
+                        <Button fx:id="changePasswordBtn" onAction="#onSubmitPasswordChange" prefHeight="40.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #1a1a1a, #2d2d2d); -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="✓ Change Password">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        
+                        <Label fx:id="changePasswordStatus" style="-fx-font-size: 12; -fx-text-fill: #64748b; -fx-text-alignment: center;" textAlignment="CENTER" wrapText="true" />
+                    </VBox>
+                    
+                    <!-- Loading Indicator -->
+                    <StackPane fx:id="passwordLoadingPane" style="-fx-background-color: rgba(248,249,250,0.95);" visible="false">
+                        <VBox alignment="CENTER" spacing="10.0">
+                            <ProgressIndicator prefHeight="40.0" prefWidth="40.0" />
+                            <Label style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: #1f2937;" text="Processing..." />
+                        </VBox>
+                    </StackPane>
+                </StackPane>
+                
+                <!-- Message Bar -->
+                <HBox fx:id="passwordMessagePane" alignment="CENTER" prefHeight="40.0" style="-fx-background-color: #10b981; -fx-background-radius: 0 0 16 16;" visible="false">
+                    <padding>
+                        <Insets bottom="8.0" left="20.0" right="20.0" top="8.0" />
+                    </padding>
+                    <Label fx:id="passwordMessageLabel" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: white;" text="Success!" />
+                </HBox>
+            </children>
+        </VBox>
     </children>
 </StackPane>
