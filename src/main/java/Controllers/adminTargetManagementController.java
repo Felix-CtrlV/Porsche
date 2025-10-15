@@ -1,12 +1,12 @@
 package Controllers;
 
 import Database.DatabaseConnectionManager;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import org.slf4j.Logger;
@@ -44,6 +44,13 @@ public class adminTargetManagementController {
     private int currentManagerId = 0;
     private int currentMonth = 0;
     private int currentYear = 0;
+    
+    // Reference to parent dashboard controller
+    private adminDashboardController dashboardController;
+    
+    public void setDashboardController(adminDashboardController controller) {
+        this.dashboardController = controller;
+    }
     
     @FXML
     public void initialize() {
@@ -99,7 +106,7 @@ public class adminTargetManagementController {
             
         } catch (SQLException e) {
             logger.error("Failed to load managers", e);
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load managers: " + e.getMessage());
+            showToast("Error", "Failed to load managers: " + e.getMessage(), "error");
         }
     }
     
@@ -222,7 +229,7 @@ public class adminTargetManagementController {
         Integer partTarget = partTargetSpinner.getValue();
         
         if (selectedManager == null || selectedMonth == null) {
-            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please select a manager and month.");
+            showToast("Validation Error", "Please select a manager and month.", "error");
             return;
         }
         
@@ -261,9 +268,7 @@ public class adminTargetManagementController {
                 updatePs.executeUpdate();
                 
                 logger.info("Target updated for manager {} - {}", managerId, targetString);
-                showAlert(Alert.AlertType.INFORMATION, "Success", 
-                         "Target updated successfully for " + selectedManager + "!\n\n" +
-                         "Cars: " + carTarget + "\nParts: " + partTarget);
+                showToast("Success", "Target updated for " + selectedManager + " (Cars: " + carTarget + ", Parts: " + partTarget + ")", "success");
             } else {
                 // Target doesn't exist, create new one
                 String insertQuery = """
@@ -278,9 +283,7 @@ public class adminTargetManagementController {
                 insertPs.executeUpdate();
                 
                 logger.info("Target created for manager {} - {}", managerId, targetString);
-                showAlert(Alert.AlertType.INFORMATION, "Success", 
-                         "Target set successfully for " + selectedManager + "!\n\n" +
-                         "Cars: " + carTarget + "\nParts: " + partTarget);
+                showToast("Success", "Target set for " + selectedManager + " (Cars: " + carTarget + ", Parts: " + partTarget + ")", "success");
             }
             
             // Switch to progress view
@@ -291,7 +294,7 @@ public class adminTargetManagementController {
             
         } catch (SQLException e) {
             logger.error("Failed to set target", e);
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to set target: " + e.getMessage());
+            showToast("Error", "Failed to set target: " + e.getMessage(), "error");
         }
     }
     
@@ -425,11 +428,9 @@ public class adminTargetManagementController {
         partTargetSpinner.getValueFactory().setValue(50);
     }
     
-    private void showAlert(Alert.AlertType type, String title, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+    private void showToast(String title, String message, String type) {
+        if (dashboardController != null) {
+            dashboardController.showToast(title, message, type);
+        }
     }
 }

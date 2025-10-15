@@ -35,4 +35,5 @@ public class DatabaseConnectionManager {
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
+
 }
