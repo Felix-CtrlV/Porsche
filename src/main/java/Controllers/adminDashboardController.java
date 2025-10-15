@@ -137,7 +137,7 @@ public class adminDashboardController {
     private Label passwordVerifyStatus, otpVerifyStatus, changePasswordStatus, otpEmailLabel;
     
     @FXML
-    private HBox passwordMessagePane;
+    private StackPane passwordMessagePane;
     
     @FXML
     private Label passwordMessageLabel, closePasswordDialogBtn;
@@ -146,6 +146,8 @@ public class adminDashboardController {
     private StackPane passwordLoadingPane;
     
     private final OTPService otpService = OTPService.getInstance();
+    
+    private SequentialTransition currentPasswordAnimation;
 
     @FXML
     private Button logoutbtn;
@@ -207,6 +209,14 @@ public class adminDashboardController {
         profileEmail.setText(current.getEmail());
         profileDOB.setText(current.getDob().toString());
         profilePhone.setText(current.getPhone());
+        
+        // Add clipping to change password dialog to hide notification overflow
+        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle();
+        clip.widthProperty().bind(changePasswordDialog.widthProperty());
+        clip.heightProperty().bind(changePasswordDialog.heightProperty());
+        clip.setArcWidth(12);
+        clip.setArcHeight(12);
+        changePasswordDialog.setClip(clip);
 
         // Removed old edit button code
 
@@ -537,6 +547,25 @@ public class adminDashboardController {
                 root.setDisable(false);
             });
             hide.play();
+        } else if (salaryPane.isVisible()) {
+            // Close salary pane directly
+            TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), salaryPane);
+            slideOut.setFromX(0);
+            slideOut.setToX(420);
+            
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
+            fadeOut.setFromValue(0.5);
+            fadeOut.setToValue(0);
+            
+            ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+            hide.setOnFinished(e -> {
+                salaryPane.setVisible(false);
+                settingPane.setVisible(false); // Also hide settings pane
+                overlayPane.setVisible(false);
+                root.setEffect(null);
+                root.setDisable(false);
+            });
+            hide.play();
         } else if (passwordVerifyPane.isVisible()) {
             // Close password verification pane directly
             TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
@@ -565,23 +594,23 @@ public class adminDashboardController {
     }
     
     private void showPasswordVerification() {
-        // Hide settings pane but keep overlay and blur
+        // Slide out settings pane first
         TranslateTransition slideOutSettings = new TranslateTransition(Duration.millis(300), settingPane);
         slideOutSettings.setFromX(0);
         slideOutSettings.setToX(420);
         slideOutSettings.setOnFinished(e -> {
             settingPane.setVisible(false);
             
-            // Show password verification pane
+            // Then slide in verification pane
             passwordVerifyPane.setVisible(true);
             passwordVerifyPane.setTranslateX(420);
             verifyPasswordField.clear();
             passwordErrorLabel.setVisible(false);
             
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
-            slideIn.setFromX(420);
-            slideIn.setToX(0);
-            slideIn.play();
+            TranslateTransition slideInVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
+            slideInVerify.setFromX(420);
+            slideInVerify.setToX(0);
+            slideInVerify.play();
         });
         slideOutSettings.play();
     }
@@ -615,32 +644,30 @@ public class adminDashboardController {
     }
     
     private void hidePasswordVerification() {
-        // Slide out verification pane and slide in settings pane simultaneously
+        // Slide out verification pane first
         TranslateTransition slideOutVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
         slideOutVerify.setFromX(0);
         slideOutVerify.setToX(420);
-        
-        // Prepare settings pane
-        settingPane.setVisible(true);
-        settingPane.setTranslateX(420);
-        
-        TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
-        slideInSettings.setFromX(420);
-        slideInSettings.setToX(0);
-        
-        // Run both transitions together
-        ParallelTransition transition = new ParallelTransition(slideOutVerify, slideInSettings);
-        transition.setOnFinished(e -> {
+        slideOutVerify.setOnFinished(e -> {
             passwordVerifyPane.setVisible(false);
             verifyPasswordField.clear();
             passwordErrorLabel.setVisible(false);
+            
+            // Prepare settings pane off-screen before making it visible
+            settingPane.setTranslateX(420);
+            settingPane.setVisible(true);
+            
+            // Then slide in settings pane
+            TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
+            slideInSettings.setFromX(420);
+            slideInSettings.setToX(0);
+            slideInSettings.play();
         });
-        transition.play();
+        slideOutVerify.play();
     }
     
     private void showProfilePane() {
-        // Hide settings pane to prevent stacking
-        settingPane.setVisible(false);
+        // Settings pane is already hidden from verification step, no need to touch it
         
         // Refresh profile data from session first
         if (current != null) {
@@ -666,51 +693,52 @@ public class adminDashboardController {
         profilePhone.setFocusTraversable(false);
         profileAddress.setFocusTraversable(false);
         
-        // Slide out verification pane and slide in profile pane simultaneously
+        // Slide out verification pane first
         TranslateTransition slideOutVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
         slideOutVerify.setFromX(0);
         slideOutVerify.setToX(420);
-        
-        // Prepare profile pane
-        profilePane.setVisible(true);
-        profilePane.setTranslateX(420);
-        
-        TranslateTransition slideInProfile = new TranslateTransition(Duration.millis(300), profilePane);
-        slideInProfile.setFromX(420);
-        slideInProfile.setToX(0);
-        
-        // Run both transitions together
-        ParallelTransition transition = new ParallelTransition(slideOutVerify, slideInProfile);
-        transition.setOnFinished(e -> {
+        slideOutVerify.setOnFinished(e -> {
             passwordVerifyPane.setVisible(false);
-            // Clear any selection after animation
-            profileEmail.deselect();
-            profilePhone.deselect();
-            profileAddress.deselect();
+            
+            // Then slide in profile pane
+            profilePane.setVisible(true);
+            profilePane.setTranslateX(420);
+            
+            TranslateTransition slideInProfile = new TranslateTransition(Duration.millis(300), profilePane);
+            slideInProfile.setFromX(420);
+            slideInProfile.setToX(0);
+            slideInProfile.setOnFinished(ev -> {
+                // Clear any selection after animation
+                profileEmail.deselect();
+                profilePhone.deselect();
+                profileAddress.deselect();
+            });
+            slideInProfile.play();
         });
-        transition.play();
+        slideOutVerify.play();
     }
     
     private void hideProfilePane() {
-        // Slide out profile pane and slide in settings pane simultaneously
+        // Prepare settings pane off-screen BEFORE starting any animation (while still invisible)
+        settingPane.setTranslateX(420);
+        
+        // Slide out profile pane first
         TranslateTransition slideOutProfile = new TranslateTransition(Duration.millis(300), profilePane);
         slideOutProfile.setFromX(0);
         slideOutProfile.setToX(420);
-        
-        // Prepare settings pane
-        settingPane.setVisible(true);
-        settingPane.setTranslateX(420);
-        
-        TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
-        slideInSettings.setFromX(420);
-        slideInSettings.setToX(0);
-        
-        // Run both transitions together
-        ParallelTransition transition = new ParallelTransition(slideOutProfile, slideInSettings);
-        transition.setOnFinished(e -> {
+        slideOutProfile.setOnFinished(e -> {
             profilePane.setVisible(false);
+            
+            // Now make settings pane visible (it's already positioned at 420)
+            settingPane.setVisible(true);
+            
+            // Then slide in settings pane
+            TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
+            slideInSettings.setFromX(420);
+            slideInSettings.setToX(0);
+            slideInSettings.play();
         });
-        transition.play();
+        slideOutProfile.play();
     }
     
     private void toggleEditMode() {
@@ -1078,21 +1106,49 @@ public class adminDashboardController {
     }
 
     private void showPasswordMessage(String message, boolean isSuccess) {
-        passwordMessageLabel.setText(message);
-        
-        // Set color based on type
-        if (isSuccess) {
-            passwordMessagePane.setStyle("-fx-background-color: #10b981; -fx-background-radius: 0 0 16 16;");
-        } else {
-            passwordMessagePane.setStyle("-fx-background-color: #ef4444; -fx-background-radius: 0 0 16 16;");
+        if (currentPasswordAnimation != null) {
+            currentPasswordAnimation.stop();
+            passwordMessagePane.setTranslateY(40);
         }
         
-        passwordMessagePane.setVisible(true);
+        passwordMessageLabel.setText(message);
         
-        // Auto-hide after 3 seconds
+        // Set colors based on type (login notification style)
+        if (isSuccess) {
+            passwordMessagePane.setStyle("-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(34, 197, 94); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(22, 163, 74);");
+            passwordMessageLabel.setStyle("-fx-text-fill: white;");
+        } else {
+            passwordMessagePane.setStyle("-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(255, 60, 41); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(255, 102, 40);");
+            passwordMessageLabel.setStyle("-fx-text-fill: white;");
+        }
+        
+        // Slide in from bottom
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), passwordMessagePane);
+        slideIn.setFromY(40);
+        slideIn.setToY(3);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), passwordMessagePane);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        ParallelTransition show = new ParallelTransition(slideIn, fadeIn);
+        
+        // Pause for 3 seconds
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
-        pause.setOnFinished(e -> passwordMessagePane.setVisible(false));
-        pause.play();
+        
+        // Slide out to bottom
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), passwordMessagePane);
+        slideOut.setFromY(3);
+        slideOut.setToY(40);
+        
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), passwordMessagePane);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        
+        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+        
+        currentPasswordAnimation = new SequentialTransition(show, pause, hide);
+        currentPasswordAnimation.play();
     }
     
     // ========== TARGET PANE METHODS ==========

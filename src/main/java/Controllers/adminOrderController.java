@@ -376,6 +376,8 @@ public class adminOrderController {
             detailPane.setVisible(false);
             detailPane.setManaged(false);
             detailPane.setTranslateY(0);
+            // Clear table selection so the same row can be clicked again
+            table.getSelectionModel().clearSelection();
         });
         timeline.play();
     }

@@ -16,7 +16,7 @@
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #f8fafc;" stylesheets="@../CSS/porsche_admin_overview.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOrderController">
    <top>
-      <VBox spacing="15.0" BorderPane.alignment="CENTER">
+      <VBox BorderPane.alignment="CENTER">
          <children>
             <!-- Date Controls Bar -->
             <HBox alignment="CENTER_RIGHT" prefHeight="50.0" spacing="10.0">
@@ -26,11 +26,11 @@
                   <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;">
                      <children>
                         <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                        <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
+                        <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" stylesheets="@../CSS/general.css" />
                         <Button fx:id="NextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                         <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
                         <Button fx:id="PreviousYearbtn" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                        <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
+                        <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" stylesheets="@../CSS/general.css" />
                         <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                      </children>
                   </HBox>
@@ -60,7 +60,7 @@
             </HBox>
          </children>
          <padding>
-            <Insets bottom="10.0" top="10.0" />
+            <Insets top="10.0" />
          </padding>
       </VBox>
    </top>
@@ -148,7 +148,7 @@
             </VBox>
          </children>
          <padding>
-            <Insets bottom="20.0" top="10.0" />
+            <Insets bottom="20.0" />
          </padding>
       </HBox>
    </center>
