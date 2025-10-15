@@ -67,7 +67,7 @@
                 </HBox>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <ComboBox fx:id="roleCombo" prefHeight="30.0" prefWidth="106.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;">
+                  <ComboBox fx:id="roleCombo" prefHeight="30.0" prefWidth="106.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;" stylesheets="@../CSS/general.css">
                       <items>
                           <FXCollections fx:factory="observableArrayList">
                               <String fx:value="Manager" />
@@ -175,13 +175,13 @@
                                 <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;">
                                     <children>
                                         <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onMouseClicked="#prevMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                                        <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
+                                        <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" stylesheets="@../CSS/general.css" />
                                         <Button fx:id="NextMonthbtn" mnemonicParsing="false" onMouseClicked="#nextMonthClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
 
                                         <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
 
                                         <Button fx:id="PreviousYearbtn" mnemonicParsing="false" onMouseClicked="#prevYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                                        <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0;" stylesheets="@../CSS/general.css" />
+                                        <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" stylesheets="@../CSS/general.css" />
                                         <Button fx:id="NextYearbtn" mnemonicParsing="false" onMouseClicked="#nextYearClick" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                                     </children>
                                 </HBox>
@@ -237,7 +237,7 @@
                     <children>
                         <StackPane HBox.hgrow="ALWAYS">
                             <children>
-                                <AreaChart fx:id="lineChart" visible="false" HBox.hgrow="ALWAYS">
+                                <AreaChart fx:id="lineChart" visible="false" stylesheets="@../CSS/general.css" HBox.hgrow="ALWAYS">
                                     <xAxis>
                                         <CategoryAxis side="BOTTOM" />
                                     </xAxis>

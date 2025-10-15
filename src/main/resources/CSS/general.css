@@ -47,6 +47,80 @@
 .choice-box .arrow-button {
     -fx-opacity: 0;
 }
+
+/* ChoiceBox text styling */
+.choice-box {
+    -fx-text-fill: #1f2937;
+}
+
+.choice-box .label {
+    -fx-text-fill: #1f2937;
+}
+
+.choice-box:showing .label {
+    -fx-text-fill: #1f2937;
+}
+
+/* ChoiceBox popup items */
+.choice-box .context-menu {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+}
+
+.choice-box .menu-item {
+    -fx-background-color: white;
+    -fx-text-fill: #1f2937;
+}
+
+.choice-box .menu-item .label {
+    -fx-text-fill: #1f2937;
+}
+
+.choice-box .menu-item:focused {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #1f2937;
+}
+
+.choice-box .menu-item:focused .label {
+    -fx-text-fill: #1f2937;
+}
+
+.choice-box .menu-item:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+.choice-box .menu-item:hover .label {
+    -fx-text-fill: #1f2937;
+}
+
+/* ComboBox text styling */
+.combo-box {
+    -fx-text-fill: #1f2937;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #1f2937;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #1f2937;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #1f2937;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #1f2937;
+}
 .car:hover{
     -fx-text-fill: #6D8196;
 
@@ -82,4 +156,51 @@
 
 .default-color1.chart-bar {
     -fx-bar-fill: #ffa500;
+}
+
+/* Smooth line charts with rounded curves */
+.chart-series-line {
+    -fx-stroke-width: 3px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+}
+
+.chart-line-symbol {
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+/* Area chart styling */
+.chart-series-area-line {
+    -fx-stroke-width: 3px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+}
+
+.chart-series-area-fill {
+    -fx-fill: linear-gradient(to bottom, rgba(102, 126, 234, 0.3), rgba(102, 126, 234, 0.05));
+}
+
+.default-color0.chart-series-area-line {
+    -fx-stroke: #667eea;
+}
+
+.default-color0.chart-area-symbol {
+    -fx-background-color: #667eea, white;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 4, 0, 0, 2);
+}
+
+.default-color1.chart-series-area-line {
+    -fx-stroke: #ffa500;
+}
+
+.default-color1.chart-area-symbol {
+    -fx-background-color: #ffa500, white;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px;
+    -fx-effect: dropshadow(gaussian, rgba(255, 165, 0, 0.4), 4, 0, 0, 2);
 }
