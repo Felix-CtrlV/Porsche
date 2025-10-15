@@ -12,6 +12,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.Cursor;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
@@ -19,7 +21,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -237,6 +242,11 @@ public class managerStaffViewController {
     }
 
     @FXML
+    private void clickStaffImage(MouseEvent event) {
+        handleImageSelection(StaffImage);
+    }
+
+    @FXML
     void ordersTableClick(MouseEvent event) throws IOException {
         managerOrderView selectorder = ordersTable.getSelectionModel().getSelectedItem();
 
@@ -308,6 +318,10 @@ public class managerStaffViewController {
         targetlayer.setVisible(true);
         setTarget();
         setupSearchBar();
+        
+        // Set up staff image click handler
+        StaffImage.setCursor(Cursor.HAND);
+        StaffImage.setPickOnBounds(true);
 
     }
 
@@ -324,6 +338,7 @@ public class managerStaffViewController {
     private boolean listenersInitialized = false;
 
     private List<user> staffInfoList = new ArrayList<user>();
+    private List<File> file = new ArrayList<>();
 
     public managerStaffViewController() throws SQLException, ClassNotFoundException, IOException {
 
@@ -600,6 +615,7 @@ public class managerStaffViewController {
 
             rs = cs.executeQuery();
             if (rs.next()) {
+
                 int target_car = rs.getInt(4);
                 int target_part = rs.getInt(5);
                 int achieve_car = rs.getInt(6);
@@ -969,5 +985,25 @@ public class managerStaffViewController {
         }
         monthBox.setValue(monthName);
         yearBox.setValue(currentYear);
+    }
+
+    private void handleImageSelection(ImageView targetImageView) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(targetImageView.getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                Image image = new Image(new FileInputStream(selectedFile));
+                targetImageView.setImage(image);
+                file.clear();
+                file.add(selectedFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

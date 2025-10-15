@@ -56,6 +56,7 @@ public class managerOrderManagementController {
     private int currentYear;
     private boolean listenersInitialized = false;
     private boolean updatingMonthBox = false;
+    private boolean isWeeklyView = true; // Track which revenue view is active
 
     @FXML
     private Button PreviousMonthbtn;
@@ -169,7 +170,8 @@ public class managerOrderManagementController {
     void clickMonthlyRevenue(ActionEvent event) {
         System.out.println("Monthly Revenue button clicked");
         
-        // Update button styles using CSS classes
+        isWeeklyView = false;
+        // Update button styles
         activateRevenueButton(monthlyRevenue);
         
         try {
@@ -189,6 +191,7 @@ public class managerOrderManagementController {
         }
         updateYearMonthLabel();
         loadOrder(); // Reload with new month/year
+        refreshRevenueChart(); // Refresh the active chart view
     }
 
     @FXML
@@ -201,6 +204,7 @@ public class managerOrderManagementController {
         }
         updateYearMonthLabel();
         loadOrder(); // Reload with new year
+        refreshRevenueChart(); // Refresh the active chart view
     }
 
     @FXML
@@ -212,6 +216,7 @@ public class managerOrderManagementController {
         }
         updateYearMonthLabel();
         loadOrder(); // Reload with new month/year
+        refreshRevenueChart(); // Refresh the active chart view
     }
 
     @FXML
@@ -219,13 +224,15 @@ public class managerOrderManagementController {
         currentYear--;
         updateYearMonthLabel();
         loadOrder(); // Reload with new year
+        refreshRevenueChart(); // Refresh the active chart view
     }
 
     @FXML
     void clickWeeklyRevenue(ActionEvent event) {
         System.out.println("Weekly Revenue button clicked");
         
-        // Update button styles using CSS classes
+        isWeeklyView = true;
+        // Update button styles
         activateRevenueButton(weeklyRevenue);
         
         try {
@@ -323,6 +330,15 @@ public class managerOrderManagementController {
         // Load all orders initially (will be filtered by current month/year)
         loadOrder();
         
+        // Initialize revenue chart buttons and show weekly chart by default
+        activateRevenueButton(weeklyRevenue);
+        try {
+            showWeeklyRevenueChart();
+        } catch (Exception e) {
+            System.err.println("Error loading initial revenue chart: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
         // Set up listeners for month/year boxes (only once)
         if (!listenersInitialized) {
             yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -331,6 +347,7 @@ public class managerOrderManagementController {
                     updateMonthBoxForYear(currentYear); // Update available months based on selected year
                     updateYearMonthLabel();
                     loadOrder(); // Reload with filter (also recalculates quantities)
+                    refreshRevenueChart(); // Refresh the active chart view
                 }
             });
             
@@ -341,6 +358,7 @@ public class managerOrderManagementController {
                     currentMonth = parsedMonth.getValue();
                     updateYearMonthLabel();
                     loadOrder(); // Reload with filter (also recalculates quantities)
+                    refreshRevenueChart(); // Refresh the active chart view
                 }
             });
             
@@ -624,6 +642,36 @@ public class managerOrderManagementController {
         
         // Populate month box
         updateMonthBoxForYear(currentYear);
+        
+        // Apply custom styling to make ChoiceBoxes more rounded and flexible
+        styleChoiceBox(monthBox);
+        styleChoiceBox(yearBox);
+    }
+    
+    private void styleChoiceBox(ChoiceBox<?> choiceBox) {
+        // Add custom CSS to properly round all parts of the ChoiceBox
+        String customStyle = 
+            "-fx-background-color: #f8fafc;" +
+            "-fx-background-radius: 12;" +
+            "-fx-border-color: #e2e8f0;" +
+            "-fx-border-radius: 12;" +
+            "-fx-border-width: 1;" +
+            "-fx-padding: 8 12 8 12;" +
+            "-fx-font-size: 13px;" +
+            "-fx-font-weight: 600;" +
+            "-fx-text-fill: #334155;" +
+            "-fx-cursor: hand;";
+        
+        choiceBox.setStyle(customStyle);
+        
+        // Apply additional styling when the ChoiceBox is shown
+        choiceBox.setOnShowing(event -> {
+            choiceBox.setStyle(customStyle + "-fx-border-color: #3b82f6; -fx-background-color: white;");
+        });
+        
+        choiceBox.setOnHidden(event -> {
+            choiceBox.setStyle(customStyle);
+        });
     }
     
     private void updateMonthBoxForYear(int year) {
@@ -776,9 +824,28 @@ public class managerOrderManagementController {
     }
     
     private void activateRevenueButton(Button activeBtn) {
-        weeklyRevenue.getStyleClass().remove("active");
-        monthlyRevenue.getStyleClass().remove("active");
-        activeBtn.getStyleClass().add("active");
+        // Reset both buttons to inactive style
+        String inactiveStyle = "-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 8 16 8 16; -fx-background-radius: 8;";
+        String activeStyle = "-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 8 16 8 16; -fx-background-radius: 8;";
+        
+        weeklyRevenue.setStyle(inactiveStyle);
+        monthlyRevenue.setStyle(inactiveStyle);
+        
+        // Set active button style
+        activeBtn.setStyle(activeStyle);
+    }
+    
+    private void refreshRevenueChart() {
+        try {
+            if (isWeeklyView) {
+                showWeeklyRevenueChart();
+            } else {
+                showMonthlyRevenueChart();
+            }
+        } catch (Exception e) {
+            System.err.println("Error refreshing revenue chart: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private void calculateSoldQuantities() {
@@ -863,10 +930,13 @@ public class managerOrderManagementController {
             // Continue with targets as 0
         }
         
+        // Calculate total orders for percentage calculation
+        int totalOrders = confirmQty + pendingQty;
+        
         // Set current values with targets and actual sold quantities from orders
-        setCarCircle(targetCar, confirmQty);
+        setConfirmQtyCircle(confirmQty, totalOrders);
         setCarPrice(confirmPrice);
-        setPartCircle(targetPart, pendingQty);
+        setPendingQtyCircle(pendingQty, totalOrders);
         setPartPrice(pendingPrice);
         
         // Calculate and set rates
@@ -874,72 +944,82 @@ public class managerOrderManagementController {
         setPendingPriceRate(pendingPrice, prevPendingPrice);
     }
     
-    private void setCarCircle(int target, int achieve) {
+    /**
+     * Sets the confirm quantity circle based on non-installment orders
+     * @param confirmQty Number of confirmed (non-installment) orders
+     * @param totalOrders Total number of all orders (confirm + pending)
+     */
+    private void setConfirmQtyCircle(int confirmQty, int totalOrders) {
         confrimQtyCircle.setVisible(true);
-        confrimQty.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
+        confrimQty.setText(String.valueOf(confirmQty));
         
-        double progressCar = 0;
-        if (achieve == 0 && target == 0) {
+        double progressConfirm = 0;
+        if (confirmQty == 0 && totalOrders == 0) {
             confrimQtyCircle.setVisible(false);
             confrimQty.setText("0");
             confrimQty.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
-        } else if (target > 0) {
-            // Calculate progress (can exceed 1.0 if achievement > target)
-            progressCar = (double) achieve / target;
-            // Cap at 1.0 for display (full circle)
-            if (progressCar > 1.0) {
-                progressCar = 1.0;
-            }
+        } else if (totalOrders > 0) {
+            // Calculate progress as percentage of total orders
+            progressConfirm = (double) confirmQty / totalOrders;
+            // Progress is already between 0 and 1 since confirmQty <= totalOrders
             confrimQty.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold; -fx-font-size: 16;");
         } else {
-            // No target set, just show achievement
-            confrimQty.setText(String.valueOf(achieve));
+            // No orders, just show confirm count
+            confrimQty.setText(String.valueOf(confirmQty));
             confrimQty.setStyle("-fx-text-fill: #6d8196; -fx-font-weight: bold; -fx-font-size: 16;");
-            progressCar = 0;
+            progressConfirm = 0;
         }
         
-        // Set stroke color and width for car circle
-        confrimQtyCircle.setStyle("-fx-stroke: #6d8196; -fx-stroke-width: 8; -fx-fill: transparent;");
+        // Set stroke color and width for confirm circle
+        confrimQtyCircle.setStroke(javafx.scene.paint.Color.web("#6d8196"));
+        confrimQtyCircle.setStrokeWidth(6);
+        confrimQtyCircle.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+        confrimQtyCircle.setFill(javafx.scene.paint.Color.TRANSPARENT);
         
-        // Set circular progress animation with car color #6d8196
+        // Set circular progress animation with confirm color #6d8196
         double circumference = 2 * Math.PI * confrimQtyCircle.getRadius();
         confrimQtyCircle.getStrokeDashArray().setAll(circumference, circumference);
         // Offset decreases as progress increases (0 offset = full circle)
-        confrimQtyCircle.setStrokeDashOffset(circumference - (circumference * progressCar));
+        confrimQtyCircle.setStrokeDashOffset(circumference - (circumference * progressConfirm));
     }
     
-    private void setPartCircle(int target, int achieve) {
+    /**
+     * Sets the pending quantity circle based on installment orders
+     * @param pendingQty Number of pending (installment) orders
+     * @param totalOrders Total number of all orders (confirm + pending)
+     */
+    private void setPendingQtyCircle(int pendingQty, int totalOrders) {
         pendingQtyCircle.setVisible(true);
-        pendingQty.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
+        this.pendingQty.setText(String.valueOf(pendingQty));
         
-        double progressPart = 0;
-        if (achieve == 0 && target == 0) {
+        double progressPending = 0;
+        if (pendingQty == 0 && totalOrders == 0) {
             pendingQtyCircle.setVisible(false);
-            pendingQty.setText("0");
-            pendingQty.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
-        } else if (target > 0) {
-            // Calculate progress (can exceed 1.0 if achievement > target)
-            progressPart = (double) achieve / target;
-            // Cap at 1.0 for display (full circle)
-            if (progressPart > 1.0) {
-                progressPart = 1.0;
-            }
-            pendingQty.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 16;");
+            this.pendingQty.setText("0");
+            this.pendingQty.setStyle("-fx-text-fill: #94a3b8; -fx-font-weight: normal;");
+        } else if (totalOrders > 0) {
+            // Calculate progress as percentage of total orders
+            progressPending = (double) pendingQty / totalOrders;
+            // Progress is already between 0 and 1 since pendingQty <= totalOrders
+            this.pendingQty.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 16;");
         } else {
-            // No target set, just show achievement
-            pendingQty.setText(String.valueOf(achieve));
-            pendingQty.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 16;");
-            progressPart = 0;
+            // No orders, just show pending count
+            this.pendingQty.setText(String.valueOf(pendingQty));
+            this.pendingQty.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 16;");
+            progressPending = 0;
         }
         
-        // Set stroke color and width for part circle
-        pendingQtyCircle.setStyle("-fx-stroke: #e67e22; -fx-stroke-width: 8; -fx-fill: transparent;");
+        // Set stroke color and width for pending circle
+        pendingQtyCircle.setStroke(javafx.scene.paint.Color.web("#e67e22"));
+        pendingQtyCircle.setStrokeWidth(6);
+        pendingQtyCircle.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+        pendingQtyCircle.setFill(javafx.scene.paint.Color.TRANSPARENT);
         
-        // Set circular progress animation with part color #e67e22
+        // Set circular progress animation with pending color #e67e22
         double circumference = 2 * Math.PI * pendingQtyCircle.getRadius();
         pendingQtyCircle.getStrokeDashArray().setAll(circumference, circumference);
         // Offset decreases as progress increases (0 offset = full circle)
-        pendingQtyCircle.setStrokeDashOffset(circumference - (circumference * progressPart));
+        pendingQtyCircle.setStrokeDashOffset(circumference - (circumference * progressPending));
     }
     
     private void setCarPrice(double totalPrice) {

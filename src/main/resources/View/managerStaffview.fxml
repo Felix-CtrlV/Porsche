@@ -77,7 +77,7 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                                     <children>
-                                        <ImageView fx:id="StaffImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                        <ImageView fx:id="StaffImage" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#clickStaffImage" pickOnBounds="true" preserveRatio="true">
                                             <image>
                                                 <Image url="@../Image/usericon.png" />
                                             </image></ImageView>
@@ -304,7 +304,7 @@
                               </TableView>
                            </center>
                                 </BorderPane>
-                        <VBox fx:id="targetlayer" disable="true" prefHeight="335.0" prefWidth="450.0" spacing="5.0" style="-fx-background-radius: 16; -fx-border-color: #dadce0; -fx-background-color: white; -fx-border-radius: 8;">
+                        <VBox fx:id="targetlayer" prefHeight="335.0" prefWidth="450.0" spacing="5.0" style="-fx-background-radius: 16; -fx-border-color: #dadce0; -fx-background-color: white; -fx-border-radius: 8;">
                            <children>
                               <Label prefHeight="21.0" prefWidth="199.0" style="-fx-font-family: 'Segoe UI'; -fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="TARGET OVERVIEW">
                                  <padding>
