@@ -190,11 +190,11 @@
                                 <HBox alignment="CENTER_RIGHT" spacing="5.0">
                                     <children>
                                         <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonthbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="◀" />
-                                        <ChoiceBox fx:id="monthBox" minWidth="100.0" prefHeight="40.0" prefWidth="90.0" HBox.hgrow="ALWAYS" />
+                                        <ChoiceBox fx:id="monthBox" minWidth="100.0" prefHeight="38.0" prefWidth="67.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 5;" HBox.hgrow="ALWAYS" />
                                         <Button fx:id="nextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonthbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="▶" />
                                         <Region prefWidth="10.0" HBox.hgrow="NEVER" />
                                         <Button fx:id="previousYearbth" mnemonicParsing="false" onAction="#clickPreviousYearbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="◀" />
-                                        <ChoiceBox fx:id="yearBox" minWidth="100.0" prefHeight="40.0" prefWidth="85.0" HBox.hgrow="ALWAYS" />
+                                        <ChoiceBox fx:id="yearBox" minWidth="100.0" prefHeight="38.0" prefWidth="80.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 10; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 5;" HBox.hgrow="ALWAYS" />
                                         <Button fx:id="nextYearbtn" mnemonicParsing="false" onAction="#clickNextYearbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="▶" />
                                     </children>
                                 </HBox>

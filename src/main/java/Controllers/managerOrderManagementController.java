@@ -642,36 +642,6 @@ public class managerOrderManagementController {
         
         // Populate month box
         updateMonthBoxForYear(currentYear);
-        
-        // Apply custom styling to make ChoiceBoxes more rounded and flexible
-        styleChoiceBox(monthBox);
-        styleChoiceBox(yearBox);
-    }
-    
-    private void styleChoiceBox(ChoiceBox<?> choiceBox) {
-        // Add custom CSS to properly round all parts of the ChoiceBox
-        String customStyle = 
-            "-fx-background-color: #f8fafc;" +
-            "-fx-background-radius: 12;" +
-            "-fx-border-color: #e2e8f0;" +
-            "-fx-border-radius: 12;" +
-            "-fx-border-width: 1;" +
-            "-fx-padding: 8 12 8 12;" +
-            "-fx-font-size: 13px;" +
-            "-fx-font-weight: 600;" +
-            "-fx-text-fill: #334155;" +
-            "-fx-cursor: hand;";
-        
-        choiceBox.setStyle(customStyle);
-        
-        // Apply additional styling when the ChoiceBox is shown
-        choiceBox.setOnShowing(event -> {
-            choiceBox.setStyle(customStyle + "-fx-border-color: #3b82f6; -fx-background-color: white;");
-        });
-        
-        choiceBox.setOnHidden(event -> {
-            choiceBox.setStyle(customStyle);
-        });
     }
     
     private void updateMonthBoxForYear(int year) {
