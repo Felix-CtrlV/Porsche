@@ -2,9 +2,16 @@ package Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import javax.swing.*;
+import java.io.IOException;
+import java.util.Objects;
 
 public class staffinternalcartController {
 
@@ -30,47 +37,74 @@ public class staffinternalcartController {
     private Button plusebtn;
 
     @FXML
-    private Button confirmbtn;
+    private Button comfirmbtn;
 
-    private int quantity = 0;
-
-    public void setData(String name, double price) {
-        namelbl.setText(name);
-        pricelbl.setText(String.format("%.2f", price));
-        numberlbl.setText("0");
+    public staffinternalcartController() throws IOException {
     }
 
+
     @FXML
-    void clickConfirmbtn(ActionEvent event) {
-        // You can handle cart confirmation here if needed
+    void clickcomfirmbtn(ActionEvent event) {
         String name = namelbl.getText();
         double price = Double.parseDouble(pricelbl.getText());
-        int qty = Integer.parseInt(numberlbl.getText());
-        System.out.println("Item confirmed: " + name + " - " + price + " x " + qty);
+
+        // Get instance of shopping cart controller and add accessory
+        if (staffShopingCartControllerInstance != null) {
+            staffShopingCartControllerInstance.addAccessory(name, price);
+        }
+
+        System.out.println("Accessory confirmed: " + name + " - " + price);
     }
 
+
     @FXML
-    void clickDeletebtn(ActionEvent event) {
+    void clickdeletebtn(ActionEvent event) {
         namelbl.setText("");
         pricelbl.setText("");
+
+    }
+    private staffShopingCartController staffShopingCartControllerInstance;
+
+    public void setCartController(staffShopingCartController controller) {
+        this.staffShopingCartControllerInstance = controller;}
+
+    @FXML
+    void clickminusbtn(ActionEvent event) {
+        int i = Integer.parseInt(numberlbl.getText());
+        if(i>0 ){
+            i=i-1;
+            numberlbl.setText("i");
+
+        }
+        else{
+            minusbtn.setVisible(false);
+        }
+    }
+
+    @FXML
+    void clickplusebtn(ActionEvent event) {
+        int i = Integer.parseInt(numberlbl.getText());
+        if(i<100){
+            i=i+1;
+            numberlbl.setText("i");
+        }
+        else{
+            plusebtn.setVisible(false);
+        }
+
+    }
+    public void setData(String name,Double price){
+        namelbl.setText(name);
+        pricelbl.setText(price.toString());
         numberlbl.setText("0");
-    }
 
-    @FXML
-    void clickMinusbtn(ActionEvent event) {
-        int i = Integer.parseInt(numberlbl.getText());
-        if (i > 0) {
-            i--;
-            numberlbl.setText(String.valueOf(i));
-        }
     }
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("staffShopingCart.fxml"));
+    Parent root = loader.load();
+    staffShopingCartController cartController = loader.getController();
+    @FXML
+    private void initialize() {
 
-    @FXML
-    void clickPlusebtn(ActionEvent event) {
-        int i = Integer.parseInt(numberlbl.getText());
-        if (i < 100) {
-            i++;
-            numberlbl.setText(String.valueOf(i));
-        }
-    }
+     }
+
 }

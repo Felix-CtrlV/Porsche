@@ -487,10 +487,16 @@ public class managerInventoryController {
         inventoryData.addAll(carsData);
         inventoryData.addAll(partsData);
         setupSearchBar();
-        if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
-            showTable("cars");
-        }else{
-            showTable("parts");
+        
+        // Preserve the current view state (Available or Unavailable)
+        if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
+            showUnavailableItems();
+        } else {
+            if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                showTable("cars");
+            }else{
+                showTable("parts");
+            }
         }
     }
 
@@ -585,7 +591,7 @@ public class managerInventoryController {
             setSelect(true,seriesSelectAll);
             fadeInOut(true, seriesPane, null);
             // Check if we're in unavailable view
-            if (switchTable.getText().contains("Unavailable")) {
+            if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
                 showUnavailableItems();
             } else {
                 showTable("cars");
@@ -593,7 +599,7 @@ public class managerInventoryController {
         } else if ("Parts".equals(selectedValue)) {
             fadeInOut(false, seriesPane, null);
             // Check if we're in unavailable view
-            if (switchTable.getText().contains("Unavailable")) {
+            if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
                 showUnavailableItems();
             } else {
                 showTable("parts");
@@ -757,7 +763,7 @@ public class managerInventoryController {
         }
         
         // Check current view state and maintain it
-        if (switchTable.getText().contains("Unavailable")) {
+        if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
             showUnavailableItems();
         } else {
             showTable("cars");
@@ -843,8 +849,9 @@ public class managerInventoryController {
                     String description = partDescriptionText.getText().trim();
                     String forCar = partRelativeComboBox.getText().trim();
 
+                    // forCar is optional, so don't include it in the empty check
                     allEmpty = img.isEmpty() && name.isEmpty() && qty.isEmpty() &&
-                            price.isEmpty() && description.isEmpty() && forCar.isEmpty();
+                            price.isEmpty() && description.isEmpty();
 
                 }else if(path.equalsIgnoreCase("carsEdit")){
                     // Convert database fuel type abbreviations to display names
@@ -875,21 +882,24 @@ public class managerInventoryController {
                                                 && !editPath.getPhoto().trim().equalsIgnoreCase("null");
                     boolean hasNewPhoto = !file.isEmpty();
                     
-                    if (hasOriginalPhoto && hasNewPhoto) {
+                    if (!hasNewPhoto) {
+                        // No new photo selected - image hasn't changed
+                        sameImage = true;
+                    } else if (hasOriginalPhoto && hasNewPhoto) {
                         // Both have photos - compare them
                         File selectedFile = file.get(0);
                         try {
                             String selectedPath = selectedFile.getCanonicalPath();
-                            String originalPath = new File(editPath.getPhoto()).getCanonicalPath();
+                            // Resolve the original path to handle relative paths
+                            File originalFile = resolveImagePath(editPath.getPhoto());
+                            String originalPath = originalFile != null ? originalFile.getCanonicalPath() : editPath.getPhoto();
                             sameImage = selectedPath.equals(originalPath);
                         } catch (IOException e) {
-                            sameImage = false;
+                            // If we can't resolve paths, assume they're the same if file exists
+                            sameImage = true;
                         }
-                    } else if (!hasOriginalPhoto && !hasNewPhoto) {
-                        // Both don't have photos - same
-                        sameImage = true;
-                    } else {
-                        // One has photo, other doesn't - different
+                    } else if (!hasOriginalPhoto && hasNewPhoto) {
+                        // Original had no photo, but new photo selected - different
                         sameImage = false;
                     }
                     allEmpty = sameImage &&
@@ -905,18 +915,27 @@ public class managerInventoryController {
                 }else if(path.equalsIgnoreCase("partsEdit")){
                     String photoPath = editPath.getPhoto();
                     boolean sameImage = true;
-                    if (!file.isEmpty() && photoPath != null) {
+                    boolean hasOriginalPhoto = photoPath != null && !photoPath.trim().isEmpty() && !photoPath.trim().equalsIgnoreCase("null");
+                    boolean hasNewPhoto = !file.isEmpty();
+                    
+                    if (!hasNewPhoto) {
+                        // No new photo selected - image hasn't changed
+                        sameImage = true;
+                    } else if (hasOriginalPhoto && hasNewPhoto) {
+                        // Both have photos - compare them
                         File selectedFile = file.get(0);
                         try {
                             String selectedPath = selectedFile.getCanonicalPath();
-                            String originalPath = new File(photoPath).getCanonicalPath();
+                            // Resolve the original path to handle relative paths
+                            File originalFile = resolveImagePath(photoPath);
+                            String originalPath = originalFile != null ? originalFile.getCanonicalPath() : photoPath;
                             sameImage = selectedPath.equals(originalPath);
                         } catch (IOException e) {
-                            sameImage = false;
+                            // If we can't resolve paths, assume they're the same if file exists
+                            sameImage = true;
                         }
-                    } else if ((file.isEmpty() || file.get(0) == null) && (photoPath == null || photoPath.isEmpty())) {
-                        sameImage = true;
-                    } else {
+                    } else if (!hasOriginalPhoto && hasNewPhoto) {
+                        // Original had no photo, but new photo selected - different
                         sameImage = false;
                     }
                     allEmpty =
@@ -975,7 +994,7 @@ public class managerInventoryController {
                 alert.setContentText("Successfully Edited The Part");
             }else if(in.contains("partsUpdate")){
                 alert.setContentText("Successfully Updated The Part");
-            }else if(in.contains("carsUpadate")){
+            }else if(in.contains("carsUpdate")){
                 alert.setContentText("Successfully Updated The Car");
             }
             alert.showAndWait();
@@ -1107,6 +1126,10 @@ public class managerInventoryController {
                     addCarbtn.setDisable(true);
                     addPartbtn.setDisable(false);
                     fadeInOut(true, addCar, addPart);
+                } else if (in.equals("carsUpdate") || in.equals("partsUpdate")) {
+                    // Close edit pane after update
+                    editPane.setVisible(false);
+                    fadeInOut(false, extraPane, inventoryPane);
                 } else {
                     fadeInOut(false, extraPane, inventoryPane);
                 }
@@ -1519,6 +1542,10 @@ public class managerInventoryController {
                 int id = rs.getInt(1);
                 String name = rs.getString(2);
                 String forCar = rs.getString(3);
+                // Display "Universal" if forCar is null
+                if (forCar == null || forCar.trim().isEmpty()) {
+                    forCar = "Universal";
+                }
                 String description = rs.getString(4);
                 int qty = rs.getInt(5);
                 Double price = rs.getDouble(6);
@@ -1532,6 +1559,7 @@ public class managerInventoryController {
                 if(check){
                     // Available items (check = true)
                     partsData.add(new inventory(id,inventoryId,name,forCar,description,qty,price,status,photoUrl));
+                    System.out.println("Added to partsData: " + inventoryId + " - " + name + " (qty: " + qty + ", status: " + status + ")");
                 }else{
                     // check = false
                     if(qty > 0){
@@ -1618,8 +1646,9 @@ public class managerInventoryController {
                 String id = String.valueOf(i.getInventoryId().toLowerCase());
                 String name = i.getName().toLowerCase();
 
-                if (id.contains(searchText) || name.contains(searchText)) {
-                    String suggestionText = i.getInventoryId() + " - " + i.getName();
+                String forCarInfo = (i.getForCar() != null && !i.getForCar().isEmpty()) ? i.getForCar() : "Universal";
+                if (id.contains(searchText) || name.contains(searchText) || forCarInfo.toLowerCase().contains(searchText)) {
+                    String suggestionText = i.getInventoryId() + " - " + i.getName() + " (" + forCarInfo + ")";
                     MenuItem item = new MenuItem(suggestionText);
 
                     // Set action for when suggestion is clicked
@@ -1661,9 +1690,10 @@ public class managerInventoryController {
             for (inventory i : partsOffDate) {
                 String id = String.valueOf(i.getInventoryId().toLowerCase());
                 String name = i.getName().toLowerCase();
+                String forCarInfo = (i.getForCar() != null && !i.getForCar().isEmpty()) ? i.getForCar() : "Universal";
 
-                if (id.contains(searchText) || name.contains(searchText)) {
-                    String suggestionText = i.getInventoryId() + " - " + i.getName() + " (Unavailable)";
+                if (id.contains(searchText) || name.contains(searchText) || forCarInfo.toLowerCase().contains(searchText)) {
+                    String suggestionText = i.getInventoryId() + " - " + i.getName() + " (" + forCarInfo + ", Unavailable)";
                     MenuItem item = new MenuItem(suggestionText);
 
                     // Set action for when suggestion is clicked
@@ -1766,12 +1796,28 @@ public class managerInventoryController {
             editPart.setVisible(false);
             editTitle.setText("(Car)");
             setEditCar();
+            // Clear previous event handlers to prevent stacking
+            editCarRevert.setOnAction(null);
+            editCarApply.setOnAction(null);
+            
             editCarRevert.setOnAction(e->{
-
                 setEditCar();
             });
             editCarApply.setOnAction(e->{
-                tableAddUpdateDelete(true);
+                try {
+                    boolean success = tableAddUpdateDelete(true);
+                    if (success) {
+                        // Show success alert
+                        alertForm(true, "carsUpdate");
+                    } else {
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Update Failed");
+                        errorAlert.setContentText("Failed to update the car. Please check all fields.");
+                        errorAlert.showAndWait();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             });
         }else{
             editCar.setVisible(false);
@@ -1779,11 +1825,28 @@ public class managerInventoryController {
             editTitle.setText("(Part)");
             setEditPart();
             populateEditPartCarNames();
+            // Clear previous event handlers to prevent stacking
+            editPartRevert.setOnAction(null);
+            editPartApply.setOnAction(null);
+            
             editPartRevert.setOnAction(e->{
                 setEditPart();
             });
             editPartApply.setOnAction(e->{
-                tableAddUpdateDelete(true);
+                try {
+                    boolean success = tableAddUpdateDelete(true);
+                    if (success) {
+                        // Show success alert
+                        alertForm(true, "partsUpdate");
+                    } else {
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Update Failed");
+                        errorAlert.setContentText("Failed to update the part. Please check all fields.");
+                        errorAlert.showAndWait();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             });
         }
         fadeInOut(true,extraPane,inventoryPane);
@@ -1796,10 +1859,10 @@ public class managerInventoryController {
         // Handle image loading with proper null/empty checks
         if (editPath.getPhoto() != null && !editPath.getPhoto().trim().isEmpty()) {
             file.clear();
-            File imageFile = new File(editPath.getPhoto());
+            File imageFile = resolveImagePath(editPath.getPhoto());
             
             // Check if file exists before trying to load it
-            if (imageFile.exists() && imageFile.isFile()) {
+            if (imageFile != null && imageFile.exists() && imageFile.isFile()) {
                 file.add(imageFile);
                 try {
                     Image img = new Image(new FileInputStream(imageFile));
@@ -1863,10 +1926,10 @@ public class managerInventoryController {
         // Handle image loading with proper null/empty checks
         if (editPath.getPhoto() != null && !editPath.getPhoto().trim().isEmpty()) {
             file.clear();
-            File imageFile = new File(editPath.getPhoto());
+            File imageFile = resolveImagePath(editPath.getPhoto());
             
             // Check if file exists before trying to load it
-            if (imageFile.exists() && imageFile.isFile()) {
+            if (imageFile != null && imageFile.exists() && imageFile.isFile()) {
                 file.add(imageFile);
                 try {
                     Image img = new Image(new FileInputStream(imageFile));
@@ -1888,37 +1951,88 @@ public class managerInventoryController {
             file.clear();
         }
     }
-    private void tableAddUpdateDelete(boolean check){
+    private void restoreItem() {
         try {
-            // Check if this is an edit operation (from edit pane) or restore/delete
+            // Restore - Mark as available (no validation needed)
+            if (editPath.getInventoryId().contains("C")) {
+                String sql = "UPDATE cars SET car_status = ? WHERE car_id = ?";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setBoolean(1, true);
+                ps.setInt(2, editPath.getId());
+                int rowsAffected = ps.executeUpdate();
+                System.out.println("Cars restored: " + rowsAffected + " rows affected for car_id: " + editPath.getId());
+                ps.close();
+            } else {
+                String sql = "UPDATE car_parts SET part_status = ? WHERE part_id = ?";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setBoolean(1, true);
+                ps.setInt(2, editPath.getId());
+                int rowsAffected = ps.executeUpdate();
+                System.out.println("Parts restored: " + rowsAffected + " rows affected for part_id: " + editPath.getId());
+                ps.close();
+            }
+            
+            // Refresh table data from database
+            setCarsTable();
+            setPartsTable();
+            inventoryData.clear();
+            inventoryData.addAll(carsData);
+            inventoryData.addAll(partsData);
+            
+            // Refresh the displayed table - preserve current view state
+            if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
+                showUnavailableItems();
+            } else {
+                if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                    showTable("cars");
+                }else{
+                    showTable("parts");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private boolean tableAddUpdateDelete(boolean check){
+        try {
+            // Check if this is an edit operation (from edit pane) or delete
             if (editPane.isVisible() && check) {
                 // EDIT/UPDATE operation
+                boolean updateSuccess = false;
                 if (editPath.getInventoryId().contains("C")) {
                     // Update Car
-                    updateCar();
+                    updateSuccess = updateCar();
                 } else {
                     // Update Part
-                    updatePart();
+                    updateSuccess = updatePart();
                 }
                 
-                // Refresh table data
+                if (!updateSuccess) {
+                    return false;
+                }
+                
+                // Refresh table data from database
                 setCarsTable();
                 setPartsTable();
                 inventoryData.clear();
                 inventoryData.addAll(carsData);
                 inventoryData.addAll(partsData);
                 
-                // Refresh the displayed table
-                if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
-                    showTable("cars");
-                }else{
-                    showTable("parts");
+                // Refresh the displayed table - preserve current view state
+                if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
+                    showUnavailableItems();
+                } else {
+                    if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                        showTable("cars");
+                    }else{
+                        showTable("parts");
+                    }
                 }
                 
-                // Close edit pane
-                fadeInOut(false, extraPane, inventoryPane);
-                editPane.setVisible(false);
-                clearCarPartForm(editPath.getInventoryId().contains("C") ? "carsEdit" : "partsEdit");
+                // Don't close edit pane here - let alertForm handle it after showing success message
+                // fadeInOut and clearCarPartForm will be called from alertForm
+                return true;
                 
             } else if (check) {
                 // Restore - Mark as available
@@ -1946,6 +2060,18 @@ public class managerInventoryController {
                 inventoryData.clear();
                 inventoryData.addAll(carsData);
                 inventoryData.addAll(partsData);
+                
+                // Refresh the displayed table - preserve current view state
+                if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
+                    showUnavailableItems();
+                } else {
+                    if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                        showTable("cars");
+                    }else{
+                        showTable("parts");
+                    }
+                }
+                return true;
 
             } else {
                 // Delete/Mark as unavailable
@@ -1980,16 +2106,18 @@ public class managerInventoryController {
                 fadeInOut(false, extraPane, inventoryPane);
                 editPane.setVisible(false);
                 clearCarPartForm(editPath.getInventoryId().contains("C") ? "carsEdit" : "partsEdit");
-
+                
+                // Refresh the displayed table
+                if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                    showTable("cars");
+                }else{
+                    showTable("parts");
+                }
+                return true;
             }
-            // Refresh the displayed table
-            if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
-                showTable("cars");
-            }else{
-                showTable("parts");
-            }
-        } catch ( SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -2034,46 +2162,104 @@ public class managerInventoryController {
         inventoryData.addAll(carsData);
         inventoryData.addAll(partsData);
         
-        // Refresh the displayed table
-        if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
-            showTable("cars");
+        // Refresh the displayed table - preserve current view state
+        if (switchTable != null && switchTable.getText() != null && switchTable.getText().contains("Unavailable")) {
+            showUnavailableItems();
+        } else {
+            if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+                showTable("cars");
+            }else{
+                showTable("parts");
+            }
         }
     }
     
     private void insertPart() throws SQLException {
-        // TODO: Implement insert part logic
-        System.out.println("Insert part not yet implemented");
+        String partName = partNameText.getText().trim();
+        String forCarModel = partRelativeComboBox.getText().trim();
+        String description = partDescriptionText.getText().trim();
+        int qty = Integer.parseInt(partQtyText.getText().trim());
+        double price = Double.parseDouble(partPriceText.getText().trim());
+        
+        // Handle image
+        String photoPath = null;
+        if (!file.isEmpty()) {
+            photoPath = file.get(0).getAbsolutePath();
+        }
+        
+        // Set forCarModel to null if empty (universal part)
+        if (forCarModel.isEmpty()) {
+            forCarModel = null;
+        }
+        
+        // Call insertFullPart stored procedure
+        CallableStatement cs = con.prepareCall("{CALL insertFullPart(?, ?, ?, ?, ?, ?)}");
+        cs.setString(1, partName);                 // in_part_name
+        cs.setString(2, description);              // in_description
+        cs.setString(3, forCarModel);              // in_for_car_model (can be NULL)
+        cs.setInt(4, qty);                         // in_part_qty
+        cs.setDouble(5, price);                    // in_price
+        cs.setString(6, photoPath);                // in_photo_url
+        
+        cs.execute();
+        System.out.println("Part inserted successfully");
+        cs.close();
+        
+        // Refresh data
+        setCarsTable();
+        setPartsTable();
+        inventoryData.clear();
+        inventoryData.addAll(carsData);
+        inventoryData.addAll(partsData);
+        
+        // Refresh the displayed table
+        if(inventoryBox.getValue().equalsIgnoreCase("Cars")){
+            showTable("cars");
+        }else{
+            showTable("parts");
+        }
     }
     
-    private void updateCar() throws SQLException {
-        // Get values from edit form
-        String name = editCarName.getText().trim();
+    private boolean updateCar() throws SQLException {
+        // Get values from edit form with null safety checks
+        if (editCarName == null || editCarName.getText() == null ||
+            editCarSeries == null || editCarSeries.getText() == null ||
+            editCarExtColor == null || editCarExtColor.getText() == null ||
+            editCarIntColor == null || editCarIntColor.getText() == null ||
+            editCarUsage == null || editCarUsage.getText() == null ||
+            editCarProductAt == null || editCarProductAt.getText() == null ||
+            editCarQty == null || editCarQty.getText() == null ||
+            editCarPrice == null || editCarPrice.getText() == null) {
+            System.err.println("Error: One or more edit car fields are null");
+            return false;
+        }
+        
+        // editCarName contains the FULL car name that user entered
+        // Don't combine with editCarSeries - just use editCarName directly
+        String fullCarName = editCarName.getText().trim();
         String extColor = editCarExtColor.getText().trim();
         String intColor = editCarIntColor.getText().trim();
         String fuelType = editCarUsage.getText().trim();
+        
+        // Validate and parse numeric fields
+        if (editCarProductAt.getText().trim().isEmpty()) {
+            System.err.println("Error: Production year is empty");
+            return false;
+        }
+        if (editCarQty.getText().trim().isEmpty()) {
+            System.err.println("Error: Quantity is empty");
+            return false;
+        }
+        if (editCarPrice.getText().trim().isEmpty()) {
+            System.err.println("Error: Price is empty");
+            return false;
+        }
+        
         int year = Integer.parseInt(editCarProductAt.getText().trim());
         int qty = Integer.parseInt(editCarQty.getText().trim());
         double price = Double.parseDouble(editCarPrice.getText().trim());
         
-        // Convert fuel type display name back to database abbreviation
-        String fuelCode = "";
-        switch(fuelType) {
-            case "Petrol":
-                fuelCode = "PET";
-                break;
-            case "Hybrid (Petrol+Electric)":
-                fuelCode = "HYB";
-                break;
-            case "Electric":
-                fuelCode = "ELEC";
-                break;
-            case "Diesel":
-                fuelCode = "DSL";
-                break;
-            default:
-                fuelCode = fuelType; // Use as-is if not recognized
-                break;
-        }
+        // The procedure will parse fullCarName: "911 Carrera T" -> model="911 Carrera", trim="T"
         
         // Handle image
         String photoPath = editPath.getPhoto(); // Keep existing photo by default
@@ -2081,29 +2267,51 @@ public class managerInventoryController {
             photoPath = file.get(0).getAbsolutePath();
         }
         
-        // Update database
-        String sql = "UPDATE cars SET car_name = ?, ext_color = ?, int_color = ?, fuel_type = ?, product_year = ?, qty = ?, price = ?, photo_url = ? WHERE car_id = ?";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, name);
-        ps.setString(2, extColor);
-        ps.setString(3, intColor);
-        ps.setString(4, fuelCode);
-        ps.setInt(5, year);
-        ps.setInt(6, qty);
-        ps.setDouble(7, price);
-        ps.setString(8, photoPath);
-        ps.setInt(9, editPath.getId());
+        // Call updateFullCar stored procedure
+        // This handles: model parsing, photo overwrite, and car update
+        CallableStatement cs = con.prepareCall("{CALL updateFullCar(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+        cs.setInt(1, editPath.getId());           // in_car_id
+        cs.setString(2, fullCarName);              // in_car_name (will be parsed by procedure)
+        cs.setString(3, extColor);                 // in_car_color
+        cs.setString(4, intColor);                 // in_interior_color
+        cs.setString(5, fuelType);                 // in_fuel_type (procedure handles conversion)
+        cs.setInt(6, year);                        // in_production_year
+        cs.setInt(7, qty);                         // in_car_qty
+        cs.setDouble(8, price);                    // in_price
+        cs.setString(9, photoPath);                // in_photo_url
         
-        int rowsAffected = ps.executeUpdate();
-        System.out.println("Car updated: " + rowsAffected + " rows affected for car_id: " + editPath.getId());
-        ps.close();
+        cs.execute();
+        System.out.println("Car updated successfully via updateFullCar procedure for car_id: " + editPath.getId());
+        cs.close();
+        return true;
     }
     
-    private void updatePart() throws SQLException {
-        // Get values from edit form
-        String name = editPartName.getText().trim();
+    private boolean updatePart() throws SQLException {
+        // Get values from edit form with null safety checks
+        if (editPartName == null || editPartName.getText() == null) {
+            System.err.println("Error: editPartName is null");
+            return false;
+        }
+        if (editPartDescription == null || editPartDescription.getText() == null) {
+            System.err.println("Error: editPartDescription is null");
+            return false;
+        }
+        if (editPartForCar == null || editPartForCar.getText() == null) {
+            System.err.println("Error: editPartForCar is null");
+            return false;
+        }
+        if (editPartQty == null || editPartQty.getText() == null) {
+            System.err.println("Error: editPartQty is null");
+            return false;
+        }
+        if (editPartPrice == null || editPartPrice.getText() == null) {
+            System.err.println("Error: editPartPrice is null");
+            return false;
+        }
+        
+        String partName = editPartName.getText().trim();
         String description = editPartDescription.getText().trim();
-        String forCar = editPartForCar.getText().trim();
+        String forCarModel = (editPartForCar != null && editPartForCar.getText() != null && !editPartForCar.getText().trim().isEmpty()) ? editPartForCar.getText().trim() : null;
         int qty = Integer.parseInt(editPartQty.getText().trim());
         double price = Double.parseDouble(editPartPrice.getText().trim());
         
@@ -2113,20 +2321,21 @@ public class managerInventoryController {
             photoPath = file.get(0).getAbsolutePath();
         }
         
-        // Update database
-        String sql = "UPDATE car_parts SET part_name = ?, description = ?, for_car = ?, qty = ?, price = ?, photo_url = ? WHERE part_id = ?";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, name);
-        ps.setString(2, description);
-        ps.setString(3, forCar);
-        ps.setInt(4, qty);
-        ps.setDouble(5, price);
-        ps.setString(6, photoPath);
-        ps.setInt(7, editPath.getId());
+        // Call updateFullPart stored procedure
+        // This handles: car lookup by model, photo update, and part update
+        CallableStatement cs = con.prepareCall("{CALL updateFullPart(?, ?, ?, ?, ?, ?, ?)}");
+        cs.setInt(1, editPath.getId());           // in_part_id
+        cs.setString(2, partName);                 // in_part_name
+        cs.setString(3, description);              // in_description
+        cs.setString(4, forCarModel);              // in_for_car_model
+        cs.setInt(5, qty);                         // in_part_qty
+        cs.setDouble(6, price);                    // in_price
+        cs.setString(7, photoPath);                // in_photo_url
         
-        int rowsAffected = ps.executeUpdate();
-        System.out.println("Part updated: " + rowsAffected + " rows affected for part_id: " + editPath.getId());
-        ps.close();
+        cs.execute();
+        System.out.println("Part updated successfully via updateFullPart procedure for part_id: " + editPath.getId());
+        cs.close();
+        return true;
     }
 
     private void handleImageSelection(ImageView targetImageView) {
@@ -2147,6 +2356,79 @@ public class managerInventoryController {
                 e.printStackTrace();
             }
         }
+    }
+    
+    /**
+     * Resolves image path - handles absolute, relative, and network (UNC) paths
+     * Supports:
+     * - Network paths: \\ServerName\SharedFolder\Image\car.png
+     * - Absolute paths: D:\Porsche\Image\car.png
+     * - Relative paths: /Image/car.png or Image/car.png
+     */
+    private File resolveImagePath(String photoPath) {
+        if (photoPath == null || photoPath.trim().isEmpty()) {
+            return null;
+        }
+        
+        // Handle network (UNC) paths: \\ServerName\SharedFolder\...
+        if (photoPath.startsWith("\\\\") || photoPath.startsWith("//")) {
+            File networkFile = new File(photoPath);
+            if (networkFile.exists()) {
+                System.out.println("Found image on network path: " + photoPath);
+                return networkFile;
+            } else {
+                System.err.println("Network path not accessible: " + photoPath);
+                return networkFile; // Return anyway for error handling
+            }
+        }
+        
+        File imageFile = new File(photoPath);
+        
+        // If it's already an absolute path and exists, return it
+        if (imageFile.isAbsolute() && imageFile.exists()) {
+            System.out.println("Found image at absolute path: " + photoPath);
+            return imageFile;
+        }
+        
+        // Try to resolve as relative path from project directory
+        // Get the project root directory (where src folder is located)
+        String projectRoot = System.getProperty("user.dir");
+        
+        // Remove leading slash if present for relative path construction
+        String relativePath = photoPath.startsWith("/") || photoPath.startsWith("\\") 
+                              ? photoPath.substring(1) 
+                              : photoPath;
+        
+        // First try from project root
+        File relativeFile = new File(projectRoot, relativePath);
+        if (relativeFile.exists()) {
+            System.out.println("Found image at relative path: " + relativeFile.getAbsolutePath());
+            return relativeFile;
+        }
+        
+        // Try from src/main/resources
+        File resourceFile = new File(projectRoot, "src/main/resources/" + relativePath);
+        if (resourceFile.exists()) {
+            System.out.println("Found image in resources: " + resourceFile.getAbsolutePath());
+            return resourceFile;
+        }
+        
+        // Try from Images folder in project root (common location)
+        File imagesFolder = new File(projectRoot, "Images/" + relativePath);
+        if (imagesFolder.exists()) {
+            System.out.println("Found image in Images folder: " + imagesFolder.getAbsolutePath());
+            return imagesFolder;
+        }
+        
+        System.err.println("Image not found at any location: " + photoPath);
+        System.err.println("Tried locations:");
+        System.err.println("  1. " + photoPath + " (absolute)");
+        System.err.println("  2. " + relativeFile.getAbsolutePath());
+        System.err.println("  3. " + resourceFile.getAbsolutePath());
+        System.err.println("  4. " + imagesFolder.getAbsolutePath());
+        
+        // Return original file object even if it doesn't exist (for error handling)
+        return imageFile;
     }
 
 

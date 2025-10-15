@@ -11,16 +11,27 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.animation.TranslateTransition;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,9 +47,11 @@ public class adminAccountController {
 
     // ---------- Staff Info ----------
     @FXML
-    private Label StaffListTitleLabel, StaffAddressLabel, StaffDOBLabel, StaffEmailLabel, StaffNameLabel, StaffPhoneLabel;
+    private Label StaffListTitleLabel, StaffAddressLabel, StaffDOBLabel, StaffEmailLabel, StaffNameLabel, StaffPhoneLabel, StaffReasonLabel, addUser;
     @FXML
     private ImageView StaffImage;
+    @FXML
+    private HBox terminationReasonBox;
     @FXML
     private TextField StaffSearchText;
     @FXML
@@ -51,6 +64,32 @@ public class adminAccountController {
     // ---------- Chart ----------
     @FXML
     private AreaChart<String, Number> lineChart;
+
+    // ---------- Staff Table (for Managers) ----------
+    @FXML
+    private TableView<user> staffTableView;
+    @FXML
+    private TableColumn<user, Integer> staffIdCol;
+    @FXML
+    private TableColumn<user, String> staffNameCol;
+    @FXML
+    private TableColumn<user, String> staffPhoneCol;
+    @FXML
+    private TableColumn<user, String> staffEmailCol;
+    @FXML
+    private TableColumn<user, String> staffStatusCol;
+
+    // ---------- Management Pane ----------
+    @FXML
+    private VBox managementPane;
+    @FXML
+    private Button manageEmployeeBtn, closeManagementBtn, updateSalaryBtn, applyBonusBtn, terminateEmployeeBtn;
+    @FXML
+    private TextField salaryField;
+    @FXML
+    private TextArea terminationReasonField;
+    @FXML
+    private Label carTargetLabel, partTargetLabel, carBonusLabel, partBonusLabel, totalBonusLabel, bonusBreakdownLabel;
 
     // ---------- Month / Year ----------
     @FXML
@@ -80,6 +119,7 @@ public class adminAccountController {
     private int currentMonth, currentYear;
     private LocalDate currentStaffStartDate;
     private LocalDate currentStaffEndDate;
+    private boolean isManagementPaneOpen = false;
 
     public adminAccountController() {
         try {
@@ -100,13 +140,45 @@ public class adminAccountController {
         roleCombo.setValue("Manager");
         roleCombo.valueProperty().addListener((obs, o, n) -> loadStaffCardsAsync(showActive));
 
+        // Setup addUser click handler
+        if (addUser != null) {
+            addUser.setOnMouseClicked(this::openUserRegistration);
+        }
+
         // Setup search, month/year, chart
         setupSearch();
         setupMonthYear();
         setupEmptyChart();
+        setupStaffTable();
 
         StaffListTitleLabel.setText("List (Active)");
         loadStaffCardsAsync(showActive);
+    }
+    
+    private void openUserRegistration(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/adminUserRegister.fxml"));
+            Parent root = loader.load();
+            
+            Stage stage = new Stage();
+            stage.setTitle("Register New User");
+            stage.initStyle(StageStyle.DECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.showAndWait();
+            
+            // Reload staff list after registration window closes
+            loadStaffCardsAsync(showActive);
+        } catch (IOException e) {
+            logger.error("Failed to open user registration window", e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Failed to open registration window");
+            alert.show();
+        }
     }
 
     // ---------- Chart ----------
@@ -119,6 +191,18 @@ public class adminAccountController {
         for (int i = 1; i <= 4; i++)
             s.getData().add(new XYChart.Data<>("Week " + i, 0));
         lineChart.getData().add(s);
+    }
+
+    // ---------- Staff Table Setup ----------
+    private void setupStaffTable() {
+        if (staffTableView == null)
+            return;
+        
+        staffIdCol.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
+        staffNameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsername()));
+        staffPhoneCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhone()));
+        staffEmailCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
+        staffStatusCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIs_active()));
     }
 
     private void loadWeeklySalesAsync(int staffId, int month, int year) {
@@ -152,6 +236,34 @@ public class adminAccountController {
             series.getData().add(new XYChart.Data<>("Week " + (i + 1), weeklySales.get(i)));
 
         lineChart.getData().add(series);
+    }
+
+    // ---------- Load Staff Under Manager ----------
+    private void loadStaffUnderManagerAsync(int managerId) {
+        if (managerId == 0)
+            return;
+
+        Task<List<user>> task = new Task<>() {
+            @Override
+            protected List<user> call() throws Exception {
+                return dao.getStaffUnderManager(managerId, "Active");
+            }
+        };
+
+        task.setOnSucceeded(e -> updateStaffTable(task.getValue()));
+        task.setOnFailed(e -> {
+            logger.error("Failed to load staff under manager", task.getException());
+            Platform.runLater(() -> staffTableView.getItems().clear());
+        });
+        ThreadPoolManager.getInstance().execute(task);
+    }
+
+    private void updateStaffTable(List<user> staffList) {
+        if (staffTableView == null || staffList == null)
+            return;
+
+        staffTableView.getItems().clear();
+        staffTableView.getItems().addAll(staffList);
     }
 
     // ---------- Attendance ----------
@@ -320,9 +432,7 @@ public class adminAccountController {
                 card.setUserData(staff.getId());
                 card.setOnMouseClicked(e -> {
                     showStaffDetails(staff);
-                    loadWeeklySalesAsync(staff.getId(), currentMonth, currentYear);
-                    loadAttendanceAsync(staff.getId(), currentMonth, currentYear);
-                    loadTargetsAsync(staff.getId(), currentMonth, currentYear);
+                    loadDataForSelectedUser(staff.getId());
                 });
 
                 staffListContainer.getChildren().add(card);
@@ -333,9 +443,7 @@ public class adminAccountController {
 
         if (!staffList.isEmpty()) {
             showStaffDetails(staffList.get(0));
-            loadWeeklySalesAsync(staffList.get(0).getId(), currentMonth, currentYear);
-            loadAttendanceAsync(staffList.get(0).getId(), currentMonth, currentYear);
-            loadTargetsAsync(staffList.get(0).getId(), currentMonth, currentYear);
+            loadDataForSelectedUser(staffList.get(0).getId());
         } else {
             selectedStaffId = 0;
             setupEmptyChart();
@@ -343,9 +451,34 @@ public class adminAccountController {
         }
     }
 
+    private void loadDataForSelectedUser(int userId) {
+        String selectedRole = roleCombo.getValue();
+        
+        if ("Manager".equals(selectedRole)) {
+            // For managers, show staff table instead of weekly sales chart
+            lineChart.setVisible(false);
+            staffTableView.setVisible(true);
+            loadStaffUnderManagerAsync(userId);
+        } else {
+            // For staff, show weekly sales chart
+            lineChart.setVisible(true);
+            staffTableView.setVisible(false);
+            loadWeeklySalesAsync(userId, currentMonth, currentYear);
+        }
+        
+        // Load attendance and targets for both roles
+        loadAttendanceAsync(userId, currentMonth, currentYear);
+        loadTargetsAsync(userId, currentMonth, currentYear);
+    }
+
     private void showStaffDetails(user staff) {
         if (staff == null)
             return;
+
+        // Close management pane if open and switching to different employee
+        if (isManagementPaneOpen && selectedStaffId != staff.getId()) {
+            closeManagementPaneWithAnimation();
+        }
 
         StaffNameLabel.setText(Optional.ofNullable(staff.getUsername()).orElse(""));
         StaffPhoneLabel.setText(Optional.ofNullable(staff.getPhone()).orElse(""));
@@ -353,6 +486,22 @@ public class adminAccountController {
         StaffAddressLabel.setText(Optional.ofNullable(staff.getAddress()).orElse(""));
         StaffDOBLabel.setText(staff.getDob() != null ?
                 staff.getDob().format(DateTimeFormatter.ofPattern("dd MMM yyyy")) : "");
+        
+        // Show/hide termination reason for inactive employees
+        boolean isInactive = "Inactive".equalsIgnoreCase(staff.getIs_active());
+        if (terminationReasonBox != null) {
+            terminationReasonBox.setVisible(isInactive);
+            terminationReasonBox.setManaged(isInactive);
+            if (isInactive && StaffReasonLabel != null) {
+                StaffReasonLabel.setText(Optional.ofNullable(staff.getReason()).orElse("No reason provided"));
+            }
+        }
+        
+        // Hide manage button for inactive employees
+        if (manageEmployeeBtn != null) {
+            manageEmployeeBtn.setVisible(!isInactive);
+            manageEmployeeBtn.setManaged(!isInactive);
+        }
 
         try {
             if (staff.getImagePath() != null && !staff.getImagePath().isBlank()) {
@@ -405,9 +554,7 @@ public class adminAccountController {
                         StaffSearchText.setText(s.getUsername());
                         searchMenu.hide();
                         showStaffDetails(s);
-                        loadWeeklySalesAsync(s.getId(), currentMonth, currentYear);
-                        loadAttendanceAsync(s.getId(), currentMonth, currentYear);
-                        loadTargetsAsync(s.getId(), currentMonth, currentYear);
+                        loadDataForSelectedUser(s.getId());
                     });
                     matches.add(item);
                 }
@@ -436,9 +583,7 @@ public class adminAccountController {
                 .findFirst()
                 .ifPresent(s -> {
                     showStaffDetails(s);
-                    loadWeeklySalesAsync(s.getId(), currentMonth, currentYear);
-                    loadAttendanceAsync(s.getId(), currentMonth, currentYear);
-                    loadTargetsAsync(s.getId(), currentMonth, currentYear);
+                    loadDataForSelectedUser(s.getId());
                 });
     }
 
@@ -453,9 +598,7 @@ public class adminAccountController {
             if (selectedMonth != currentMonth) {
                 currentMonth = selectedMonth;
                 updateDateControls();
-                loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
-                loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
-                loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
+                loadDataForSelectedUser(selectedStaffId);
             }
         });
 
@@ -466,9 +609,7 @@ public class adminAccountController {
                 currentYear = newVal;
                 updateMonthBox();
                 updateDateControls();
-                loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
-                loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
-                loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
+                loadDataForSelectedUser(selectedStaffId);
             }
         });
     }
@@ -496,13 +637,19 @@ public class adminAccountController {
 
         List<String> months = new ArrayList<>();
 
-        // Optional: Limit months by staff start/end if needed
-        for (int i = 1; i <= 12; i++)
+        // Limit months based on staff start/end dates for the current year
+        int startMonth = (currentYear == currentStaffStartDate.getYear()) ? currentStaffStartDate.getMonthValue() : 1;
+        int endMonth = (currentYear == currentStaffEndDate.getYear()) ? currentStaffEndDate.getMonthValue() : 12;
+
+        for (int i = startMonth; i <= endMonth; i++)
             months.add(Month.of(i).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
 
         monthBox.setItems(FXCollections.observableArrayList(months));
-        if (currentMonth < 1 || currentMonth > 12)
-            currentMonth = 1;
+        
+        // Ensure current month is within valid range
+        if (currentMonth < startMonth || currentMonth > endMonth)
+            currentMonth = startMonth;
+            
         monthBox.setValue(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
 
         updatingDateBox = false;
@@ -512,15 +659,18 @@ public class adminAccountController {
         if (NextMonthbtn == null || NextYearbtn == null || PreviousMonthbtn == null || PreviousYearbtn == null)
             return;
         
-        // Disable next buttons if at current month/year
-        boolean isCurrentYear = currentYear == today.getYear();
-        boolean isCurrentMonth = isCurrentYear && currentMonth == today.getMonthValue();
-        NextMonthbtn.setDisable(isCurrentMonth);
-        NextYearbtn.setDisable(isCurrentYear);
+        // Use end date for boundary checking (for inactive employees, this is their termination date)
+        LocalDate endBoundary = (currentStaffEndDate != null) ? currentStaffEndDate : today;
         
-        // Hide next buttons if at current month/year
-        NextMonthbtn.setVisible(!isCurrentMonth);
-        NextYearbtn.setVisible(!isCurrentYear);
+        // Disable next buttons if at end boundary month/year
+        boolean isEndYear = currentYear == endBoundary.getYear();
+        boolean isEndMonth = isEndYear && currentMonth == endBoundary.getMonthValue();
+        NextMonthbtn.setDisable(isEndMonth);
+        NextYearbtn.setDisable(isEndYear);
+        
+        // Hide next buttons if at end boundary month/year
+        NextMonthbtn.setVisible(!isEndMonth);
+        NextYearbtn.setVisible(!isEndYear);
         
         // Disable/hide previous buttons if at staff start date
         if (currentStaffStartDate != null) {
@@ -549,9 +699,7 @@ public class adminAccountController {
             currentMonth++;
         updateMonthBox();
         updateDateControls();
-        loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
-        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
-        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
+        loadDataForSelectedUser(selectedStaffId);
     }
 
     @FXML
@@ -564,9 +712,7 @@ public class adminAccountController {
             currentMonth--;
         updateMonthBox();
         updateDateControls();
-        loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
-        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
-        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
+        loadDataForSelectedUser(selectedStaffId);
     }
 
     @FXML
@@ -575,9 +721,7 @@ public class adminAccountController {
         yearBox.setValue(currentYear);
         updateMonthBox();
         updateDateControls();
-        loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
-        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
-        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
+        loadDataForSelectedUser(selectedStaffId);
     }
 
     @FXML
@@ -586,9 +730,7 @@ public class adminAccountController {
         yearBox.setValue(currentYear);
         updateMonthBox();
         updateDateControls();
-        loadWeeklySalesAsync(selectedStaffId, currentMonth, currentYear);
-        loadAttendanceAsync(selectedStaffId, currentMonth, currentYear);
-        loadTargetsAsync(selectedStaffId, currentMonth, currentYear);
+        loadDataForSelectedUser(selectedStaffId);
     }
 
     boolean cardtype = true;
@@ -598,6 +740,304 @@ public class adminAccountController {
         cardtype = !cardtype;
         StaffListTitleLabel.setText(cardtype ? "List (Active)" : "List (InActive)");
         loadStaffCardsAsync(cardtype);
+    }
+
+    // ---------- Management Pane Methods ----------
+    @FXML
+    private void onManageEmployeeClick() {
+        if (selectedStaffId == 0) {
+            showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee to manage.");
+            return;
+        }
+        
+        // Toggle the pane
+        if (isManagementPaneOpen) {
+            closeManagementPaneWithAnimation();
+        } else {
+            openManagementPaneWithAnimation();
+            loadManagementData();
+        }
+    }
+
+    @FXML
+    private void onCloseManagementPane() {
+        closeManagementPaneWithAnimation();
+    }
+
+    private void openManagementPaneWithAnimation() {
+        isManagementPaneOpen = true;
+        
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), managementPane);
+        slideIn.setFromX(450);  // Start off-screen to the right
+        slideIn.setToX(0);      // End at normal position
+        slideIn.play();
+    }
+
+    private void closeManagementPaneWithAnimation() {
+        if (!isManagementPaneOpen) return;
+        
+        isManagementPaneOpen = false;
+        terminationReasonField.clear();
+        
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), managementPane);
+        slideOut.setFromX(0);    // Start at normal position
+        slideOut.setToX(450);    // End off-screen to the right
+        slideOut.play();
+    }
+
+    private void loadManagementData() {
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                // Load current salary
+                double salary = dao.getCurrentSalary(selectedStaffId);
+                
+                // Get target data for bonus calculation
+                int[][] targetData = dao.getTargetData(selectedStaffId, currentMonth, currentYear);
+                int carAchieved = targetData[0][0];
+                int carTarget = targetData[0][1];
+                int partAchieved = targetData[1][0];
+                int partTarget = targetData[1][1];
+                
+                Platform.runLater(() -> {
+                    // Update salary field
+                    salaryField.setText(String.format("%.2f", salary));
+                    
+                    // Calculate and display bonus
+                    calculateAndDisplayBonus(carAchieved, carTarget, partAchieved, partTarget, salary);
+                });
+                
+                return null;
+            }
+        };
+        
+        task.setOnFailed(e -> {
+            logger.error("Failed to load management data", task.getException());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load employee data.");
+        });
+        
+        ThreadPoolManager.getInstance().execute(task);
+    }
+
+    private void calculateAndDisplayBonus(int carAchieved, int carTarget, int partAchieved, int partTarget, double salary) {
+        // Update target labels
+        carTargetLabel.setText(carAchieved + "/" + carTarget);
+        partTargetLabel.setText(partAchieved + "/" + partTarget);
+        
+        // Calculate car bonus (2% per car over target)
+        int carsOverTarget = Math.max(0, carAchieved - carTarget);
+        double carBonusPercent = carsOverTarget * 2.0;
+        double carBonusAmount = (salary * carBonusPercent) / 100.0;
+        
+        // Calculate part bonus (1% per part over target)
+        int partsOverTarget = Math.max(0, partAchieved - partTarget);
+        double partBonusPercent = partsOverTarget * 1.0;
+        double partBonusAmount = (salary * partBonusPercent) / 100.0;
+        
+        // Total bonus
+        double totalBonus = carBonusAmount + partBonusAmount;
+        
+        // Update UI
+        carBonusLabel.setText(String.format("+%.1f%%", carBonusPercent));
+        carBonusLabel.setStyle(carBonusPercent > 0 ? "-fx-text-fill: #10b981; -fx-font-weight: bold;" : "-fx-text-fill: #64748b; -fx-font-weight: bold;");
+        
+        partBonusLabel.setText(String.format("+%.1f%%", partBonusPercent));
+        partBonusLabel.setStyle(partBonusPercent > 0 ? "-fx-text-fill: #10b981; -fx-font-weight: bold;" : "-fx-text-fill: #64748b; -fx-font-weight: bold;");
+        
+        totalBonusLabel.setText(String.format("$ %.2f", totalBonus));
+        
+        // Breakdown text
+        if (totalBonus > 0) {
+            StringBuilder breakdown = new StringBuilder();
+            if (carsOverTarget > 0) {
+                breakdown.append(String.format("Cars: %d over target × 2%% = $ %.2f", carsOverTarget, carBonusAmount));
+            }
+            if (partsOverTarget > 0) {
+                if (breakdown.length() > 0) breakdown.append("\n");
+                breakdown.append(String.format("Parts: %d over target × 1%% = $ %.2f", partsOverTarget, partBonusAmount));
+            }
+            bonusBreakdownLabel.setText(breakdown.toString());
+        } else {
+            bonusBreakdownLabel.setText("No bonus earned this month. Target not exceeded.");
+        }
+    }
+
+    @FXML
+    private void onUpdateSalary() {
+        if (selectedStaffId == 0) {
+            showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee first.");
+            return;
+        }
+        
+        try {
+            double newSalary = Double.parseDouble(salaryField.getText().trim());
+            
+            if (newSalary <= 0) {
+                showAlert(Alert.AlertType.WARNING, "Invalid Salary", "Salary must be greater than 0.");
+                return;
+            }
+            
+            // Confirm update
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirm Salary Update");
+            confirm.setHeaderText("Update Employee Salary");
+            confirm.setContentText(String.format("Are you sure you want to update the salary to $ %.2f?", newSalary));
+            
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    updateSalaryAsync(newSalary);
+                }
+            });
+            
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter a valid salary amount.");
+        }
+    }
+
+    private void updateSalaryAsync(double newSalary) {
+        Task<Boolean> task = new Task<>() {
+            @Override
+            protected Boolean call() throws Exception {
+                return dao.updateSalary(selectedStaffId, newSalary);
+            }
+        };
+        
+        task.setOnSucceeded(e -> {
+            if (task.getValue()) {
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Salary updated successfully!");
+                loadManagementData(); // Refresh bonus calculation
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to update salary.");
+            }
+        });
+        
+        task.setOnFailed(e -> {
+            logger.error("Failed to update salary", task.getException());
+            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while updating salary.");
+        });
+        
+        ThreadPoolManager.getInstance().execute(task);
+    }
+
+    @FXML
+    private void onApplyBonus() {
+        if (selectedStaffId == 0) {
+            showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee first.");
+            return;
+        }
+        
+        try {
+            String bonusText = totalBonusLabel.getText().replace("$", "").trim();
+            double bonusAmount = Double.parseDouble(bonusText);
+            
+            if (bonusAmount <= 0) {
+                showAlert(Alert.AlertType.WARNING, "No Bonus", "There is no bonus to apply for this employee.");
+                return;
+            }
+            
+            // Confirm apply
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirm Bonus Application");
+            confirm.setHeaderText("Apply Employee Bonus");
+            confirm.setContentText(String.format("Are you sure you want to apply a bonus of $ %.2f?", bonusAmount));
+            
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    applyBonusAsync(bonusAmount);
+                }
+            });
+            
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Bonus", "Unable to parse bonus amount.");
+        }
+    }
+
+    private void applyBonusAsync(double bonusAmount) {
+        Task<Boolean> task = new Task<>() {
+            @Override
+            protected Boolean call() throws Exception {
+                return dao.applyBonus(selectedStaffId, bonusAmount);
+            }
+        };
+        
+        task.setOnSucceeded(e -> {
+            if (task.getValue()) {
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Bonus applied successfully!");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to apply bonus.");
+            }
+        });
+        
+        task.setOnFailed(e -> {
+            logger.error("Failed to apply bonus", task.getException());
+            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while applying bonus.");
+        });
+        
+        ThreadPoolManager.getInstance().execute(task);
+    }
+
+    @FXML
+    private void onTerminateEmployee() {
+        if (selectedStaffId == 0) {
+            showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee first.");
+            return;
+        }
+        
+        String reason = terminationReasonField.getText().trim();
+        
+        if (reason.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Reason Required", "Please provide a reason for termination.");
+            return;
+        }
+        
+        // Confirm termination
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirm Employee Termination");
+        confirm.setHeaderText("⚠ WARNING: This action cannot be undone!");
+        confirm.setContentText("Are you sure you want to terminate this employee?\n\nReason: " + reason);
+        
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                terminateEmployeeAsync(reason);
+            }
+        });
+    }
+
+    private void terminateEmployeeAsync(String reason) {
+        Task<Boolean> task = new Task<>() {
+            @Override
+            protected Boolean call() throws Exception {
+                return dao.terminateEmployee(selectedStaffId, reason);
+            }
+        };
+        
+        task.setOnSucceeded(e -> {
+            if (task.getValue()) {
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Employee has been terminated successfully.");
+                closeManagementPaneWithAnimation();
+                // Reload staff list
+                loadStaffCardsAsync(showActive);
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to terminate employee.");
+            }
+        });
+        
+        task.setOnFailed(e -> {
+            logger.error("Failed to terminate employee", task.getException());
+            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while terminating employee.");
+        });
+        
+        ThreadPoolManager.getInstance().execute(task);
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(type);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(content);
+            alert.show();
+        });
     }
 
 }

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminSalaryManagementController">
+    <content>
+        <VBox spacing="20.0" style="-fx-background-color: #f5f7fa;">
+            <padding>
+                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+            </padding>
+            
+            <!-- Header -->
+            <VBox spacing="10.0">
+                <Label style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="💰 Salary Management" />
+                <Label style="-fx-font-size: 14; -fx-text-fill: #64748b;" text="Manage month-end salary processing and notifications" />
+            </VBox>
+            
+            <Separator />
+            
+            <!-- Scheduler Status -->
+            <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25;">
+                <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Automatic Scheduler Status" />
+                
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                    <Label style="-fx-font-size: 14; -fx-text-fill: #64748b;" text="Status:" />
+                    <Label fx:id="schedulerStatusLabel" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #10b981;" text="Running" />
+                </HBox>
+                
+                <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="The scheduler automatically processes salaries on the last day of each month at midnight." wrapText="true" />
+                
+                <HBox spacing="10.0">
+                    <Button fx:id="startSchedulerBtn" onAction="#onStartScheduler" prefHeight="40.0" prefWidth="120.0" 
+                            style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" 
+                            text="Start" />
+                    <Button fx:id="stopSchedulerBtn" onAction="#onStopScheduler" prefHeight="40.0" prefWidth="120.0" 
+                            style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" 
+                            text="Stop" />
+                </HBox>
+            </VBox>
+            
+            <!-- Manual Processing -->
+            <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25;">
+                <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Manual Processing" />
+                
+                <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="Manually trigger salary processing and email notifications to all employees." wrapText="true" />
+                
+                <VBox spacing="10.0" style="-fx-background-color: #fef3c7; -fx-background-radius: 8; -fx-padding: 15;">
+                    <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #92400e;" text="⚠️ Warning" />
+                    <Label style="-fx-font-size: 12; -fx-text-fill: #92400e;" text="This will send emails to ALL employees and reset their bonuses to $0. Use this only for testing or emergency processing." wrapText="true" />
+                </VBox>
+                
+                <Button fx:id="manualProcessBtn" onAction="#onManualProcess" prefHeight="45.0" prefWidth="200.0" 
+                        style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" 
+                        text="Process Now" />
+            </VBox>
+            
+            <!-- Information -->
+            <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25;">
+                <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="How It Works" />
+                
+                <VBox spacing="10.0">
+                    <HBox spacing="10.0">
+                        <Label style="-fx-font-size: 24; -fx-text-fill: #667eea;" text="1" />
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Bonus Accumulation" />
+                            <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="Throughout the month, employee bonuses are accumulated in the database based on performance." wrapText="true" />
+                        </VBox>
+                    </HBox>
+                    
+                    <HBox spacing="10.0">
+                        <Label style="-fx-font-size: 24; -fx-text-fill: #667eea;" text="2" />
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Month-End Processing" />
+                            <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="On the last day of the month, the system automatically calculates total payment (salary + bonus)." wrapText="true" />
+                        </VBox>
+                    </HBox>
+                    
+                    <HBox spacing="10.0">
+                        <Label style="-fx-font-size: 24; -fx-text-fill: #667eea;" text="3" />
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Email Notification" />
+                            <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="Each employee receives a detailed email with their salary breakdown and total payment." wrapText="true" />
+                        </VBox>
+                    </HBox>
+                    
+                    <HBox spacing="10.0">
+                        <Label style="-fx-font-size: 24; -fx-text-fill: #667eea;" text="4" />
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Bonus Reset" />
+                            <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="After notification, all bonuses are reset to $0 to start fresh for the next month." wrapText="true" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+            
+            <!-- Email Configuration Note -->
+            <VBox spacing="10.0" style="-fx-background-color: #dbeafe; -fx-background-radius: 8; -fx-padding: 15;">
+                <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1e40af;" text="📧 Email Configuration Required" />
+                <Label style="-fx-font-size: 12; -fx-text-fill: #1e40af;" text="To enable email notifications, update the email credentials in MonthEndSalaryService.java with your Gmail account and app password." wrapText="true" />
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>

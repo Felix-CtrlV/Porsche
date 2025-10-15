@@ -103,7 +103,6 @@ public class staffCarsController implements Initializable {
             new ParallelTransition(fadeIn, slideUp).play();
             delay += 100;
         }
-
     }
 
     @FXML

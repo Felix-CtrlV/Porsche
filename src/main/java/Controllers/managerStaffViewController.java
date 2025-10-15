@@ -277,8 +277,16 @@ public class managerStaffViewController {
         // Initialize listeners only once
         if (!listenersInitialized) {
             yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal != null) {
+                if (newVal != null && selectedStaffId != 0) {
                     currentYear = newVal;
+                    // Update month box for the new year
+                    user selectedStaff = staffInfoList.stream()
+                            .filter(s -> s.getId() == selectedStaffId)
+                            .findFirst()
+                            .orElse(null);
+                    if (selectedStaff != null) {
+                        updateMonthBoxForYear(currentYear, selectedStaff);
+                    }
                     updateYearMonthLabel();
                 }
             });
@@ -417,10 +425,10 @@ public class managerStaffViewController {
         String[] qty = orders.getCarsandparts_qty();
         String[] price = orders.getCarsandparts_perprice();
 
-        totalPriceLabel.setText(String.valueOf(orders.getTotal_amount()));
+        totalPriceLabel.setText("$" + String.format("%.2f", orders.getTotal_amount()));
         dueDateLabel.setText(String.valueOf(orders.getDue_date()));
-        remainAmountLabel.setText(String.valueOf(orders.getRemain_amount()));
-        paidAmountLabel.setText(String.valueOf(orders.getPayed_amount()));
+        remainAmountLabel.setText("$" + String.format("%.2f", orders.getRemain_amount()));
+        paidAmountLabel.setText("$" + String.format("%.2f", orders.getPayed_amount()));
 
         // Clear and populate the installment table
         installmentTable.getItems().clear();
@@ -513,11 +521,12 @@ public class managerStaffViewController {
             String status = rs.getInt("user_status") == 1 ? "Active" : "Inactive";
             java.sql.Date sqlStart = rs.getDate("start_date");
             java.sql.Date sqlEnd = rs.getDate("end_date");
+            String reason = rs.getString("reason");
 
             LocalDate str = (sqlStart != null) ? sqlStart.toLocalDate() : null;
             LocalDate end = (sqlEnd != null) ? sqlEnd.toLocalDate() : null;
 
-            user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status, str, end);
+            user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status, str, end, reason);
             staffInfoList.add(staff);
 
             // Use cached loader or create new one
@@ -591,10 +600,10 @@ public class managerStaffViewController {
 
             rs = cs.executeQuery();
             if (rs.next()) {
-                int target_car = rs.getInt(1);
-                int target_part = rs.getInt(2);
-                int achieve_car = rs.getInt(3);
-                int achieve_part = rs.getInt(4);
+                int target_car = rs.getInt(4);
+                int target_part = rs.getInt(5);
+                int achieve_car = rs.getInt(6);
+                int achieve_part = rs.getInt(7);
 
                 setCarCircle(target_car, achieve_car);
                 setPartCircle(target_part, achieve_part);
