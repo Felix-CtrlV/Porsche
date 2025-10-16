@@ -18,7 +18,6 @@ module Porsche {
     requires jakarta.mail;
     requires java.net.http;
     requires java.prefs;
-//    requires Porsche;
 
     opens MainUI to javafx.fxml;
     opens Controllers to javafx.fxml;

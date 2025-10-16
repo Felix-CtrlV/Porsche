@@ -466,11 +466,12 @@ public class adminAccountController {
 
         attendancePercent.setText(String.format("%.0f%%", percent));
         
-        // Update circle stroke dash to show percentage
-        double radius = 100;
+        // Update circle stroke dash to show percentage - use actual radius from FXML
+        double radius = attendanceCircle.getRadius();
         double circumference = 2 * Math.PI * radius;
         double dashLength = (percent / 100.0) * circumference;
         attendanceCircle.getStrokeDashArray().setAll(dashLength, circumference);
+        attendanceCircle.setRotate(-90); // Start from top
         attendanceCircle.setVisible(true);
     }
 

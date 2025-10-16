@@ -670,6 +670,7 @@ public class managerStaffViewController {
         double circulerCar = 2 * Math.PI * carCircle.getRadius();
         carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
         carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
+        carCircle.setRotate(-90); // Start from top
     }
     private void setPartCircle(int target, int achieve) {
         targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
@@ -711,6 +712,7 @@ public class managerStaffViewController {
         double circulerPart = 2 * Math.PI * partCircle.getRadius();
         partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
         partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
+        partCircle.setRotate(-90); // Start from top
     }
 
     // for monthly attendance circle
@@ -740,6 +742,7 @@ public class managerStaffViewController {
                 // Set up the dash array for smooth circular progress
                 attendanceCircle.getStrokeDashArray().setAll(attendCircle, attendCircle);
                 attendanceCircle.setStrokeDashOffset(attendCircle * (1 - progress));
+                attendanceCircle.setRotate(-90); // Start from top
 
                 // Show/hide circles based on data
                 attendanceCircle.setVisible(present_day > 0);

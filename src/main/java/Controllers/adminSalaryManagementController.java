@@ -49,7 +49,7 @@ public class adminSalaryManagementController {
         try {
             SalaryScheduler.start();
             updateSchedulerStatus();
-            showToast("Scheduler Started", "The automatic salary scheduler has been started successfully.", "success");
+            showToast("Scheduler Started", "The automatic salary scheduler has been started.", "success");
         } catch (Exception e) {
             logger.error("Failed to start scheduler", e);
             showToast("Error", "Failed to start the scheduler: " + e.getMessage(), "error");

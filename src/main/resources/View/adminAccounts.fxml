@@ -27,7 +27,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminAccountController" stylesheets="@../CSS/admin_accounts.css">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="1280.0" stylesheets="@../CSS/admin_accounts.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminAccountController">
 <BorderPane>
     <left>
         <VBox minWidth="301.0" prefHeight="700.0" prefWidth="301.0" spacing="10.0" style="-fx-background-color: #f8f9fa;">
@@ -105,11 +105,11 @@
                             <children>
                                 <Region HBox.hgrow="ALWAYS" />
                                 <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onMouseClicked="#prevMonthClick" styleClass="admin-button-secondary" text="◀" />
-                                <ChoiceBox fx:id="monthBox" prefHeight="32.0" prefWidth="76.0" styleClass="admin-choice-box" />
+                                <ChoiceBox fx:id="monthBox" minHeight="30.0" prefHeight="32.0" prefWidth="76.0" style="-fx-padding: 0;" styleClass="admin-choice-box" />
                                 <Button fx:id="NextMonthbtn" mnemonicParsing="false" onMouseClicked="#nextMonthClick" styleClass="admin-button-secondary" text="▶" />
                                 <Region prefWidth="20.0" HBox.hgrow="NEVER" />
                                 <Button fx:id="PreviousYearbtn" mnemonicParsing="false" onMouseClicked="#prevYearClick" styleClass="admin-button-secondary" text="◀" />
-                                <ChoiceBox fx:id="yearBox" prefHeight="32.0" prefWidth="76.0" styleClass="admin-choice-box" />
+                                <ChoiceBox fx:id="yearBox" minHeight="30.0" prefHeight="32.0" prefWidth="76.0" style="-fx-padding: 0;" styleClass="admin-choice-box" />
                                 <Button fx:id="NextYearbtn" mnemonicParsing="false" onMouseClicked="#nextYearClick" styleClass="admin-button-secondary" text="▶" />
                             </children>
                         </HBox>
@@ -118,7 +118,7 @@
                         <VBox spacing="20.0" styleClass="admin-card">
                             <children>
                                 <!-- Profile Header -->
-                                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #f0f9ff; -fx-background-radius: 12; -fx-padding: 20;">
                                     <children>
                                         <StackPane>
                                             <children>
@@ -139,7 +139,7 @@
                                             </children>
                                         </VBox>
                                         <Region HBox.hgrow="ALWAYS" />
-                                        <Button fx:id="manageEmployeeBtn" mnemonicParsing="false" onAction="#onManageEmployeeClick" styleClass="admin-button-primary" text="⚙ Manage Employee">
+                                        <Button fx:id="manageEmployeeBtn" mnemonicParsing="false" onAction="#onManageEmployeeClick" prefHeight="31.0" prefWidth="109.0" style="-fx-font-size: 12;" styleClass="admin-button-primary" text="⚙ Manage">
                                             <cursor>
                                                 <Cursor fx:constant="HAND" />
                                             </cursor>
@@ -187,7 +187,7 @@
                                                         <HBox spacing="12.0">
                                                             <children>
                                                                 <Label styleClass="admin-icon" text="🏠" />
-                                                                <VBox spacing="4.0">
+                                                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                                                                     <children>
                                                                         <Label styleClass="admin-label-field" text="ADDRESS" />
                                                                         <Label fx:id="StaffAddressLabel" styleClass="admin-label-value" text="123 Main St, City, State 12345" wrapText="true" />
@@ -199,7 +199,7 @@
                                                         <HBox spacing="12.0">
                                                             <children>
                                                                 <Label styleClass="admin-icon" text="🎂" />
-                                                                <VBox spacing="4.0">
+                                                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                                                                     <children>
                                                                         <Label styleClass="admin-label-field" text="DATE OF BIRTH" />
                                                                         <Label fx:id="StaffDOBLabel" styleClass="admin-label-value" text="January 15, 1985" />
@@ -243,8 +243,8 @@
                                             <children>
                                                 <Group>
                                                     <children>
-                                                        <Circle fx:id="attendanceBackCircle" fill="transparent" radius="60" styleClass="progress-circle-background" strokeWidth="12" />
-                                                        <Circle fx:id="attendanceCircle" fill="transparent" radius="60" styleClass="progress-circle progress-circle-attendance" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="12" visible="false" />
+                                                        <Circle fx:id="attendanceBackCircle" fill="transparent" radius="60" stroke="#e5e7eb" strokeWidth="12" styleClass="progress-circle-background" />
+                                                        <Circle fx:id="attendanceCircle" fill="transparent" radius="60" stroke="#3b82f6" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="12" styleClass="progress-circle progress-circle-attendance" visible="false" />
                                                     </children>
                                                 </Group>
                                                 <Text fx:id="attendancePercent" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: #1f2937;" text="10%" />
@@ -305,11 +305,11 @@
                         </HBox>
 
                         <!-- Target Overview Card -->
-                        <VBox fx:id="targetlayer" spacing="20.0" styleClass="admin-card">
+                        <VBox fx:id="targetlayer" maxHeight="350.0" spacing="20.0" styleClass="admin-card">
                             <children>
                                 <Label styleClass="admin-label-title" text="🎯 Target Overview" />
                                 
-                                <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+                                <HBox spacing="20.0">
                                     <children>
                                         <!-- Car Sales Target -->
                                         <VBox spacing="15.0" styleClass="target-card" HBox.hgrow="ALWAYS">
@@ -325,8 +325,8 @@
                                                     <children>
                                                         <Group>
                                                             <children>
-                                                                <Circle fill="transparent" radius="45.0" styleClass="progress-circle-background" strokeWidth="8.0" />
-                                                                <Circle fx:id="carCircle" fill="transparent" radius="45.0" styleClass="progress-circle progress-circle-car" strokeLineCap="ROUND" strokeWidth="8.0" />
+                                                                <Circle fill="transparent" radius="45.0" stroke="#e5e7eb" strokeWidth="8.0" styleClass="progress-circle-background" />
+                                                                <Circle fx:id="carCircle" fill="transparent" radius="45.0" stroke="#3b82f6" strokeLineCap="ROUND" strokeWidth="8.0" styleClass="progress-circle progress-circle-car" />
                                                             </children>
                                                         </Group>
                                                         <VBox alignment="CENTER" spacing="4.0">
@@ -372,8 +372,8 @@
                                                     <children>
                                                         <Group>
                                                             <children>
-                                                                <Circle fill="transparent" radius="45.0" styleClass="progress-circle-background" strokeWidth="8.0" />
-                                                                <Circle fx:id="partCircle" fill="transparent" radius="45.0" styleClass="progress-circle progress-circle-parts" strokeLineCap="ROUND" strokeWidth="8.0" />
+                                                                <Circle fill="transparent" radius="45.0" stroke="#e5e7eb" strokeWidth="8.0" styleClass="progress-circle-background" />
+                                                                <Circle fx:id="partCircle" fill="transparent" radius="45.0" stroke="#f59e0b" strokeLineCap="ROUND" strokeWidth="8.0" styleClass="progress-circle progress-circle-parts" />
                                                             </children>
                                                         </Group>
                                                         <VBox alignment="CENTER" spacing="4.0">
@@ -461,7 +461,7 @@
                 <!-- Header -->
                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                     <children>
-                        <Label styleClass="admin-label-title" text="Employee Management" HBox.hgrow="ALWAYS" />
+                        <Label prefHeight="24.0" prefWidth="350.0" styleClass="admin-label-title" text="Employee Management" HBox.hgrow="ALWAYS" />
                         <Button fx:id="closeManagementBtn" mnemonicParsing="false" onAction="#onCloseManagementPane" styleClass="admin-close-button" text="✕">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
