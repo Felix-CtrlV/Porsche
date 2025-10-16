@@ -39,7 +39,7 @@ import java.util.Optional;
 public class adminDashboardController {
 
     @FXML
-    private HBox optionProfile, optionTarget, optionChange;
+    private HBox optionProfile, optionTarget, optionSalary, optionChange;
 
     @FXML
     private Label profileName, profileDOB;
@@ -83,16 +83,16 @@ public class adminDashboardController {
     private BorderPane root;
 
     @FXML
-    private VBox settingPane, passwordVerifyPane, profilePane, targetPane;
+    private VBox settingPane, passwordVerifyPane, profilePane, targetPane, salaryPane;
     
     @FXML
-    private StackPane targetContentPane;
+    private StackPane targetContentPane, salaryContentPane;
     
     @FXML
     private AnchorPane oldProfilePane;
 
     @FXML
-    private Label settingIcon, backToSettingsBtn, backToSettingsFromTarget, editProfileBtn, passwordErrorLabel;
+    private Label settingIcon, backToSettingsBtn, backToSettingsFromTarget, backToSettingsFromSalary, editProfileBtn, passwordErrorLabel;
     
     @FXML
     private javafx.scene.control.PasswordField verifyPasswordField;
@@ -105,6 +105,49 @@ public class adminDashboardController {
     
     @FXML
     private Label toastIcon, toastTitle, toastMessage;
+    
+    @FXML
+    private VBox confirmDialog, confirmContent;
+    
+    @FXML
+    private Pane confirmOverlay;
+    
+    @FXML
+    private Label confirmIcon, confirmTitle, confirmMessage;
+    
+    @FXML
+    private Button confirmOkBtn, confirmCancelBtn;
+    
+    private Runnable confirmCallback;
+    
+    // Change Password Dialog
+    @FXML
+    private VBox changePasswordDialog, passwordVerificationPane, otpVerificationPane, newPasswordPane;
+    
+    @FXML
+    private PasswordField currentPasswordField, newPasswordField, confirmPasswordField;
+    
+    @FXML
+    private TextField otpField;
+    
+    @FXML
+    private Button verifyCurrentPasswordBtn, verifyOtpBtn, resendOtpBtn, changePasswordBtn;
+    
+    @FXML
+    private Label passwordVerifyStatus, otpVerifyStatus, changePasswordStatus, otpEmailLabel;
+    
+    @FXML
+    private StackPane passwordMessagePane;
+    
+    @FXML
+    private Label passwordMessageLabel, closePasswordDialogBtn;
+    
+    @FXML
+    private StackPane passwordLoadingPane;
+    
+    private final OTPService otpService = OTPService.getInstance();
+    
+    private SequentialTransition currentPasswordAnimation;
 
     @FXML
     private Button logoutbtn;
@@ -166,6 +209,14 @@ public class adminDashboardController {
         profileEmail.setText(current.getEmail());
         profileDOB.setText(current.getDob().toString());
         profilePhone.setText(current.getPhone());
+        
+        // Add clipping to change password dialog to hide notification overflow
+        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle();
+        clip.widthProperty().bind(changePasswordDialog.widthProperty());
+        clip.heightProperty().bind(changePasswordDialog.heightProperty());
+        clip.setArcWidth(12);
+        clip.setArcHeight(12);
+        changePasswordDialog.setClip(clip);
 
         // Removed old edit button code
 
@@ -176,12 +227,17 @@ public class adminDashboardController {
         
         // Change password click in settings
         optionChange.setOnMouseClicked(e -> {
-            onChangePassword();
+            showChangePasswordDialog();
         });
         
         // Target click in settings
         optionTarget.setOnMouseClicked(e -> {
             showTargetPane();
+        });
+        
+        // Salary click in settings
+        optionSalary.setOnMouseClicked(e -> {
+            showSalaryPane();
         });
         
         // Back to settings from profile
@@ -195,6 +251,13 @@ public class adminDashboardController {
         if (backToSettingsFromTarget != null) {
             backToSettingsFromTarget.setOnMouseClicked(e -> {
                 hideTargetPane();
+            });
+        }
+        
+        // Back to settings from salary
+        if (backToSettingsFromSalary != null) {
+            backToSettingsFromSalary.setOnMouseClicked(e -> {
+                hideSalaryPane();
             });
         }
         
@@ -389,7 +452,7 @@ public class adminDashboardController {
             sendOtpTask.setOnSucceeded(e -> {
                 if (sendOtpTask.getValue()) {
                     // OTP sent successfully, open change password dialog
-                    openChangePasswordDialog();
+                    showChangePasswordDialog();
                 } else {
                     showErrorMessage("Failed to send OTP. Please check email configuration in OTPService.java\n\n" +
                                    "1. Update SENDER_EMAIL with your Gmail address\n" +
@@ -411,24 +474,6 @@ public class adminDashboardController {
         }
     }
 
-    /**
-     * Opens the change password dialog
-     */
-    private void openChangePasswordDialog() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/ChangePassword.fxml"));
-            Parent root = loader.load();
-            
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            showErrorMessage("Failed to open change password dialog");
-        }
-    }
 
 
     /**
@@ -502,6 +547,25 @@ public class adminDashboardController {
                 root.setDisable(false);
             });
             hide.play();
+        } else if (salaryPane.isVisible()) {
+            // Close salary pane directly
+            TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), salaryPane);
+            slideOut.setFromX(0);
+            slideOut.setToX(420);
+            
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
+            fadeOut.setFromValue(0.5);
+            fadeOut.setToValue(0);
+            
+            ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+            hide.setOnFinished(e -> {
+                salaryPane.setVisible(false);
+                settingPane.setVisible(false); // Also hide settings pane
+                overlayPane.setVisible(false);
+                root.setEffect(null);
+                root.setDisable(false);
+            });
+            hide.play();
         } else if (passwordVerifyPane.isVisible()) {
             // Close password verification pane directly
             TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
@@ -530,23 +594,23 @@ public class adminDashboardController {
     }
     
     private void showPasswordVerification() {
-        // Hide settings pane but keep overlay and blur
+        // Slide out settings pane first
         TranslateTransition slideOutSettings = new TranslateTransition(Duration.millis(300), settingPane);
         slideOutSettings.setFromX(0);
         slideOutSettings.setToX(420);
         slideOutSettings.setOnFinished(e -> {
             settingPane.setVisible(false);
             
-            // Show password verification pane
+            // Then slide in verification pane
             passwordVerifyPane.setVisible(true);
             passwordVerifyPane.setTranslateX(420);
             verifyPasswordField.clear();
             passwordErrorLabel.setVisible(false);
             
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
-            slideIn.setFromX(420);
-            slideIn.setToX(0);
-            slideIn.play();
+            TranslateTransition slideInVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
+            slideInVerify.setFromX(420);
+            slideInVerify.setToX(0);
+            slideInVerify.play();
         });
         slideOutSettings.play();
     }
@@ -580,32 +644,30 @@ public class adminDashboardController {
     }
     
     private void hidePasswordVerification() {
-        // Slide out verification pane and slide in settings pane simultaneously
+        // Slide out verification pane first
         TranslateTransition slideOutVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
         slideOutVerify.setFromX(0);
         slideOutVerify.setToX(420);
-        
-        // Prepare settings pane
-        settingPane.setVisible(true);
-        settingPane.setTranslateX(420);
-        
-        TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
-        slideInSettings.setFromX(420);
-        slideInSettings.setToX(0);
-        
-        // Run both transitions together
-        ParallelTransition transition = new ParallelTransition(slideOutVerify, slideInSettings);
-        transition.setOnFinished(e -> {
+        slideOutVerify.setOnFinished(e -> {
             passwordVerifyPane.setVisible(false);
             verifyPasswordField.clear();
             passwordErrorLabel.setVisible(false);
+            
+            // Prepare settings pane off-screen before making it visible
+            settingPane.setTranslateX(420);
+            settingPane.setVisible(true);
+            
+            // Then slide in settings pane
+            TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
+            slideInSettings.setFromX(420);
+            slideInSettings.setToX(0);
+            slideInSettings.play();
         });
-        transition.play();
+        slideOutVerify.play();
     }
     
     private void showProfilePane() {
-        // Hide settings pane to prevent stacking
-        settingPane.setVisible(false);
+        // Settings pane is already hidden from verification step, no need to touch it
         
         // Refresh profile data from session first
         if (current != null) {
@@ -631,51 +693,52 @@ public class adminDashboardController {
         profilePhone.setFocusTraversable(false);
         profileAddress.setFocusTraversable(false);
         
-        // Slide out verification pane and slide in profile pane simultaneously
+        // Slide out verification pane first
         TranslateTransition slideOutVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
         slideOutVerify.setFromX(0);
         slideOutVerify.setToX(420);
-        
-        // Prepare profile pane
-        profilePane.setVisible(true);
-        profilePane.setTranslateX(420);
-        
-        TranslateTransition slideInProfile = new TranslateTransition(Duration.millis(300), profilePane);
-        slideInProfile.setFromX(420);
-        slideInProfile.setToX(0);
-        
-        // Run both transitions together
-        ParallelTransition transition = new ParallelTransition(slideOutVerify, slideInProfile);
-        transition.setOnFinished(e -> {
+        slideOutVerify.setOnFinished(e -> {
             passwordVerifyPane.setVisible(false);
-            // Clear any selection after animation
-            profileEmail.deselect();
-            profilePhone.deselect();
-            profileAddress.deselect();
+            
+            // Then slide in profile pane
+            profilePane.setVisible(true);
+            profilePane.setTranslateX(420);
+            
+            TranslateTransition slideInProfile = new TranslateTransition(Duration.millis(300), profilePane);
+            slideInProfile.setFromX(420);
+            slideInProfile.setToX(0);
+            slideInProfile.setOnFinished(ev -> {
+                // Clear any selection after animation
+                profileEmail.deselect();
+                profilePhone.deselect();
+                profileAddress.deselect();
+            });
+            slideInProfile.play();
         });
-        transition.play();
+        slideOutVerify.play();
     }
     
     private void hideProfilePane() {
-        // Slide out profile pane and slide in settings pane simultaneously
+        // Prepare settings pane off-screen BEFORE starting any animation (while still invisible)
+        settingPane.setTranslateX(420);
+        
+        // Slide out profile pane first
         TranslateTransition slideOutProfile = new TranslateTransition(Duration.millis(300), profilePane);
         slideOutProfile.setFromX(0);
         slideOutProfile.setToX(420);
-        
-        // Prepare settings pane
-        settingPane.setVisible(true);
-        settingPane.setTranslateX(420);
-        
-        TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
-        slideInSettings.setFromX(420);
-        slideInSettings.setToX(0);
-        
-        // Run both transitions together
-        ParallelTransition transition = new ParallelTransition(slideOutProfile, slideInSettings);
-        transition.setOnFinished(e -> {
+        slideOutProfile.setOnFinished(e -> {
             profilePane.setVisible(false);
+            
+            // Now make settings pane visible (it's already positioned at 420)
+            settingPane.setVisible(true);
+            
+            // Then slide in settings pane
+            TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
+            slideInSettings.setFromX(420);
+            slideInSettings.setToX(0);
+            slideInSettings.play();
         });
-        transition.play();
+        slideOutProfile.play();
     }
     
     private void toggleEditMode() {
@@ -802,26 +865,295 @@ public class adminDashboardController {
     }
     
     @FXML
-    private void onChangePassword() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/ChangePassword.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+    public void showChangePasswordDialog() {
+        // Reset to step 1
+        passwordVerificationPane.setVisible(true);
+        otpVerificationPane.setVisible(false);
+        newPasswordPane.setVisible(false);
+        
+        // Clear fields
+        currentPasswordField.clear();
+        otpField.clear();
+        newPasswordField.clear();
+        confirmPasswordField.clear();
+        
+        // Clear status labels
+        passwordVerifyStatus.setText("");
+        otpVerifyStatus.setText("");
+        changePasswordStatus.setText("");
+        
+        // Show overlay
+        confirmOverlay.setVisible(true);
+        confirmOverlay.setOpacity(0);
+        
+        FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
+        overlayFade.setFromValue(0);
+        overlayFade.setToValue(1);
+        overlayFade.play();
+        
+        // Show dialog
+        changePasswordDialog.setVisible(true);
+        changePasswordDialog.setTranslateY(-700);
+        
+        // Slide in animation from top
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), changePasswordDialog);
+        slideIn.setFromY(-700);
+        slideIn.setToY(0);
+        slideIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(400), changePasswordDialog);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        ParallelTransition showDialog = new ParallelTransition(slideIn, fadeIn);
+        showDialog.play();
+        
+        // Set up enter key handlers
+        currentPasswordField.setOnAction(e -> onVerifyCurrentPassword());
+        otpField.setOnAction(e -> onVerifyOTP());
+        confirmPasswordField.setOnAction(e -> onSubmitPasswordChange());
+    }
+    
+    @FXML
+    public void closePasswordDialog() {
+        // Fade out overlay
+        FadeTransition overlayFadeOut = new FadeTransition(Duration.millis(300), confirmOverlay);
+        overlayFadeOut.setFromValue(1);
+        overlayFadeOut.setToValue(0);
+        overlayFadeOut.setOnFinished(e -> confirmOverlay.setVisible(false));
+        overlayFadeOut.play();
+        
+        // Slide out dialog
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), changePasswordDialog);
+        slideOut.setFromY(0);
+        slideOut.setToY(-700);
+        slideOut.setInterpolator(javafx.animation.Interpolator.EASE_IN);
+        
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), changePasswordDialog);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        
+        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+        hide.setOnFinished(e -> changePasswordDialog.setVisible(false));
+        hide.play();
+    }
+    
+    @FXML
+    void onVerifyCurrentPassword() {
+        String password = currentPasswordField.getText().trim();
+
+        if (password.isEmpty()) {
+            showPasswordMessage("Please enter your current password", false);
+            return;
         }
+
+        Session session = Session.getInstance();
+        if (!password.equals(session.getPassword())) {
+            showPasswordMessage("Incorrect password!", false);
+            currentPasswordField.clear();
+            currentPasswordField.requestFocus();
+            return;
+        }
+
+        // Password correct, send OTP
+        showPasswordLoading(true);
+        verifyCurrentPasswordBtn.setDisable(true);
+        passwordVerifyStatus.setText("Sending OTP...");
+
+        new Thread(() -> {
+            boolean success = otpService.sendOTP(session.getEmail());
+            javafx.application.Platform.runLater(() -> {
+                showPasswordLoading(false);
+                if (success) {
+                    showPasswordMessage("OTP sent to " + maskEmail(session.getEmail()), true);
+                    showOtpPane();
+                } else {
+                    showPasswordMessage("Failed to send OTP", false);
+                    verifyCurrentPasswordBtn.setDisable(false);
+                }
+            });
+        }).start();
+    }
+
+    @FXML
+    void onVerifyOTP() {
+        String otp = otpField.getText().trim();
+
+        if (otp.isEmpty()) {
+            showPasswordMessage("Please enter the OTP", false);
+            return;
+        }
+
+        if (otp.length() != 6 || !otp.matches("\\d+")) {
+            showPasswordMessage("OTP must be 6 digits", false);
+            return;
+        }
+
+        showPasswordLoading(true);
+        verifyOtpBtn.setDisable(true);
+
+        new Thread(() -> {
+            boolean verified = otpService.verifyOTP(Session.getInstance().getEmail(), otp);
+            javafx.application.Platform.runLater(() -> {
+                showPasswordLoading(false);
+                if (verified) {
+                    showPasswordMessage("OTP verified successfully!", true);
+                    showNewPasswordPane();
+                } else {
+                    showPasswordMessage("Invalid or expired OTP!", false);
+                    verifyOtpBtn.setDisable(false);
+                    otpField.clear();
+                    otpField.requestFocus();
+                }
+            });
+        }).start();
+    }
+
+    @FXML
+    void onResendOTP() {
+        showPasswordLoading(true);
+        resendOtpBtn.setDisable(true);
+
+        new Thread(() -> {
+            boolean success = otpService.sendOTP(Session.getInstance().getEmail());
+            javafx.application.Platform.runLater(() -> {
+                showPasswordLoading(false);
+                if (success) {
+                    showPasswordMessage("OTP resent successfully!", true);
+                } else {
+                    showPasswordMessage("Failed to resend OTP", false);
+                }
+                resendOtpBtn.setDisable(false);
+            });
+        }).start();
+    }
+
+    @FXML
+    void onSubmitPasswordChange() {        String newPassword = newPasswordField.getText().trim();
+        String confirmPassword = confirmPasswordField.getText().trim();
+
+        if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            showPasswordMessage("Please fill in all fields", false);
+            return;
+        }
+
+        if (newPassword.length() < 6) {
+            showPasswordMessage("Password must be at least 6 characters", false);
+            return;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            showPasswordMessage("Passwords do not match!", false);
+            return;
+        }
+
+        showPasswordLoading(true);
+        changePasswordBtn.setDisable(true);
+
+        new Thread(() -> {
+            boolean success = updatePasswordInDatabase(Session.getInstance().getUserid(), newPassword);
+            javafx.application.Platform.runLater(() -> {
+                showPasswordLoading(false);
+                if (success) {
+                    showPasswordMessage("Password changed successfully!", true);
+                    Session.getInstance().setPassword(newPassword);
+                    
+                    // Close dialog after 2 seconds
+                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                    pause.setOnFinished(ev -> closePasswordDialog());
+                    pause.play();
+                } else {
+                    showPasswordMessage("Failed to update password", false);
+                    changePasswordBtn.setDisable(false);
+                }
+            });
+        }).start();
+    }
+    
+    private boolean updatePasswordInDatabase(int userId, String newPassword) {
+        String sql = "UPDATE user_info SET password = SHA2(?, 256) WHERE user_id = ?";
+
+        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newPassword);
+            ps.setInt(2, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    private void showOtpPane() {
+        passwordVerificationPane.setVisible(false);
+        otpVerificationPane.setVisible(true);
+        newPasswordPane.setVisible(false);
+        otpField.requestFocus();
+    }
+
+    private void showNewPasswordPane() {
+        passwordVerificationPane.setVisible(false);
+        otpVerificationPane.setVisible(false);
+        newPasswordPane.setVisible(true);
+        newPasswordField.requestFocus();
+    }
+    
+    private void showPasswordLoading(boolean show) {
+        passwordLoadingPane.setVisible(show);
+    }
+
+    private void showPasswordMessage(String message, boolean isSuccess) {
+        if (currentPasswordAnimation != null) {
+            currentPasswordAnimation.stop();
+            passwordMessagePane.setTranslateY(40);
+        }
+        
+        passwordMessageLabel.setText(message);
+        
+        // Set colors based on type (login notification style)
+        if (isSuccess) {
+            passwordMessagePane.setStyle("-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(34, 197, 94); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(22, 163, 74);");
+            passwordMessageLabel.setStyle("-fx-text-fill: white;");
+        } else {
+            passwordMessagePane.setStyle("-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(255, 60, 41); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(255, 102, 40);");
+            passwordMessageLabel.setStyle("-fx-text-fill: white;");
+        }
+        
+        // Slide in from bottom
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), passwordMessagePane);
+        slideIn.setFromY(40);
+        slideIn.setToY(3);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), passwordMessagePane);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        ParallelTransition show = new ParallelTransition(slideIn, fadeIn);
+        
+        // Pause for 3 seconds
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        
+        // Slide out to bottom
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), passwordMessagePane);
+        slideOut.setFromY(3);
+        slideOut.setToY(40);
+        
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), passwordMessagePane);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        
+        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+        
+        currentPasswordAnimation = new SequentialTransition(show, pause, hide);
+        currentPasswordAnimation.play();
     }
     
     // ========== TARGET PANE METHODS ==========
     
     private void showTargetPane() {
-        // Hide settings pane
-        settingPane.setVisible(false);
-        
         // Load target management content if not already loaded
         if (targetContentPane.getChildren().isEmpty()) {
             try {
@@ -840,36 +1172,226 @@ public class adminDashboardController {
             }
         }
         
-        // Show target pane with animation
-        targetPane.setVisible(true);
-        targetPane.setTranslateX(420);
+        // Slide out settings pane to the right first
+        TranslateTransition slideOutSettings = new TranslateTransition(Duration.millis(300), settingPane);
+        slideOutSettings.setFromX(0);
+        slideOutSettings.setToX(420);
         
-        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), targetPane);
-        slideIn.setFromX(420);
-        slideIn.setToX(0);
-        slideIn.play();
+        slideOutSettings.setOnFinished(e -> {
+            settingPane.setVisible(false);
+            settingPane.setTranslateX(0); // Reset position
+            
+            // Then slide in target pane from the right
+            targetPane.setVisible(true);
+            targetPane.setTranslateX(420);
+            
+            TranslateTransition slideInTarget = new TranslateTransition(Duration.millis(300), targetPane);
+            slideInTarget.setFromX(420);
+            slideInTarget.setToX(0);
+            slideInTarget.play();
+        });
+        
+        slideOutSettings.play();
     }
     
     private void hideTargetPane() {
-        // Slide out target pane and slide in settings pane simultaneously
+        // Slide out target pane to the right first
         TranslateTransition slideOutTarget = new TranslateTransition(Duration.millis(300), targetPane);
         slideOutTarget.setFromX(0);
         slideOutTarget.setToX(420);
         
-        // Prepare settings pane
-        settingPane.setVisible(true);
-        settingPane.setTranslateX(420);
-        
-        TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
-        slideInSettings.setFromX(420);
-        slideInSettings.setToX(0);
-        
-        // Run both transitions together
-        ParallelTransition transition = new ParallelTransition(slideOutTarget, slideInSettings);
-        transition.setOnFinished(e -> {
+        slideOutTarget.setOnFinished(e -> {
             targetPane.setVisible(false);
+            
+            // Then slide in settings pane from the right
+            settingPane.setVisible(true);
+            settingPane.setTranslateX(420);
+            
+            TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
+            slideInSettings.setFromX(420);
+            slideInSettings.setToX(0);
+            slideInSettings.play();
         });
-        transition.play();
+        
+        slideOutTarget.play();
+    }
+    
+    // ========== SALARY PANE METHODS ==========
+    
+    private void showSalaryPane() {
+        // Load salary management content if not already loaded
+        if (salaryContentPane.getChildren().isEmpty()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/adminSalaryManagement.fxml"));
+                javafx.scene.Node salaryContent = loader.load();
+                
+                // Get the controller and pass reference to this dashboard controller
+                adminSalaryManagementController salaryController = loader.getController();
+                salaryController.setDashboardController(this);
+                
+                salaryContentPane.getChildren().add(salaryContent);
+            } catch (IOException e) {
+                e.printStackTrace();
+                showToast("Error", "Failed to load salary management", "error");
+                return;
+            }
+        }
+        
+        // Slide out settings pane to the right first
+        TranslateTransition slideOutSettings = new TranslateTransition(Duration.millis(300), settingPane);
+        slideOutSettings.setFromX(0);
+        slideOutSettings.setToX(420);
+        
+        slideOutSettings.setOnFinished(e -> {
+            settingPane.setVisible(false);
+            settingPane.setTranslateX(0); // Reset position
+            
+            // Then slide in salary pane from the right
+            salaryPane.setVisible(true);
+            salaryPane.setTranslateX(420);
+            
+            TranslateTransition slideInSalary = new TranslateTransition(Duration.millis(300), salaryPane);
+            slideInSalary.setFromX(420);
+            slideInSalary.setToX(0);
+            slideInSalary.play();
+        });
+        
+        slideOutSettings.play();
+    }
+    
+    private void hideSalaryPane() {
+        // Slide out salary pane to the right first
+        TranslateTransition slideOutSalary = new TranslateTransition(Duration.millis(300), salaryPane);
+        slideOutSalary.setFromX(0);
+        slideOutSalary.setToX(420);
+        
+        slideOutSalary.setOnFinished(e -> {
+            salaryPane.setVisible(false);
+            
+            // Then slide in settings pane from the right
+            settingPane.setVisible(true);
+            settingPane.setTranslateX(420);
+            
+            TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
+            slideInSettings.setFromX(420);
+            slideInSettings.setToX(0);
+            slideInSettings.play();
+        });
+        
+        slideOutSalary.play();
+    }
+    
+    // ========== CONFIRMATION DIALOG METHODS ==========
+    
+    public void showConfirmDialog(String title, String message, String icon, Runnable onConfirm) {
+        confirmTitle.setText(title);
+        confirmMessage.setText(message);
+        confirmIcon.setText(icon);
+        confirmCallback = onConfirm;
+        
+        // Clear any custom content
+        confirmContent.getChildren().clear();
+        confirmContent.getChildren().add(confirmMessage);
+        
+        // Show overlay
+        confirmOverlay.setVisible(true);
+        confirmOverlay.setOpacity(0);
+        
+        FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
+        overlayFade.setFromValue(0);
+        overlayFade.setToValue(1);
+        overlayFade.play();
+        
+        // Show dialog
+        confirmDialog.setVisible(true);
+        confirmDialog.setTranslateY(-600);
+        
+        // Slide in animation from top
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), confirmDialog);
+        slideIn.setFromY(-600);
+        slideIn.setToY(0);
+        slideIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(400), confirmDialog);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        ParallelTransition showDialog = new ParallelTransition(slideIn, fadeIn);
+        showDialog.play();
+    }
+    
+    public void showConfirmDialogWithDetails(String title, String icon, javafx.scene.Node detailsNode, Runnable onConfirm) {
+        confirmTitle.setText(title);
+        confirmIcon.setText(icon);
+        confirmCallback = onConfirm;
+        
+        // Set custom content
+        confirmContent.getChildren().clear();
+        confirmContent.getChildren().add(detailsNode);
+        
+        // Show overlay
+        confirmOverlay.setVisible(true);
+        confirmOverlay.setOpacity(0);
+        
+        FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
+        overlayFade.setFromValue(0);
+        overlayFade.setToValue(1);
+        overlayFade.play();
+        
+        // Show dialog
+        confirmDialog.setVisible(true);
+        confirmDialog.setTranslateY(-600);
+        
+        // Slide in animation from top
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), confirmDialog);
+        slideIn.setFromY(-600);
+        slideIn.setToY(0);
+        slideIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(400), confirmDialog);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        ParallelTransition showDialog = new ParallelTransition(slideIn, fadeIn);
+        showDialog.play();
+    }
+    
+    @FXML
+    private void onConfirmOk() {
+        hideConfirmDialog();
+        if (confirmCallback != null) {
+            confirmCallback.run();
+            confirmCallback = null;
+        }
+    }
+    
+    @FXML
+    private void onConfirmCancel() {
+        hideConfirmDialog();
+        confirmCallback = null;
+    }
+    
+    private void hideConfirmDialog() {
+        // Fade out overlay
+        FadeTransition overlayFadeOut = new FadeTransition(Duration.millis(300), confirmOverlay);
+        overlayFadeOut.setFromValue(1);
+        overlayFadeOut.setToValue(0);
+        overlayFadeOut.setOnFinished(e -> confirmOverlay.setVisible(false));
+        overlayFadeOut.play();
+        
+        // Slide out dialog
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), confirmDialog);
+        slideOut.setFromY(0);
+        slideOut.setToY(-600);
+        slideOut.setInterpolator(javafx.animation.Interpolator.EASE_IN);
+        
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), confirmDialog);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        
+        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+        hide.setOnFinished(e -> confirmDialog.setVisible(false));
+        hide.play();
     }
 
 }

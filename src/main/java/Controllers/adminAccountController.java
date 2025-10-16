@@ -19,7 +19,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -185,12 +184,179 @@ public class adminAccountController {
     private void setupEmptyChart() {
         if (lineChart == null)
             return;
+        
+        // Enable smooth curves for the chart
+        lineChart.setCreateSymbols(true);
+        lineChart.setLegendVisible(false);
+        lineChart.setAnimated(false); // Disable animation for immediate rendering
+        
         lineChart.getData().clear();
         XYChart.Series<String, Number> s = new XYChart.Series<>();
         s.setName("Weekly Sales");
         for (int i = 1; i <= 4; i++)
             s.getData().add(new XYChart.Data<>("Week " + i, 0));
         lineChart.getData().add(s);
+        
+        // Hide chart temporarily to prevent showing sharp lines
+        lineChart.setOpacity(0);
+        
+        // Apply smooth curves after a short delay to ensure paths are created
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
+        pause.setOnFinished(e -> applySmoothCurves());
+        pause.play();
+    }
+    
+    private void applySmoothCurves() {
+        if (lineChart == null)
+            return;
+        
+        // Check if paths are ready, if not, retry after a short delay
+        var linePaths = lineChart.lookupAll(".chart-series-area-line");
+        var fillPaths = lineChart.lookupAll(".chart-series-area-fill");
+        
+        if (linePaths.isEmpty() || fillPaths.isEmpty()) {
+            // Paths not ready yet, try again after 50ms
+            javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(50));
+            pause.setOnFinished(e -> applySmoothCurves());
+            pause.play();
+            return;
+        }
+        
+        // Store the smoothed line elements to copy to fill area
+        java.util.List<javafx.scene.shape.PathElement> smoothedLineElements = new java.util.ArrayList<>();
+            
+        // Smooth the line first and store the elements
+        linePaths.forEach(node -> {
+            if (node instanceof javafx.scene.shape.Path) {
+                javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
+                smoothPath(path, false);
+                // Copy the smoothed elements
+                smoothedLineElements.addAll(new java.util.ArrayList<>(path.getElements()));
+            }
+        });
+        
+        // Apply the same smooth curve to the fill area
+        fillPaths.forEach(node -> {
+            if (node instanceof javafx.scene.shape.Path && !smoothedLineElements.isEmpty()) {
+                javafx.scene.shape.Path fillPath = (javafx.scene.shape.Path) node;
+                var originalFillElements = new java.util.ArrayList<>(fillPath.getElements());
+                
+                // Find the baseline (bottom of chart) from original fill path
+                double baselineY = 0;
+                double startX = 0;
+                double endX = 0;
+                
+                for (var element : originalFillElements) {
+                    if (element instanceof javafx.scene.shape.LineTo) {
+                        javafx.scene.shape.LineTo lt = (javafx.scene.shape.LineTo) element;
+                        baselineY = Math.max(baselineY, lt.getY());
+                    }
+                }
+                
+                // Get start and end X coordinates from smoothed line
+                if (smoothedLineElements.get(0) instanceof javafx.scene.shape.MoveTo) {
+                    javafx.scene.shape.MoveTo firstMove = (javafx.scene.shape.MoveTo) smoothedLineElements.get(0);
+                    startX = firstMove.getX();
+                }
+                
+                var lastElement = smoothedLineElements.get(smoothedLineElements.size() - 1);
+                if (lastElement instanceof javafx.scene.shape.CubicCurveTo) {
+                    javafx.scene.shape.CubicCurveTo lastCurve = (javafx.scene.shape.CubicCurveTo) lastElement;
+                    endX = lastCurve.getX();
+                }
+                
+                // Clear and rebuild: smooth line + close to baseline
+                fillPath.getElements().clear();
+                
+                // Add the smoothed line elements
+                for (var element : smoothedLineElements) {
+                    if (element instanceof javafx.scene.shape.MoveTo) {
+                        javafx.scene.shape.MoveTo mt = (javafx.scene.shape.MoveTo) element;
+                        fillPath.getElements().add(new javafx.scene.shape.MoveTo(mt.getX(), mt.getY()));
+                    } else if (element instanceof javafx.scene.shape.CubicCurveTo) {
+                        javafx.scene.shape.CubicCurveTo cc = (javafx.scene.shape.CubicCurveTo) element;
+                        fillPath.getElements().add(new javafx.scene.shape.CubicCurveTo(
+                            cc.getControlX1(), cc.getControlY1(),
+                            cc.getControlX2(), cc.getControlY2(),
+                            cc.getX(), cc.getY()
+                        ));
+                    }
+                }
+                
+                // Close the path to baseline
+                fillPath.getElements().add(new javafx.scene.shape.LineTo(endX, baselineY));
+                fillPath.getElements().add(new javafx.scene.shape.LineTo(startX, baselineY));
+                fillPath.getElements().add(new javafx.scene.shape.ClosePath());
+            }
+        });
+        
+        // Show chart after smoothing is complete
+        lineChart.setOpacity(1);
+    }
+    
+    private void smoothPath(javafx.scene.shape.Path path, boolean isFillArea) {
+        var elements = path.getElements();
+        if (elements.size() < 3) return;
+        
+        // Extract points from path
+        java.util.List<Double> xPoints = new java.util.ArrayList<>();
+        java.util.List<Double> yPoints = new java.util.ArrayList<>();
+        
+        for (var element : elements) {
+            if (element instanceof javafx.scene.shape.MoveTo) {
+                javafx.scene.shape.MoveTo moveTo = (javafx.scene.shape.MoveTo) element;
+                xPoints.add(moveTo.getX());
+                yPoints.add(moveTo.getY());
+            } else if (element instanceof javafx.scene.shape.LineTo) {
+                javafx.scene.shape.LineTo lineTo = (javafx.scene.shape.LineTo) element;
+                xPoints.add(lineTo.getX());
+                yPoints.add(lineTo.getY());
+            }
+        }
+        
+        if (xPoints.size() < 3) return;
+        
+        // Find the baseline (bottom of chart) for clamping
+        double baseline = yPoints.stream().mapToDouble(Double::doubleValue).max().orElse(0);
+        
+        // Clear existing elements and rebuild with smooth curves
+        elements.clear();
+        
+        // Start at first point
+        elements.add(new javafx.scene.shape.MoveTo(xPoints.get(0), yPoints.get(0)));
+        
+        // Create smooth Catmull-Rom spline curves between points
+        for (int i = 0; i < xPoints.size() - 1; i++) {
+            double x0 = i > 0 ? xPoints.get(i - 1) : xPoints.get(i);
+            double y0 = i > 0 ? yPoints.get(i - 1) : yPoints.get(i);
+            double x1 = xPoints.get(i);
+            double y1 = yPoints.get(i);
+            double x2 = xPoints.get(i + 1);
+            double y2 = yPoints.get(i + 1);
+            double x3 = i < xPoints.size() - 2 ? xPoints.get(i + 2) : x2;
+            double y3 = i < xPoints.size() - 2 ? yPoints.get(i + 2) : y2;
+            
+            // Calculate control points for cubic Bezier curve
+            double cp1x = x1 + (x2 - x0) / 6.0;
+            double cp1y = y1 + (y2 - y0) / 6.0;
+            double cp2x = x2 - (x3 - x1) / 6.0;
+            double cp2y = y2 - (y3 - y1) / 6.0;
+            
+            // Strict clamping to prevent overshooting
+            // Control points must stay between the two data points
+            double minY = Math.min(y1, y2);
+            double maxY = Math.max(y1, y2);
+            
+            // Clamp control points strictly within the range of the two endpoints
+            cp1y = Math.max(minY, Math.min(cp1y, maxY));
+            cp2y = Math.max(minY, Math.min(cp2y, maxY));
+            
+            // Also ensure they don't go below baseline
+            cp1y = Math.min(cp1y, baseline);
+            cp2y = Math.min(cp2y, baseline);
+            
+            elements.add(new javafx.scene.shape.CubicCurveTo(cp1x, cp1y, cp2x, cp2y, x2, y2));
+        }
     }
 
     // ---------- Staff Table Setup ----------
@@ -236,6 +402,14 @@ public class adminAccountController {
             series.getData().add(new XYChart.Data<>("Week " + (i + 1), weeklySales.get(i)));
 
         lineChart.getData().add(series);
+        
+        // Hide chart temporarily to prevent showing sharp lines
+        lineChart.setOpacity(0);
+        
+        // Apply smooth curves after a short delay to ensure paths are created
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
+        pause.setOnFinished(e -> applySmoothCurves());
+        pause.play();
     }
 
     // ---------- Load Staff Under Manager ----------

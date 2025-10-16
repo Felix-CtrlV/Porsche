@@ -17,6 +17,7 @@ module Porsche {
     requires com.zaxxer.hikari;
     requires jakarta.mail;
     requires java.net.http;
+    requires java.prefs;
 //    requires Porsche;
 
     opens MainUI to javafx.fxml;

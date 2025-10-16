@@ -36,9 +36,9 @@
                                         <StackPane minWidth="60.0" prefHeight="80.0" prefWidth="80.0">
                                             <children>
                                                 <Circle fill="TRANSPARENT" radius="40.0" stroke="#f1f5f9" strokeWidth="6.0" />
-                                                <Circle fx:id="confrimQtyCircle" fill="transparent" radius="40.0" stroke="#6d8196" strokeWidth="6.0" />
+                                                <Circle fx:id="pendingQtyCircle" fill="transparent" radius="40.0" stroke="#e67e22" strokeWidth="6.0" />
                                                 <Circle fill="transparent" radius="30.0" stroke="#f1f5f9" strokeWidth="6.0" />
-                                                <Circle fx:id="pendingQtyCircle" fill="transparent" radius="30.0" stroke="#e67e22" strokeWidth="6.0" />
+                                                <Circle fx:id="confrimQtyCircle" fill="transparent" radius="30.0" stroke="#6d8196" strokeWidth="6.0" />
                                             </children>
                                             <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

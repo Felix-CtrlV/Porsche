@@ -44,7 +44,7 @@ public class login extends Application {
 
     private void loadLoginScreen(Stage stage) {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/staffShopingcart.fxml")));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/staffWelcome.fxml")));
             Scene scene = new Scene(root);
             
             Platform.runLater(() -> {
@@ -59,6 +59,10 @@ public class login extends Application {
         }
     }
 
+    /**
+     * Starts the application directly at the login screen, skipping the splash screen.
+     * Used for logout functionality.
+     */
     public void startDirectLogin(Stage primaryStage) throws Exception {
         loadLoginScreen(primaryStage);
     }

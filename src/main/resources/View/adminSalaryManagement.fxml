@@ -32,15 +32,11 @@
                     <Label fx:id="schedulerStatusLabel" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #10b981;" text="Running" />
                 </HBox>
                 
-                <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="The scheduler automatically processes salaries on the last day of each month at midnight." wrapText="true" />
+                <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="The scheduler automatically processes salaries on the last day of each month." wrapText="true" />
                 
                 <HBox spacing="10.0">
-                    <Button fx:id="startSchedulerBtn" onAction="#onStartScheduler" prefHeight="40.0" prefWidth="120.0" 
-                            style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" 
-                            text="Start" />
-                    <Button fx:id="stopSchedulerBtn" onAction="#onStopScheduler" prefHeight="40.0" prefWidth="120.0" 
-                            style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" 
-                            text="Stop" />
+                    <Button fx:id="startSchedulerBtn" onAction="#onStartScheduler" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" text="Start" />
+                    <Button fx:id="stopSchedulerBtn" onAction="#onStopScheduler" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" text="Stop" />
                 </HBox>
             </VBox>
             
@@ -52,12 +48,10 @@
                 
                 <VBox spacing="10.0" style="-fx-background-color: #fef3c7; -fx-background-radius: 8; -fx-padding: 15;">
                     <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #92400e;" text="⚠️ Warning" />
-                    <Label style="-fx-font-size: 12; -fx-text-fill: #92400e;" text="This will send emails to ALL employees and reset their bonuses to $0. Use this only for testing or emergency processing." wrapText="true" />
+                    <Label style="-fx-font-size: 12; -fx-text-fill: #92400e;" text="This will send emails to ALL employees and reset their bonuses to $0. [FOR TESTING PURPOSE}" wrapText="true" />
                 </VBox>
                 
-                <Button fx:id="manualProcessBtn" onAction="#onManualProcess" prefHeight="45.0" prefWidth="200.0" 
-                        style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" 
-                        text="Process Now" />
+                <Button fx:id="manualProcessBtn" onAction="#onManualProcess" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="Process Now" />
             </VBox>
             
             <!-- Information -->
@@ -97,12 +91,6 @@
                         </VBox>
                     </HBox>
                 </VBox>
-            </VBox>
-            
-            <!-- Email Configuration Note -->
-            <VBox spacing="10.0" style="-fx-background-color: #dbeafe; -fx-background-radius: 8; -fx-padding: 15;">
-                <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1e40af;" text="📧 Email Configuration Required" />
-                <Label style="-fx-font-size: 12; -fx-text-fill: #1e40af;" text="To enable email notifications, update the email credentials in MonthEndSalaryService.java with your Gmail account and app password." wrapText="true" />
             </VBox>
         </VBox>
     </content>

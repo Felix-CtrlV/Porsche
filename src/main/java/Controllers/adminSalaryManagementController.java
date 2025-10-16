@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 public class adminSalaryManagementController {
     private static final Logger logger = LoggerFactory.getLogger(adminSalaryManagementController.class);
     
+    // Reference to parent dashboard controller
+    private adminDashboardController dashboardController;
+    
     @FXML
     private Label schedulerStatusLabel;
     
@@ -25,6 +28,10 @@ public class adminSalaryManagementController {
     
     @FXML
     private Button manualProcessBtn;
+    
+    public void setDashboardController(adminDashboardController controller) {
+        this.dashboardController = controller;
+    }
     
     @FXML
     public void initialize() {
@@ -42,78 +49,68 @@ public class adminSalaryManagementController {
         try {
             SalaryScheduler.start();
             updateSchedulerStatus();
-            showAlert(Alert.AlertType.INFORMATION, "Scheduler Started", 
-                     "The automatic salary scheduler has been started successfully.");
+            showToast("Scheduler Started", "The automatic salary scheduler has been started successfully.", "success");
         } catch (Exception e) {
             logger.error("Failed to start scheduler", e);
-            showAlert(Alert.AlertType.ERROR, "Error", 
-                     "Failed to start the scheduler: " + e.getMessage());
+            showToast("Error", "Failed to start the scheduler: " + e.getMessage(), "error");
         }
     }
     
     @FXML
     private void onStopScheduler() {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirm Stop");
-        confirm.setHeaderText("Stop Automatic Scheduler");
-        confirm.setContentText("Are you sure you want to stop the automatic salary scheduler? " +
-                              "Salaries will not be processed automatically at month-end.");
-        
-        confirm.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                try {
-                    SalaryScheduler.stop();
-                    updateSchedulerStatus();
-                    showAlert(Alert.AlertType.INFORMATION, "Scheduler Stopped", 
-                             "The automatic salary scheduler has been stopped.");
-                } catch (Exception e) {
-                    logger.error("Failed to stop scheduler", e);
-                    showAlert(Alert.AlertType.ERROR, "Error", 
-                             "Failed to stop the scheduler: " + e.getMessage());
+        if (dashboardController != null) {
+            dashboardController.showConfirmDialog(
+                "Stop Automatic Scheduler",
+                "Are you sure you want to stop the automatic salary scheduler? Salaries will not be processed automatically at month-end.",
+                "⚠",
+                () -> {
+                    try {
+                        SalaryScheduler.stop();
+                        updateSchedulerStatus();
+                        showToast("Scheduler Stopped", "The automatic salary scheduler has been stopped.", "info");
+                    } catch (Exception e) {
+                        logger.error("Failed to stop scheduler", e);
+                        showToast("Error", "Failed to stop the scheduler: " + e.getMessage(), "error");
+                    }
                 }
-            }
-        });
+            );
+        }
     }
     
     @FXML
     private void onManualProcess() {
-        Alert confirm = new Alert(Alert.AlertType.WARNING);
-        confirm.setTitle("Confirm Manual Processing");
-        confirm.setHeaderText("Process Salaries Manually");
-        confirm.setContentText("This will:\n" +
-                              "• Send email notifications to ALL employees\n" +
-                              "• Reset ALL bonuses to $0\n\n" +
-                              "Are you sure you want to continue?");
-        
-        confirm.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                manualProcessBtn.setDisable(true);
-                manualProcessBtn.setText("Processing...");
-                
-                // Run in background thread
-                new Thread(() -> {
-                    try {
-                        MonthEndSalaryService.processMonthEndSalary();
-                        
-                        Platform.runLater(() -> {
-                            manualProcessBtn.setDisable(false);
-                            manualProcessBtn.setText("Process Now");
-                            showAlert(Alert.AlertType.INFORMATION, "Processing Complete", 
-                                     "Salary processing completed successfully. Check logs for details.");
-                        });
-                        
-                    } catch (Exception e) {
-                        logger.error("Manual processing failed", e);
-                        Platform.runLater(() -> {
-                            manualProcessBtn.setDisable(false);
-                            manualProcessBtn.setText("Process Now");
-                            showAlert(Alert.AlertType.ERROR, "Processing Failed", 
-                                     "Failed to process salaries: " + e.getMessage());
-                        });
-                    }
-                }).start();
-            }
-        });
+        if (dashboardController != null) {
+            dashboardController.showConfirmDialog(
+                "Process Salaries Manually",
+                "This will:\n• Send email notifications to ALL employees\n• Reset ALL bonuses to $0\n\nAre you sure you want to continue?",
+                "⚠",
+                () -> {
+                    manualProcessBtn.setDisable(true);
+                    manualProcessBtn.setText("Processing...");
+                    
+                    // Run in background thread
+                    new Thread(() -> {
+                        try {
+                            MonthEndSalaryService.processMonthEndSalary();
+                            
+                            Platform.runLater(() -> {
+                                manualProcessBtn.setDisable(false);
+                                manualProcessBtn.setText("Process Now");
+                                showToast("Processing Complete", "Salary processing completed successfully. Check logs for details.", "success");
+                            });
+                            
+                        } catch (Exception e) {
+                            logger.error("Manual processing failed", e);
+                            Platform.runLater(() -> {
+                                manualProcessBtn.setDisable(false);
+                                manualProcessBtn.setText("Process Now");
+                                showToast("Processing Failed", "Failed to process salaries: " + e.getMessage(), "error");
+                            });
+                        }
+                    }).start();
+                }
+            );
+        }
     }
     
     private void updateSchedulerStatus() {
@@ -130,11 +127,9 @@ public class adminSalaryManagementController {
         }
     }
     
-    private void showAlert(Alert.AlertType type, String title, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+    private void showToast(String title, String message, String type) {
+        if (dashboardController != null) {
+            dashboardController.showToast(title, message, type);
+        }
     }
 }
