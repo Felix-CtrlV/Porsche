@@ -212,9 +212,8 @@ public class adminOrderController {
         StringBuilder items = new StringBuilder();
         
         // Get cars with model names
-        String carQuery = "SELECT cm.model_name, cm.trim_name FROM order_details od " +
+        String carQuery = "SELECT c.model_name, c.trim_name FROM order_details od " +
                          "JOIN cars c ON od.car_id = c.car_id " +
-                         "JOIN car_models cm ON c.model_id = cm.model_id " +
                          "WHERE od.order_id = ? AND od.car_id IS NOT NULL";
         PreparedStatement carPs = con.prepareStatement(carQuery);
         carPs.setInt(1, orderId);
@@ -392,11 +391,10 @@ public class adminOrderController {
                 Connection con = connect.connect();
                 
                 // Get car details
-                String carQuery = "SELECT cm.model_name, cm.trim_name, c.car_color, c.production_year, " +
+                String carQuery = "SELECT c.model_name, c.trim_name, c.car_color, c.production_year, " +
                                  "od.qty, od.total_price " +
                                  "FROM order_details od " +
                                  "JOIN cars c ON od.car_id = c.car_id " +
-                                 "JOIN car_models cm ON c.model_id = cm.model_id " +
                                  "WHERE od.order_id = ? AND od.car_id IS NOT NULL";
                 PreparedStatement carPs = con.prepareStatement(carQuery);
                 carPs.setInt(1, order.getOrderId());
