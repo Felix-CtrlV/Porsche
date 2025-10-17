@@ -11,8 +11,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import Database.Porsche_DB;
 import Model.managerOrderView;
@@ -33,6 +35,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
@@ -45,7 +48,6 @@ import org.slf4j.LoggerFactory;
 public class managerOrderManagementController {
     
     private static final Logger logger = LoggerFactory.getLogger(managerOrderManagementController.class);
-    private Connection con;
     private ObservableList<managerOrderView> allOrdersData = FXCollections.observableArrayList();
     private ObservableList<managerOrderView> searchResultData = FXCollections.observableArrayList();
     private int managerId;
@@ -137,7 +139,7 @@ public class managerOrderManagementController {
     private TableColumn<managerOrderView, Double> priceCol;
 
     @FXML
-    private TableColumn<managerOrderView, String> qtyCol;
+    private TableColumn<managerOrderView, Integer> qtyCol;
 
     @FXML
     private Label remainAmountlbl;
@@ -274,6 +276,113 @@ public class managerOrderManagementController {
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("totalQty"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("is_installmenat"));
         
+        // Format date column properly with visible text
+        orderDateCol.setCellFactory(column -> new TableCell<managerOrderView, Date>() {
+            private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            
+            @Override
+            protected void updateItem(Date item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(new java.sql.Date(item.getTime()).toLocalDate().format(formatter));
+                }
+            }
+        });
+        
+        // Format customer name column with visible text
+        customerNameCol.setCellFactory(column -> new TableCell<managerOrderView, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                }
+            }
+        });
+        
+        // Format staff name column with visible text
+        staffNameCol.setCellFactory(column -> new TableCell<managerOrderView, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                }
+            }
+        });
+        
+        // Format quantity column with visible text
+        qtyCol.setCellFactory(column -> new TableCell<managerOrderView, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.toString());
+                }
+            }
+        });
+        
+        // Format price column properly with visible text
+        priceCol.setCellFactory(column -> new TableCell<managerOrderView, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("$%.2f", item));
+                }
+            }
+        });
+        
+        // Format status column with visible text
+        statusCol.setCellFactory(column -> new TableCell<managerOrderView, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                }
+            }
+        });
+        
+        // Set up row factory to ensure rows are visible
+        orderTable.setRowFactory(tv -> {
+            TableRow<managerOrderView> row = new TableRow<>();
+            row.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
+            
+            // Add hover effect
+            row.setOnMouseEntered(e -> {
+                if (!row.isEmpty()) {
+                    row.setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: black; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
+                }
+            });
+            
+            row.setOnMouseExited(e -> {
+                if (!row.isEmpty()) {
+                    row.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
+                }
+            });
+            
+            return row;
+        });
+        
         // Set up installment table columns
         installmentNameCol.setCellValueFactory(cellData -> {
             String[] parts = cellData.getValue().split("\\|");
@@ -369,16 +478,21 @@ public class managerOrderManagementController {
     public void loadOrder(){
         CallableStatement cs = null;
         ResultSet rs = null;
+        Connection tempCon = null;
         
         try {
             // Establish database connection
             Porsche_DB db = new Porsche_DB();
-            con = db.connect();
+            tempCon = db.connect();
             
             List<managerOrderView> ordersList = new ArrayList<>();
             
-            // Always call stored procedure to get ALL orders
-            cs = con.prepareCall("CALL getAllOrders()");
+            // Call stored procedure to get ALL orders
+            // Pass NULL for month/year to get all orders (needed for search and charts)
+            cs = tempCon.prepareCall("CALL getAllOrders(?, ?, ?)");
+            cs.setInt(1, managerId);
+            cs.setNull(2, java.sql.Types.INTEGER);  // month = NULL (get all months)
+            cs.setNull(3, java.sql.Types.INTEGER);  // year = NULL (get all years)
             rs = cs.executeQuery();
             
             while (rs.next()) {
@@ -458,7 +572,7 @@ public class managerOrderManagementController {
             try {
                 if (rs != null) rs.close();
                 if (cs != null) cs.close();
-                if (con != null) con.close();
+                if (tempCon != null) tempCon.close();
             } catch (SQLException e) {
                 logger.error("Error closing database resources", e);
             }
@@ -765,7 +879,10 @@ public class managerOrderManagementController {
         // Clear and populate the installment table
         installmentTable.getItems().clear();
 
-        for (int i = 0; i < names.length; i++) {
+        // Find the minimum length to avoid ArrayIndexOutOfBoundsException
+        int minLength = Math.min(Math.min(names.length, qty.length), price.length);
+        
+        for (int i = 0; i < minLength; i++) {
             // Create a formatted string for the table row (no need to trim if data is clean)
             String rowData = String.format("%s|%s|%s", names[i].trim(), qty[i].trim(), price[i].trim());
             installmentTable.getItems().add(rowData);
@@ -881,23 +998,36 @@ public class managerOrderManagementController {
         int targetCar = 0;
         int targetPart = 0;
         
+        Connection tempCon = null;
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        
         try {
-            CallableStatement cs = con.prepareCall("CALL targetViewChart(?,?,?)");
+            Porsche_DB db = new Porsche_DB();
+            tempCon = db.connect();
+            
+            cs = tempCon.prepareCall("CALL targetViewChart(?,?,?)");
             cs.setInt(1, managerId);
             cs.setInt(2, currentMonth);
             cs.setInt(3, currentYear);
             
-            ResultSet rs = cs.executeQuery();
+            rs = cs.executeQuery();
             if (rs.next()) {
                 targetCar = rs.getInt(4);    // Column 4: target_car
                 targetPart = rs.getInt(5);   // Column 5: target_part
                 // We use confirmQty and pendingQty from orders, not columns 6 & 7
             }
-            rs.close();
-            cs.close();
         } catch (SQLException e) {
             logger.error("Error fetching target data", e);
             // Continue with targets as 0
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (cs != null) cs.close();
+                if (tempCon != null) tempCon.close();
+            } catch (SQLException e) {
+                logger.error("Error closing database resources in calculateSoldQuantities", e);
+            }
         }
         
         // Calculate total orders for percentage calculation
@@ -1107,32 +1237,34 @@ public class managerOrderManagementController {
         // Get the number of days in the selected month
         LocalDate firstDayOfMonth = LocalDate.of(currentYear, currentMonth, 1);
         int daysInMonth = firstDayOfMonth.lengthOfMonth();
-        
-        // Calculate revenue for each week (Week 1, Week 2, Week 3, Week 4, Week 5 if exists)
         int numberOfWeeks = (int) Math.ceil(daysInMonth / 7.0);
         
+        // Pre-calculate revenue by week using HashMap for O(1) lookup
+        Map<Integer, Double> weekRevenueMap = new HashMap<>();
+        for (int i = 1; i <= numberOfWeeks; i++) {
+            weekRevenueMap.put(i, 0.0);
+        }
+        
+        // Single pass through orders - O(n) instead of O(n*weeks)
+        for (managerOrderView order : allOrdersData) {
+            if (order.getOrder_date() != null) {
+                LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
+                
+                // Check if order is in current month/year
+                if (orderDate.getYear() == currentYear && orderDate.getMonthValue() == currentMonth) {
+                    int dayOfMonth = orderDate.getDayOfMonth();
+                    int week = ((dayOfMonth - 1) / 7) + 1; // Calculate week number
+                    weekRevenueMap.put(week, weekRevenueMap.get(week) + order.getTotal_amount());
+                }
+            }
+        }
+        
+        // Add data to chart
         for (int week = 1; week <= numberOfWeeks; week++) {
             int startDay = (week - 1) * 7 + 1;
             int endDay = Math.min(week * 7, daysInMonth);
+            double weekRevenue = weekRevenueMap.get(week);
             
-            double weekRevenue = 0.0;
-            
-            // Calculate revenue for this week
-            for (managerOrderView order : allOrdersData) {
-                if (order.getOrder_date() != null) {
-                    LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
-                    
-                    // Check if order is in current month/year and within this week
-                    if (orderDate.getYear() == currentYear && 
-                        orderDate.getMonthValue() == currentMonth &&
-                        orderDate.getDayOfMonth() >= startDay && 
-                        orderDate.getDayOfMonth() <= endDay) {
-                        weekRevenue += order.getTotal_amount();
-                    }
-                }
-            }
-            
-            // Add data to chart
             String weekLabel = "Week " + week;
             series.getData().add(new XYChart.Data(weekLabel, weekRevenue));
             System.out.println(weekLabel + " (Days " + startDay + "-" + endDay + "): $" + String.format("%.2f", weekRevenue));
@@ -1185,24 +1317,28 @@ public class managerOrderManagementController {
             XYChart.Series series = new XYChart.Series();
             series.setName("Revenue");
         
-        // Calculate revenue for each month of the selected year
-        for (int month = 1; month <= 12; month++) {
-            double monthRevenue = 0.0;
-            
-            // Calculate revenue for this month
-            for (managerOrderView order : allOrdersData) {
-                if (order.getOrder_date() != null) {
-                    LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
-                    
-                    // Check if order is in current year and this month
-                    if (orderDate.getYear() == currentYear && 
-                        orderDate.getMonthValue() == month) {
-                        monthRevenue += order.getTotal_amount();
-                    }
+        // Pre-calculate revenue by month using HashMap for O(1) lookup
+        Map<Integer, Double> monthRevenueMap = new HashMap<>();
+        for (int i = 1; i <= 12; i++) {
+            monthRevenueMap.put(i, 0.0);
+        }
+        
+        // Single pass through orders - O(n) instead of O(n*12)
+        for (managerOrderView order : allOrdersData) {
+            if (order.getOrder_date() != null) {
+                LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
+                
+                // Check if order is in current year
+                if (orderDate.getYear() == currentYear) {
+                    int month = orderDate.getMonthValue();
+                    monthRevenueMap.put(month, monthRevenueMap.get(month) + order.getTotal_amount());
                 }
             }
-            
-            // Add data to chart
+        }
+        
+        // Add data to chart
+        for (int month = 1; month <= 12; month++) {
+            double monthRevenue = monthRevenueMap.get(month);
             String monthLabel = Month.of(month).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
             series.getData().add(new XYChart.Data(monthLabel, monthRevenue));
             System.out.println(monthLabel + ": $" + String.format("%.2f", monthRevenue));
