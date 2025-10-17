@@ -170,7 +170,6 @@ public class managerOrderManagementController {
 
     @FXML
     void clickMonthlyRevenue(ActionEvent event) {
-        System.out.println("Monthly Revenue button clicked");
         
         isWeeklyView = false;
         // Update button styles
@@ -231,7 +230,6 @@ public class managerOrderManagementController {
 
     @FXML
     void clickWeeklyRevenue(ActionEvent event) {
-        System.out.println("Weekly Revenue button clicked");
         
         isWeeklyView = true;
         // Update button styles
@@ -531,8 +529,6 @@ public class managerOrderManagementController {
             allOrdersData.addAll(ordersList);
             
             // Debug: Uncomment these lines if you need to troubleshoot data loading
-            // System.out.println("DEBUG: Total orders loaded from DB: " + ordersList.size());
-            // System.out.println("DEBUG: Current month/year filter: " + currentMonth + "/" + currentYear);
             
             // Filter orders based on selected month/year
             List<managerOrderView> filteredOrders = new ArrayList<>();
@@ -1224,17 +1220,12 @@ public class managerOrderManagementController {
     
     @SuppressWarnings("unchecked")
     private void showWeeklyRevenueChart() {
-        System.out.println("=== WEEKLY REVENUE CHART ===");
-        System.out.println("Current Month: " + currentMonth + ", Current Year: " + currentYear);
         
         // Check if chart is null
         if (revenueChart == null) {
             System.err.println("ERROR: revenueChart is null! Check FXML fx:id='revenueChart'");
             return;
         }
-        
-        System.out.println("Chart found: " + revenueChart.getClass().getName());
-        System.out.println("All orders data size: " + allOrdersData.size());
         
         try {
             // Clear existing chart data and force layout refresh
@@ -1273,16 +1264,11 @@ public class managerOrderManagementController {
         
         // Add data to chart
         for (int week = 1; week <= numberOfWeeks; week++) {
-            int startDay = (week - 1) * 7 + 1;
-            int endDay = Math.min(week * 7, daysInMonth);
             double weekRevenue = weekRevenueMap.get(week);
             
             String weekLabel = "Week " + week;
             series.getData().add(new XYChart.Data(weekLabel, weekRevenue));
-            System.out.println(weekLabel + " (Days " + startDay + "-" + endDay + "): $" + String.format("%.2f", weekRevenue));
         }
-        
-        System.out.println("Total data points: " + series.getData().size());
         
         if (series.getData().isEmpty()) {
             System.err.println("WARNING: No data to display in chart!");
@@ -1296,8 +1282,6 @@ public class managerOrderManagementController {
         // Force layout update after adding data
         revenueChart.layout();
         
-        System.out.println("✓ Weekly chart updated successfully");
-        System.out.println("============================\n");
         
         } catch (Exception e) {
             System.err.println("ERROR in showWeeklyRevenueChart: " + e.getMessage());
@@ -1307,17 +1291,12 @@ public class managerOrderManagementController {
     
     @SuppressWarnings("unchecked")
     private void showMonthlyRevenueChart() {
-        System.out.println("=== MONTHLY REVENUE CHART ===");
-        System.out.println("Current Year: " + currentYear);
         
         // Check if chart is null
         if (revenueChart == null) {
             System.err.println("ERROR: revenueChart is null! Check FXML fx:id='revenueChart'");
             return;
         }
-        
-        System.out.println("Chart found: " + revenueChart.getClass().getName());
-        System.out.println("All orders data size: " + allOrdersData.size());
         
         try {
             // Clear existing chart data and force layout refresh
@@ -1353,10 +1332,7 @@ public class managerOrderManagementController {
             double monthRevenue = monthRevenueMap.get(month);
             String monthLabel = Month.of(month).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
             series.getData().add(new XYChart.Data(monthLabel, monthRevenue));
-            System.out.println(monthLabel + ": $" + String.format("%.2f", monthRevenue));
         }
-        
-        System.out.println("Total data points: " + series.getData().size());
         
         if (series.getData().isEmpty()) {
             System.err.println("WARNING: No data to display in chart!");
@@ -1370,8 +1346,6 @@ public class managerOrderManagementController {
         // Force layout update after adding data
         revenueChart.layout();
         
-        System.out.println("✓ Monthly chart updated successfully");
-        System.out.println("============================\n");
         
         } catch (Exception e) {
             System.err.println("ERROR in showMonthlyRevenueChart: " + e.getMessage());

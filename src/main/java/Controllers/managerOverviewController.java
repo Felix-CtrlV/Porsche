@@ -2,6 +2,8 @@ package Controllers;
 
 import Database.Porsche_DB;
 import Model.ManagerOfAttendanceView;
+import Controllers.ChartDataHelper;
+import Controllers.ChartDataHelper.ChartDataPoint;
 
 import Model.managerOverview;
 import Utils.Session;
@@ -637,27 +639,53 @@ public class managerOverviewController {
         partSeries.getData().clear();
         revenueSeries.getData().clear();
 
-        String selectedPart = saleComboBox.getValue();
-        CallableStatement cs = con.prepareCall("CALL getSalesChartData(?,?,?)");
-        {
-            cs.setInt(1, currentMonth);
-            cs.setInt(2, currentYear);
-            cs.setString(3, selectedPart);
+        String selectedPeriod = saleComboBox.getValue();
+        
+        try {
+            // Load revenue data using ChartDataHelper
+            List<ChartDataPoint> revenueData = ChartDataHelper.loadChartData(
+                managerId, currentMonth, currentYear, selectedPeriod
+            );
+            
+            // Add revenue data to chart
+            for (ChartDataPoint point : revenueData) {
+                revenueSeries.getData().add(new XYChart.Data<>(point.getLabel(), point.getRevenue()));
+            }
+            
+            // For car and part data, we'll use the original procedure call but with correct parameters
+            CallableStatement cs = con.prepareCall("CALL getSalesChartData(?,?,?,?)");
+            cs.setInt(1, managerId);
+            cs.setInt(2, currentMonth);
+            cs.setInt(3, currentYear);
+            cs.setString(4, selectedPeriod);
 
             ResultSet rs = cs.executeQuery();
             while (rs.next()){
+                // Check if this procedure returns the expected columns
+                try {
+                    // Try to access new format columns to see if they exist
+                    rs.getString("period_label");
+                    rs.getDouble("revenue");
+                    
+                    // If we get here, the procedure returns the new format
+                    // We already handled revenue above with ChartDataHelper, so we can skip this
+                } catch (SQLException e) {
+                    // Old format - try to get the original columns
+                    String monthDate = rs.getString(1);
+                    int carSoldQty = rs.getInt(2);
+                    int partSoldQty = rs.getInt(3);
+                    // Revenue already handled above with ChartDataHelper
 
-                String monthDate = rs.getString(1);
-                int carSoldQty = rs.getInt(2);
-                int partSoldQty = rs.getInt(3);
-                double revenue = rs.getDouble(4);
-
-                carSeries.getData().add(new XYChart.Data<>(monthDate, carSoldQty));
-                partSeries.getData().add(new XYChart.Data<>(monthDate, partSoldQty));
-                revenueSeries.getData().add(new XYChart.Data<>(monthDate, revenue));
+                    carSeries.getData().add(new XYChart.Data<>(monthDate, carSoldQty));
+                    partSeries.getData().add(new XYChart.Data<>(monthDate, partSoldQty));
+                }
             }
             rs.close();
             cs.close();
+            
+        } catch (Exception e) {
+            System.err.println("Error loading chart data: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     private void styleCharts() {
@@ -784,7 +812,7 @@ public class managerOverviewController {
                     scrollPane.getChildren().add(progressCard);
                 }
             } else {
-
+                // Handle staff data
                 for (managerOverview seller : bestSellerList) {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/bestSeller.fxml"));
                     HBox sellerCard = loader.load();
@@ -795,8 +823,6 @@ public class managerOverviewController {
                     scrollPane.getChildren().add(sellerCard);
                 }
             }
-
-
         }
     }
 }
