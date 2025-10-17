@@ -279,7 +279,7 @@ public class managerOrderManagementController {
         // Format date column properly with visible text
         orderDateCol.setCellFactory(column -> new TableCell<managerOrderView, Date>() {
             private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            
+
             @Override
             protected void updateItem(Date item, boolean empty) {
                 super.updateItem(item, empty);
@@ -291,35 +291,61 @@ public class managerOrderManagementController {
                 }
             }
         });
-        
+
         // Format customer name column with visible text
-        customerNameCol.setCellFactory(column -> new TableCell<managerOrderView, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item);
+        customerNameCol.setCellFactory(column -> {
+            TableCell<managerOrderView, String> cell = new TableCell<managerOrderView, String>() {
+                private final Text text = new Text();
+
+                {
+                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                    text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
+                    setGraphic(text);
+                    setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
                 }
-            }
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                    if (empty || item == null) {
+                        text.setText(null);
+                    } else {
+                        text.setText(item);
+                        text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
+                    }
+                }
+            };
+            return cell;
         });
-        
+
         // Format staff name column with visible text
-        staffNameCol.setCellFactory(column -> new TableCell<managerOrderView, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item);
+        staffNameCol.setCellFactory(column -> {
+            TableCell<managerOrderView, String> cell = new TableCell<managerOrderView, String>() {
+                private final Text text = new Text();
+
+                {
+                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                    text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
+                    setGraphic(text);
+                    setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
                 }
-            }
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                    if (empty || item == null) {
+                        text.setText(null);
+                    } else {
+                        text.setText(item);
+                        text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
+                    }
+                }
+            };
+            return cell;
         });
-        
+
         // Format quantity column with visible text
         qtyCol.setCellFactory(column -> new TableCell<managerOrderView, Integer>() {
             @Override
@@ -333,7 +359,7 @@ public class managerOrderManagementController {
                 }
             }
         });
-        
+
         // Format price column properly with visible text
         priceCol.setCellFactory(column -> new TableCell<managerOrderView, Double>() {
             @Override
@@ -347,39 +373,53 @@ public class managerOrderManagementController {
                 }
             }
         });
-        
+
         // Format status column with visible text
-        statusCol.setCellFactory(column -> new TableCell<managerOrderView, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item);
+        statusCol.setCellFactory(column -> {
+            TableCell<managerOrderView, String> cell = new TableCell<managerOrderView, String>() {
+                private final Text text = new Text();
+
+                {
+                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                    text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
+                    setGraphic(text);
+                    setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
                 }
-            }
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                    if (empty || item == null) {
+                        text.setText(null);
+                    } else {
+                        text.setText(item);
+                        text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
+                    }
+                }
+            };
+            return cell;
         });
-        
-        // Set up row factory to ensure rows are visible
+
+        // Allow variable row heights and visible rows
+        orderTable.setFixedCellSize(-1);
         orderTable.setRowFactory(tv -> {
             TableRow<managerOrderView> row = new TableRow<>();
             row.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
-            
-            // Add hover effect
+            row.setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
+
             row.setOnMouseEntered(e -> {
                 if (!row.isEmpty()) {
                     row.setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: black; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
                 }
             });
-            
+
             row.setOnMouseExited(e -> {
                 if (!row.isEmpty()) {
                     row.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
                 }
             });
-            
+
             return row;
         });
         

@@ -44,7 +44,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.*;
 import java.util.*;
 
@@ -2133,10 +2135,35 @@ public class managerInventoryController {
         int qty = Integer.parseInt(carQtyText.getText().trim());
         double price = Double.parseDouble(carPriceText.getText().trim());
         
-        // Handle image
+        // Handle image - Copy to project Images folder for cross-computer compatibility
         String photoPath = null;
         if (!file.isEmpty()) {
-            photoPath = file.get(0).getAbsolutePath();
+            File selectedFile = file.get(0);
+            String projectRoot = System.getProperty("user.dir");
+            File imagesDir = new File(projectRoot, "Images");
+            
+            // Create Images directory if it doesn't exist
+            if (!imagesDir.exists()) {
+                imagesDir.mkdirs();
+            }
+            
+            // Copy file to Images directory and store relative path
+            String fileName = selectedFile.getName();
+            File targetFile = new File(imagesDir, fileName);
+            
+            try {
+                // Copy the selected file to Images directory
+                java.nio.file.Files.copy(selectedFile.toPath(), targetFile.toPath(), 
+                                       java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                // Store relative path: Images/filename.jpg
+                photoPath = "Images/" + fileName;
+                System.out.println("Image copied to: " + targetFile.getAbsolutePath());
+                System.out.println("Storing relative path: " + photoPath);
+            } catch (IOException e) {
+                System.err.println("Failed to copy image: " + e.getMessage());
+                // Fallback to absolute path if copy fails
+                photoPath = selectedFile.getAbsolutePath();
+            }
         }
         
         // Call stored procedure
@@ -2181,10 +2208,35 @@ public class managerInventoryController {
         int qty = Integer.parseInt(partQtyText.getText().trim());
         double price = Double.parseDouble(partPriceText.getText().trim());
         
-        // Handle image
+        // Handle image - Copy to project Images folder for cross-computer compatibility
         String photoPath = null;
         if (!file.isEmpty()) {
-            photoPath = file.get(0).getAbsolutePath();
+            File selectedFile = file.get(0);
+            String projectRoot = System.getProperty("user.dir");
+            File imagesDir = new File(projectRoot, "Images");
+            
+            // Create Images directory if it doesn't exist
+            if (!imagesDir.exists()) {
+                imagesDir.mkdirs();
+            }
+            
+            // Copy file to Images directory and store relative path
+            String fileName = selectedFile.getName();
+            File targetFile = new File(imagesDir, fileName);
+            
+            try {
+                // Copy the selected file to Images directory
+                java.nio.file.Files.copy(selectedFile.toPath(), targetFile.toPath(), 
+                                       java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                // Store relative path: Images/filename.jpg
+                photoPath = "Images/" + fileName;
+                System.out.println("Image copied to: " + targetFile.getAbsolutePath());
+                System.out.println("Storing relative path: " + photoPath);
+            } catch (IOException e) {
+                System.err.println("Failed to copy image: " + e.getMessage());
+                // Fallback to absolute path if copy fails
+                photoPath = selectedFile.getAbsolutePath();
+            }
         }
         
         // Set forCarModel to null if empty (universal part)
