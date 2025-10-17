@@ -2,8 +2,6 @@ package Controllers;
 
 import Database.Porsche_DB;
 import Model.ManagerOfAttendanceView;
-import Controllers.ChartDataHelper;
-import Controllers.ChartDataHelper.ChartDataPoint;
 
 import Model.managerOverview;
 import Utils.Session;
@@ -642,17 +640,7 @@ public class managerOverviewController {
         String selectedPeriod = saleComboBox.getValue();
         
         try {
-            // Load revenue data using ChartDataHelper
-            List<ChartDataPoint> revenueData = ChartDataHelper.loadChartData(
-                managerId, currentMonth, currentYear, selectedPeriod
-            );
-            
-            // Add revenue data to chart
-            for (ChartDataPoint point : revenueData) {
-                revenueSeries.getData().add(new XYChart.Data<>(point.getLabel(), point.getRevenue()));
-            }
-            
-            // For car and part data, we'll use the original procedure call but with correct parameters
+            // Call getSalesChartData procedure directly
             CallableStatement cs = con.prepareCall("CALL getSalesChartData(?,?,?,?)");
             cs.setInt(1, managerId);
             cs.setInt(2, currentMonth);
@@ -661,23 +649,25 @@ public class managerOverviewController {
 
             ResultSet rs = cs.executeQuery();
             while (rs.next()){
-                // Check if this procedure returns the expected columns
+                // Check if this procedure returns the new format with named columns
                 try {
-                    // Try to access new format columns to see if they exist
-                    rs.getString("period_label");
-                    rs.getDouble("revenue");
+                    // Try to access new format columns
+                    String periodLabel = rs.getString("period_label");
+                    double revenue = rs.getDouble("revenue");
                     
-                    // If we get here, the procedure returns the new format
-                    // We already handled revenue above with ChartDataHelper, so we can skip this
+                    // New format - only has period_label and revenue
+                    revenueSeries.getData().add(new XYChart.Data<>(periodLabel, revenue));
+                    
                 } catch (SQLException e) {
-                    // Old format - try to get the original columns
+                    // Old format - has multiple columns
                     String monthDate = rs.getString(1);
                     int carSoldQty = rs.getInt(2);
                     int partSoldQty = rs.getInt(3);
-                    // Revenue already handled above with ChartDataHelper
+                    double revenue = rs.getDouble(4);
 
                     carSeries.getData().add(new XYChart.Data<>(monthDate, carSoldQty));
                     partSeries.getData().add(new XYChart.Data<>(monthDate, partSoldQty));
+                    revenueSeries.getData().add(new XYChart.Data<>(monthDate, revenue));
                 }
             }
             rs.close();
