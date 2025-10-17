@@ -44,7 +44,7 @@ public class login extends Application {
 
     private void loadLoginScreen(Stage stage) {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/login.fxml")));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/staffWelcome.fxml")));
             Scene scene = new Scene(root);
             
             Platform.runLater(() -> {

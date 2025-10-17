@@ -1,6 +1,7 @@
 package Controllers;
 
 import javafx.animation.*;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +13,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -22,6 +24,7 @@ import java.net.URL;
 import java.util.*;
 
 public class staffCarsController implements Initializable {
+
     @FXML private ImageView nine11_select_image;
     @FXML private ImageView seven18_select_image;
     @FXML private ImageView cayenne_select_image;
@@ -54,10 +57,11 @@ public class staffCarsController implements Initializable {
                 macan_select_image, "/Image/macan_promo.png",
                 cayenne_select_image, "/Image/cayenne_promo.png"
         );
+
         imageMap.forEach((imageView, path) -> {
             try (InputStream stream = getClass().getResourceAsStream(path)) {
                 if (stream == null) {
-                    System.err.println("Image not found: " + path);
+                    System.err.println("⚠️ Image not found: " + path);
                     return;
                 }
                 Image image = new Image(stream, 0, 0, true, true);
@@ -72,17 +76,22 @@ public class staffCarsController implements Initializable {
     private void setupImageInteractions() {
         DropShadow glowEffect = new DropShadow(20, PORSCHE_RED);
         glowEffect.setSpread(0.4);
+
         for (ImageView imageView : allImages) {
             imageView.setOnMouseEntered(e -> {
                 applyScale(imageView, 1.08);
                 imageView.setEffect(glowEffect);
-                imageView.getScene().setCursor(javafx.scene.Cursor.HAND);
+                if (imageView.getScene() != null)
+                    imageView.getScene().setCursor(javafx.scene.Cursor.HAND);
             });
+
             imageView.setOnMouseExited(e -> {
                 applyScale(imageView, 1.0);
                 imageView.setEffect(null);
-                imageView.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
+                if (imageView.getScene() != null)
+                    imageView.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
             });
+
             imageView.setOnMouseClicked(this::redirect);
         }
     }
@@ -99,63 +108,79 @@ public class staffCarsController implements Initializable {
         for (ImageView imageView : allImages) {
             imageView.setOpacity(0);
             imageView.setTranslateY(30);
+
             FadeTransition fadeIn = new FadeTransition(Duration.millis(500), imageView);
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
             fadeIn.setDelay(Duration.millis(delay));
+
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(500), imageView);
             slideUp.setFromY(30);
             slideUp.setToY(0);
             slideUp.setDelay(Duration.millis(delay));
+
             new ParallelTransition(fadeIn, slideUp).play();
             delay += 100;
         }
     }
 
     @FXML
+    private void home(ActionEvent event) {
+        Button btn = (Button) event.getSource();
+        createClickFeedback(btn);
+        PauseTransition pause = new PauseTransition(Duration.millis(250));
+        pause.setOnFinished(e -> navigate(event, "/View/staffWelcome.fxml"));
+        pause.play();
+    }
+
+    @FXML
     private void redirect(MouseEvent event) {
         ImageView clicked = (ImageView) event.getSource();
-        String modelId = clicked.getId();
-        System.out.println("Model selected: " + modelId);
+        System.out.println("Model selected: " + clicked.getId());
         createClickFeedback(clicked);
         PauseTransition pause = new PauseTransition(Duration.millis(250));
         pause.setOnFinished(e -> navigate(event, "/View/staffModelSelect.fxml"));
         pause.play();
     }
 
-    private void createClickFeedback(ImageView imageView) {
-        ScaleTransition pulse = new ScaleTransition(Duration.millis(120), imageView);
+    private void createClickFeedback(Node node) {
+        ScaleTransition pulse = new ScaleTransition(Duration.millis(120), node);
         pulse.setToX(0.95);
         pulse.setToY(0.95);
         pulse.setAutoReverse(true);
         pulse.setCycleCount(2);
-        FadeTransition flash = new FadeTransition(Duration.millis(120), imageView);
+
+        FadeTransition flash = new FadeTransition(Duration.millis(120), node);
         flash.setFromValue(1.0);
         flash.setToValue(0.8);
         flash.setAutoReverse(true);
         flash.setCycleCount(2);
+
         new ParallelTransition(pulse, flash).play();
     }
 
-    private void navigate(MouseEvent event, String fxmlPath) {
+    private void navigate(Event event, String fxmlPath) {
         Node source = (Node) event.getSource();
         Scene currentScene = source.getScene();
         Parent root;
+
         try {
             root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
         } catch (IOException | NullPointerException ex) {
-            System.err.println("⚠️ Failed to navigate: " + fxmlPath);
+            System.err.println("Failed to navigate: " + fxmlPath);
             ex.printStackTrace();
             return;
         }
+
         root.setOpacity(0);
         Stage stage = (Stage) currentScene.getWindow();
-        Scene newScene = new Scene(root);
+        Scene newScene = new Scene(root, 1133, 580);
         FadeTransition fadeOut = new FadeTransition(FADE_DURATION, currentScene.getRoot());
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
         fadeOut.setOnFinished(e -> {
             stage.setScene(newScene);
+            stage.centerOnScreen();
             FadeTransition fadeIn = new FadeTransition(FADE_DURATION, root);
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
@@ -163,14 +188,6 @@ public class staffCarsController implements Initializable {
         });
         fadeOut.play();
     }
-
-    @FXML
-    private void home(MouseEvent event) {
-        System.out.println("🏠 Home button clicked");
-        navigate(event, "/View/staffWelcome.fxml");
-    }
-
-    public String getSelectedModelId(ImageView imageView) { return imageView.getId(); }
 
     public void preloadAllImages() {
         allImages.stream()

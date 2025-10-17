@@ -3,6 +3,29 @@
     -fx-font-family: "Helvetica Neue", "Arial", sans-serif;
 }
 
+.scroll-pane, .accessories-scroll {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(184, 0, 0, 0.5);
+    -fx-background-radius: 6px;
+    -fx-opacity: 0.8;
+    -fx-transition: all 0.3s ease;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(184, 0, 0, 0.8);
+}
+
 .brand-logo {
     -fx-font-size: 36px;
     -fx-font-weight: bold;
@@ -25,11 +48,22 @@
     -fx-border-radius: 20px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 30, 0.3, 0, 10);
     -fx-padding: 40px;
+    -fx-transition: all 0.4s ease-in-out;
+}
+
+.glass-card:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.45);
 }
 
 .car-image {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 20, 0.4, 0, 5);
     -fx-cursor: hand;
+    -fx-transition: transform 0.3s ease;
+}
+
+.car-image:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
 }
 
 .section-title {
@@ -66,14 +100,9 @@
 .accessories-scroll {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-background: transparent;
 }
 
 .accessories-scroll > .viewport {
-    -fx-background-color: transparent;
-}
-
-.accessories-scroll .scroll-bar {
     -fx-background-color: transparent;
 }
 

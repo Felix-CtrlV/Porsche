@@ -75,7 +75,6 @@
                 </rowConstraints>
 
                 <children>
-                    <!-- Template for Each Model -->
                     <!-- Model 1: 911 -->
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="0" GridPane.rowIndex="0">
                         <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">

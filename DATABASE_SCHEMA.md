@@ -290,12 +290,12 @@ Stores employee/user account information.
 | reason      | VARCHAR  | Fired Reason                             |
 
 
-**Total Records:** 10 users
+**Total Records:** 11 users (7 active, 4 inactive)
 
 **User Roles:**
 - **admin** (1): Full system access
-- **manager** (1): Management functions
-- **staff** (8): Sales and operations
+- **manager** (2): Management functions (2 active)
+- **staff** (8): Sales and operations (5 active, 3 inactive)
 
 **Password Hash:** All users currently use the same hashed password for testing
 
@@ -315,13 +315,13 @@ Stores monthly sales targets and achievements for users.
 | target        | VARCHAR | Target in format "cars-X,parts-Y"                |
 | achieve       | VARCHAR | Achievement in format "cars-X,parts-Y" (nullable)|
 
-**Total Records:** 32 target entries
+**Total Records:** 9 target entries
 
 **Sample Data:**
-- Manager (user_id=2): Monthly targets ranging from 10-20 cars, 50 parts
-- Staff (user_id=3-11): Monthly targets of 1-2 cars, 5 parts each
-- Targets set from January 2020 onwards
-- Some entries include achievement data (e.g., November 2020)
+- Manager (user_id=2): Target "cars-5,parts-10", Achieved "cars-5,parts-11"
+- Staff (user_id=3-10): Monthly targets of 1 car, 1 part each
+- Targets set for October 2020
+- All entries include achievement data
 
 **Format Examples:**
 - Target: `"cars-10,parts-50"` (10 cars, 50 parts)
@@ -341,19 +341,20 @@ Stores employment and compensation details.
 | user_id       | INT     | Foreign key to user_info             |
 | manager       | INT     | Foreign key to user_info (manager)   |
 | salary_amount | DECIMAL | Monthly salary                       |
-| bonous        | DECIMAL | Bonus amount                         |
+| bonus         | DECIMAL | Bonus amount                         |
 
-**Total Records:** 11 work info entries
+**Total Records:** 12 work info entries
 
 **Salary Structure:**
-- Admin (user_id=1): 450,000 MMK
-- Manager (user_id=2): 2,500 MMK
+- Admin (user_id=1): 5,000 MMK
+- Managers (user_id=2, 15): 2,500 MMK each
 - Staff (user_id=3-11): 1,000 MMK each
 
 **Reporting Structure:**
-- Admin has no manager
-- Manager reports to Admin (manager=1)
-- All staff report to Manager (manager=2)
+- Admin (user_id=1) has no manager
+- Manager (user_id=2) reports to Admin (manager=1)
+- Manager (user_id=15) has no manager
+- All staff (user_id=3-11) report to Manager (manager=2)
 
 **Note:** All bonuses currently set to 0
 
@@ -363,26 +364,26 @@ Stores employment and compensation details.
 
 ### Primary Relationships:
 
-1. **car_models** → **cars** (one-to-many)
-   - One model can have multiple cars with different colors/specs
-
-2. **cars** → **order_details** (one-to-many)
+1. **cars** → **order_details** (one-to-many)
    - One car can appear in multiple orders
 
-3. **car_parts** → **order_details** (one-to-many)
+2. **car_parts** → **order_details** (one-to-many)
    - One part can appear in multiple orders
 
-4. **customer_info** → **orders** (one-to-many)
+3. **customer_info** → **orders** (one-to-many)
    - One customer can place multiple orders
 
-5. **user_info** → **orders** (one-to-many)
+4. **user_info** → **orders** (one-to-many)
    - One staff member can process multiple orders
 
-6. **orders** → **order_details** (one-to-many)
+5. **orders** → **order_details** (one-to-many)
    - One order can contain multiple items (cars and parts)
 
-7. **orders** → **installment_list** (one-to-many)
+6. **orders** → **installment_list** (one-to-many)
    - One order can have multiple installment payments
+
+7. **order_details** → **customize** (one-to-many)
+   - One order detail can have multiple customizations
 
 8. **user_info** → **user_workinfo** (one-to-one)
    - Each user has one work info record
@@ -390,8 +391,8 @@ Stores employment and compensation details.
 9. **user_info** → **user_attendance** (one-to-many)
    - One user can have multiple attendance records
 
-10. **photos** → Multiple tables (one-to-many)
-    - Photos can be linked to users, cars, models, and parts
+10. **user_info** → **user_target** (one-to-many)
+    - One user can have multiple monthly targets
 
 ---
 
@@ -421,16 +422,16 @@ Stores employment and compensation details.
 
 ## Data Statistics
 
-- **Total Customers:** 40
-- **Total Users:** 10 (1 admin, 1 manager, 8 staff)
-- **Total Car Models:** 17
-- **Total Cars in Inventory:** 17 unique configurations
-- **Total Parts:** 10 types
-- **Total Orders:** 112
-- **Total Order Details:** 236 line items
-- **Date Range:** October 2020 - November 2025
-- **Total Revenue (estimated):** Sum of all order totals
-- **Pending Installments:** 68 unpaid installments
+- **Total Customers:** 10
+- **Total Users:** 11 (1 admin, 2 managers, 8 staff) - 7 active, 4 inactive
+- **Total Cars in Inventory:** 19 unique configurations (18 active, 1 discontinued)
+- **Total Parts:** 12 types (10 active, 2 inactive)
+- **Total Orders:** 10
+- **Total Order Details:** 10 line items
+- **Date Range:** October 2020 - November 2020
+- **Total Attendance Records:** 10
+- **Total User Targets:** 9
+- **Pending Installments:** 15 unpaid installments
 
 ---
 
@@ -449,12 +450,11 @@ ORDER BY o.order_date DESC;
 ### Get order details with car/part information:
 ```sql
 SELECT od.detail_id, o.order_id, 
-       COALESCE(CONCAT(cm.model_name, ' ', cm.trim_name), cp.part_name) as item_name,
+       COALESCE(CONCAT(c.model_name, ' ', c.trim_name), cp.part_name) as item_name,
        od.qty, od.total_price
 FROM order_details od
 JOIN orders o ON od.order_id = o.order_id
 LEFT JOIN cars c ON od.car_id = c.car_id
-LEFT JOIN car_models cm ON c.model_id = cm.model_id
 LEFT JOIN car_parts cp ON od.part_id = cp.part_id;
 ```
 
@@ -483,4 +483,4 @@ ORDER BY total_sales DESC;
 
 ---
 
-*Last Updated: October 13, 2025*
+*Last Updated: October 17, 2025*
