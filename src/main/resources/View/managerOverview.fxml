@@ -323,10 +323,10 @@
                                                         </HBox.margin>
                                                     </Label>
                                           <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                          <HBox alignment="CENTER" minHeight="20.0" prefHeight="35.0" prefWidth="158.0">
+                                          <HBox alignment="CENTER" minHeight="20.0" prefHeight="35.0" prefWidth="158.0" spacing="5.0">
                                              <children>
-                                                <Button minHeight="30.0" mnemonicParsing="false" prefHeight="13.0" prefWidth="78.0" style="-fx-background-color: transparent;" text="CAR" HBox.hgrow="ALWAYS" />
-                                                <Button minHeight="30.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="78.0" style="-fx-background-color: transparent;" text="PART" HBox.hgrow="ALWAYS" />
+                                                <Button fx:id="carChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickCarChart" prefHeight="13.0" prefWidth="78.0" style="-fx-background-color: transparent;" text="CAR" wrapText="true" HBox.hgrow="ALWAYS" />
+                                                <Button fx:id="partChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickPartChart" prefHeight="19.0" prefWidth="78.0" style="-fx-background-color: transparent;" text="PART" wrapText="true" HBox.hgrow="ALWAYS" />
                                              </children>
                                           </HBox>
                                                 </children>
