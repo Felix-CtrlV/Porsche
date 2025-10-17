@@ -386,50 +386,67 @@
                                     <padding>
                                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                                     </padding>
-                                    <top>
-                                        <VBox spacing="15.0">
-                                            <children>
-                                                <HBox prefHeight="17.0" prefWidth="448.0" spacing="10.0">
-                                                    <children>
-                                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Paid Amount:" />
-                                                        <Region prefHeight="17.0" prefWidth="230.0" HBox.hgrow="ALWAYS" />
-                                                        <Label fx:id="paidAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #34a853;" text="0.00" />
-                                                    </children>
-                                                </HBox>
-                                                <HBox spacing="10.0">
-                                                    <children>
-                                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Remain Amount:" />
-                                                        <Region prefHeight="17.0" prefWidth="222.0" HBox.hgrow="ALWAYS" />
-                                                        <Label fx:id="remainAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #ea4335;" text="0.00" />
-                                                    </children>
-                                                </HBox>
-                                    <HBox spacing="10.0">
-                                       <children>
-                                          <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Due Date" />
-                                          <Region prefHeight="17.0" prefWidth="55.0" HBox.hgrow="NEVER" />
-                                          <Label fx:id="dueDateLabel" style="-fx-font-weight: bold; -fx-text-fill: #fbbc04;" text="2025-10-20" />
-                                       </children>
-                                    </HBox>
-                                            </children>
-                                        </VBox>
-                                    </top>
                                     <bottom>
-                                        <HBox alignment="CENTER_RIGHT" spacing="100.0" style="-fx-border-color: #f1f3f4; -fx-border-width: 1 0 0 0; -fx-padding: 10 0 0 0;" BorderPane.alignment="CENTER">
-                                            <children>
-                                                <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Total Price:" />
-                                                <Label fx:id="totalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="0.00">
-                                       <HBox.margin>
-                                          <Insets right="90.0" />
-                                       </HBox.margin>
-                                    </Label>
-                                            </children>
-                                 <padding>
-                                    <Insets bottom="15.0" left="60.0" right="100.0" top="15.0" />
-                                 </padding>
-                                 <BorderPane.margin>
-                                    <Insets />
-                                 </BorderPane.margin>
-                                        </HBox>
+                                       <VBox BorderPane.alignment="CENTER">
+                                          <BorderPane.margin>
+                                             <Insets />
+                                          </BorderPane.margin>
+                                          <children>
+                                             <HBox alignment="CENTER_LEFT">
+                                                <children>
+                                                   <HBox alignment="CENTER_LEFT" spacing="10.0" HBox.hgrow="ALWAYS">
+                                                      <children>
+                                                         <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Due Date" />
+                                                         <Region prefHeight="17.0" prefWidth="50.0" HBox.hgrow="NEVER" />
+                                                         <Label fx:id="dueDateLabel" style="-fx-font-weight: bold; -fx-text-fill: #fbbc04;" text="2025-10-20">
+                                                            <HBox.margin>
+                                                               <Insets />
+                                                            </HBox.margin>
+                                                         </Label>
+                                                      </children>
+                                                   </HBox>
+                                                    <HBox alignment="CENTER_RIGHT" spacing="100.0" HBox.hgrow="ALWAYS">
+                                                        <children>
+                                                            <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Total Price:" />
+                                                            <Label fx:id="totalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #1a73e8;" text="0.00">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                </Label>
+                                                        </children>
+                                             <padding>
+                                                <Insets bottom="15.0" left="60.0" top="15.0" />
+                                             </padding>
+                                                      <HBox.margin>
+                                                         <Insets />
+                                                      </HBox.margin>
+                                                    </HBox>
+                                                </children>
+                                             </HBox>
+                                             <HBox prefHeight="17.0" prefWidth="448.0" spacing="10.0">
+                                                <children>
+                                                   <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Paid Amount:">
+                                                      <HBox.margin>
+                                                         <Insets left="160.0" />
+                                                      </HBox.margin>
+                                                   </Label>
+                                                   <Region prefHeight="17.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                   <Label fx:id="paidAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #34a853;" text="0.00" />
+                                                </children>
+                                             </HBox>
+                                             <HBox spacing="10.0">
+                                                <children>
+                                                   <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Remain Amount:">
+                                                      <HBox.margin>
+                                                         <Insets left="160.0" />
+                                                      </HBox.margin>
+                                                   </Label>
+                                                   <Region prefHeight="17.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                   <Label fx:id="remainAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #ea4335;" text="0.00" />
+                                                </children>
+                                             </HBox>
+                                          </children>
+                                       </VBox>
                                     </bottom>
                            <center>
                               <TableView fx:id="installmentTable" styleClass="admin-table" BorderPane.alignment="CENTER">
