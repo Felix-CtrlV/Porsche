@@ -293,57 +293,31 @@ public class managerOrderManagementController {
         });
 
         // Format customer name column with visible text
-        customerNameCol.setCellFactory(column -> {
-            TableCell<managerOrderView, String> cell = new TableCell<managerOrderView, String>() {
-                private final Text text = new Text();
-
-                {
-                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
-                    text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
-                    setGraphic(text);
-                    setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
+        customerNameCol.setCellFactory(column -> new TableCell<managerOrderView, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
                 }
-
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
-                    if (empty || item == null) {
-                        text.setText(null);
-                    } else {
-                        text.setText(item);
-                        text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
-                    }
-                }
-            };
-            return cell;
+            }
         });
 
         // Format staff name column with visible text
-        staffNameCol.setCellFactory(column -> {
-            TableCell<managerOrderView, String> cell = new TableCell<managerOrderView, String>() {
-                private final Text text = new Text();
-
-                {
-                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
-                    text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
-                    setGraphic(text);
-                    setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
+        staffNameCol.setCellFactory(column -> new TableCell<managerOrderView, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
                 }
-
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
-                    if (empty || item == null) {
-                        text.setText(null);
-                    } else {
-                        text.setText(item);
-                        text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
-                    }
-                }
-            };
-            return cell;
+            }
         });
 
         // Format quantity column with visible text
@@ -375,49 +349,40 @@ public class managerOrderManagementController {
         });
 
         // Format status column with visible text
-        statusCol.setCellFactory(column -> {
-            TableCell<managerOrderView, String> cell = new TableCell<managerOrderView, String>() {
-                private final Text text = new Text();
-
-                {
-                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
-                    text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
-                    setGraphic(text);
-                    setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
+        statusCol.setCellFactory(column -> new TableCell<managerOrderView, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
                 }
-
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
-                    if (empty || item == null) {
-                        text.setText(null);
-                    } else {
-                        text.setText(item);
-                        text.setStyle("-fx-fill: black; -fx-font-size: 12px;");
-                    }
-                }
-            };
-            return cell;
+            }
         });
 
-        // Allow variable row heights and visible rows
+        // Force table and text visibility with normal font weight
         orderTable.setFixedCellSize(-1);
+        orderTable.setStyle("-fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-background-color: white;");
+        
         orderTable.setRowFactory(tv -> {
             TableRow<managerOrderView> row = new TableRow<>();
-            row.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
+            
+            // Update row style based on selection
+            row.itemProperty().addListener((obs, oldItem, newItem) -> updateRowStyle(row));
+            row.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateRowStyle(row));
+            
             row.setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
 
             row.setOnMouseEntered(e -> {
-                if (!row.isEmpty()) {
-                    row.setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: black; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
+                if (!row.isEmpty() && !row.isSelected()) {
+                    row.setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
                 }
             });
 
             row.setOnMouseExited(e -> {
-                if (!row.isEmpty()) {
-                    row.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
-                }
+                updateRowStyle(row);
             });
 
             return row;
@@ -565,6 +530,10 @@ public class managerOrderManagementController {
             allOrdersData.clear();
             allOrdersData.addAll(ordersList);
             
+            // Debug: Uncomment these lines if you need to troubleshoot data loading
+            // System.out.println("DEBUG: Total orders loaded from DB: " + ordersList.size());
+            // System.out.println("DEBUG: Current month/year filter: " + currentMonth + "/" + currentYear);
+            
             // Filter orders based on selected month/year
             List<managerOrderView> filteredOrders = new ArrayList<>();
             if (currentMonth > 0 && currentYear > 0) {
@@ -578,7 +547,9 @@ public class managerOrderManagementController {
                         }
                     }
                 }
-                orderTable.setItems(FXCollections.observableArrayList(filteredOrders));
+                ObservableList<managerOrderView> observableList = FXCollections.observableArrayList(filteredOrders);
+                orderTable.setItems(observableList);
+                orderTable.refresh(); // Force table refresh
                 
                 // Auto-select first row if data exists and display details
                 if (!filteredOrders.isEmpty()) {
@@ -591,6 +562,7 @@ public class managerOrderManagementController {
             } else {
                 // Show all orders
                 orderTable.setItems(allOrdersData);
+                orderTable.refresh(); // Force table refresh
                 
                 // Auto-select first row if data exists and display details
                 if (!allOrdersData.isEmpty()) {
@@ -1404,6 +1376,21 @@ public class managerOrderManagementController {
         } catch (Exception e) {
             System.err.println("ERROR in showMonthlyRevenueChart: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Updates the style of a table row based on its selection state
+     */
+    private void updateRowStyle(TableRow<managerOrderView> row) {
+        if (row.isEmpty()) {
+            row.setStyle("");
+        } else if (row.isSelected()) {
+            // Selected row: bold text with highlight background
+            row.setStyle("-fx-background-color: #e3f2fd; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: bold; -fx-border-color: #2196f3; -fx-border-width: 0 0 1 0;");
+        } else {
+            // Normal row: regular text
+            row.setStyle("-fx-background-color: white; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
         }
     }
 
