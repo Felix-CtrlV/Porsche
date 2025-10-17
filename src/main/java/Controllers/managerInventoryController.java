@@ -1561,7 +1561,6 @@ public class managerInventoryController {
                 if(check){
                     // Available items (check = true)
                     partsData.add(new inventory(id,inventoryId,name,forCar,description,qty,price,status,photoUrl));
-                    System.out.println("Added to partsData: " + inventoryId + " - " + name + " (qty: " + qty + ", status: " + status + ")");
                 }else{
                     // check = false
                     if(qty > 0){
@@ -1962,7 +1961,6 @@ public class managerInventoryController {
                 ps.setBoolean(1, true);
                 ps.setInt(2, editPath.getId());
                 int rowsAffected = ps.executeUpdate();
-                System.out.println("Cars restored: " + rowsAffected + " rows affected for car_id: " + editPath.getId());
                 ps.close();
             } else {
                 String sql = "UPDATE car_parts SET part_status = ? WHERE part_id = ?";
@@ -1970,7 +1968,6 @@ public class managerInventoryController {
                 ps.setBoolean(1, true);
                 ps.setInt(2, editPath.getId());
                 int rowsAffected = ps.executeUpdate();
-                System.out.println("Parts restored: " + rowsAffected + " rows affected for part_id: " + editPath.getId());
                 ps.close();
             }
             
@@ -2044,7 +2041,6 @@ public class managerInventoryController {
                     ps.setBoolean(1, true);
                     ps.setInt(2, editPath.getId());
                     int rowsAffected = ps.executeUpdate();
-                    System.out.println("Cars restored: " + rowsAffected + " rows affected for car_id: " + editPath.getId());
                     ps.close();
                 } else {
                     String sql = "UPDATE car_parts SET part_status = ? WHERE part_id = ?";
@@ -2052,7 +2048,6 @@ public class managerInventoryController {
                     ps.setBoolean(1, true);
                     ps.setInt(2, editPath.getId());
                     int rowsAffected = ps.executeUpdate();
-                    System.out.println("Parts restored: " + rowsAffected + " rows affected for part_id: " + editPath.getId());
                     ps.close();
                 }
                 
@@ -2083,7 +2078,6 @@ public class managerInventoryController {
                     ps.setBoolean(1, false);
                     ps.setInt(2, editPath.getId());
                     int rowsAffected = ps.executeUpdate();
-                    System.out.println("Cars updated: " + rowsAffected + " rows affected for car_id: " + editPath.getId());
                     ps.close();
 
 
@@ -2093,7 +2087,6 @@ public class managerInventoryController {
                     ps.setBoolean(1, false);
                     ps.setInt(2, editPath.getId());
                     int rowsAffected = ps.executeUpdate();
-                    System.out.println("Parts updated: " + rowsAffected + " rows affected for part_id: " + editPath.getId());
                     ps.close();
                 }
                 
@@ -2157,8 +2150,6 @@ public class managerInventoryController {
                                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 // Store relative path: Images/filename.jpg
                 photoPath = "Images/" + fileName;
-                System.out.println("Image copied to: " + targetFile.getAbsolutePath());
-                System.out.println("Storing relative path: " + photoPath);
             } catch (IOException e) {
                 System.err.println("Failed to copy image: " + e.getMessage());
                 // Fallback to absolute path if copy fails
@@ -2230,8 +2221,6 @@ public class managerInventoryController {
                                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 // Store relative path: Images/filename.jpg
                 photoPath = "Images/" + fileName;
-                System.out.println("Image copied to: " + targetFile.getAbsolutePath());
-                System.out.println("Storing relative path: " + photoPath);
             } catch (IOException e) {
                 System.err.println("Failed to copy image: " + e.getMessage());
                 // Fallback to absolute path if copy fails
@@ -2254,7 +2243,6 @@ public class managerInventoryController {
         cs.setString(6, photoPath);                // in_photo_url
         
         cs.execute();
-        System.out.println("Part inserted successfully");
         cs.close();
         
         // Refresh data
@@ -2333,7 +2321,6 @@ public class managerInventoryController {
         cs.setString(9, photoPath);                // in_photo_url
         
         cs.execute();
-        System.out.println("Car updated successfully via updateFullCar procedure for car_id: " + editPath.getId());
         cs.close();
         return true;
     }
@@ -2385,7 +2372,6 @@ public class managerInventoryController {
         cs.setString(7, photoPath);                // in_photo_url
         
         cs.execute();
-        System.out.println("Part updated successfully via updateFullPart procedure for part_id: " + editPath.getId());
         cs.close();
         return true;
     }
@@ -2426,7 +2412,6 @@ public class managerInventoryController {
         if (photoPath.startsWith("\\\\") || photoPath.startsWith("//")) {
             File networkFile = new File(photoPath);
             if (networkFile.exists()) {
-                System.out.println("Found image on network path: " + photoPath);
                 return networkFile;
             } else {
                 System.err.println("Network path not accessible: " + photoPath);
@@ -2438,7 +2423,6 @@ public class managerInventoryController {
         
         // If it's already an absolute path and exists, return it
         if (imageFile.isAbsolute() && imageFile.exists()) {
-            System.out.println("Found image at absolute path: " + photoPath);
             return imageFile;
         }
         
@@ -2454,21 +2438,18 @@ public class managerInventoryController {
         // First try from project root
         File relativeFile = new File(projectRoot, relativePath);
         if (relativeFile.exists()) {
-            System.out.println("Found image at relative path: " + relativeFile.getAbsolutePath());
             return relativeFile;
         }
         
         // Try from src/main/resources
         File resourceFile = new File(projectRoot, "src/main/resources/" + relativePath);
         if (resourceFile.exists()) {
-            System.out.println("Found image in resources: " + resourceFile.getAbsolutePath());
             return resourceFile;
         }
         
         // Try from Images folder in project root (common location)
         File imagesFolder = new File(projectRoot, "Images/" + relativePath);
         if (imagesFolder.exists()) {
-            System.out.println("Found image in Images folder: " + imagesFolder.getAbsolutePath());
             return imagesFolder;
         }
         
