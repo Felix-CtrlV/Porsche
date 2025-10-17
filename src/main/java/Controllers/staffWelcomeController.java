@@ -1,7 +1,10 @@
 package Controllers;
 
 import Utils.defaultStage;
+import javafx.animation.*;
 import javafx.beans.binding.DoubleBinding;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -14,7 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.event.ActionEvent;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -29,6 +32,9 @@ public class staffWelcomeController {
     @FXML private Button accessorybtn;
     @FXML private ImageView backgroundImage;
     @FXML private StackPane imageContainer;
+    @FXML private VBox settingsPopup;
+
+    private static final Duration FADE_DURATION = Duration.millis(400);
 
     public void initialize() {
         Image image = new Image(Objects.requireNonNull(
@@ -46,8 +52,13 @@ public class staffWelcomeController {
                 widthScale.addListener((o, oldVal, newVal) -> scaleFonts(newVal.doubleValue(), heightScale.get()));
                 heightScale.addListener((o, oldVal, newVal) -> scaleFonts(widthScale.get(), newVal.doubleValue()));
                 scaleFonts(widthScale.get(), heightScale.get());
+
+                settingsPopup.layoutXProperty().bind(newScene.widthProperty().subtract(settingsPopup.prefWidthProperty()).subtract(20));
+                settingsPopup.layoutYProperty().bind(logoutbtn.heightProperty().add(20));
             }
         });
+
+        animateContentOnLoad();
     }
 
     private void scaleFonts(double widthScale, double heightScale) {
@@ -56,31 +67,118 @@ public class staffWelcomeController {
         headingLabel.setStyle("-fx-font-size: " + (36 * scale) + "px;");
     }
 
-    @FXML
-    private void discover(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/staffCars.fxml")));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
+    private void animateContentOnLoad() {
+        vbox.setOpacity(0);
+        vbox.setTranslateY(40);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(600), vbox);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        TranslateTransition slideUp = new TranslateTransition(Duration.millis(600), vbox);
+        slideUp.setFromY(40);
+        slideUp.setToY(0);
+
+        new ParallelTransition(fadeIn, slideUp).play();
+    }
+
+    private void createClickFeedback(Node node) {
+        ScaleTransition pulse = new ScaleTransition(Duration.millis(120), node);
+        pulse.setToX(0.95);
+        pulse.setToY(0.95);
+        pulse.setAutoReverse(true);
+        pulse.setCycleCount(2);
+
+        FadeTransition flash = new FadeTransition(Duration.millis(120), node);
+        flash.setFromValue(1.0);
+        flash.setToValue(0.8);
+        flash.setAutoReverse(true);
+        flash.setCycleCount(2);
+
+        new ParallelTransition(pulse, flash).play();
+    }
+
+    private void navigate(Event event, String fxmlPath) {
+        Node source = (Node) event.getSource();
+        Scene currentScene = source.getScene();
+        Parent root;
+
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+        } catch (IOException | NullPointerException ex) {
+            System.err.println("Failed to navigate: " + fxmlPath);
+            ex.printStackTrace();
+            return;
+        }
+
+        root.setOpacity(0);
+        Stage stage = (Stage) currentScene.getWindow();
+        Scene newScene = new Scene(root);
+        defaultStage defStage = new defaultStage();
+        defStage.setStage(stage);
+        stage.setScene(newScene);
+
+        FadeTransition fadeOut = new FadeTransition(FADE_DURATION, currentScene.getRoot());
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> {
+            FadeTransition fadeIn = new FadeTransition(FADE_DURATION, root);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+        });
+        fadeOut.play();
     }
 
     @FXML
-    private void logout(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/login.fxml")));
-        Scene scene = new Scene(root);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        defaultStage ds = new defaultStage();
-        ds.setStage(stage);
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.show();
+    private void discover(ActionEvent event) {
+        createClickFeedback(discoverbtn);
+        PauseTransition pause = new PauseTransition(Duration.millis(250));
+        pause.setOnFinished(e -> navigate(event, "/View/staffCars.fxml"));
+        pause.play();
     }
 
     @FXML
-    private void clickaccessorybtn(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/staffasset.fxml")));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
+    private void logout(ActionEvent event) {
+        createClickFeedback(logoutbtn);
+        PauseTransition pause = new PauseTransition(Duration.millis(250));
+        pause.setOnFinished(e -> navigate(event, "/View/login.fxml"));
+        pause.play();
+    }
+
+    @FXML
+    private void clickaccessorybtn(ActionEvent event) {
+        createClickFeedback(accessorybtn);
+        PauseTransition pause = new PauseTransition(Duration.millis(250));
+        pause.setOnFinished(e -> navigate(event, "/View/staffasset.fxml"));
+        pause.play();
+    }
+
+    @FXML
+    private void viewProfile(ActionEvent event) {
+    }
+
+    @FXML
+    private void changePassword(ActionEvent event) {
+    }
+
+    @FXML
+    private void togglePopup(ActionEvent event) {
+        boolean isVisible = settingsPopup.isVisible();
+        settingsPopup.setVisible(!isVisible);
+        settingsPopup.setManaged(!isVisible);
+
+        if (!isVisible) {
+            settingsPopup.setOpacity(0);
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), settingsPopup);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+        } else {
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(200), settingsPopup);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.play();
+        }
     }
 }
