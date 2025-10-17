@@ -1,6 +1,5 @@
 package Controllers;
 
-import Utils.defaultStage;
 import javafx.animation.*;
 import javafx.beans.binding.DoubleBinding;
 import javafx.event.ActionEvent;
@@ -47,7 +46,7 @@ public class staffWelcomeController {
 
         vbox.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
-                DoubleBinding widthScale = newScene.widthProperty().divide(1188.0);
+                DoubleBinding widthScale = newScene.widthProperty().divide(1133.0);
                 DoubleBinding heightScale = newScene.heightProperty().divide(580.0);
                 widthScale.addListener((o, oldVal, newVal) -> scaleFonts(newVal.doubleValue(), heightScale.get()));
                 heightScale.addListener((o, oldVal, newVal) -> scaleFonts(widthScale.get(), newVal.doubleValue()));
@@ -58,28 +57,15 @@ public class staffWelcomeController {
             }
         });
 
-        animateContentOnLoad();
+        // Remove entrance animation
+        vbox.setOpacity(1);
+        vbox.setTranslateY(0);
     }
 
     private void scaleFonts(double widthScale, double heightScale) {
         double scale = Math.min(widthScale, heightScale);
         topicLabel.setStyle("-fx-font-size: " + (24 * scale) + "px;");
         headingLabel.setStyle("-fx-font-size: " + (36 * scale) + "px;");
-    }
-
-    private void animateContentOnLoad() {
-        vbox.setOpacity(0);
-        vbox.setTranslateY(40);
-
-        FadeTransition fadeIn = new FadeTransition(Duration.millis(600), vbox);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-
-        TranslateTransition slideUp = new TranslateTransition(Duration.millis(600), vbox);
-        slideUp.setFromY(40);
-        slideUp.setToY(0);
-
-        new ParallelTransition(fadeIn, slideUp).play();
     }
 
     private void createClickFeedback(Node node) {
@@ -100,7 +86,7 @@ public class staffWelcomeController {
 
     private void navigate(Event event, String fxmlPath) {
         Node source = (Node) event.getSource();
-        Scene currentScene = source.getScene();
+        Stage stage = (Stage) source.getScene().getWindow();
         Parent root;
 
         try {
@@ -112,16 +98,14 @@ public class staffWelcomeController {
         }
 
         root.setOpacity(0);
-        Stage stage = (Stage) currentScene.getWindow();
-        Scene newScene = new Scene(root);
-        defaultStage defStage = new defaultStage();
-        defStage.setStage(stage);
-        stage.setScene(newScene);
+        Scene newScene = new Scene(root, 1133, 580);
 
-        FadeTransition fadeOut = new FadeTransition(FADE_DURATION, currentScene.getRoot());
+        FadeTransition fadeOut = new FadeTransition(FADE_DURATION, stage.getScene().getRoot());
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
         fadeOut.setOnFinished(e -> {
+            stage.setScene(newScene);
+            stage.centerOnScreen();
             FadeTransition fadeIn = new FadeTransition(FADE_DURATION, root);
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
@@ -155,12 +139,10 @@ public class staffWelcomeController {
     }
 
     @FXML
-    private void viewProfile(ActionEvent event) {
-    }
+    private void viewProfile(ActionEvent event) {}
 
     @FXML
-    private void changePassword(ActionEvent event) {
-    }
+    private void changePassword(ActionEvent event) {}
 
     @FXML
     private void togglePopup(ActionEvent event) {
