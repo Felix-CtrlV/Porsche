@@ -4,6 +4,7 @@ import Database.Porsche_DB;
 import Model.managerOrderView;
 import Model.user;
 import Utils.Session;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -39,6 +40,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class managerStaffViewController {
 
@@ -339,6 +343,7 @@ public class managerStaffViewController {
 
     private List<user> staffInfoList = new ArrayList<user>();
     private List<File> file = new ArrayList<>();
+    private ExecutorService executorService = Executors.newFixedThreadPool(4);
 
     public managerStaffViewController() throws SQLException, ClassNotFoundException, IOException {
 
@@ -362,20 +367,81 @@ public class managerStaffViewController {
         selectedStaffId = staff.getId();
 
         currentDateSelect();
-        try {
-            insertMonthYearChoiceBox(staff);
-            updateChoiceBoxes();
-            refreshOrdersTable();
-            monthlyOrdersStatus(selectedStaffId, currentMonth, currentYear);
-            setTarget();
-            monthlyAttendance();
-        } catch (
-                SQLException e) {
-            throw new RuntimeException(e);
-        }
+        insertMonthYearChoiceBox(staff);
+        updateChoiceBoxes();
+        
+        // Execute all database calls in parallel for faster loading
+        loadStaffDataAsync();
 
         targetlayer.setVisible(true);
         installmentPane.setVisible(false);
+    }
+    
+    // Async method to load all staff data in parallel
+    private void loadStaffDataAsync() {
+        int currentStaffId = selectedStaffId;
+        int month = currentMonth;
+        int year = currentYear;
+        
+        CompletableFuture<Void> ordersTableFuture = CompletableFuture.runAsync(() -> {
+            try {
+                List<managerOrderView> orders = getOrdersByUserId(currentStaffId, month, year);
+                Platform.runLater(() -> {
+                    ordersTable.getItems().clear();
+                    ordersTable.getItems().addAll(orders);
+                    ordersTable.getSelectionModel().clearSelection();
+                    ordersTable.refresh();
+                });
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, executorService);
+        
+        CompletableFuture<Void> orderStatusFuture = CompletableFuture.runAsync(() -> {
+            try {
+                int[] statusCounts = getMonthlyOrderStatusData(currentStaffId, month, year);
+                Platform.runLater(() -> {
+                    TotalOrderlbl.setText(String.valueOf(statusCounts[0]));
+                    CompleOrderlbl.setText(String.valueOf(statusCounts[1]));
+                    PendOrderlbl.setText(String.valueOf(statusCounts[2]));
+                });
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, executorService);
+        
+        CompletableFuture<Void> targetFuture = CompletableFuture.runAsync(() -> {
+            try {
+                int[] targetData = getTargetData(currentStaffId, month, year);
+                Platform.runLater(() -> {
+                    setCarCircle(targetData[0], targetData[2]);
+                    setPartCircle(targetData[1], targetData[3]);
+                });
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, executorService);
+        
+        CompletableFuture<Void> attendanceFuture = CompletableFuture.runAsync(() -> {
+            try {
+                double[] attendanceData = getAttendanceData(currentStaffId, month, year);
+                Platform.runLater(() -> {
+                    updateAttendanceUI(attendanceData);
+                });
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, executorService);
+        
+        // Wait for all tasks to complete
+        CompletableFuture.allOf(ordersTableFuture, orderStatusFuture, targetFuture, attendanceFuture)
+            .exceptionally(ex -> {
+                Platform.runLater(() -> {
+                    System.err.println("Error loading staff data: " + ex.getMessage());
+                });
+                ex.printStackTrace();
+                return null;
+            });
     }
 
     //for the staff of monthly sold out the order table
@@ -389,7 +455,8 @@ public class managerStaffViewController {
         }
     }
 
-    private void showOrdersTable(int staffId, int month, int year) throws SQLException {
+    // Fetch orders data without UI updates (for async use)
+    private List<managerOrderView> getOrdersByUserId(int staffId, int month, int year) throws SQLException {
         CallableStatement cs = null;
         ResultSet rs = null;
         try {
@@ -422,12 +489,17 @@ public class managerStaffViewController {
 
                 managerordersList.add(od);
             }
-
-            ordersTable.getItems().addAll(managerordersList);
+            
+            return managerordersList;
         } finally {
             if (rs != null) rs.close();
             if (cs != null) cs.close();
         }
+    }
+    
+    private void showOrdersTable(int staffId, int month, int year) throws SQLException {
+        List<managerOrderView> orders = getOrdersByUserId(staffId, month, year);
+        ordersTable.getItems().addAll(orders);
     }
 
     //to see like a slip of the order table
@@ -471,8 +543,8 @@ public class managerStaffViewController {
         });
     }
 
-    // for monthly order status box
-    private void monthlyOrdersStatus(int staffid, int month, int year) throws SQLException {
+    // Fetch monthly order status data without UI updates (for async use)
+    private int[] getMonthlyOrderStatusData(int staffid, int month, int year) throws SQLException {
         CallableStatement cs = null;
         ResultSet rs = null;
         try {
@@ -484,14 +556,21 @@ public class managerStaffViewController {
             rs = cs.executeQuery();
 
             if (rs.next()) {
-                TotalOrderlbl.setText(String.valueOf(rs.getInt(1)));
-                CompleOrderlbl.setText(String.valueOf(rs.getInt(2)));
-                PendOrderlbl.setText(String.valueOf(rs.getInt(3)));
+                return new int[]{rs.getInt(1), rs.getInt(2), rs.getInt(3)};
             }
+            return new int[]{0, 0, 0};
         } finally {
             if (rs != null) rs.close();
             if (cs != null) cs.close();
         }
+    }
+    
+    // for monthly order status box
+    private void monthlyOrdersStatus(int staffid, int month, int year) throws SQLException {
+        int[] statusCounts = getMonthlyOrderStatusData(staffid, month, year);
+        TotalOrderlbl.setText(String.valueOf(statusCounts[0]));
+        CompleOrderlbl.setText(String.valueOf(statusCounts[1]));
+        PendOrderlbl.setText(String.valueOf(statusCounts[2]));
     }
 
     // for staff card add and highlight the select card
@@ -603,31 +682,37 @@ public class managerStaffViewController {
         }
     }
 
-    //target side
-    private void setTarget() throws SQLException {
+    // Fetch target data without UI updates (for async use)
+    // Returns [target_car, target_part, achieve_car, achieve_part]
+    private int[] getTargetData(int staffId, int month, int year) throws SQLException {
         CallableStatement cs = null;
         ResultSet rs = null;
         try {
             cs = con.prepareCall("CALL targetviewchart(?,?,?)");
-            cs.setInt(1, selectedStaffId);
-            cs.setInt(2, currentMonth);
-            cs.setInt(3, currentYear);
+            cs.setInt(1, staffId);
+            cs.setInt(2, month);
+            cs.setInt(3, year);
 
             rs = cs.executeQuery();
             if (rs.next()) {
-
                 int target_car = rs.getInt(4);
                 int target_part = rs.getInt(5);
                 int achieve_car = rs.getInt(6);
                 int achieve_part = rs.getInt(7);
-
-                setCarCircle(target_car, achieve_car);
-                setPartCircle(target_part, achieve_part);
+                return new int[]{target_car, target_part, achieve_car, achieve_part};
             }
+            return new int[]{0, 0, 0, 0};
         } finally {
             if (rs != null) rs.close();
             if (cs != null) cs.close();
         }
+    }
+    
+    //target side
+    private void setTarget() throws SQLException {
+        int[] targetData = getTargetData(selectedStaffId, currentMonth, currentYear);
+        setCarCircle(targetData[0], targetData[2]);
+        setPartCircle(targetData[1], targetData[3]);
     }
     private void setCarCircle(int target,int achieve){
         carCircle.setVisible(true);
@@ -670,6 +755,7 @@ public class managerStaffViewController {
         double circulerCar = 2 * Math.PI * carCircle.getRadius();
         carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
         carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
+        carCircle.setRotate(-90); // Start from top
     }
     private void setPartCircle(int target, int achieve) {
         targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
@@ -711,46 +797,65 @@ public class managerStaffViewController {
         double circulerPart = 2 * Math.PI * partCircle.getRadius();
         partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
         partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
+        partCircle.setRotate(-90); // Start from top
     }
 
-    // for monthly attendance circle
-    private void monthlyAttendance() throws SQLException {
+    // Fetch attendance data without UI updates (for async use)
+    // Returns [present_day, absent_day, total_days, attendance_percentage]
+    private double[] getAttendanceData(int staffId, int month, int year) throws SQLException {
         CallableStatement cs = null;
         ResultSet rs = null;
         try {
-            attendanceBackCircle.setVisible(true);
-            attendanceCircle.setVisible(true);
-            
             cs = con.prepareCall("CALL getMonthlyAttendance(?,?,?)");
-            cs.setInt(1, selectedStaffId);
-            cs.setInt(2, currentMonth);
-            cs.setInt(3, currentYear);
+            cs.setInt(1, staffId);
+            cs.setInt(2, month);
+            cs.setInt(3, year);
 
             rs = cs.executeQuery();
 
             if (rs.next()) {
-                int present_day = rs.getInt(1);
-                int absent_day = rs.getInt(2);
-                double attendance_percentage = rs.getDouble(4);
-
-                // Use attendanceCircle's radius
-                double attendCircle = 2 * Math.PI * attendanceCircle.getRadius();
-                double progress = attendance_percentage / 100;
-
-                // Set up the dash array for smooth circular progress
-                attendanceCircle.getStrokeDashArray().setAll(attendCircle, attendCircle);
-                attendanceCircle.setStrokeDashOffset(attendCircle * (1 - progress));
-
-                // Show/hide circles based on data
-                attendanceCircle.setVisible(present_day > 0);
-                attendanceBackCircle.setVisible(absent_day > 0);
-
-                attendancePercent.setText(String.format("%.1f%%", attendance_percentage));
+                int present_day = rs.getInt(4);
+                int absent_day = rs.getInt(5);
+                int total_days = rs.getInt(6);
+                double attendance_percentage = rs.getDouble(7);
+                return new double[]{present_day, absent_day, total_days, attendance_percentage};
             }
+            return new double[]{0, 0, 0, 0};
         } finally {
             if (rs != null) rs.close();
             if (cs != null) cs.close();
         }
+    }
+    
+    // Update attendance UI
+    private void updateAttendanceUI(double[] data) {
+        int present_day = (int) data[0];
+        int absent_day = (int) data[1];
+        double attendance_percentage = data[3];
+        
+        attendanceBackCircle.setVisible(true);
+        attendanceCircle.setVisible(true);
+
+        // Use attendanceCircle's radius
+        double attendCircle = 2 * Math.PI * attendanceCircle.getRadius();
+        double progress = attendance_percentage / 100;
+
+        // Set up the dash array for smooth circular progress
+        attendanceCircle.getStrokeDashArray().setAll(attendCircle, attendCircle);
+        attendanceCircle.setStrokeDashOffset(attendCircle * (1 - progress));
+        attendanceCircle.setRotate(-90); // Start from top
+
+        // Show/hide circles based on data
+        attendanceCircle.setVisible(present_day > 0);
+        attendanceBackCircle.setVisible(absent_day > 0);
+
+        attendancePercent.setText(String.format("%.1f%%", attendance_percentage));
+    }
+    
+    // for monthly attendance circle
+    private void monthlyAttendance() throws SQLException {
+        double[] attendanceData = getAttendanceData(selectedStaffId, currentMonth, currentYear);
+        updateAttendanceUI(attendanceData);
     }
     // for search bar
     private ContextMenu searchSuggestions = new ContextMenu();
@@ -911,14 +1016,8 @@ public class managerStaffViewController {
             yearBox.setValue(currentYear);
         }
 
-        try {
-            refreshOrdersTable();
-            monthlyOrdersStatus(selectedStaffId, currentMonth, currentYear);
-            setTarget();
-            monthlyAttendance();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        // Use async loading for better performance
+        loadStaffDataAsync();
     }
 
 

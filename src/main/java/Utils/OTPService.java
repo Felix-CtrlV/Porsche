@@ -21,8 +21,8 @@ public class OTPService {
     // Email configuration - Using Gmail
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
-    private static final String SENDER_EMAIL = "kaungswan59@gmail.com";
-    private static final String SENDER_PASSWORD = "yrdbkwnxexjhzuoa"; // Gmail App Password
+    private static final String SENDER_EMAIL = "porscheemailingsys@gmail.com";
+    private static final String SENDER_PASSWORD = "kcsvkdbzgzqtplod"; // Gmail App Password
     
     // Check if email is configured
     private boolean isEmailConfigured() {

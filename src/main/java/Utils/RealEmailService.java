@@ -59,12 +59,12 @@ public class RealEmailService {
             jakarta.mail.Session session = jakarta.mail.Session.getInstance(props, new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("kaungswan59@gmail.com", "yrdbkwnxexjhzuoa");
+                    return new PasswordAuthentication("porscheemailingsys@gmail.com", "kcsvkdbzgzqtplod");
                 }
             });
             
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("kaungswan59@gmail.com"));
+            message.setFrom(new InternetAddress("porscheemailingsys@gmail.com"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject("Porsche System - Password Change OTP");
             
@@ -103,12 +103,12 @@ public class RealEmailService {
             jakarta.mail.Session session = jakarta.mail.Session.getInstance(props, new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("kaungswan59@gmail.com", "yrdbkwnxexjhzuoa");
+                    return new PasswordAuthentication("porscheemailingsys@gmail.com", "kcsvkdbzgzqtplod");
                 }
             });
             
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("kaungswan59@gmail.com"));
+            message.setFrom(new InternetAddress("porscheemailingsys@gmail.com"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject("Porsche System - Password Change OTP");
             

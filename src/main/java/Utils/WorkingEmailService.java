@@ -30,12 +30,10 @@ public class WorkingEmailService {
     public boolean sendOTP(String email, String otp) {
         // Try different SMTP providers
         String[] smtpConfigs = {
-            // Gmail with different settings
-            "smtp.gmail.com:587:kaungswan59@gmail.com:Kaung273",
-            // Yahoo
-            "smtp.mail.yahoo.com:587:kaungswan59@gmail.com:Kaung273",
-            // Outlook
-            "smtp-mail.outlook.com:587:kaungswan59@gmail.com:Kaung273"
+            // Gmail with app password
+            "smtp.gmail.com:587:porscheemailingsys@gmail.com:kcsvkdbzgzqtplod",
+            // Gmail SSL
+            "smtp.gmail.com:465:porscheemailingsys@gmail.com:kcsvkdbzgzqtplod"
         };
         
         for (String config : smtpConfigs) {

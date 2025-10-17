@@ -29,8 +29,8 @@ public class EmailConfig {
         // Default configuration - you can modify these
         props.setProperty("smtp.host", "smtp.gmail.com");
         props.setProperty("smtp.port", "587");
-        props.setProperty("smtp.username", "kaungswan59@gmail.com");
-        props.setProperty("smtp.password", "Kaung273");
+        props.setProperty("smtp.username", "porscheemailingsys@gmail.com");
+        props.setProperty("smtp.password", "kcsvkdbzgzqtplod");
         props.setProperty("smtp.auth", "true");
         props.setProperty("smtp.starttls", "true");
         

@@ -93,9 +93,9 @@ public class MonthEndSalaryService {
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
         
-        // TODO: Replace with your actual email credentials
-        final String senderEmail = "kaungswan59@gmail.com";
-        final String senderPassword = "yrdbkwnxexjhzuoa";
+        // Email credentials for Porsche system
+        final String senderEmail = "porscheemailingsys@gmail.com";
+        final String senderPassword = "kcsvkdbzgzqtplod";
         
         jakarta.mail.Session mailSession = jakarta.mail.Session.getInstance(props, new jakarta.mail.Authenticator() {
             @Override
