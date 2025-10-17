@@ -544,14 +544,13 @@ public class adminOverviewController implements Initializable {
                     LocalDate endDate = startDate.plusMonths(1);
                     
                     // Get car sales by model name
-                    String query = "SELECT CONCAT(cm.model_name, ' ', COALESCE(cm.trim_name, '')) as car_model, " +
+                    String query = "SELECT CONCAT(c.model_name, ' ', COALESCE(c.trim_name, '')) as car_model, " +
                             "COUNT(od.detail_id) as qty " +
                             "FROM orders o " +
                             "JOIN order_details od ON o.order_id = od.order_id " +
                             "JOIN cars c ON od.car_id = c.car_id " +
-                            "JOIN car_models cm ON c.model_id = cm.model_id " +
                             "WHERE o.order_date >= ? AND o.order_date < ? AND od.car_id IS NOT NULL " +
-                            "GROUP BY cm.model_id, cm.model_name, cm.trim_name " +
+                            "GROUP BY c.car_id, c.model_name, c.trim_name " +
                             "ORDER BY qty DESC";
                     
                     try (PreparedStatement ps = con.prepareStatement(query)) {

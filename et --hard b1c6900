@@ -1,0 +1,460 @@
+[33m0ec8dda[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge remote-tracking branch 'origin/main'
+[33m6bd02a6[m Merge remote-tracking branch 'origin/main'
+[33mb5cc40a[m Merge remote-tracking branch 'origin/main'
+[33mb1c6900[m managerInventory.fxml
+[33m614b96b[m Merge branch 'kaungswanthaw'
+[33m376d33c[m[33m ([m[1;31morigin/kaungswanthaw[m[33m)[m Merge remote-tracking branch 'origin/main'
+[33mde5ba6f[m Merge remote-tracking branch 'origin/main'
+[33m0ebdf61[m managerInventory.fxml
+[33mebea37f[m manager inventory
+[33me44ee7c[m manager inventory
+[33mf293360[m Merge remote-tracking branch 'origin/main'
+[33m4f1b6c7[m ..
+[33m23c28eb[m ..
+[33m841a25a[m .
+[33m6ac1935[m manager inventory
+[33m83e9e92[m Merge remote-tracking branch 'origin/main'
+[33m92b93cf[m Merge remote-tracking branch 'origin/main'
+[33m8b78353[m kk
+[33m492c59f[m kk
+[33mecf51fc[m Merge remote-tracking branch 'origin/main'
+[33m307c3c5[m manager inventory
+[33m772f22f[m Merge remote-tracking branch 'origin/main'
+[33m510b5e9[m kk
+[33m154d166[m Merge remote-tracking branch 'origin/main'
+[33m451eb4b[m .
+[33mb8d7320[m manager inventory
+[33me0b8d20[m Merge remote-tracking branch 'origin/main'
+[33m40401c0[m manager inventory
+[33m640d9a3[m Merge branch 'kaungswanthaw'
+[33m51e75f2[m Merge remote-tracking branch 'origin/main'
+[33mab6e3e9[m Merge remote-tracking branch 'origin/main'
+[33m9ab0fd1[m manager inventory
+[33m9ceb38d[m managerInventory.fxml
+[33mdf29efb[m manager order
+[33m82d6098[m manager order
+[33mfb384aa[m manager order
+[33m825ef1a[m Merge remote-tracking branch 'origin/main'
+[33m3cab003[m manager order
+[33m47e1a45[m managerInventory.fxml
+[33mf65dd94[m checkout fix
+[33m0150d13[m checkout fix
+[33m594a01f[m checkout fix
+[33m3588457[m checkout fix
+[33m4e4d6b2[m managerInventory.fxml
+[33mb858d6a[m managerInventory.fxml
+[33m3645eff[m db connect in progress
+[33mf5468b5[m Merge remote-tracking branch 'origin/main'
+[33me1ac329[m managerInventory.fxml
+[33ma6e5008[m pp
+[33m2af4b26[m Merge remote-tracking branch 'origin/main'
+[33ma3694fe[m pp
+[33m05943fb[m pp
+[33mc9dc579[m pp
+[33m2379ba1[m pp
+[33m62c718f[m pp
+[33m1ddde43[m kk
+[33mb1af02a[m kk
+[33m2e19bb1[m Merge remote-tracking branch 'origin/main'
+[33m8d9b5ac[m kk
+[33m499abc0[m manager order
+[33m072ed2c[m Merge remote-tracking branch 'origin/main'
+[33m40dab94[m manager order
+[33m00cbaf8[m managerOverview.fxml
+[33mfc589fc[m managerOverview.fxml
+[33maabadb5[m manager order
+[33mfaddfe9[m Merge remote-tracking branch 'origin/main'
+[33m60631b3[m managerOverview.fxml
+[33m31019cb[m manager order
+[33mf446487[m managerOverview.fxml
+[33madcdba9[m managerOverview.fxml
+[33m3733390[m manager order
+[33mfb9fcb1[m manager order
+[33m78e75ed[m Merge remote-tracking branch 'origin/main'
+[33m27de031[m Merge remote-tracking branch 'origin/main'
+[33mb5404fa[m managerOverview.fxml
+[33m3ab7d3d[m Merge remote-tracking branch 'origin/main'
+[33m8c559e4[m Merge remote-tracking branch 'origin/main'
+[33mead1148[m Merge remote-tracking branch 'origin/main'
+[33md828377[m manager order
+[33me792b9c[m Merge remote-tracking branch 'origin/main'
+[33m89134cb[m manager order
+[33m09bd094[m manager order
+[33m4b3ad40[m Merge remote-tracking branch 'origin/main'
+[33m8d77612[m Merge remote-tracking branch 'origin/main'
+[33mc8c70fb[m managerOverview.fxml
+[33mac61ad8[m managerOverview.fxml
+[33meace5ec[m Merge remote-tracking branch 'origin/main'
+[33m4e50d3b[m managerOverview.fxml
+[33mb7294bc[m manager order
+[33m1b27130[m manager order
+[33md775256[m Merge remote-tracking branch 'origin/main'
+[33m6ce84e3[m manager order
+[33m44a3148[m manager order
+[33madea3fb[m managerOverview.fxml
+[33mc4d9819[m managerOverview.fxml
+[33mead40ec[m managerOverview.fxml
+[33mb36334f[m managerOrderManagement.fxml
+[33m2e09a0b[m Merge remote-tracking branch 'origin/main'
+[33m3f7c2a1[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m253f369[m Remove unnecessary log conflict
+[33mce5a502[m Merge remote-tracking branch 'origin/main'
+[33mbf98b36[m Merge remote-tracking branch 'origin/main'
+[33mc1e6c9f[m Merge remote-tracking branch 'origin/main'
+[33m78af5c5[m manager order
+[33m89ca4c3[m Merge remote-tracking branch 'origin/main'
+[33mea481e8[m Merge remote-tracking branch 'origin/main'
+[33mb46026f[m managerOrderManagement.fxml
+[33mdcf920c[m Ignore log files
+[33m8bdb9dc[m Merge remote-tracking branch 'origin/main'
+[33m6fb24c3[m Merge remote-tracking branch 'origin/main'
+[33m8134461[m Merge remote-tracking branch 'origin/main'
+[33m819d0cc[m Merge remote-tracking branch 'origin/main'
+[33m617838d[m Merge remote-tracking branch 'origin/main'
+[33m7fd19cd[m Merge remote-tracking branch 'origin/main'
+[33m7f2cbe1[m Merge remote-tracking branch 'origin/main'
+[33mf279779[m managerOrderManagement.fxml
+[33m4fe19a3[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33ma8b6bfd[m kk
+[33m7ea98cc[m Merge remote-tracking branch 'origin/main'
+[33m0b006b5[m kk
+[33m0deb4f2[m managerOrderManagement.fxml
+[33m4c8529d[m checkout fix
+[33mc31e23a[m kk
+[33m6d046c4[m Merge remote-tracking branch 'origin/main'
+[33ma1a4bab[m managerOrderManagement.fxml
+[33mcd60872[m Merge remote-tracking branch 'origin/main'
+[33m8cce965[m Merge remote-tracking branch 'origin/main'
+[33m66fb44d[m manager order
+[33m47ee034[m manager order
+[33ma137683[m manager inventory
+[33m747f455[m manager inventory
+[33m9c3cc26[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m1b54394[m manager inventory
+[33ma5d2a25[m managerOrderManagement.fxml
+[33mf17fdad[m managerOrderManagement.fxml
+[33mb477c16[m managerOrderManagement.fxml
+[33m9132873[m managerOrderManagement.fxml
+[33m7a87388[m managerOrderManagement.fxml
+[33mb9ed419[m manager inventory
+[33m634ad92[m Merge remote-tracking branch 'origin/main'
+[33m422bd2e[m manager inventory
+[33madd7d0a[m managerOrderManagement.fxml
+[33mc6a9224[m managerOrderManagement.fxml
+[33mdcbbeff[m Merge remote-tracking branch 'origin/main'
+[33m29cdd39[m managerOrderManagement.fxml
+[33mbd6ce0d[m manager inventory
+[33m8686968[m manager inventory
+[33m4889f88[m manager inventory
+[33m9b2b2f9[m Merge remote-tracking branch 'origin/main'
+[33m9fc9127[m Merge remote-tracking branch 'origin/main'
+[33m2646ea0[m managerStaffview.fxml
+[33m621b134[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m498c8a0[m cars and stuffs
+[33me325feb[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m5057ac3[m manager inventory
+[33m8995a37[m Merge remote-tracking branch 'origin/main'
+[33m9c683e5[m manager inventory
+[33m08409ee[m manager inventory
+[33m275a41d[m cars and stuffs
+[33mbf1f142[m Merge remote-tracking branch 'origin/main'
+[33m6fed593[m cars and stuffs
+[33m1f8325c[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m1a57d47[m Merge remote-tracking branch 'origin/main'
+[33m4efb013[m Merge remote-tracking branch 'origin/main'
+[33m029f047[m Ignore logs directory
+[33m1278b4e[m Merge remote-tracking branch 'origin/main'
+[33me1d796e[m Merge remote-tracking branch 'origin/main'
+[33me7aabf7[m cars and stuffs
+[33m3cd0c6a[m Cars and stuffffffffffffffffff
+[33m3f1caa1[m Merge remote-tracking branch 'origin/main'
+[33m5bac215[m Cars and stufff
+[33meadf82b[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m62d8faa[m Merge remote-tracking branch 'origin/main'
+[33m17a5569[m managerStaffview.fxml
+[33m0fca846[m manager inventory
+[33m3be60aa[m manager inventory
+[33m9205b07[m manager inventory
+[33mfd3b065[m manager inventory
+[33mdee6f2c[m customize
+[33m8e689b3[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33mdf937a8[m customize
+[33ma867081[m manager inventory
+[33m7381351[m Merge remote-tracking branch 'origin/main'
+[33m1913047[m Merge remote-tracking branch 'origin/main'
+[33m739b338[m customize
+[33mb62c8c3[m manager inventory
+[33m97bd89f[m Merge remote-tracking branch 'origin/main'
+[33m8535adc[m manager inventory
+[33m0949b59[m managerStaffview.fxml
+[33m3de0ba3[m Merge remote-tracking branch 'origin/main'
+[33m4174c29[m managerStaffview.fxml
+[33meed344f[m manager inventory
+[33mc51996e[m Merge remote-tracking branch 'origin/main'
+[33m3ad606d[m manager inventory
+[33maac99fd[m managerStaffview.fxml
+[33m7618a1f[m managerStaffview.fxml
+[33me864e8d[m manager inventory
+[33me76f0e3[m managerInventory.fxml
+[33m45f9a8d[m managerInventory.fxml
+[33m8a9d825[m managerInventory.fxml
+[33mf0d6443[m managerInventory.fxml
+[33m36dcf41[m Merge remote-tracking branch 'origin/main'
+[33ma60c4ca[m managerInventory.fxml
+[33me6a5b56[m Merge remote-tracking branch 'origin/main'
+[33m23838bb[m manager inventory
+[33m4eb48fd[m pp
+[33m2b620ec[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m8088c53[m customize
+[33m2b0a9dd[m pp
+[33mc2a4085[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33mb15755a[m Merge branch 'Malivuuuuuu'
+[33mf77e7fb[m Merge remote-tracking branch 'origin/main'
+[33md3d3579[m Merge remote-tracking branch 'origin/main'
+[33m8b90213[m Merge remote-tracking branch 'origin/main'
+[33mf82b317[m manager inventory
+[33m698eda6[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m9cd1d52[m Merge remote-tracking branch 'origin/main'
+[33m3c52ce5[m[33m ([m[1;31morigin/Malivuuuuuu[m[33m)[m hw di mhr check
+[33m2d458d8[m pp
+[33m57a300d[m suckamaballs
+[33m70a4f23[m pp
+[33m315c367[m manager inventory
+[33md38f952[m managerInventory.fxml
+[33mffb45fa[m alert.fxml
+[33m06e417c[m alert.fxml
+[33mcb8c608[m Merge remote-tracking branch 'origin/main'
+[33m45bd5f0[m alert.fxml
+[33m823e033[m :wq Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m4aac69d[m manager inventory
+[33m5e381fe[m manager inventory
+[33m7b951a4[m Merge remote-tracking branch 'origin/main'
+[33m3981765[m manager inventory
+[33m158194d[m alert.fxml
+[33md8d7b6a[m alert.fxml
+[33m7216223[m manager inventory
+[33mfac3eeb[m manager inventory
+[33m61bdab9[m Merge remote-tracking branch 'origin/main'
+[33m58fbadc[m manager inventory
+[33m54c2454[m alert.fxml
+[33m6cfc6eb[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33ma2616cf[m managerInvenory.fxml
+[33m53bf44b[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche # Please enter a commit message to explain why this merge is necessary, # especially if it merges an updated upstream into a topic branch. # # Lines starting with '#' will be ignored, and an empty message aborts # the commit.
+[33ma8145c7[m inventory manager
+[33m171068f[m managerInvenory.fxml
+[33md3d635e[m managerInvenory.fxml
+[33m3aeeab1[m managerInvenory.fxml
+[33mdb5127c[m Merge remote-tracking branch 'origin/main'
+[33m80a859f[m managerInvenory.fxml
+[33mdf75ec3[m inventory manager
+[33m0cda049[m Merge remote-tracking branch 'origin/main'
+[33me8e7ecd[m Merge remote-tracking branch 'origin/main'
+[33madbe886[m inventory manager
+[33mc87c7ad[m inventory manager
+[33me3195d1[m inventory manager
+[33mcaac585[m manager of staff view table changing
+[33m7ad4af1[m manager of staff view table changing
+[33mba73114[m manager of staff view table changing
+[33m07d3f26[m manager of staff view table changing
+[33mcf5b59d[m managerInvenory.fxml
+[33m8d2a465[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m9738fb8[m managerInvenory.fxml
+[33m20b7d6b[m manager of staff view table changing
+[33m0bbb17c[m manager of staff view table changing
+[33m60b48e6[m managerInvenory.fxml
+[33mdf275d1[m Merge remote-tracking branch 'origin/main'
+[33m3bb72b1[m manager of staff view table changing
+[33me7d18cb[m adminOverview.fxml
+[33m2e2981c[m Merge remote-tracking branch 'origin/main'
+[33m4f837f3[m adminOverview.fxml
+[33m1ece482[m Merge remote-tracking branch 'origin/main'
+[33md4c75c7[m Merge remote-tracking branch 'origin/main'
+[33m704d8c4[m adminOverview.fxml
+[33m67ce766[m adminOverview.fxml
+[33m0febc8f[m adminOverview.fxml
+[33m5b9e304[m adminOverview.fxml
+[33md840209[m adminOverview.fxml
+[33m1e69cf8[m Merge remote-tracking branch 'origin/main'
+[33m807c9ee[m adminOverview.fxml
+[33mdce1242[m adminOverview.fxml
+[33m3aced0e[m Merge remote-tracking branch 'origin/main'
+[33mf5cd622[m manager of staff view table changing
+[33mb1ecd49[m Merge remote-tracking branch 'origin/main'
+[33m2343137[m Merge remote-tracking branch 'origin/main'
+[33m7ba9a68[m Merge remote-tracking branch 'origin/main'
+[33m515116d[m manager of staff view table changing
+[33m1435182[m Merge remote-tracking branch 'origin/main'
+[33ma31d7ca[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m771b91c[m Merge remote-tracking branch 'origin/main'
+[33m657bd4e[m Merge remote-tracking branch 'origin/main'
+[33m7c4282e[m kk
+[33m12add53[m manager of staff view table changing
+[33mbf6c720[m manager of staff view table changing
+[33mf4e09d4[m manager of staff view table changing
+[33macb3a2f[m manager of staff view table changing
+[33m4584e08[m Merge remote-tracking branch 'origin/main'
+[33m73dbb94[m manager of staff view table changing
+[33m6c1d468[m managerOverview.fxml
+[33m8b025a2[m manager of staff view table changing
+[33md319eaf[m manager of staff view table changing
+[33me461b27[m manager of staff view table changing
+[33m9212fbf[m manager of staff view table changing
+[33m667800e[m manager of staff view table changing
+[33m9544c28[m manager of staff view table changing
+[33m40ba704[m Merge remote-tracking branch 'origin/main'
+[33ma9b497f[m manager of staff view table changing
+[33m864c46b[m manager_car_part_progress_bar
+[33m7d46596[m manager of staff view table changing
+[33m2e79303[m Merge remote-tracking branch 'origin/main'
+[33m46adf87[m manager of staff view table changing
+[33m5c425d8[m manager_car_part_progress_bar
+[33m0501048[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m0abe213[m managerStaffview.fxml
+[33m646055e[m managerStaffview.fxml
+[33mfe6749f[m manager of staff view table changing
+[33m627ebc6[m manager of staff view table changing
+[33m868d691[m manager of staff view table changing
+[33m7847c12[m manager of staff view table changing
+[33m5992a94[m manager of staff view table changing
+[33m0c3b254[m manager of staff view table changing
+[33mce5f891[m manager of staff view table changing
+[33m9febffd[m Merge remote-tracking branch 'origin/main'
+[33mfafcf40[m manager of staff view table changing
+[33m95b4b19[m Merge remote-tracking branch 'origin/main'
+[33m731e4ed[m kk
+[33m296790d[m Merge remote-tracking branch 'origin/main'
+[33m6850684[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m3e3cf81[m managerStaffview.fxml
+[33meefb1bf[m bestSeller.fxml
+[33m66f0dcd[m managerOverview.fxml
+[33m1de9a6a[m managerOverview.fxml
+[33m4a557aa[m manager of staff view table changing
+[33mdf55f29[m Merge remote-tracking branch 'origin/main'
+[33m847c4a8[m Merge remote-tracking branch 'origin/main'
+[33mf47597a[m Merge remote-tracking branch 'origin/main'
+[33mb8af980[m kk
+[33m37706d1[m kk
+[33mc93a8fc[m Merge remote-tracking branch 'origin/main'
+[33m9ab24c7[m kk
+[33m2c1dd8d[m managerStaffview
+[33m9dfb6cd[m Merge remote-tracking branch 'origin/main'
+[33m3497e48[m kk
+[33m2c42652[m Merge remote-tracking branch 'origin/main'
+[33m85cf3de[m Merge remote-tracking branch 'origin/main'
+[33m3f76b63[m Merge remote-tracking branch 'origin/main'
+[33mdbe2ad5[m managerStaffview
+[33m3c963f1[m managerStaffview
+[33m567e730[m kk
+[33m6ca5611[m kk
+[33m932f0f5[m Merge remote-tracking branch 'origin/main'
+[33m7eea9cb[m managerStaffview
+[33md388c8c[m Merge remote-tracking branch 'origin/main'
+[33mad57612[m kk
+[33mf67b7de[m Merge remote-tracking branch 'origin/main'
+[33m68a90c4[m managerStaffview
+[33m61ad306[m Merge remote-tracking branch 'origin/main'
+[33ma22d502[m Merge remote-tracking branch 'origin/main'
+[33mac681c1[m Merge remote-tracking branch 'origin/main'
+[33mbba6f3b[m Merge remote-tracking branch 'origin/main'
+[33m7588f04[m Merge remote-tracking branch 'origin/main'
+[33me304b79[m kk
+[33mc8d6589[m manager of staff view table changing
+[33m3934410[m manager of staff view table changing
+[33m398560c[m manager of staff view table changing
+[33mf7aefac[m manager of staff view table changing
+[33m40ddcb7[m Merge remote-tracking branch 'origin/main'
+[33m931c635[m Merge remote-tracking branch 'origin/main'
+[33m758d31d[m kk
+[33mc855b33[m Merge remote-tracking branch 'origin/main'
+[33ma56cfcd[m kk
+[33mfa5cb9f[m manager of staff view table changing
+[33m93960b5[m Merge remote-tracking branch 'origin/main'
+[33me6c4b8c[m Merge remote-tracking branch 'origin/main'
+[33m4f8079e[m managerStaffview
+[33m65da33f[m managerStaffview
+[33mba6b498[m manager of staff view table changing
+[33m9150ba3[m Merge remote-tracking branch 'origin/main'
+[33md9512f1[m Merge remote-tracking branch 'origin/main'
+[33m3cc12df[m manager of staff view table changing
+[33mbe7f4c6[m manager of staff view table changing
+[33m855bfa1[m managerStaffview
+[33m63ceac1[m managerStaffview
+[33m2377b11[m manager of staff view table changing
+[33mb6b339c[m manager of staff view table changing
+[33m06bfc1d[m managerStaffview
+[33ma76b813[m managerStaffview
+[33me6a2ada[m managerStaffview
+[33mba49db9[m manager of staff view table changing
+[33m0827004[m managerStaffview
+[33mc355067[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33ma2d6e24[m manager of staff view table changing
+[33ma0e2a3c[m manager of staff view table changing
+[33m709dae5[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33m6b5e21c[m managerStaffview
+[33m7429f43[m Merge remote-tracking branch 'origin/main'
+[33m3626d1a[m manager of staff view table changing
+[33m69bbd96[m managerStaffview
+[33m16736a7[m manager of staff view table changing
+[33m519bf1d[m manager of staff view table changing
+[33m32c6b2a[m manager of staff view table changing
+[33m72d1137[m manager of staff view table changing
+[33m429611f[m managerStaffview
+[33m4597f14[m manager of staff view table changing
+[33m4aaaab6[m manager of staff view table changing
+[33mfaf2670[m managerStaffview
+[33m578c78b[m manager of staff view table changing
+[33m9093f00[m manager of staff view table changing
+[33m1971310[m manager of staff view table changing
+[33mea6fdbc[m manager of staff view table changing
+[33m8fa18ed[m managerStaffview
+[33m599b71d[m managerStaffview.fxml
+[33m9a149cc[m manager of staff view table changing
+[33m8a4b60c[m manager of staff view table changing
+[33m14b5179[m manager of staff view table changing
+[33m93156a0[m manager of staff view table changing
+[33m4c42354[m manager of staff view table changing
+[33m51365b1[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche :wq
+[33m6dfad9b[m manager of staff view table changing
+[33m101611b[m Merge remote-tracking branch 'origin/main'
+[33mc78133a[m change
+[33mc856e41[m manager parts
+[33mf05ee3f[m Merge remote-tracking branch 'origin/main'
+[33m2ade524[m Merge remote-tracking branch 'origin/main'
+[33m10d68df[m kk
+[33m64e31a9[m Merge remote-tracking branch 'origin/main'
+[33m3bf1027[m manager parts
+[33m430dd03[m Merge remote-tracking branch 'origin/main'
+[33m470840e[m Merge remote-tracking branch 'origin/main'
+[33m71bf674[m Merge remote-tracking branch 'origin/main'
+[33m1479d94[m Merge remote-tracking branch 'origin/main'
+[33mf7bbf01[m manager parts
+[33mace72c3[m Merge remote-tracking branch 'origin/main'
+[33m6bfcd6c[m kk
+[33m82c5c10[m manager parts
+[33m13de445[m Merge remote-tracking branch 'origin/main'
+[33mf32970e[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33mf2068b6[m manager parts
+[33mb1a6e58[m Merge remote-tracking branch 'origin/main'
+[33m81391bd[m Merge remote-tracking branch 'origin/main'
+[33m91359eb[m Merge remote-tracking branch 'origin/main'
+[33m58eb5eb[m controller
+[33m8a0fcb0[m controller
+[33mc103562[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33mcc1d2de[m kk
+[33m7555f55[m controller
+[33m113f372[m Merge branch 'main' of https://github.com/Felix-CtrlV/Porsche
+[33me6f28c2[m controller
+[33m6706934[m Merge remote-tracking branch 'origin/main'
+[33mef7e407[m Merge remote-tracking branch 'origin/main'
+[33mae18122[m Merge remote-tracking branch 'origin/main'
+[33m9f779d2[m Merge remote-tracking branch 'origin/main'
+[33m147a48c[m Merge remote-tracking branch 'origin/main'
+[33m16b1c39[m Merge remote-tracking branch 'origin/main'
+[33m21c0f2c[m Merge remote-tracking branch 'origin/main'
+[33m176e479[m Merge remote-tracking branch 'origin/main'
+[33m9e486e8[m Merge remote-tracking branch 'origin/main'
+[33mf598542[m Create test.java
+[33mc67da60[m commit css
+[33mffae06c[m create_pj
+[33m211f5ca[m create: t
+[33mec23bfa[m Initial commit
