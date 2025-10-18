@@ -3,97 +3,86 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<StackPane styleClass="root-container" stylesheets="@../CSS/finalCheckout.css"
-           xmlns="http://javafx.com/javafx/8.0.171"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="Controllers.staffShopingCartController">
+<StackPane prefHeight="580" prefWidth="1188" styleClass="root-container" stylesheets="@../CSS/finalCheckout.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffShopingCartController">
 
-    <ScrollPane fitToWidth="true" fitToHeight="true" pannable="true" styleClass="accessories-scroll">
-        <content>
-            <VBox alignment="CENTER" spacing="30">
-                <padding>
-                    <Insets bottom="40" left="40" right="40" top="40" />
-                </padding>
+    <VBox alignment="TOP_CENTER" spacing="15">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
 
-                <VBox alignment="CENTER" spacing="10">
-                    <Label styleClass="brand-logo" text="PORSCHE" />
-                    <Label styleClass="page-title" text="Final Configuration" />
-                </VBox>
+        <VBox alignment="CENTER" spacing="10">
+            <Label styleClass="section-title" text="Final Configuration">
+            <VBox.margin>
+               <Insets top="35.0" />
+            </VBox.margin></Label>
+        </VBox>
 
-                <VBox maxWidth="900" spacing="30" styleClass="glass-card">
-                    <padding>
-                        <Insets bottom="40" left="40" right="40" top="40" />
-                    </padding>
+        <VBox maxWidth="900" spacing="15" styleClass="glass-card">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
 
-                    <VBox alignment="CENTER">
-                        <ImageView fx:id="carImageView" fitHeight="350" fitWidth="600" preserveRatio="true" styleClass="car-image" />
-                    </VBox>
-
-                    <VBox spacing="20">
-                        <Label styleClass="section-title" text="Configuration Details" />
-                        <VBox spacing="12" styleClass="details-container">
-                            <HBox alignment="CENTER_LEFT" spacing="15">
-                                <Label styleClass="detail-label" text="Model:" />
-                                <Label fx:id="modelLabel" styleClass="detail-value" text="911 Carrera" />
-                            </HBox>
-                            <HBox alignment="CENTER_LEFT" spacing="15">
-                                <Label styleClass="detail-label" text="Color:" />
-                                <Label fx:id="colorLabel" styleClass="detail-value" text="Snow White" />
-                            </HBox>
-                            <HBox alignment="CENTER_LEFT" spacing="15">
-                                <Label styleClass="detail-label" text="Engine Type:" />
-                                <Label fx:id="engineLabel" styleClass="detail-value" text="3.0L Twin-Turbo" />
-                            </HBox>
-                            <HBox alignment="CENTER_LEFT" spacing="15">
-                                <Label styleClass="detail-label" text="Base Price:" />
-                                <Label fx:id="basePriceLabel" styleClass="detail-value" text="" />
-                            </HBox>
-                        </VBox>
-                    </VBox>
-
-                    <Line endX="820" strokeWidth="1" styleClass="divider" />
-
-                    <VBox spacing="20">
-                        <Label styleClass="section-title" text="Selected Accessories" />
-                        <ScrollPane fitToWidth="true" maxHeight="200" styleClass="accessories-scroll">
-                            <VBox fx:id="accessoriesContainer" spacing="10" styleClass="accessories-container" />
-                        </ScrollPane>
-                    </VBox>
-
-                    <Line endX="820" strokeWidth="1" styleClass="divider" />
-
-                    <VBox spacing="15" styleClass="summary-container">
-                        <HBox alignment="CENTER_LEFT" spacing="15">
-                            <Label styleClass="summary-label" text="Base Price:" />
-                            <Label fx:id="summaryBasePriceLabel" styleClass="summary-value" text="" />
-                        </HBox>
-
-                        <HBox alignment="CENTER_LEFT" spacing="15">
-                            <Label styleClass="summary-label" text="Accessories Total:" />
-                            <Label fx:id="accessoriesTotalLabel" styleClass="summary-value" text="" />
-                        </HBox>
-
-                        <Line endX="820" strokeWidth="1" styleClass="total-divider" />
-
-                        <HBox alignment="CENTER_LEFT" spacing="15">
-                            <Label styleClass="total-label" text="Total Price:" />
-                            <Label fx:id="totalPriceLabel" styleClass="total-value" text="" />
-                        </HBox>
-                    </VBox>
-
-                    <VBox alignment="CENTER" spacing="15">
-                        <Button fx:id="confirmButton" styleClass="confirm-button" text="CONFIRM PURCHASE" />
-                        <Label fx:id="confirmationMessageLabel" styleClass="confirmation-message" visible="false" />
-                    </VBox>
+            <VBox spacing="10">
+                <Label styleClass="section-title" text="Configuration Details" />
+                <VBox spacing="10" styleClass="details-container">
+                    <HBox spacing="15">
+                        <Label styleClass="detail-label" text="Model:" />
+                        <Label fx:id="modelLabel" styleClass="detail-value" text="911 Carrera" />
+                    </HBox>
+                    <HBox spacing="15">
+                        <Label styleClass="detail-label" text="Color:" />
+                        <Label fx:id="colorLabel" styleClass="detail-value" text="Snow White" />
+                    </HBox>
+                    <HBox spacing="15">
+                        <Label styleClass="detail-label" text="Engine Type:" />
+                        <Label fx:id="engineLabel" styleClass="detail-value" text="3.0L Twin-Turbo" />
+                    </HBox>
+                    <HBox spacing="15">
+                        <Label styleClass="detail-label" text="Base Price:" />
+                        <Label fx:id="basePriceLabel" styleClass="detail-value" text="Price here" />
+                    </HBox>
                 </VBox>
             </VBox>
-        </content>
-    </ScrollPane>
+
+            <Line endX="820" strokeWidth="1" styleClass="divider" />
+
+            <VBox spacing="10">
+                <Label styleClass="section-title" text="Selected Accessories" />
+                <VBox fx:id="accessoriesContainer" spacing="10" styleClass="accessories-container" />
+            </VBox>
+
+            <Line endX="820" strokeWidth="1" styleClass="divider" />
+
+            <VBox spacing="10" styleClass="summary-container">
+                <HBox spacing="15">
+                    <Label styleClass="summary-label" text="Base Price:" />
+                    <Label fx:id="summaryBasePriceLabel" styleClass="summary-value" text="Price here" />
+                </HBox>
+                <HBox spacing="15">
+                    <Label styleClass="summary-label" text="Accessories Total:" />
+                    <Label fx:id="accessoriesTotalLabel" styleClass="summary-value" text="Price here" />
+                </HBox>
+                <Line endX="820" strokeWidth="2" styleClass="total-divider" />
+                <HBox spacing="15">
+                    <Label styleClass="total-label" text="Total Price:" />
+                    <Label fx:id="totalPriceLabel" styleClass="total-value" text="Price here" />
+                </HBox>
+            </VBox>
+
+            <HBox alignment="CENTER" spacing="20">
+                <Button fx:id="backButton" minHeight="40" minWidth="180" prefHeight="40" prefWidth="190.0" styleClass="back-button" text="BACK" />
+                <Button fx:id="confirmButton" minHeight="40" minWidth="180" prefHeight="40" prefWidth="190.0" styleClass="confirm-button" text="CONFIRM PURCHASE" />
+                <VBox.margin>
+                    <Insets top="20.0" />
+                </VBox.margin>
+            </HBox>
+
+            <Label fx:id="confirmationMessageLabel" styleClass="confirmation-message" visible="false" />
+        </VBox>
+    </VBox>
 </StackPane>
