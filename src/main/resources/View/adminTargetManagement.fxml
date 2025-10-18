@@ -148,8 +148,8 @@
             </HBox>
             
             <StackPane>
-                <Circle fill="TRANSPARENT" radius="60.0" stroke="#e5e7eb" strokeWidth="12.0" />
-                <Circle fx:id="carProgressCircle" fill="TRANSPARENT" radius="60.0" stroke="#3b82f6" strokeDashArray="376.99" strokeDashOffset="376.99" strokeWidth="12.0" style="-fx-effect: dropshadow(gaussian, rgba(59,130,246,0.25), 6, 0, 0, 2);" />
+                <Circle fill="TRANSPARENT" radius="60.0" stroke="#e5e7eb" strokeLineCap="ROUND" strokeWidth="12.0" />
+                <Circle fx:id="carProgressCircle" fill="TRANSPARENT" radius="60.0" stroke="#3b82f6" strokeDashArray="376.99" strokeDashOffset="376.99" strokeLineCap="ROUND" strokeWidth="12.0" style="-fx-effect: dropshadow(gaussian, rgba(59,130,246,0.25), 6, 0, 0, 2); -fx-stroke-line-cap: round;" />
                 <VBox alignment="CENTER" spacing="2.0">
                     <Label fx:id="carProgressLabel" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: #3b82f6;" text="0%" />
                     <Label style="-fx-font-size: 10; -fx-text-fill: #94a3b8; -fx-font-weight: 600; -fx-letter-spacing: 0.5;" text="COMPLETE" />
@@ -172,8 +172,8 @@
             </HBox>
             
             <StackPane>
-                <Circle fill="TRANSPARENT" radius="60.0" stroke="#e5e7eb" strokeWidth="12.0" />
-                <Circle fx:id="partProgressCircle" fill="TRANSPARENT" radius="60.0" stroke="#10b981" strokeDashArray="376.99" strokeDashOffset="376.99" strokeWidth="12.0" style="-fx-effect: dropshadow(gaussian, rgba(16,185,129,0.25), 6, 0, 0, 2);" />
+                <Circle fill="TRANSPARENT" radius="60.0" stroke="#e5e7eb" strokeLineCap="ROUND" strokeWidth="12.0" />
+                <Circle fx:id="partProgressCircle" fill="TRANSPARENT" radius="60.0" stroke="#10b981" strokeDashArray="376.99" strokeDashOffset="376.99" strokeLineCap="ROUND" strokeWidth="12.0" style="-fx-effect: dropshadow(gaussian, rgba(16,185,129,0.25), 6, 0, 0, 2); -fx-stroke-line-cap: round;" />
                 <VBox alignment="CENTER" spacing="2.0">
                     <Label fx:id="partProgressLabel" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: #10b981;" text="0%" />
                     <Label style="-fx-font-size: 10; -fx-text-fill: #94a3b8; -fx-font-weight: 600; -fx-letter-spacing: 0.5;" text="COMPLETE" />

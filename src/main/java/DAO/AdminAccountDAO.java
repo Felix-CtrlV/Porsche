@@ -323,40 +323,23 @@ public class AdminAccountDAO {
             return false;
         }
 
-        double currentBonus = getCurrentBonus(userId);
         double maxBonus = getBonusColumnMaxValue();
-
-        double newBonus = currentBonus + bonusAmount;
-        if (Double.isFinite(maxBonus) && newBonus > maxBonus) {
-            logger.warn("New bonus total {} exceeds database column limit {} for user {}", newBonus, maxBonus, userId);
+        if (Double.isFinite(maxBonus) && bonusAmount > maxBonus) {
+            logger.warn("Requested bonus {} exceeds database column limit {} for user {}", bonusAmount, maxBonus, userId);
             return false;
         }
 
         String sql = "UPDATE user_workinfo SET bonus = ? WHERE user_id = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            double normalizedBonus = Math.round(newBonus * 100.0) / 100.0;
+            double normalizedBonus = Math.round(bonusAmount * 100.0) / 100.0;
             ps.setDouble(1, normalizedBonus);
             ps.setInt(2, userId);
 
             int rowsAffected = ps.executeUpdate();
-            logger.info("Applied bonus for user ID: {} amount: {} (new total: {})", userId, bonusAmount, normalizedBonus);
+            logger.info("Set bonus for user ID: {} to {}", userId, normalizedBonus);
             return rowsAffected > 0;
         }
-    }
-
-    private double getCurrentBonus(int userId) throws SQLException {
-        String sql = "SELECT COALESCE(bonus, 0) AS current_bonus FROM user_workinfo WHERE user_id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getDouble("current_bonus");
-                }
-            }
-        }
-        logger.warn("No work info record found for user {} when retrieving current bonus", userId);
-        return 0.0;
     }
 
     private double getBonusColumnMaxValue() throws SQLException {

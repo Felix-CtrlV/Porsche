@@ -177,9 +177,7 @@ public class managerOverviewController {
     @FXML
     void clickCarbtn(ActionEvent event) throws SQLException, IOException {
         besti = "car";
-        chartMode = "car"; // Set chart mode to show car data
         setBesti();
-        setCharts(); // Refresh charts to show car data
         activateButton(carbtn);
     }
 
@@ -208,10 +206,7 @@ public class managerOverviewController {
     @FXML
     void clickPartbtn(ActionEvent event) throws SQLException, IOException {
         besti = "part";
-        chartMode = "part"; // Set chart mode to show part data
         setBesti();
-        setCharts(); // Refresh charts to show part data
-        partbtn.getStyleClass().add("part_active");
         activateButton(partbtn);
     }
 
@@ -224,20 +219,23 @@ public class managerOverviewController {
     }
 
     private void activateChartButton(Button activeBtn) {
-        // Remove active styles from chart buttons
-        carChart.getStyleClass().remove("chart-active");
-        partChart.getStyleClass().remove("chart-active");
+        // Remove active class from both buttons
+        carChart.getStyleClass().remove("active");
+        partChart.getStyleClass().remove("active");
         
-        // Add active style to clicked button
-        activeBtn.getStyleClass().add("chart-active");
+        // Add active class to clicked button
+        activeBtn.getStyleClass().add("active");
         
-        // Update button text styling for visual feedback
-        carChart.setStyle(carChart == activeBtn ? 
-            "-fx-background-color: rgba(255,255,255,0.3); -fx-text-fill: white; -fx-font-weight: bold;" : 
-            "-fx-background-color: transparent; -fx-text-fill: rgba(255,255,255,0.7);");
-        partChart.setStyle(partChart == activeBtn ? 
-            "-fx-background-color: rgba(255,255,255,0.3); -fx-text-fill: white; -fx-font-weight: bold;" : 
-            "-fx-background-color: transparent; -fx-text-fill: rgba(255,255,255,0.7);");
+        // Apply color-coded text styling
+        if (carChart == activeBtn) {
+            // Car is active - use car color (#6D8196)
+            carChart.setStyle("-fx-text-fill: #6D8196; -fx-font-weight: bold; -fx-background-color: transparent;");
+            partChart.setStyle("-fx-text-fill: rgba(255,255,255,0.6); -fx-font-weight: normal; -fx-background-color: transparent;");
+        } else {
+            // Part is active - use part color (#ffa500)
+            partChart.setStyle("-fx-text-fill: #ffa500; -fx-font-weight: bold; -fx-background-color: transparent;");
+            carChart.setStyle("-fx-text-fill: rgba(255,255,255,0.6); -fx-font-weight: normal; -fx-background-color: transparent;");
+        }
     }
 
     @FXML
@@ -769,13 +767,24 @@ public class managerOverviewController {
         revenueAreaChart.setLegendVisible(true);
         revenueAreaChart.setAnimated(false);
 
-        // Apply custom colors to match the custom legend
+        // Apply custom colors to match the selected mode (car or part)
         Platform.runLater(() -> {
-            // Apply colors only to active series to avoid NullPointerException
-            if (chartMode.equals("car") && carSeries.getNode() != null) {
-                carSeries.getNode().setStyle("-fx-bar-fill: #6D8196;");
-            } else if (chartMode.equals("part") && partSeries.getNode() != null) {
-                partSeries.getNode().setStyle("-fx-bar-fill: #ffa500;");
+            String color = chartMode.equals("car") ? "#6D8196" : "#ffa500";
+            
+            // Apply styling to all bars using lookupAll (like adminOverviewController)
+            qtyBarChart.lookupAll(".chart-bar").forEach(node -> {
+                node.setStyle("-fx-bar-fill: " + color + ";");
+            });
+            
+            // Apply colors to area chart based on active mode
+            if (revenueSeries.getNode() != null) {
+                if (chartMode.equals("car")) {
+                    // Car mode - use car color
+                    revenueSeries.getNode().setStyle("-fx-fill: rgba(109,129,150,0.3); -fx-stroke: #6D8196; -fx-stroke-width: 2px;");
+                } else if (chartMode.equals("part")) {
+                    // Part mode - use part color
+                    revenueSeries.getNode().setStyle("-fx-fill: rgba(255,165,0,0.3); -fx-stroke: #ffa500; -fx-stroke-width: 2px;");
+                }
             }
         });
     }
