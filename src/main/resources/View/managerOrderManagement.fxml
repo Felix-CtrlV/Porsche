@@ -12,11 +12,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
@@ -190,11 +187,11 @@
                                 <HBox alignment="CENTER_RIGHT" spacing="5.0">
                                     <children>
                                         <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonthbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="◀" />
-                                        <ChoiceBox fx:id="monthBox" minWidth="100.0" prefHeight="38.0" prefWidth="67.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 5;" HBox.hgrow="ALWAYS" />
+                                        <ChoiceBox fx:id="monthBox" minWidth="76.0" prefHeight="32.0" prefWidth="76.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 5;" HBox.hgrow="ALWAYS" />
                                         <Button fx:id="nextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonthbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="▶" />
                                         <Region prefWidth="10.0" HBox.hgrow="NEVER" />
                                         <Button fx:id="previousYearbth" mnemonicParsing="false" onAction="#clickPreviousYearbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="◀" />
-                                        <ChoiceBox fx:id="yearBox" minWidth="100.0" prefHeight="38.0" prefWidth="80.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 10; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 5;" HBox.hgrow="ALWAYS" />
+                                        <ChoiceBox fx:id="yearBox" minWidth="76.0" prefHeight="32.0" prefWidth="76.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 10; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 5;" HBox.hgrow="ALWAYS" />
                                         <Button fx:id="nextYearbtn" mnemonicParsing="false" onAction="#clickNextYearbtn" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="▶" />
                                     </children>
                                 </HBox>
@@ -217,81 +214,84 @@
                                 </StackPane>
                             </children>
                         </VBox>
-                        <VBox style="-fx-background-color: linear-gradient(to bottom, #ffffff, #f8fafc); -fx-border-color: #e2e8f0; -fx-border-radius: 16; -fx-background-radius: 16; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);" VBox.vgrow="ALWAYS">
-                            <padding>
-                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                            </padding>
-                            <children>
-                                <VBox spacing="12.0">
-                                    <children>
-                                        <HBox spacing="10.0">
-                                            <children>
-                                                <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Paid Amount:" />
-                                                <Region HBox.hgrow="ALWAYS" />
-                                                <Label fx:id="paidAmountlbl" style="-fx-font-weight: bold; -fx-text-fill: #10b981; -fx-font-size: 14; -fx-background-color: rgba(16, 185, 129, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
-                                            </children>
-                                        </HBox>
-                                        <HBox spacing="10.0">
-                                            <children>
-                                                <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Remain Amount:" />
-                                                <Region HBox.hgrow="ALWAYS" />
-                                                <Label fx:id="remainAmountlbl" style="-fx-font-weight: bold; -fx-text-fill: #ef4444; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
-                                            </children>
-                                        </HBox>
+                  <VBox style="-fx-background-color: linear-gradient(to bottom, #ffffff, #f8fafc); -fx-border-color: #e2e8f0; -fx-border-radius: 16; -fx-background-radius: 16; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);" VBox.vgrow="ALWAYS">
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                     <children>
+                        <VBox spacing="12.0">
+                           <children>
                               <HBox spacing="10.0">
                                  <children>
-                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Due Date" />
-                                    <Region prefHeight="17.0" prefWidth="55.0" HBox.hgrow="NEVER" />
-                                    <Label fx:id="dueDateLabel" style="-fx-font-weight: bold; -fx-text-fill: #fbbc04;" text="2025-10-20" />
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="From:" />
+                                    <Label fx:id="staffNamelabel1" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 12;" text="label" wrapText="true">
+                                       <HBox.margin>
+                                          <Insets left="25.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Customer:" />
+                                    <Label fx:id="staffNamelabel11" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 12;" text="label" wrapText="true" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="253.0" spacing="10.0" style="-fx-background-color: #fff7ed; -fx-border-color: #fed7aa; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 1; -fx-padding: 9;">
+                                 <children>
+                                    <Label minWidth="70.0" style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Due Date" />
+                                    <Region maxWidth="10000.0" minWidth="55.0" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="dueDateLabel1" style="-fx-font-weight: bold; -fx-text-fill: #ea580c; -fx-font-size: 14; -fx-background-color: rgba(234, 88, 12, 0.15); -fx-background-radius: 8; -fx-padding: 4 10 4 10;" text="2025-10-20" />
                                  </children>
                               </HBox>
-                                    </children>
-                                </VBox>
-                                <TableView fx:id="installmentTable" prefHeight="150.0" style="-fx-background-color: transparent; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-size: 11; -fx-border-width: 1.5;" VBox.vgrow="ALWAYS">
-                                    <columns>
-                                        <TableColumn fx:id="installmentNameCol" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-font-family: 'Arial';" text="Name" />
-                                        <TableColumn fx:id="installmentQtyCol" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER; -fx-font-family: 'Arial';" text="Quantity" />
-                                        <TableColumn fx:id="installmentPriceCol" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER_RIGHT; -fx-font-family: 'Arial';" text="Price" />
-                                    </columns>
-                                    <columnResizePolicy>
-                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                    </columnResizePolicy>
-                                    <VBox.margin>
-                                        <Insets top="10.0" />
-                                    </VBox.margin>
-                                </TableView>
-                                <GridPane prefHeight="100.0" VBox.vgrow="NEVER">
-                                    <columnConstraints>
-                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                    </columnConstraints>
-                                    <rowConstraints>
-                                        <RowConstraints vgrow="SOMETIMES" />
-                                        <RowConstraints vgrow="SOMETIMES" />
-                                        <RowConstraints vgrow="SOMETIMES" />
-                                    </rowConstraints>
-                                    <children>
-                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Total Price:" />
-                                        <Label fx:id="totalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 14; -fx-background-color: rgba(59, 130, 246, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" GridPane.columnIndex="1" />
-                                        <HBox alignment="CENTER_LEFT" spacing="8.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                            <children>
-                                                <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="From:" />
-                                                <Label fx:id="staffNamelabel" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 12;" text="label" wrapText="true" />
-                                            </children>
-                                        </HBox>
-                                        <HBox alignment="CENTER_LEFT" spacing="8.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
-                                            <children>
-                                                <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Customer:" />
-                                                <Label fx:id="customerNamelabel" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 12;" text="label" wrapText="true" />
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                    <VBox.margin>
-                                        <Insets top="10.0" />
-                                    </VBox.margin>
-                                </GridPane>
-                            </children>
+                           </children>
                         </VBox>
+                        <TableView fx:id="installmentTable1" prefHeight="150.0" style="-fx-background-color: transparent; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-size: 11; -fx-border-width: 1.5;" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="installmentNameCol1" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-font-family: 'Arial';" text="Name" />
+                              <TableColumn fx:id="installmentQtyCol1" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER; -fx-font-family: 'Arial';" text="Quantity" />
+                              <TableColumn fx:id="installmentPriceCol1" style="-fx-font-weight: bold; -fx-text-fill: #495057; -fx-alignment: CENTER_RIGHT; -fx-font-family: 'Arial';" text="Price" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TableView>
+                        <VBox spacing="5.0">
+                           <children>
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Total Price:" />
+                                    <Region minWidth="137.0" prefHeight="18.0" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="remainAmountlbl1" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                 </children>
+                              </HBox>
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Paid Amount:" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="paidAmountlbl1" style="-fx-font-weight: bold; -fx-text-fill: #10b981; -fx-font-size: 14; -fx-background-color: rgba(16, 185, 129, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                 </children>
+                              </HBox>
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Remain Amount:" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="remainAmountlbl2" style="-fx-font-weight: bold; -fx-text-fill: #ef4444; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
                     </children>
                 </VBox>
             </children>
