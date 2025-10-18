@@ -109,7 +109,7 @@
                               <children>
       
                                       <!-- Contact Information Grid -->
-                                      <VBox spacing="16.0" style="-fx-border-color: #f1f5f9; -fx-border-width: 1 0 0 0; -fx-padding: 20 0 0 0;" HBox.hgrow="ALWAYS">
+                                      <VBox maxWidth="605.0" minWidth="605.0" spacing="16.0" style="-fx-border-color: #f1f5f9; -fx-border-width: 1 0 0 0; -fx-padding: 20 0 0 0;" HBox.hgrow="NEVER">
                                           <children>
                                               <Label styleClass="admin-label-section" text="Contact Information" />
                                               
@@ -118,19 +118,35 @@
                                                       <VBox spacing="40.0" HBox.hgrow="ALWAYS">
                                                           <children>
                                           <HBox spacing="12.0">
-                                              <Label styleClass="admin-icon" text="📞" />
                                               <VBox spacing="4.0">
-                                                  <Label styleClass="admin-label-field" text="PHONE" />
+                                                         <HBox spacing="10.0">
+                                                            <children>
+                                                       <Label styleClass="admin-icon" text="📞">
+                                                                  <HBox.margin>
+                                                                     <Insets top="-5.0" />
+                                                                  </HBox.margin>
+                                                               </Label>
+                                                        <Label styleClass="admin-label-field" text="PHONE" />
+                                                            </children>
+                                                         </HBox>
                                                   <Label fx:id="StaffPhoneLabel" styleClass="admin-label-value" text="+1 (555) 123-4567" />
                                               </VBox>
                                           </HBox>
       
                                                               <HBox spacing="12.0">
                                                                   <children>
-                                                                      <Label styleClass="admin-icon" text="✉" />
                                                                       <VBox spacing="4.0">
                                                                           <children>
-                                                                              <Label styleClass="admin-label-field" text="EMAIL" />
+                                                               <HBox spacing="10.0">
+                                                                  <children>
+                                                                                  <Label styleClass="admin-icon" text="✉">
+                                                                        <HBox.margin>
+                                                                           <Insets top="-5.0" />
+                                                                        </HBox.margin>
+                                                                     </Label>
+                                                                                    <Label styleClass="admin-label-field" text="EMAIL" />
+                                                                  </children>
+                                                               </HBox>
                                                                               <Label fx:id="StaffEmailLabel" styleClass="admin-label-value" text="john.doe@company.com" />
                                                                           </children>
                                                                       </VBox>
@@ -141,27 +157,36 @@
                                                       
                                                       <VBox spacing="40.0" HBox.hgrow="ALWAYS">
                                                           <children>
-                                                              <HBox spacing="12.0">
-                                                                  <children>
-                                                                      <Label styleClass="admin-icon" text="🏠" />
-                                                                      <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                                                                          <children>
+                                                                <VBox spacing="4.0">
+                                                                    <children>
+                                                         <HBox spacing="10.0">
+                                                            <children>
+                                                                            <Label styleClass="admin-icon" text="🏠">
+                                                                  <HBox.margin>
+                                                                     <Insets top="-5.0" />
+                                                                  </HBox.margin>
+                                                               </Label>
                                                                               <Label styleClass="admin-label-field" text="ADDRESS" />
-                                                                              <Label fx:id="StaffAddressLabel" styleClass="admin-label-value" text="123 Main St, City, State 12345" wrapText="true" />
-                                                                          </children>
-                                                            <HBox.margin>
-                                                               <Insets />
-                                                            </HBox.margin>
-                                                                      </VBox>
-                                                                  </children>
-                                                              </HBox>
+                                                            </children>
+                                                         </HBox>
+                                                                        <Label fx:id="StaffAddressLabel" styleClass="admin-label-value" text="123 Main St, City, State 12345" wrapText="true" />
+                                                                    </children>
+                                                                </VBox>
       
                                                               <HBox spacing="12.0">
                                                                   <children>
-                                                                      <Label styleClass="admin-icon" text="🎂" />
                                                                       <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                                                                           <children>
-                                                                              <Label styleClass="admin-label-field" text="DATE OF BIRTH" />
+                                                               <HBox spacing="10.0">
+                                                                  <children>
+                                                                                  <Label styleClass="admin-icon" text="🎂">
+                                                                        <HBox.margin>
+                                                                           <Insets top="-5.0" />
+                                                                        </HBox.margin>
+                                                                     </Label>
+                                                                                    <Label styleClass="admin-label-field" text="DATE OF BIRTH" />
+                                                                  </children>
+                                                               </HBox>
                                                                               <Label fx:id="StaffDOBLabel" styleClass="admin-label-value" text="January 15, 1985" />
                                                                           </children>
                                                                       </VBox>
@@ -174,6 +199,18 @@
                                              <Insets top="50.0" />
                                           </VBox.margin>
                                               </HBox>
+
+                                        <HBox fx:id="terminationReasonBox" managed="false" maxWidth="600" spacing="12.0" styleClass="termination-reason" visible="false">
+                                            <children>
+                                                <Label styleClass="admin-icon-warning" text="⚠" />
+                                                <VBox spacing="4.0">
+                                                    <children>
+                                                        <Label styleClass="termination-reason-label" text="TERMINATION REASON" />
+                                                        <Label fx:id="StaffReasonLabel" styleClass="termination-reason-text" text="" wrapText="true" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
                                           </children>
                                     <HBox.margin>
                                        <Insets top="10.0" />
@@ -197,13 +234,13 @@
                                                    <Group>
                                                       <children>
                                                          <Circle fill="transparent" radius="45.0" stroke="#e5e7eb" strokeWidth="8.0" styleClass="progress-circle-background" />
-                                                         <Circle fx:id="carCircle1" fill="transparent" radius="45.0" stroke="#6d8196" strokeLineCap="ROUND" strokeWidth="8.0" styleClass="progress-circle progress-circle-car" />
+                                                         <Circle fx:id="carCircle" fill="transparent" radius="45.0" stroke="#6d8196" strokeLineCap="ROUND" strokeWidth="8.0" styleClass="progress-circle progress-circle-car" />
                                                       </children>
                                                    </Group>
                                                    <VBox alignment="CENTER" spacing="4.0">
                                                       <children>
-                                                         <Text fx:id="targetCar1" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #1f2937;" text="0/0" />
-                                                         <Label fx:id="targetOverCar1" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="+0" />
+                                                         <Text fx:id="targetCar" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #1f2937;" text="0/0" />
+                                                         <Label fx:id="targetOverCar" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="+0" />
                                                       </children>
                                                       <StackPane.margin>
                                                          <Insets />
@@ -218,7 +255,7 @@
                                                 <children>
                                                    <HBox alignment="CENTER">
                                                       <children>
-                                                         <Label fx:id="targetCarMessagelbl1" alignment="CENTER" style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 12;" text="Missed the target" wrapText="true" />
+                                                         <Label fx:id="targetCarMessagelbl" alignment="CENTER" style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 12;" text="Missed the target" wrapText="true" />
                                                       </children>
                                                    </HBox>
                                                 </children>
@@ -241,13 +278,13 @@
                                                    <Group>
                                                       <children>
                                                          <Circle fill="transparent" radius="45.0" stroke="#e5e7eb" strokeWidth="8.0" styleClass="progress-circle-background" />
-                                                         <Circle fx:id="partCircle1" fill="transparent" radius="45.0" stroke="#e67e22" strokeLineCap="ROUND" strokeWidth="8.0" styleClass="progress-circle progress-circle-parts" />
+                                                         <Circle fx:id="partCircle" fill="transparent" radius="45.0" stroke="#e67e22" strokeLineCap="ROUND" strokeWidth="8.0" styleClass="progress-circle progress-circle-parts" />
                                                       </children>
                                                    </Group>
                                                    <VBox alignment="CENTER" spacing="4.0">
                                                       <children>
-                                                         <Text fx:id="targetPart1" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #1f2937;" text="10/10" />
-                                                         <Label fx:id="targetOverPart1" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="+0" />
+                                                         <Text fx:id="targetPart" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #1f2937;" text="10/10" />
+                                                         <Label fx:id="targetOverPart" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="+0" />
                                                       </children>
                                                    </VBox>
                                                 </children>
@@ -259,7 +296,7 @@
                                                 <children>
                                                    <HBox alignment="CENTER">
                                                       <children>
-                                                         <Label fx:id="targetPartMessagelbl1" alignment="CENTER" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="Target Achieved! 🎉" wrapText="true" />
+                                                         <Label fx:id="targetPartMessagelbl" alignment="CENTER" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="Target Achieved! 🎉" wrapText="true" />
                                                       </children>
                                                    </HBox>
                                                 </children>
@@ -401,24 +438,27 @@
                                                 <children>
                                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Total Price:" />
                                                    <Region minWidth="137.0" prefHeight="18.0" HBox.hgrow="ALWAYS" />
-                                                   <Label fx:id="remainAmountlbl1" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                                   <Label fx:id="totalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
                                                 </children>
                                              </HBox>
                                              <HBox spacing="10.0">
                                                 <children>
                                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Paid Amount:" />
                                                    <Region HBox.hgrow="ALWAYS" />
-                                                   <Label fx:id="paidAmountlbl1" style="-fx-font-weight: bold; -fx-text-fill: #10b981; -fx-font-size: 14; -fx-background-color: rgba(16, 185, 129, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                                   <Label fx:id="paidAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #10b981; -fx-font-size: 14; -fx-background-color: rgba(16, 185, 129, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
                                                 </children>
                                              </HBox>
                                              <HBox spacing="10.0">
                                                 <children>
                                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Remain Amount:" />
                                                    <Region HBox.hgrow="ALWAYS" />
-                                                   <Label fx:id="remainAmountlbl2" style="-fx-font-weight: bold; -fx-text-fill: #ef4444; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                                   <Label fx:id="remainAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #ef4444; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
                                                 </children>
                                              </HBox>
                                           </children>
+                                          <padding>
+                                             <Insets top="10.0" />
+                                          </padding>
                                        </VBox>
                                     </bottom>
                            <center>
@@ -438,7 +478,7 @@
                                           <children>
                                              <Label minWidth="70.0" style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Due Date" />
                                              <Region maxWidth="10000.0" minWidth="55.0" HBox.hgrow="ALWAYS" />
-                                             <Label fx:id="dueDateLabel1" style="-fx-font-weight: bold; -fx-text-fill: #ea580c; -fx-font-size: 14; -fx-background-color: rgba(234, 88, 12, 0.15); -fx-background-radius: 8; -fx-padding: 4 10 4 10;" text="2025-10-20" />
+                                             <Label fx:id="dueDateLabel" style="-fx-font-weight: bold; -fx-text-fill: #ea580c; -fx-font-size: 14; -fx-background-color: rgba(234, 88, 12, 0.15); -fx-background-radius: 8; -fx-padding: 4 10 4 10;" text="2025-10-20" />
                                           </children>
                                           <BorderPane.margin>
                                              <Insets bottom="10.0" />
