@@ -26,7 +26,6 @@
                 <Label styleClass="summary-label" text="Review your customization and choose payment method" />
             </VBox>
 
-            <!-- Main Content Container -->
             <VBox maxWidth="1000" spacing="20" styleClass="glass-card">
                 <padding>
                     <Insets bottom="30" left="30" right="30" top="30" />
