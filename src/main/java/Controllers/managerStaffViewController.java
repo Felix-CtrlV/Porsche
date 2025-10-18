@@ -302,7 +302,7 @@ public class managerStaffViewController {
                 super.updateItem(item, empty);
                 setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                 if (empty || item == null) {
-                    setText(null);
+                    setText("---");
                 } else {
                     setText(item.toString());
                 }
@@ -496,7 +496,17 @@ public class managerStaffViewController {
                         }
                     } else {
                         ordersTable.getSelectionModel().clearSelection();
-                        // Clear details and show "No order data" message
+                        
+                        // Add "No order data" placeholder row to orders table
+                        managerOrderView placeholderOrder = new managerOrderView();
+                        placeholderOrder.setNo(0);
+                        placeholderOrder.setCus_name("No order data available");
+                        placeholderOrder.setOrder_date(null);
+                        placeholderOrder.setTotal_amount(0.0);
+                        placeholderOrder.setIs_installmenat("---");
+                        ordersTable.getItems().add(placeholderOrder);
+                        
+                        // Clear details and show "No order data" message in installment table
                         totalPriceLabel.setText("$0.00");
                         dueDateLabel.setText("N/A");
                         remainAmountLabel.setText("$0.00");
@@ -625,7 +635,7 @@ public class managerStaffViewController {
         String[] price = orders.getCarsandparts_perprice();
 
         totalPriceLabel.setText("$" + String.format("%.2f", orders.getTotal_amount()));
-        dueDateLabel.setText(String.valueOf(orders.getDue_date()));
+        dueDateLabel.setText(orders.getDue_date() != null ? String.valueOf(orders.getDue_date()) : "N/A");
         remainAmountLabel.setText("$" + String.format("%.2f", orders.getRemain_amount()));
         paidAmountLabel.setText("$" + String.format("%.2f", orders.getPayed_amount()));
 
