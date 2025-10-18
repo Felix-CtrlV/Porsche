@@ -20,7 +20,6 @@
                 <Insets bottom="30" left="30" right="30" top="30" />
             </padding>
 
-            <!-- Header Section -->
             <VBox alignment="CENTER" spacing="10">
                 <Label styleClass="section-title" text="Final Configuration" />
                 <Label styleClass="summary-label" text="Review your customization and choose payment method" />
