@@ -419,6 +419,9 @@
                                                 </children>
                                              </HBox>
                                           </children>
+                                          <padding>
+                                             <Insets top="10.0" />
+                                          </padding>
                                        </VBox>
                                     </bottom>
                            <center>
