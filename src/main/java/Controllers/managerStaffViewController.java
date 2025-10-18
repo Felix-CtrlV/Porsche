@@ -254,13 +254,6 @@ public class managerStaffViewController {
     void ordersTableClick(MouseEvent event) throws IOException {
         managerOrderView selectorder = ordersTable.getSelectionModel().getSelectedItem();
 
-
-        if (selectorder == null) {
-            // Show target overview when no order is selected or table is empty
-            installmentPane.setVisible(false);
-            targetlayer.setVisible(true);
-            return;
-        }
         orderDetails(selectorder);
     }
 
@@ -287,6 +280,113 @@ public class managerStaffViewController {
         DateCol.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().getOrder_date()));
         TotalAmountCol.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
         IsInstallmentCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getIs_installmenat()));
+        
+        // Format TotalAmount column with currency
+        TotalAmountCol.setCellFactory(column -> new TableCell<managerOrderView, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("$%.2f", item));
+                }
+            }
+        });
+        
+        // Format Date column
+        DateCol.setCellFactory(column -> new TableCell<managerOrderView, Date>() {
+            @Override
+            protected void updateItem(Date item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.toString());
+                }
+            }
+        });
+        
+        // Format IsInstallment column
+        IsInstallmentCol.setCellFactory(column -> new TableCell<managerOrderView, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                }
+            }
+        });
+        
+        // Set table style and row factory
+        ordersTable.setFixedCellSize(-1);
+        ordersTable.setStyle("-fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-background-color: white;");
+        
+        ordersTable.setRowFactory(tv -> {
+            TableRow<managerOrderView> row = new TableRow<>();
+            
+            // Update row style based on selection
+            row.itemProperty().addListener((obs, oldItem, newItem) -> updateRowStyle(row));
+            row.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateRowStyle(row));
+            
+            row.setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
+
+            row.setOnMouseEntered(e -> {
+                if (!row.isEmpty() && !row.isSelected()) {
+                    row.setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
+                }
+            });
+
+            row.setOnMouseExited(e -> {
+                updateRowStyle(row);
+            });
+
+            return row;
+        });
+        
+        // Set up installment table columns
+        installmentNameCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 0 ? parts[0] : "");
+        });
+        
+        // Add text wrapping to name column
+        installmentNameCol.setCellFactory(column -> {
+            TableCell<String, String> cell = new TableCell<String, String>() {
+                private final Text text = new Text();
+                
+                {
+                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                    setGraphic(text);
+                }
+                
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        text.setText(null);
+                    } else {
+                        text.setText(item);
+                    }
+                }
+            };
+            return cell;
+        });
+        
+        installmentQtyCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
+        });
+        
+        installmentPriceCol.setCellValueFactory(cellData -> {
+            String[] parts = cellData.getValue().split("\\|");
+            return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
+        });
 
         // Initialize listeners only once
         if (!listenersInitialized) {
@@ -318,8 +418,6 @@ public class managerStaffViewController {
         }
 
         //for car and parts of the show circle
-       installmentPane.setVisible(false);
-        targetlayer.setVisible(true);
         setTarget();
         setupSearchBar();
         
@@ -372,9 +470,6 @@ public class managerStaffViewController {
         
         // Execute all database calls in parallel for faster loading
         loadStaffDataAsync();
-
-        targetlayer.setVisible(true);
-        installmentPane.setVisible(false);
     }
     
     // Async method to load all staff data in parallel
@@ -389,8 +484,26 @@ public class managerStaffViewController {
                 Platform.runLater(() -> {
                     ordersTable.getItems().clear();
                     ordersTable.getItems().addAll(orders);
-                    ordersTable.getSelectionModel().clearSelection();
                     ordersTable.refresh();
+                    
+                    // Auto-select first row and display its details
+                    if (!orders.isEmpty()) {
+                        ordersTable.getSelectionModel().selectFirst();
+                        try {
+                            orderDetails(ordersTable.getSelectionModel().getSelectedItem());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        ordersTable.getSelectionModel().clearSelection();
+                        // Clear details and show "No order data" message
+                        totalPriceLabel.setText("$0.00");
+                        dueDateLabel.setText("N/A");
+                        remainAmountLabel.setText("$0.00");
+                        paidAmountLabel.setText("$0.00");
+                        installmentTable.getItems().clear();
+                        installmentTable.getItems().add("No order data available|---|---");
+                    }
                 });
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -504,8 +617,7 @@ public class managerStaffViewController {
 
     //to see like a slip of the order table
     private void orderDetails(managerOrderView orders) throws IOException {
-        targetlayer.setVisible(false);
-        installmentPane.setVisible(true);
+
 
         // Load order details
         String[] names = orders.getCarsandparts_name();
@@ -525,22 +637,6 @@ public class managerStaffViewController {
             String rowData = String.format("%s|%s|%s", names[i].trim(), qty[i].trim(), price[i].trim());
             installmentTable.getItems().add(rowData);
         }
-
-        // Set up table columns to display the data properly
-        installmentNameCol.setCellValueFactory(cellData -> {
-            String[] parts = cellData.getValue().split("\\|");
-            return new SimpleStringProperty(parts.length > 0 ? parts[0] : "");
-        });
-
-        installmentQtyCol.setCellValueFactory(cellData -> {
-            String[] parts = cellData.getValue().split("\\|");
-            return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
-        });
-
-        installmentPriceCol.setCellValueFactory(cellData -> {
-            String[] parts = cellData.getValue().split("\\|");
-            return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
-        });
     }
 
     // Fetch monthly order status data without UI updates (for async use)
@@ -948,8 +1044,6 @@ public class managerStaffViewController {
     private void updateYearMonthLabel() {
         Year nyear = Year.of(currentYear);
         int curyear = today.getYear();
-        targetlayer.setVisible(true);
-        installmentPane.setVisible(false);
 
         Month nmonth = Month.of(currentMonth);
         String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
@@ -1103,6 +1197,21 @@ public class managerStaffViewController {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+        }
+    }
+    
+    /**
+     * Updates the style of a table row based on its selection state
+     */
+    private void updateRowStyle(TableRow<managerOrderView> row) {
+        if (row.isEmpty()) {
+            row.setStyle("");
+        } else if (row.isSelected()) {
+            // Selected row: bold text with highlight background
+            row.setStyle("-fx-background-color: #e3f2fd; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: bold; -fx-border-color: #2196f3; -fx-border-width: 0 0 1 0;");
+        } else {
+            // Normal row: regular text
+            row.setStyle("-fx-background-color: white; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
         }
     }
 }

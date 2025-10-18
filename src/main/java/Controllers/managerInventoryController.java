@@ -1145,7 +1145,7 @@ public class managerInventoryController {
     private void populateCarNamesComboBox() {
         // Set up autocomplete for part relative car field
         partRelativeComboBox.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText.isEmpty()) {
+            if (newText == null || newText.isEmpty()) {
                 partCarSuggestions.hide();
                 return;
             }
@@ -1210,7 +1210,7 @@ public class managerInventoryController {
     private void populateEditPartCarNames() {
         // Set up autocomplete for edit part car field
         editPartForCar.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText.isEmpty()) {
+            if (newText == null || newText.isEmpty()) {
                 editPartCarSuggestions.hide();
                 return;
             }

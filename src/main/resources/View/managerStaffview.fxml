@@ -197,13 +197,13 @@
                                                    <Group>
                                                       <children>
                                                          <Circle fill="transparent" radius="45.0" stroke="#e5e7eb" strokeWidth="8.0" styleClass="progress-circle-background" />
-                                                         <Circle fx:id="carCircle1" fill="transparent" radius="45.0" stroke="#6d8196" strokeLineCap="ROUND" strokeWidth="8.0" styleClass="progress-circle progress-circle-car" />
+                                                         <Circle fx:id="carCircle" fill="transparent" radius="45.0" stroke="#6d8196" strokeLineCap="ROUND" strokeWidth="8.0" styleClass="progress-circle progress-circle-car" />
                                                       </children>
                                                    </Group>
                                                    <VBox alignment="CENTER" spacing="4.0">
                                                       <children>
-                                                         <Text fx:id="targetCar1" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #1f2937;" text="0/0" />
-                                                         <Label fx:id="targetOverCar1" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="+0" />
+                                                         <Text fx:id="targetCar" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #1f2937;" text="0/0" />
+                                                         <Label fx:id="targetOverCar" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="+0" />
                                                       </children>
                                                       <StackPane.margin>
                                                          <Insets />
@@ -218,7 +218,7 @@
                                                 <children>
                                                    <HBox alignment="CENTER">
                                                       <children>
-                                                         <Label fx:id="targetCarMessagelbl1" alignment="CENTER" style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 12;" text="Missed the target" wrapText="true" />
+                                                         <Label fx:id="targetCarMessagelbl" alignment="CENTER" style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 12;" text="Missed the target" wrapText="true" />
                                                       </children>
                                                    </HBox>
                                                 </children>
@@ -241,13 +241,13 @@
                                                    <Group>
                                                       <children>
                                                          <Circle fill="transparent" radius="45.0" stroke="#e5e7eb" strokeWidth="8.0" styleClass="progress-circle-background" />
-                                                         <Circle fx:id="partCircle1" fill="transparent" radius="45.0" stroke="#e67e22" strokeLineCap="ROUND" strokeWidth="8.0" styleClass="progress-circle progress-circle-parts" />
+                                                         <Circle fx:id="partCircle" fill="transparent" radius="45.0" stroke="#e67e22" strokeLineCap="ROUND" strokeWidth="8.0" styleClass="progress-circle progress-circle-parts" />
                                                       </children>
                                                    </Group>
                                                    <VBox alignment="CENTER" spacing="4.0">
                                                       <children>
-                                                         <Text fx:id="targetPart1" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #1f2937;" text="10/10" />
-                                                         <Label fx:id="targetOverPart1" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="+0" />
+                                                         <Text fx:id="targetPart" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #1f2937;" text="10/10" />
+                                                         <Label fx:id="targetOverPart" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="+0" />
                                                       </children>
                                                    </VBox>
                                                 </children>
@@ -259,7 +259,7 @@
                                                 <children>
                                                    <HBox alignment="CENTER">
                                                       <children>
-                                                         <Label fx:id="targetPartMessagelbl1" alignment="CENTER" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="Target Achieved! 🎉" wrapText="true" />
+                                                         <Label fx:id="targetPartMessagelbl" alignment="CENTER" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 12;" text="Target Achieved! 🎉" wrapText="true" />
                                                       </children>
                                                    </HBox>
                                                 </children>
@@ -401,21 +401,21 @@
                                                 <children>
                                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Total Price:" />
                                                    <Region minWidth="137.0" prefHeight="18.0" HBox.hgrow="ALWAYS" />
-                                                   <Label fx:id="remainAmountlbl1" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                                   <Label fx:id="totalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
                                                 </children>
                                              </HBox>
                                              <HBox spacing="10.0">
                                                 <children>
                                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Paid Amount:" />
                                                    <Region HBox.hgrow="ALWAYS" />
-                                                   <Label fx:id="paidAmountlbl1" style="-fx-font-weight: bold; -fx-text-fill: #10b981; -fx-font-size: 14; -fx-background-color: rgba(16, 185, 129, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                                   <Label fx:id="paidAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #10b981; -fx-font-size: 14; -fx-background-color: rgba(16, 185, 129, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
                                                 </children>
                                              </HBox>
                                              <HBox spacing="10.0">
                                                 <children>
                                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569; -fx-font-size: 12;" text="Remain Amount:" />
                                                    <Region HBox.hgrow="ALWAYS" />
-                                                   <Label fx:id="remainAmountlbl2" style="-fx-font-weight: bold; -fx-text-fill: #ef4444; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
+                                                   <Label fx:id="remainAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #ef4444; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
                                                 </children>
                                              </HBox>
                                           </children>
@@ -438,7 +438,7 @@
                                           <children>
                                              <Label minWidth="70.0" style="-fx-font-weight: bold; -fx-text-fill: #5f6368;" text="Due Date" />
                                              <Region maxWidth="10000.0" minWidth="55.0" HBox.hgrow="ALWAYS" />
-                                             <Label fx:id="dueDateLabel1" style="-fx-font-weight: bold; -fx-text-fill: #ea580c; -fx-font-size: 14; -fx-background-color: rgba(234, 88, 12, 0.15); -fx-background-radius: 8; -fx-padding: 4 10 4 10;" text="2025-10-20" />
+                                             <Label fx:id="dueDateLabel" style="-fx-font-weight: bold; -fx-text-fill: #ea580c; -fx-font-size: 14; -fx-background-color: rgba(234, 88, 12, 0.15); -fx-background-radius: 8; -fx-padding: 4 10 4 10;" text="2025-10-20" />
                                           </children>
                                           <BorderPane.margin>
                                              <Insets bottom="10.0" />
