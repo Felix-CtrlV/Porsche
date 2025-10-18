@@ -10,11 +10,6 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.5" prefWidth="799.0" style="-fx-background-color: #000000;" stylesheets="@../CSS/splash.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SplashController">
    <children>
-      <!-- Porsche Red Accent Bar Top -->
-      <AnchorPane prefHeight="5.0" prefWidth="600.0" style="-fx-background-color: #d5001c;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      
-      <!-- Porsche Red Accent Bar Bottom -->
-      <AnchorPane layoutY="395.0" prefHeight="5.0" prefWidth="600.0" style="-fx-background-color: #d5001c;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
 
       <!-- Center Content -->
       <VBox alignment="CENTER" layoutX="150.0" layoutY="100.0" prefHeight="449.5" prefWidth="799.0" spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -34,7 +29,7 @@
             </Label>
             
             <!-- Subtitle -->
-            <Label style="-fx-text-fill: #999999; -fx-font-size: 13px;" text="Management System" />
+            <Label style="-fx-text-fill: #999999; -fx-font-size: 13px;" text="Sale and Management System" />
             
             <!-- Progress Bar -->
             <ProgressBar fx:id="progressBar" minHeight="10.0" prefHeight="8.0" prefWidth="400.0" progress="0.0" style="-fx-accent: #d5001c;" styleClass="porsche-progress" />

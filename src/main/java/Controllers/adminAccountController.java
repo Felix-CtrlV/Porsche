@@ -13,7 +13,6 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.chart.AreaChart;
@@ -30,16 +29,26 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.File;
-import java.time.*;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 public class adminAccountController {
     private static final Logger logger = LoggerFactory.getLogger(adminAccountController.class);
@@ -119,11 +128,17 @@ public class adminAccountController {
     private LocalDate currentStaffStartDate;
     private LocalDate currentStaffEndDate;
     private boolean isManagementPaneOpen = false;
+    private adminDashboardController dashboardController;
+
+    public void setDashboardController(adminDashboardController dashboardController) {
+        this.dashboardController = dashboardController;
+    }
 
     public adminAccountController() {
         try {
             dao = new AdminAccountDAO();
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             logger.error("Failed to initialize AdminAccountDAO", e);
             throw new RuntimeException("Failed to initialize controller", e);
         }
@@ -153,30 +168,28 @@ public class adminAccountController {
         StaffListTitleLabel.setText("List (Active)");
         loadStaffCardsAsync(showActive);
     }
-    
+
     private void openUserRegistration(MouseEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/adminUserRegister.fxml"));
             Parent root = loader.load();
-            
+
             Stage stage = new Stage();
             stage.setTitle("Register New User");
             stage.initStyle(StageStyle.DECORATED);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
-            
+
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.showAndWait();
-            
+
             // Reload staff list after registration window closes
             loadStaffCardsAsync(showActive);
-        } catch (IOException e) {
+        } catch (
+                IOException e) {
             logger.error("Failed to open user registration window", e);
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("Failed to open registration window");
-            alert.show();
+            showToast("error", "Error", "Failed to open registration window");
         }
     }
 
@@ -184,36 +197,36 @@ public class adminAccountController {
     private void setupEmptyChart() {
         if (lineChart == null)
             return;
-        
+
         // Enable smooth curves for the chart
         lineChart.setCreateSymbols(true);
         lineChart.setLegendVisible(false);
         lineChart.setAnimated(false); // Disable animation for immediate rendering
-        
+
         lineChart.getData().clear();
         XYChart.Series<String, Number> s = new XYChart.Series<>();
         s.setName("Weekly Sales");
         for (int i = 1; i <= 4; i++)
             s.getData().add(new XYChart.Data<>("Week " + i, 0));
         lineChart.getData().add(s);
-        
+
         // Hide chart temporarily to prevent showing sharp lines
         lineChart.setOpacity(0);
-        
+
         // Apply smooth curves after a short delay to ensure paths are created
         javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
         pause.setOnFinished(e -> applySmoothCurves());
         pause.play();
     }
-    
+
     private void applySmoothCurves() {
         if (lineChart == null)
             return;
-        
+
         // Check if paths are ready, if not, retry after a short delay
         var linePaths = lineChart.lookupAll(".chart-series-area-line");
         var fillPaths = lineChart.lookupAll(".chart-series-area-fill");
-        
+
         if (linePaths.isEmpty() || fillPaths.isEmpty()) {
             // Paths not ready yet, try again after 50ms
             javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(50));
@@ -221,10 +234,10 @@ public class adminAccountController {
             pause.play();
             return;
         }
-        
+
         // Store the smoothed line elements to copy to fill area
         java.util.List<javafx.scene.shape.PathElement> smoothedLineElements = new java.util.ArrayList<>();
-            
+
         // Smooth the line first and store the elements
         linePaths.forEach(node -> {
             if (node instanceof javafx.scene.shape.Path) {
@@ -234,40 +247,40 @@ public class adminAccountController {
                 smoothedLineElements.addAll(new java.util.ArrayList<>(path.getElements()));
             }
         });
-        
+
         // Apply the same smooth curve to the fill area
         fillPaths.forEach(node -> {
             if (node instanceof javafx.scene.shape.Path && !smoothedLineElements.isEmpty()) {
                 javafx.scene.shape.Path fillPath = (javafx.scene.shape.Path) node;
                 var originalFillElements = new java.util.ArrayList<>(fillPath.getElements());
-                
+
                 // Find the baseline (bottom of chart) from original fill path
                 double baselineY = 0;
                 double startX = 0;
                 double endX = 0;
-                
+
                 for (var element : originalFillElements) {
                     if (element instanceof javafx.scene.shape.LineTo) {
                         javafx.scene.shape.LineTo lt = (javafx.scene.shape.LineTo) element;
                         baselineY = Math.max(baselineY, lt.getY());
                     }
                 }
-                
+
                 // Get start and end X coordinates from smoothed line
                 if (smoothedLineElements.get(0) instanceof javafx.scene.shape.MoveTo) {
                     javafx.scene.shape.MoveTo firstMove = (javafx.scene.shape.MoveTo) smoothedLineElements.get(0);
                     startX = firstMove.getX();
                 }
-                
+
                 var lastElement = smoothedLineElements.get(smoothedLineElements.size() - 1);
                 if (lastElement instanceof javafx.scene.shape.CubicCurveTo) {
                     javafx.scene.shape.CubicCurveTo lastCurve = (javafx.scene.shape.CubicCurveTo) lastElement;
                     endX = lastCurve.getX();
                 }
-                
+
                 // Clear and rebuild: smooth line + close to baseline
                 fillPath.getElements().clear();
-                
+
                 // Add the smoothed line elements
                 for (var element : smoothedLineElements) {
                     if (element instanceof javafx.scene.shape.MoveTo) {
@@ -276,32 +289,33 @@ public class adminAccountController {
                     } else if (element instanceof javafx.scene.shape.CubicCurveTo) {
                         javafx.scene.shape.CubicCurveTo cc = (javafx.scene.shape.CubicCurveTo) element;
                         fillPath.getElements().add(new javafx.scene.shape.CubicCurveTo(
-                            cc.getControlX1(), cc.getControlY1(),
-                            cc.getControlX2(), cc.getControlY2(),
-                            cc.getX(), cc.getY()
+                                cc.getControlX1(), cc.getControlY1(),
+                                cc.getControlX2(), cc.getControlY2(),
+                                cc.getX(), cc.getY()
                         ));
                     }
                 }
-                
+
                 // Close the path to baseline
                 fillPath.getElements().add(new javafx.scene.shape.LineTo(endX, baselineY));
                 fillPath.getElements().add(new javafx.scene.shape.LineTo(startX, baselineY));
                 fillPath.getElements().add(new javafx.scene.shape.ClosePath());
             }
         });
-        
+
         // Show chart after smoothing is complete
         lineChart.setOpacity(1);
     }
-    
+
     private void smoothPath(javafx.scene.shape.Path path, boolean isFillArea) {
         var elements = path.getElements();
-        if (elements.size() < 3) return;
-        
+        if (elements.size() < 3)
+            return;
+
         // Extract points from path
         java.util.List<Double> xPoints = new java.util.ArrayList<>();
         java.util.List<Double> yPoints = new java.util.ArrayList<>();
-        
+
         for (var element : elements) {
             if (element instanceof javafx.scene.shape.MoveTo) {
                 javafx.scene.shape.MoveTo moveTo = (javafx.scene.shape.MoveTo) element;
@@ -313,18 +327,19 @@ public class adminAccountController {
                 yPoints.add(lineTo.getY());
             }
         }
-        
-        if (xPoints.size() < 3) return;
-        
+
+        if (xPoints.size() < 3)
+            return;
+
         // Find the baseline (bottom of chart) for clamping
         double baseline = yPoints.stream().mapToDouble(Double::doubleValue).max().orElse(0);
-        
+
         // Clear existing elements and rebuild with smooth curves
         elements.clear();
-        
+
         // Start at first point
         elements.add(new javafx.scene.shape.MoveTo(xPoints.get(0), yPoints.get(0)));
-        
+
         // Create smooth Catmull-Rom spline curves between points
         for (int i = 0; i < xPoints.size() - 1; i++) {
             double x0 = i > 0 ? xPoints.get(i - 1) : xPoints.get(i);
@@ -335,26 +350,26 @@ public class adminAccountController {
             double y2 = yPoints.get(i + 1);
             double x3 = i < xPoints.size() - 2 ? xPoints.get(i + 2) : x2;
             double y3 = i < xPoints.size() - 2 ? yPoints.get(i + 2) : y2;
-            
+
             // Calculate control points for cubic Bezier curve
             double cp1x = x1 + (x2 - x0) / 6.0;
             double cp1y = y1 + (y2 - y0) / 6.0;
             double cp2x = x2 - (x3 - x1) / 6.0;
             double cp2y = y2 - (y3 - y1) / 6.0;
-            
+
             // Strict clamping to prevent overshooting
             // Control points must stay between the two data points
             double minY = Math.min(y1, y2);
             double maxY = Math.max(y1, y2);
-            
+
             // Clamp control points strictly within the range of the two endpoints
             cp1y = Math.max(minY, Math.min(cp1y, maxY));
             cp2y = Math.max(minY, Math.min(cp2y, maxY));
-            
+
             // Also ensure they don't go below baseline
             cp1y = Math.min(cp1y, baseline);
             cp2y = Math.min(cp2y, baseline);
-            
+
             elements.add(new javafx.scene.shape.CubicCurveTo(cp1x, cp1y, cp2x, cp2y, x2, y2));
         }
     }
@@ -363,7 +378,7 @@ public class adminAccountController {
     private void setupStaffTable() {
         if (staffTableView == null)
             return;
-        
+
         staffIdCol.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
         staffNameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsername()));
         staffPhoneCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhone()));
@@ -402,10 +417,10 @@ public class adminAccountController {
             series.getData().add(new XYChart.Data<>("Week " + (i + 1), weeklySales.get(i)));
 
         lineChart.getData().add(series);
-        
+
         // Hide chart temporarily to prevent showing sharp lines
         lineChart.setOpacity(0);
-        
+
         // Apply smooth curves after a short delay to ensure paths are created
         javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
         pause.setOnFinished(e -> applySmoothCurves());
@@ -465,7 +480,7 @@ public class adminAccountController {
             return;
 
         attendancePercent.setText(String.format("%.0f%%", percent));
-        
+
         // Update circle stroke dash to show percentage - use actual radius from FXML
         double radius = attendanceCircle.getRadius();
         double circumference = 2 * Math.PI * radius;
@@ -506,14 +521,14 @@ public class adminAccountController {
         int carAchieved = carData[0];
         int carTarget = carData[1];
         targetCar.setText(carAchieved + "/" + carTarget);
-        
+
         if (carTarget > 0) {
             int carOver = carAchieved - carTarget;
             targetOverCar.setText((carOver >= 0 ? "+" : "") + carOver);
             targetOverCar.setStyle("-fx-text-fill: " + (carOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
             targetCarMessagelbl.setText(carOver >= 0 ? "Target Achieved! 🎉" : "Missed the target");
             targetCarMessagelbl.setStyle("-fx-text-fill: " + (carOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
-            
+
             double carPercent = Math.min(100.0, (carAchieved * 100.0) / carTarget);
             updateCircleProgress(carCircle, carPercent);
         } else {
@@ -526,14 +541,14 @@ public class adminAccountController {
         int partAchieved = partData[0];
         int partTarget = partData[1];
         targetPart.setText(partAchieved + "/" + partTarget);
-        
+
         if (partTarget > 0) {
             int partOver = partAchieved - partTarget;
             targetOverPart.setText((partOver >= 0 ? "+" : "") + partOver);
             targetOverPart.setStyle("-fx-text-fill: " + (partOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
             targetPartMessagelbl.setText(partOver >= 0 ? "Target Achieved! 🎉" : "Missed the target");
             targetPartMessagelbl.setStyle("-fx-text-fill: " + (partOver >= 0 ? "#10b981" : "#ef4444") + "; -fx-font-weight: bold; -fx-font-size: 12;");
-            
+
             double partPercent = Math.min(100.0, (partAchieved * 100.0) / partTarget);
             updateCircleProgress(partCircle, partPercent);
         } else {
@@ -546,7 +561,7 @@ public class adminAccountController {
     private void updateCircleProgress(Circle circle, double percent) {
         if (circle == null)
             return;
-        
+
         double radius = circle.getRadius();
         double circumference = 2 * Math.PI * radius;
         double dashLength = (percent / 100.0) * circumference;
@@ -611,7 +626,8 @@ public class adminAccountController {
                 });
 
                 staffListContainer.getChildren().add(card);
-            } catch (IOException ex) {
+            } catch (
+                    IOException ex) {
                 logger.error("Failed to load staff card for user ID: " + staff.getId(), ex);
             }
         }
@@ -628,7 +644,7 @@ public class adminAccountController {
 
     private void loadDataForSelectedUser(int userId) {
         String selectedRole = roleCombo.getValue();
-        
+
         if ("Manager".equals(selectedRole)) {
             // For managers, show staff table instead of weekly sales chart
             lineChart.setVisible(false);
@@ -640,7 +656,7 @@ public class adminAccountController {
             staffTableView.setVisible(false);
             loadWeeklySalesAsync(userId, currentMonth, currentYear);
         }
-        
+
         // Load attendance and targets for both roles
         loadAttendanceAsync(userId, currentMonth, currentYear);
         loadTargetsAsync(userId, currentMonth, currentYear);
@@ -661,7 +677,7 @@ public class adminAccountController {
         StaffAddressLabel.setText(Optional.ofNullable(staff.getAddress()).orElse(""));
         StaffDOBLabel.setText(staff.getDob() != null ?
                 staff.getDob().format(DateTimeFormatter.ofPattern("dd MMM yyyy")) : "");
-        
+
         // Show/hide termination reason for inactive employees
         boolean isInactive = "Inactive".equalsIgnoreCase(staff.getIs_active());
         if (terminationReasonBox != null) {
@@ -671,7 +687,7 @@ public class adminAccountController {
                 StaffReasonLabel.setText(Optional.ofNullable(staff.getReason()).orElse("No reason provided"));
             }
         }
-        
+
         // Hide manage button for inactive employees
         if (manageEmployeeBtn != null) {
             manageEmployeeBtn.setVisible(!isInactive);
@@ -686,7 +702,8 @@ public class adminAccountController {
                         : new File(path).toURI().toString();
                 StaffImage.setImage(new Image(uri, true));
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             logger.warn("Failed to load image for staff ID: " + staff.getId(), e);
         }
 
@@ -820,11 +837,11 @@ public class adminAccountController {
             months.add(Month.of(i).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
 
         monthBox.setItems(FXCollections.observableArrayList(months));
-        
+
         // Ensure current month is within valid range
         if (currentMonth < startMonth || currentMonth > endMonth)
             currentMonth = startMonth;
-            
+
         monthBox.setValue(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
 
         updatingDateBox = false;
@@ -833,25 +850,25 @@ public class adminAccountController {
     private void updateDateControls() {
         if (NextMonthbtn == null || NextYearbtn == null || PreviousMonthbtn == null || PreviousYearbtn == null)
             return;
-        
+
         // Use end date for boundary checking (for inactive employees, this is their termination date)
         LocalDate endBoundary = (currentStaffEndDate != null) ? currentStaffEndDate : today;
-        
+
         // Disable next buttons if at end boundary month/year
         boolean isEndYear = currentYear == endBoundary.getYear();
         boolean isEndMonth = isEndYear && currentMonth == endBoundary.getMonthValue();
         NextMonthbtn.setDisable(isEndMonth);
         NextYearbtn.setDisable(isEndYear);
-        
+
         // Hide next buttons if at end boundary month/year
         NextMonthbtn.setVisible(!isEndMonth);
         NextYearbtn.setVisible(!isEndYear);
-        
+
         // Disable/hide previous buttons if at staff start date
         if (currentStaffStartDate != null) {
             boolean isStartYear = currentYear == currentStaffStartDate.getYear();
             boolean isStartMonth = isStartYear && currentMonth == currentStaffStartDate.getMonthValue();
-            
+
             PreviousMonthbtn.setDisable(isStartMonth);
             PreviousYearbtn.setDisable(isStartYear);
             PreviousMonthbtn.setVisible(!isStartMonth);
@@ -921,10 +938,10 @@ public class adminAccountController {
     @FXML
     private void onManageEmployeeClick() {
         if (selectedStaffId == 0) {
-            showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee to manage.");
+            showToast("Error", "No Employee Selected", "Please select an employee to manage.");
             return;
         }
-        
+
         // Toggle the pane
         if (isManagementPaneOpen) {
             closeManagementPaneWithAnimation();
@@ -941,7 +958,7 @@ public class adminAccountController {
 
     private void openManagementPaneWithAnimation() {
         isManagementPaneOpen = true;
-        
+
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), managementPane);
         slideIn.setFromX(450);  // Start off-screen to the right
         slideIn.setToX(0);      // End at normal position
@@ -949,11 +966,12 @@ public class adminAccountController {
     }
 
     private void closeManagementPaneWithAnimation() {
-        if (!isManagementPaneOpen) return;
-        
+        if (!isManagementPaneOpen)
+            return;
+
         isManagementPaneOpen = false;
         terminationReasonField.clear();
-        
+
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), managementPane);
         slideOut.setFromX(0);    // Start at normal position
         slideOut.setToX(450);    // End off-screen to the right
@@ -966,31 +984,31 @@ public class adminAccountController {
             protected Void call() throws Exception {
                 // Load current salary
                 double salary = dao.getCurrentSalary(selectedStaffId);
-                
+
                 // Get target data for bonus calculation
                 int[][] targetData = dao.getTargetData(selectedStaffId, currentMonth, currentYear);
                 int carAchieved = targetData[0][0];
                 int carTarget = targetData[0][1];
                 int partAchieved = targetData[1][0];
                 int partTarget = targetData[1][1];
-                
+
                 Platform.runLater(() -> {
                     // Update salary field
                     salaryField.setText(String.format("%.2f", salary));
-                    
+
                     // Calculate and display bonus
                     calculateAndDisplayBonus(carAchieved, carTarget, partAchieved, partTarget, salary);
                 });
-                
+
                 return null;
             }
         };
-        
+
         task.setOnFailed(e -> {
             logger.error("Failed to load management data", task.getException());
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load employee data.");
+            showToast("error", "Error", "Failed to load employee data.");
         });
-        
+
         ThreadPoolManager.getInstance().execute(task);
     }
 
@@ -998,29 +1016,29 @@ public class adminAccountController {
         // Update target labels
         carTargetLabel.setText(carAchieved + "/" + carTarget);
         partTargetLabel.setText(partAchieved + "/" + partTarget);
-        
+
         // Calculate car bonus (2% per car over target)
         int carsOverTarget = Math.max(0, carAchieved - carTarget);
         double carBonusPercent = carsOverTarget * 2.0;
         double carBonusAmount = (salary * carBonusPercent) / 100.0;
-        
+
         // Calculate part bonus (1% per part over target)
         int partsOverTarget = Math.max(0, partAchieved - partTarget);
         double partBonusPercent = partsOverTarget * 1.0;
         double partBonusAmount = (salary * partBonusPercent) / 100.0;
-        
+
         // Total bonus
         double totalBonus = carBonusAmount + partBonusAmount;
-        
+
         // Update UI
         carBonusLabel.setText(String.format("+%.1f%%", carBonusPercent));
         carBonusLabel.setStyle(carBonusPercent > 0 ? "-fx-text-fill: #10b981; -fx-font-weight: bold;" : "-fx-text-fill: #64748b; -fx-font-weight: bold;");
-        
+
         partBonusLabel.setText(String.format("+%.1f%%", partBonusPercent));
         partBonusLabel.setStyle(partBonusPercent > 0 ? "-fx-text-fill: #10b981; -fx-font-weight: bold;" : "-fx-text-fill: #64748b; -fx-font-weight: bold;");
-        
+
         totalBonusLabel.setText(String.format("$ %.2f", totalBonus));
-        
+
         // Breakdown text
         if (totalBonus > 0) {
             StringBuilder breakdown = new StringBuilder();
@@ -1028,7 +1046,8 @@ public class adminAccountController {
                 breakdown.append(String.format("Cars: %d over target × 2%% = $ %.2f", carsOverTarget, carBonusAmount));
             }
             if (partsOverTarget > 0) {
-                if (breakdown.length() > 0) breakdown.append("\n");
+                if (breakdown.length() > 0)
+                    breakdown.append("\n");
                 breakdown.append(String.format("Parts: %d over target × 1%% = $ %.2f", partsOverTarget, partBonusAmount));
             }
             bonusBreakdownLabel.setText(breakdown.toString());
@@ -1040,32 +1059,28 @@ public class adminAccountController {
     @FXML
     private void onUpdateSalary() {
         if (selectedStaffId == 0) {
-            showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee first.");
+            showToast("warning", "No Employee Selected", "Please select an employee first.");
             return;
         }
-        
+
         try {
             double newSalary = Double.parseDouble(salaryField.getText().trim());
-            
+
             if (newSalary <= 0) {
-                showAlert(Alert.AlertType.WARNING, "Invalid Salary", "Salary must be greater than 0.");
+                showToast("error", "Invalid Salary", "Salary must be greater than 0.");
                 return;
             }
-            
-            // Confirm update
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Confirm Salary Update");
-            confirm.setHeaderText("Update Employee Salary");
-            confirm.setContentText(String.format("Are you sure you want to update the salary to $ %.2f?", newSalary));
-            
-            confirm.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    updateSalaryAsync(newSalary);
-                }
-            });
-            
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter a valid salary amount.");
+
+            if (dashboardController != null) {
+                dashboardController.showConfirmDialog("Confirm Salary Update", String.format("Are you sure you want to update the salary to $ %.2f?", newSalary), "⚠", () -> updateSalaryAsync(newSalary)
+                );
+            } else {
+                showToast("info", "Confirmation Needed", "Unable to show confirmation dialog. Please retry from dashboard view.");
+            }
+
+        } catch (
+                NumberFormatException e) {
+            showToast("error", "Invalid Input", "Please enter a valid salary amount.");
         }
     }
 
@@ -1076,54 +1091,44 @@ public class adminAccountController {
                 return dao.updateSalary(selectedStaffId, newSalary);
             }
         };
-        
+
         task.setOnSucceeded(e -> {
             if (task.getValue()) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Salary updated successfully!");
+                showToast("success", "Success", "Salary updated successfully!");
                 loadManagementData(); // Refresh bonus calculation
             } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to update salary.");
+                showToast("error", "Error", "Failed to update salary.");
             }
         });
-        
+
         task.setOnFailed(e -> {
             logger.error("Failed to update salary", task.getException());
-            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while updating salary.");
+            showToast("error", "Error", "An error occurred while updating salary.");
         });
-        
+
         ThreadPoolManager.getInstance().execute(task);
     }
 
     @FXML
     private void onApplyBonus() {
         if (selectedStaffId == 0) {
-            showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee first.");
+            showToast("warning", "No Employee Selected", "Please select an employee first.");
             return;
         }
-        
+
         try {
             String bonusText = totalBonusLabel.getText().replace("$", "").trim();
             double bonusAmount = Double.parseDouble(bonusText);
-            
+
             if (bonusAmount <= 0) {
-                showAlert(Alert.AlertType.WARNING, "No Bonus", "There is no bonus to apply for this employee.");
+                showToast("warning", "No Bonus", "There is no bonus to apply for this employee.");
                 return;
+            }else {
+                dashboardController.showConfirmDialog("Confrim Apply Bonus", String.format("Are you sure you want to apply bonus of $ %.2f?", bonusAmount), "⚠", () -> applyBonusAsync(bonusAmount));
             }
-            
-            // Confirm apply
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Confirm Bonus Application");
-            confirm.setHeaderText("Apply Employee Bonus");
-            confirm.setContentText(String.format("Are you sure you want to apply a bonus of $ %.2f?", bonusAmount));
-            
-            confirm.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    applyBonusAsync(bonusAmount);
-                }
-            });
-            
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Bonus", "Unable to parse bonus amount.");
+        } catch (
+                NumberFormatException e) {
+            showToast("error", "Invalid Bonus", "Unable to parse bonus amount.");
         }
     }
 
@@ -1134,43 +1139,43 @@ public class adminAccountController {
                 return dao.applyBonus(selectedStaffId, bonusAmount);
             }
         };
-        
+
         task.setOnSucceeded(e -> {
             if (task.getValue()) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Bonus applied successfully!");
+                showToast("success", "Success", "Bonus applied successfully!");
             } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to apply bonus.");
+                showToast("error", "Error", "Failed to apply bonus.");
             }
         });
-        
+
         task.setOnFailed(e -> {
             logger.error("Failed to apply bonus", task.getException());
-            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while applying bonus.");
+            showToast("error", "Error", "An error occurred while applying bonus.");
         });
-        
+
         ThreadPoolManager.getInstance().execute(task);
     }
 
     @FXML
     private void onTerminateEmployee() {
         if (selectedStaffId == 0) {
-            showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee first.");
+            showToast("warning", "No Employee Selected", "Please select an employee first.");
             return;
         }
-        
+
         String reason = terminationReasonField.getText().trim();
-        
+
         if (reason.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Reason Required", "Please provide a reason for termination.");
+            showToast("warning", "Reason Required", "Please provide a reason for termination.");
             return;
         }
-        
+
         // Confirm termination
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirm Employee Termination");
         confirm.setHeaderText("⚠ WARNING: This action cannot be undone!");
         confirm.setContentText("Are you sure you want to terminate this employee?\n\nReason: " + reason);
-        
+
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 terminateEmployeeAsync(reason);
@@ -1185,34 +1190,33 @@ public class adminAccountController {
                 return dao.terminateEmployee(selectedStaffId, reason);
             }
         };
-        
+
         task.setOnSucceeded(e -> {
             if (task.getValue()) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Employee has been terminated successfully.");
+                showToast("success", "Success", "Employee has been terminated successfully.");
                 closeManagementPaneWithAnimation();
                 // Reload staff list
                 loadStaffCardsAsync(showActive);
             } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to terminate employee.");
+                showToast("error", "Error", "Failed to terminate employee.");
             }
         });
-        
+
         task.setOnFailed(e -> {
             logger.error("Failed to terminate employee", task.getException());
-            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while terminating employee.");
+            showToast("error", "Error", "An error occurred while terminating employee.");
         });
-        
+
         ThreadPoolManager.getInstance().execute(task);
     }
 
-    private void showAlert(Alert.AlertType type, String title, String content) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(type);
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.setContentText(content);
-            alert.show();
-        });
+    // ---------- Toast Notification Methods ----------
+    private void showToast(String type, String title, String message) {
+        if (dashboardController != null) {
+            dashboardController.showToast(title, message, type);
+        } else {
+            logger.warn("Dashboard controller not set; unable to show toast: {} - {}", title, message);
+        }
     }
 
 }

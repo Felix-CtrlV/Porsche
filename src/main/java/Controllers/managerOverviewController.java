@@ -132,6 +132,12 @@ public class managerOverviewController {
     private Button staffbtn;
 
     @FXML
+    private Button carChart;
+
+    @FXML
+    private Button partChart;
+
+    @FXML
     private BarChart<String, Integer> qtyBarChart;
 
     @FXML
@@ -171,7 +177,9 @@ public class managerOverviewController {
     @FXML
     void clickCarbtn(ActionEvent event) throws SQLException, IOException {
         besti = "car";
+        chartMode = "car"; // Set chart mode to show car data
         setBesti();
+        setCharts(); // Refresh charts to show car data
         activateButton(carbtn);
     }
 
@@ -200,7 +208,9 @@ public class managerOverviewController {
     @FXML
     void clickPartbtn(ActionEvent event) throws SQLException, IOException {
         besti = "part";
+        chartMode = "part"; // Set chart mode to show part data
         setBesti();
+        setCharts(); // Refresh charts to show part data
         partbtn.getStyleClass().add("part_active");
         activateButton(partbtn);
     }
@@ -211,6 +221,41 @@ public class managerOverviewController {
         setBesti();
         staffbtn.getStyleClass().add("staff_active");
         activateButton(staffbtn);
+    }
+
+    private void activateChartButton(Button activeBtn) {
+        // Remove active styles from chart buttons
+        carChart.getStyleClass().remove("chart-active");
+        partChart.getStyleClass().remove("chart-active");
+        
+        // Add active style to clicked button
+        activeBtn.getStyleClass().add("chart-active");
+        
+        // Update button text styling for visual feedback
+        carChart.setStyle(carChart == activeBtn ? 
+            "-fx-background-color: rgba(255,255,255,0.3); -fx-text-fill: white; -fx-font-weight: bold;" : 
+            "-fx-background-color: transparent; -fx-text-fill: rgba(255,255,255,0.7);");
+        partChart.setStyle(partChart == activeBtn ? 
+            "-fx-background-color: rgba(255,255,255,0.3); -fx-text-fill: white; -fx-font-weight: bold;" : 
+            "-fx-background-color: transparent; -fx-text-fill: rgba(255,255,255,0.7);");
+    }
+
+    @FXML
+    void clickCarChart(ActionEvent event) throws SQLException {
+        System.out.println("Car chart button clicked - switching to car mode");
+        chartMode = "car";
+        setCharts(); // Refresh charts to show car data
+        activateChartButton(carChart);
+        System.out.println("Car chart data loaded. Car series size: " + carSeries.getData().size());
+    }
+
+    @FXML
+    void clickPartChart(ActionEvent event) throws SQLException {
+        System.out.println("Part chart button clicked - switching to part mode");
+        chartMode = "part";
+        setCharts(); // Refresh charts to show part data
+        activateChartButton(partChart);
+        System.out.println("Part chart data loaded. Part series size: " + partSeries.getData().size());
     }
 
     @FXML
@@ -246,9 +291,14 @@ public class managerOverviewController {
         partSeries.setName("Parts Sold");
         revenueSeries = new XYChart.Series<>();
         revenueSeries.setName("Revenue");
-        qtyBarChart.getData().addAll(carSeries, partSeries);
+        
+        // Initially show car data (default mode)
+        updateChartSeries();
         revenueAreaChart.getData().add(revenueSeries);
         styleCharts();
+        
+        // Initialize chart buttons - set car as default active
+        activateChartButton(carChart);
 
         //for besti of cars and parts and staff
         besti = "car";
@@ -305,6 +355,8 @@ public class managerOverviewController {
 
         activeBtn.getStyleClass().add("active");
     }
+
+
     //to connect with the database
     Porsche_DB db = new Porsche_DB();
     Connection con = db.connect();
@@ -493,7 +545,7 @@ public class managerOverviewController {
             targetOverP = achieve - target;
             progressPart = (target > 0) ? (double) achieve / achieve : 0;
             targetOverPart.setText("+" + String.valueOf(targetOverP));
-            targetOverPart.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill:#10981;");
+            targetOverPart.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill:#10b981;");
 
             targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(achieve));
 
@@ -549,11 +601,27 @@ public class managerOverviewController {
         ResultSet rs = cs.executeQuery();
 
         while(rs.next()){
-            Integer attendedUsers = rs.getInt(1);
-            Integer workingUsers = rs.getInt(2);
+            Integer attendedUsers = rs.getInt(1);    // Workers who attended
+            Integer totalWorkers = rs.getInt(2);     // Total workers
             rating = rs.getString(3);
-            piechartdata.add(new PieChart.Data("Attendance Workers",attendedUsers));
-            piechartdata.add(new PieChart.Data("Total Workers",workingUsers));
+            
+            // Calculate absent workers
+            Integer absentUsers = totalWorkers - attendedUsers;
+            
+            // Only add slices if there are workers
+            if (totalWorkers > 0) {
+                if (attendedUsers > 0) {
+                    piechartdata.add(new PieChart.Data("Present (" + attendedUsers + ")", attendedUsers));
+                }
+                if (absentUsers > 0) {
+                    piechartdata.add(new PieChart.Data("Absent (" + absentUsers + ")", absentUsers));
+                }
+                
+                // If all workers attended, show only the "Present" slice (100%)
+                if (absentUsers == 0 && attendedUsers > 0) {
+                    // Chart will show 100% attendance
+                }
+            }
         }
         rs.close();
         cs.close();
@@ -628,10 +696,32 @@ public class managerOverviewController {
     }
 
     //for bar chart and area chart of the sale performance
-    private ObservableList<managerOverview> chartData;
     private XYChart.Series<String, Integer> carSeries;
     private XYChart.Series<String, Integer> partSeries;
     private XYChart.Series<String, Double> revenueSeries;
+    private String chartMode = "car"; // Track current chart mode: "car" or "part"
+    
+    private void updateChartSeries() {
+        // Clear existing series from bar chart
+        qtyBarChart.getData().clear();
+        
+        // Add appropriate series based on chart mode
+        if (chartMode.equals("car")) {
+            qtyBarChart.getData().add(carSeries);
+            revenueSeries.setName("Car Revenue");
+            System.out.println("Added car series to bar chart. Car series data points: " + carSeries.getData().size());
+        } else if (chartMode.equals("part")) {
+            qtyBarChart.getData().add(partSeries);
+            revenueSeries.setName("Part Revenue");
+            System.out.println("Added part series to bar chart. Part series data points: " + partSeries.getData().size());
+        }
+        
+        System.out.println("Chart mode: " + chartMode + ", Bar chart series count: " + qtyBarChart.getData().size());
+        
+        // Apply styling after updating series
+        styleCharts();
+    }
+    
     private void setCharts() throws SQLException {
         carSeries.getData().clear();
         partSeries.getData().clear();
@@ -649,29 +739,20 @@ public class managerOverviewController {
 
             ResultSet rs = cs.executeQuery();
             while (rs.next()){
-                // Check if this procedure returns the new format with named columns
-                try {
-                    // Try to access new format columns
-                    String periodLabel = rs.getString("period_label");
-                    double revenue = rs.getDouble("revenue");
-                    
-                    // New format - only has period_label and revenue
-                    revenueSeries.getData().add(new XYChart.Data<>(periodLabel, revenue));
-                    
-                } catch (SQLException e) {
-                    // Old format - has multiple columns
-                    String monthDate = rs.getString(1);
-                    int carSoldQty = rs.getInt(2);
-                    int partSoldQty = rs.getInt(3);
-                    double revenue = rs.getDouble(4);
+                String periodLabel = rs.getString("period_label");
+                int carQty = rs.getInt("car_qty");
+                int partQty = rs.getInt("part_qty");
+                double revenue = rs.getDouble("revenue");
 
-                    carSeries.getData().add(new XYChart.Data<>(monthDate, carSoldQty));
-                    partSeries.getData().add(new XYChart.Data<>(monthDate, partSoldQty));
-                    revenueSeries.getData().add(new XYChart.Data<>(monthDate, revenue));
-                }
+                carSeries.getData().add(new XYChart.Data<>(periodLabel, carQty));
+                partSeries.getData().add(new XYChart.Data<>(periodLabel, partQty));
+                revenueSeries.getData().add(new XYChart.Data<>(periodLabel, revenue));
             }
             rs.close();
             cs.close();
+            
+            // Update chart series after loading data
+            updateChartSeries();
             
         } catch (Exception e) {
             System.err.println("Error loading chart data: " + e.getMessage());
@@ -690,10 +771,12 @@ public class managerOverviewController {
 
         // Apply custom colors to match the custom legend
         Platform.runLater(() -> {
-            // Apply car series color (#6D8196)
-            carSeries.getNode().setStyle("-fx-bar-fill: #6D8196;");
-            // Apply part series color (#ffa500)
-            partSeries.getNode().setStyle("-fx-bar-fill: #ffa500;");
+            // Apply colors only to active series to avoid NullPointerException
+            if (chartMode.equals("car") && carSeries.getNode() != null) {
+                carSeries.getNode().setStyle("-fx-bar-fill: #6D8196;");
+            } else if (chartMode.equals("part") && partSeries.getNode() != null) {
+                partSeries.getNode().setStyle("-fx-bar-fill: #ffa500;");
+            }
         });
     }
 
@@ -741,12 +824,12 @@ public class managerOverviewController {
 
             // FIXED: Use OR condition instead of AND   
             if (besti.equals("car")) {
-                // getBestSellingCars returns: rank, carId, modelId, modelName, colorId, colorName, fuelType, price, percentage
+                // getBestSellingCars returns: car_rank, target_qty, sold_qty, inventory_name, car_id, car_color, fuel_type, price, achievement_percentage
                 while (rs.next()) {
-                    int rank = rs.getInt(1);
-                    String inventoryName = rs.getString(4);  // modelName
-                    int soldQty = rs.getInt(2);              // carId (using as soldQty)
-                    int targetQty = rs.getInt(3);            // modelId (using as targetQty)
+                    int rank = rs.getInt(1);           // car_rank
+                    int targetQty = rs.getInt(2);      // target_qty
+                    int soldQty = rs.getInt(3);        // sold_qty  
+                    String inventoryName = rs.getString(4); // inventory_name (model + trim)
                     managerOverview item = new managerOverview(
                             rank, targetQty, soldQty, inventoryName
                     );
@@ -765,16 +848,16 @@ public class managerOverviewController {
                     bestCarPartList.add(item);
                 }
             } else {
-                // getBestStaff returns: rank, staffId, staffName, staffPhoto, totalSale, prevTotalSale, workHour, prevWorkHour
+                // getBestStaff returns: rank, staffId, staffName, staffPhoto, workHours, prevWorkHours, totalSale, prevTotalSale
                 while (rs.next()) {
                     int rank = rs.getInt(1);
                     int staffId = rs.getInt(2);
                     String staffName = rs.getString(3);
                     String staffPhoto = rs.getString(4);
-                    Double totalSale = rs.getDouble(5);
-                    Double prevTotalSale = rs.getDouble(6);
-                    int workHour = rs.getInt(7);
-                    int prevWorkHour = rs.getInt(8);
+                    int workHour = rs.getInt(5);        // work_hours (column 5)
+                    int prevWorkHour = rs.getInt(6);    // prev_work_hours (column 6)
+                    Double totalSale = rs.getDouble(7); // total_sale (column 7)
+                    Double prevTotalSale = rs.getDouble(8); // prev_total_sale (column 8)
 
                     managerOverview seller = new managerOverview(
                             rank, staffId, workHour, prevWorkHour,

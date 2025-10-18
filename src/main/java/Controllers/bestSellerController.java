@@ -43,10 +43,14 @@ public class bestSellerController {
         int daysInMonth = yearMonth.lengthOfMonth();
         int hours = 24 * daysInMonth;
 
-        double hrate = ((double) pwh / hours * 100) - ((double) wh / hours * 100);
+        // Calculate work hours change percentage (current vs previous)
+        double hrate = 0;
+        if (pwh > 0) {
+            hrate = ((double) (wh - pwh) / pwh) * 100;
+        }
 
         workHour.setText(wh + " Hours");
-        hourRate.setText(String.format("%.2f%% of this month", hrate));
+        hourRate.setText(String.format("%.2f%% from last month", hrate));
 
         double sale = overview.getTotalSale();
         double psale = overview.getPrevTotalSale();
