@@ -2301,10 +2301,33 @@ public class managerInventoryController {
         
         // The procedure will parse fullCarName: "911 Carrera T" -> model="911 Carrera", trim="T"
         
-        // Handle image
+        // Handle image - Copy to project Images folder for cross-computer compatibility
         String photoPath = editPath.getPhoto(); // Keep existing photo by default
         if (!file.isEmpty()) {
-            photoPath = file.get(0).getAbsolutePath();
+            File selectedFile = file.get(0);
+            String projectRoot = System.getProperty("user.dir");
+            File imagesDir = new File(projectRoot, "Images");
+            
+            // Create Images directory if it doesn't exist
+            if (!imagesDir.exists()) {
+                imagesDir.mkdirs();
+            }
+            
+            // Copy file to Images directory and store relative path
+            String fileName = selectedFile.getName();
+            File targetFile = new File(imagesDir, fileName);
+            
+            try {
+                // Copy the selected file to Images directory
+                java.nio.file.Files.copy(selectedFile.toPath(), targetFile.toPath(), 
+                                       java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                // Store relative path: Images/filename.jpg
+                photoPath = "Images/" + fileName;
+            } catch (IOException e) {
+                System.err.println("Failed to copy image: " + e.getMessage());
+                // Fallback to absolute path if copy fails
+                photoPath = selectedFile.getAbsolutePath();
+            }
         }
         
         // Call updateFullCar stored procedure
@@ -2354,10 +2377,33 @@ public class managerInventoryController {
         int qty = Integer.parseInt(editPartQty.getText().trim());
         double price = Double.parseDouble(editPartPrice.getText().trim());
         
-        // Handle image
+        // Handle image - Copy to project Images folder for cross-computer compatibility
         String photoPath = editPath.getPhoto(); // Keep existing photo by default
         if (!file.isEmpty()) {
-            photoPath = file.get(0).getAbsolutePath();
+            File selectedFile = file.get(0);
+            String projectRoot = System.getProperty("user.dir");
+            File imagesDir = new File(projectRoot, "Images");
+            
+            // Create Images directory if it doesn't exist
+            if (!imagesDir.exists()) {
+                imagesDir.mkdirs();
+            }
+            
+            // Copy file to Images directory and store relative path
+            String fileName = selectedFile.getName();
+            File targetFile = new File(imagesDir, fileName);
+            
+            try {
+                // Copy the selected file to Images directory
+                java.nio.file.Files.copy(selectedFile.toPath(), targetFile.toPath(), 
+                                       java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                // Store relative path: Images/filename.jpg
+                photoPath = "Images/" + fileName;
+            } catch (IOException e) {
+                System.err.println("Failed to copy image: " + e.getMessage());
+                // Fallback to absolute path if copy fails
+                photoPath = selectedFile.getAbsolutePath();
+            }
         }
         
         // Call updateFullPart stored procedure
