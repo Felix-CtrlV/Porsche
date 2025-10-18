@@ -2322,7 +2322,7 @@ public class managerInventoryController {
                 java.nio.file.Files.copy(selectedFile.toPath(), targetFile.toPath(), 
                                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 // Store relative path: Images/filename.jpg
-                photoPath = "/Images/" + fileName;
+                photoPath = "Images/" + fileName;
             } catch (IOException e) {
                 System.err.println("Failed to copy image: " + e.getMessage());
                 // Fallback to absolute path if copy fails
@@ -2454,8 +2454,11 @@ public class managerInventoryController {
             return null;
         }
         
-        // Handle network (UNC) paths: \\ServerName\SharedFolder\...
-        if (photoPath.startsWith("\\\\") || photoPath.startsWith("//")) {
+        // Normalize path - replace backslashes with forward slashes
+        photoPath = photoPath.replace("\\", "/");
+        
+        // Handle network (UNC) paths: //ServerName/SharedFolder/...
+        if (photoPath.startsWith("//")) {
             File networkFile = new File(photoPath);
             if (networkFile.exists()) {
                 return networkFile;
@@ -2472,31 +2475,36 @@ public class managerInventoryController {
             return imageFile;
         }
         
-        // Try to resolve as relative path from project directory
         // Get the project root directory (where src folder is located)
         String projectRoot = System.getProperty("user.dir");
         
         // Remove leading slash if present for relative path construction
-        String relativePath = photoPath.startsWith("/") || photoPath.startsWith("\\") 
-                              ? photoPath.substring(1) 
-                              : photoPath;
+        String relativePath = photoPath.startsWith("/") ? photoPath.substring(1) : photoPath;
         
-        // First try from project root
+        // Strategy 1: Try from project root (most common: Images/filename.jpg)
         File relativeFile = new File(projectRoot, relativePath);
         if (relativeFile.exists()) {
             return relativeFile;
         }
         
-        // Try from src/main/resources
+        // Strategy 2: If path doesn't start with "Images/", try prepending it
+        if (!relativePath.startsWith("Images/")) {
+            File withImagesPrefix = new File(projectRoot, "Images/" + relativePath);
+            if (withImagesPrefix.exists()) {
+                return withImagesPrefix;
+            }
+        }
+        
+        // Strategy 3: Try from src/main/resources
         File resourceFile = new File(projectRoot, "src/main/resources/" + relativePath);
         if (resourceFile.exists()) {
             return resourceFile;
         }
         
-        // Try from Images folder in project root (common location)
-        File imagesFolder = new File(projectRoot, "Images/" + relativePath);
-        if (imagesFolder.exists()) {
-            return imagesFolder;
+        // Strategy 4: Try backup folder
+        File backupFolder = new File(projectRoot, "backup/Image/" + relativePath);
+        if (backupFolder.exists()) {
+            return backupFolder;
         }
         
         System.err.println("Image not found at any location: " + photoPath);
@@ -2504,7 +2512,7 @@ public class managerInventoryController {
         System.err.println("  1. " + photoPath + " (absolute)");
         System.err.println("  2. " + relativeFile.getAbsolutePath());
         System.err.println("  3. " + resourceFile.getAbsolutePath());
-        System.err.println("  4. " + imagesFolder.getAbsolutePath());
+        System.err.println("  4. " + backupFolder.getAbsolutePath());
         
         // Return original file object even if it doesn't exist (for error handling)
         return imageFile;
