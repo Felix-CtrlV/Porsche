@@ -27,7 +27,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="1280.0" stylesheets="@../CSS/admin_accounts.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminAccountController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="761.0" prefWidth="1280.0" stylesheets="@../CSS/admin_accounts.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminAccountController">
 <BorderPane>
     <left>
         <VBox minWidth="301.0" prefHeight="700.0" prefWidth="301.0" spacing="10.0" style="-fx-background-color: #f8f9fa;">
@@ -50,7 +50,7 @@
                                 </Button>
                             </children>
                         </StackPane>
-                        <Button fx:id="ActiveInactiveSwitchbtn" mnemonicParsing="false" onMouseClicked="#SwitchMouseClick" prefHeight="29.0" prefWidth="59.0" style="-fx-background-color: #34a853; -fx-text-fill: white; -fx-background-radius: 5;" text="Switch" />
+                        <Button fx:id="ActiveInactiveSwitchbtn" mnemonicParsing="false" onMouseClicked="#SwitchMouseClick" prefHeight="29.0" prefWidth="59.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-background-radius: 5;" text="Switch" />
                   <Label fx:id="addUser" prefHeight="20.0" prefWidth="20.0" style="-fx-alignment: center;" text="➕">
                      <cursor>
                         <Cursor fx:constant="HAND" />
@@ -66,7 +66,7 @@
                 </HBox>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <ComboBox fx:id="roleCombo" prefHeight="30.0" prefWidth="106.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;" stylesheets="@../CSS/general.css">
+                  <ComboBox fx:id="roleCombo" prefHeight="30.0" prefWidth="106.0" style="-fx-padding: 0;" styleClass="admin-choice-box">
                       <items>
                           <FXCollections fx:factory="observableArrayList">
                               <String fx:value="Manager" />
@@ -312,13 +312,16 @@
                                 <HBox spacing="20.0">
                                     <children>
                                         <!-- Car Sales Target -->
-                                        <VBox spacing="15.0" styleClass="target-card" HBox.hgrow="ALWAYS">
+                                        <VBox spacing="15.0" style="-fx-padding: 0;" styleClass="target-card" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="target-card-header target-card-header-car">
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: skyblue; -fx-background-radius: 12 12 0 0;" styleClass="target-card-header target-card-header-car">
                                                     <children>
                                                         <Label styleClass="target-card-header-label" text="🚗" />
                                                         <Label styleClass="target-card-header-label" text="CAR SALES" />
                                                     </children>
+                                          <padding>
+                                             <Insets bottom="15.0" left="15.0" top="15.0" />
+                                          </padding>
                                                 </HBox>
                                                 
                                                 <StackPane alignment="CENTER" prefHeight="100.0">
@@ -359,13 +362,16 @@
                                         </VBox>
 
                                         <!-- Parts Sales Target -->
-                                        <VBox spacing="15.0" styleClass="target-card" HBox.hgrow="ALWAYS">
+                                        <VBox spacing="15.0" style="-fx-padding: 0;" styleClass="target-card" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="target-card-header target-card-header-parts">
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: skyblue; -fx-background-radius: 12 12 0 0;" styleClass="target-card-header target-card-header-parts">
                                                     <children>
                                                         <Label styleClass="target-card-header-label" text="🔧" />
                                                         <Label styleClass="target-card-header-label" text="PARTS SALES" />
                                                     </children>
+                                          <padding>
+                                             <Insets bottom="15.0" left="15.0" top="15.0" />
+                                          </padding>
                                                 </HBox>
                                                 
                                                 <StackPane alignment="CENTER" prefHeight="100.0">
@@ -483,8 +489,8 @@
                                     <HBox alignment="CENTER_LEFT" spacing="10.0">
                                         <children>
                                             <Label style="-fx-text-fill: #64748b; -fx-font-size: 14;" text="Current Salary:" />
+                                            <Label style="-fx-text-fill: #64748b; -fx-font-size: 14;" text="\$" />
                                             <TextField fx:id="salaryField" prefWidth="150.0" promptText="0.00" styleClass="admin-text-field" />
-                                            <Label style="-fx-text-fill: #64748b; -fx-font-size: 14;" text="MMK" />
                                         </children>
                                     </HBox>
                                     <Button fx:id="updateSalaryBtn" mnemonicParsing="false" onAction="#onUpdateSalary" styleClass="admin-action-button-success" text="Update Salary">
@@ -552,7 +558,7 @@
                                     <VBox spacing="5.0">
                                         <children>
                                             <Label style="-fx-text-fill: #7f1d1d; -fx-font-weight: bold;" text="Reason for Termination:" />
-                                            <TextArea fx:id="terminationReasonField" prefHeight="80.0" promptText="Enter the reason for termination..." styleClass="admin-text-area" wrapText="true" />
+                                            <TextArea fx:id="terminationReasonField" prefHeight="80.0" promptText="Enter the reason for termination..." style="-fx-padding: 1; ra: ;" styleClass="admin-text-area" wrapText="true" />
                                         </children>
                                     </VBox>
                                     <Button fx:id="terminateEmployeeBtn" mnemonicParsing="false" onAction="#onTerminateEmployee" styleClass="admin-action-button-danger" text="Terminate Employee">

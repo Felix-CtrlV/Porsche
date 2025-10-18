@@ -193,6 +193,37 @@
     -fx-font-size: 12px;
 }
 
+/* Area chart series styling - Smooth and round matching admin overview */
+.chart-series-area-line { 
+    -fx-stroke-width: 3px; 
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+.chart-series-area-fill { 
+    -fx-fill: rgba(109, 129, 150, 0.2);
+    -fx-fill-rule: even-odd;
+}
+.default-color0.chart-series-area-line { 
+    -fx-stroke: #6d8196; 
+    -fx-stroke-width: 3px;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+.default-color0.chart-series-area-fill { 
+    -fx-fill: rgba(109, 129, 150, 0.2);
+    -fx-fill-rule: even-odd;
+}
+.default-color1.chart-series-area-line { 
+    -fx-stroke: #3b82f6; 
+    -fx-stroke-width: 3px;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+.default-color1.chart-series-area-fill { 
+    -fx-fill: rgba(59, 130, 246, 0.2);
+    -fx-fill-rule: even-odd;
+}
+
 /* Progress circle styling */
 .progress-circle {
     -fx-stroke-width: 12;

@@ -321,9 +321,18 @@ public class adminDashboardController {
         Task<Parent> task = new Task<>() {
             @Override
             protected Parent call() throws Exception {
-                return FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+                Parent view = loader.load();
+
+                Object controller = loader.getController();
+                if (controller instanceof adminAccountController accountController) {
+                    accountController.setDashboardController(adminDashboardController.this);
+                }
+
+                return view;
             }
         };
+
         task.setOnSucceeded(e -> {
             Parent pane = task.getValue();
             admin_anc.getChildren().setAll(pane);
@@ -332,7 +341,14 @@ public class adminDashboardController {
             AnchorPane.setLeftAnchor(pane, 0.0);
             AnchorPane.setRightAnchor(pane, 0.0);
         });
-        task.setOnFailed(e -> task.getException().printStackTrace());
+
+        task.setOnFailed(e -> {
+            Throwable ex = task.getException();
+            if (ex != null) {
+                ex.printStackTrace();
+            }
+        });
+
         Thread t = new Thread(task);
         t.setDaemon(true);
         t.start();
@@ -814,18 +830,28 @@ public class adminDashboardController {
     public void showToast(String title, String message, String type) {
         toastTitle.setText(title);
         toastMessage.setText(message);
-        
+
+        String normalizedType = (type == null ? "info" : type.toLowerCase());
+
         // Set icon and color based on type
         StackPane iconContainer = (StackPane) toastIcon.getParent();
-        if (type.equals("success")) {
-            toastIcon.setText("✓");
-            iconContainer.setStyle("-fx-background-color: #10b981; -fx-background-radius: 18;");
-        } else if (type.equals("error")) {
-            toastIcon.setText("✕");
-            iconContainer.setStyle("-fx-background-color: #ef4444; -fx-background-radius: 18;");
-        } else if (type.equals("info")) {
-            toastIcon.setText("ℹ");
-            iconContainer.setStyle("-fx-background-color: #3b82f6; -fx-background-radius: 18;");
+        switch (normalizedType) {
+            case "success":
+                toastIcon.setText("✓");
+                iconContainer.setStyle("-fx-background-color: #10b981; -fx-background-radius: 18;");
+                break;
+            case "error":
+                toastIcon.setText("✕");
+                iconContainer.setStyle("-fx-background-color: #ef4444; -fx-background-radius: 18;");
+                break;
+            case "warning":
+                toastIcon.setText("!");
+                iconContainer.setStyle("-fx-background-color: #f59e0b; -fx-background-radius: 18;");
+                break;
+            default:
+                toastIcon.setText("ℹ");
+                iconContainer.setStyle("-fx-background-color: #3b82f6; -fx-background-radius: 18;");
+                break;
         }
         
         toastNotification.setVisible(true);

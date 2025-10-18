@@ -12,6 +12,7 @@ import java.util.List;
 public class AdminAccountDAO {
     private static final Logger logger = LoggerFactory.getLogger(AdminAccountDAO.class);
     private final Connection conn;
+    private Double bonusColumnMaxValue;
 
     public AdminAccountDAO() throws SQLException {
         this.conn = DatabaseConnectionManager.getInstance().getConnection();
@@ -317,17 +318,72 @@ public class AdminAccountDAO {
     }
 
     public boolean applyBonus(int userId, double bonusAmount) throws SQLException {
-        // Store bonus in bonus column (will be paid at month-end)
-        String sql = "UPDATE user_workinfo SET bonus = bonus + ? WHERE user_id = ?";
-        
+        if (bonusAmount <= 0) {
+            logger.warn("Bonus amount must be positive. Requested {} for user {}", bonusAmount, userId);
+            return false;
+        }
+
+        double currentBonus = getCurrentBonus(userId);
+        double maxBonus = getBonusColumnMaxValue();
+
+        double newBonus = currentBonus + bonusAmount;
+        if (Double.isFinite(maxBonus) && newBonus > maxBonus) {
+            logger.warn("New bonus total {} exceeds database column limit {} for user {}", newBonus, maxBonus, userId);
+            return false;
+        }
+
+        String sql = "UPDATE user_workinfo SET bonus = ? WHERE user_id = ?";
+
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDouble(1, bonusAmount);
+            double normalizedBonus = Math.round(newBonus * 100.0) / 100.0;
+            ps.setDouble(1, normalizedBonus);
             ps.setInt(2, userId);
-            
+
             int rowsAffected = ps.executeUpdate();
-            logger.info("Applied bonus for user ID: {} amount: {} (stored in bonus column)", userId, bonusAmount);
+            logger.info("Applied bonus for user ID: {} amount: {} (new total: {})", userId, bonusAmount, normalizedBonus);
             return rowsAffected > 0;
         }
+    }
+
+    private double getCurrentBonus(int userId) throws SQLException {
+        String sql = "SELECT COALESCE(bonus, 0) AS current_bonus FROM user_workinfo WHERE user_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("current_bonus");
+                }
+            }
+        }
+        logger.warn("No work info record found for user {} when retrieving current bonus", userId);
+        return 0.0;
+    }
+
+    private double getBonusColumnMaxValue() throws SQLException {
+        if (bonusColumnMaxValue != null) {
+            return bonusColumnMaxValue;
+        }
+
+        DatabaseMetaData metaData = conn.getMetaData();
+        String catalog = conn.getCatalog();
+        String schema = conn.getSchema();
+
+        try (ResultSet rs = metaData.getColumns(catalog, schema, "user_workinfo", "bonus")) {
+            if (rs.next()) {
+                int precision = rs.getInt("COLUMN_SIZE");
+                int scale = Math.max(rs.getInt("DECIMAL_DIGITS"), 0);
+                int integerDigits = Math.max(precision - scale, 0);
+                if (integerDigits > 0) {
+                    double maxValue = Math.pow(10, integerDigits) - Math.pow(10, -scale);
+                    bonusColumnMaxValue = maxValue;
+                    return maxValue;
+                }
+            }
+        }
+
+        bonusColumnMaxValue = Double.POSITIVE_INFINITY;
+        logger.warn("Unable to determine bonus column precision; defaulting to no upper bound");
+        return bonusColumnMaxValue;
     }
 
     public boolean terminateEmployee(int userId, String reason) throws SQLException {

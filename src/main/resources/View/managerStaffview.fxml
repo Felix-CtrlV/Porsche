@@ -42,7 +42,7 @@
                                 </Button>
                             </children>
                         </StackPane>
-                        <Button fx:id="ActiveInactiveSwitchbtn" mnemonicParsing="false" onMouseClicked="#SwitchMouseClick" style="-fx-background-color: #34a853; -fx-text-fill: white; -fx-background-radius: 5;" text="Switch" />
+                        <Button fx:id="ActiveInactiveSwitchbtn" mnemonicParsing="false" onMouseClicked="#SwitchMouseClick" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-background-radius: 5;" text="Switch" />
                     </children>
                     <VBox.margin>
                         <Insets top="20.0" />

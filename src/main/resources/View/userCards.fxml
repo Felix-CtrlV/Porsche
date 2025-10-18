@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="78.0" prefWidth="235.0" styleClass="stats" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.cardController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="78.0" prefWidth="235.0" stylesheets="@../CSS/DashBoard_general.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.cardController">
    <children>
       <HBox focusTraversable="true" layoutX="-2.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="78.0" prefWidth="243.0" spacing="5.0">
          <children>
@@ -23,19 +23,19 @@
                <children>
                   <HBox prefHeight="25.0" prefWidth="103.0" spacing="10.0">
                      <children>
-                        <Label prefHeight="64.0" prefWidth="22.0" style="-fx-text-fill: red;" text="ID :">
+                        <Label prefHeight="25.0" prefWidth="28.0" style="-fx-text-fill: black;" styleClass="selected_dash_font" text="ID :">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <Label fx:id="StaffId" prefHeight="27.0" prefWidth="26.0" style="-fx-text-fill: red;" text="ID :">
+                        <Label fx:id="StaffId" prefHeight="27.0" prefWidth="26.0" style="-fx-text-fill: black;" styleClass="selected_dash_font" text="ID :">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
                      </children>
                   </HBox>
-                  <Label fx:id="StaffName" prefHeight="29.0" prefWidth="103.0" style="-fx-text-fill: red;" text="Name">
+                  <Label fx:id="StaffName" prefHeight="29.0" prefWidth="103.0" style="-fx-text-fill: black;" styleClass="selected_dash_font" text="Name">
                      <font>
                         <Font size="13.0" />
                      </font>
