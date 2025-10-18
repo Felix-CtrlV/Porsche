@@ -545,7 +545,7 @@ public class managerOverviewController {
             targetOverP = achieve - target;
             progressPart = (target > 0) ? (double) achieve / achieve : 0;
             targetOverPart.setText("+" + String.valueOf(targetOverP));
-            targetOverPart.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill:#10981;");
+            targetOverPart.setStyle("-fx-font-weight:bold; -fx-font-size:15; -fx-text-fill:#10b981;");
 
             targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(achieve));
 
@@ -696,7 +696,6 @@ public class managerOverviewController {
     }
 
     //for bar chart and area chart of the sale performance
-    private ObservableList<managerOverview> chartData;
     private XYChart.Series<String, Integer> carSeries;
     private XYChart.Series<String, Integer> partSeries;
     private XYChart.Series<String, Double> revenueSeries;
@@ -740,34 +739,14 @@ public class managerOverviewController {
 
             ResultSet rs = cs.executeQuery();
             while (rs.next()){
-                // Check if this procedure returns the new format with named columns
-                try {
-                    // Try to access new format columns - this might not have the quantity data we need
-                    String periodLabel = rs.getString("period_label");
-                    double revenue = rs.getDouble("revenue");
-                    
-                    // New format - only has period_label and revenue (no quantity data for bar chart)
-                    revenueSeries.getData().add(new XYChart.Data<>(periodLabel, revenue));
-                    
-                    // Note: New format doesn't have car/part quantity data, so bar chart won't show data
-                    System.out.println("Using new format - bar chart may be empty. Period: " + periodLabel + ", Revenue: " + revenue);
-                    
-                } catch (SQLException e) {
-                    // Old format - has multiple columns
-                    String monthDate = rs.getString(1);
-                    int carSoldQty = rs.getInt(2);
-                    int partSoldQty = rs.getInt(3);
-                    double revenue = rs.getDouble(4);
+                String periodLabel = rs.getString("period_label");
+                int carQty = rs.getInt("car_qty");
+                int partQty = rs.getInt("part_qty");
+                double revenue = rs.getDouble("revenue");
 
-                    // Show data based on current chart mode
-                    if (chartMode.equals("car")) {
-                        carSeries.getData().add(new XYChart.Data<>(monthDate, carSoldQty));
-                        revenueSeries.getData().add(new XYChart.Data<>(monthDate, revenue)); // Car revenue
-                    } else if (chartMode.equals("part")) {
-                        partSeries.getData().add(new XYChart.Data<>(monthDate, partSoldQty));
-                        revenueSeries.getData().add(new XYChart.Data<>(monthDate, revenue)); // Part revenue
-                    }
-                }
+                carSeries.getData().add(new XYChart.Data<>(periodLabel, carQty));
+                partSeries.getData().add(new XYChart.Data<>(periodLabel, partQty));
+                revenueSeries.getData().add(new XYChart.Data<>(periodLabel, revenue));
             }
             rs.close();
             cs.close();

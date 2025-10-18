@@ -1042,10 +1042,12 @@ public class managerOrderManagementController {
         int totalOrders = confirmQty + pendingQty;
         
         // Set current values with targets and actual sold quantities from orders
-        setConfirmQtyCircle(confirmQty, totalOrders);
-        setCarPrice(confirmPrice);
+        // Calculate pending progress first to pass to confirm circle
+        double pendingProgress = (totalOrders > 0) ? (double) pendingQty / totalOrders : 0;
         setPendingQtyCircle(pendingQty, totalOrders);
         setPartPrice(pendingPrice);
+        setConfirmQtyCircle(confirmQty, totalOrders, pendingProgress);
+        setCarPrice(confirmPrice);
         
         // Calculate and set rates
         setConfirmPriceRate(confirmPrice, prevConfirmPrice);
@@ -1056,8 +1058,9 @@ public class managerOrderManagementController {
      * Sets the confirm quantity circle based on non-installment orders
      * @param confirmQty Number of confirmed (non-installment) orders
      * @param totalOrders Total number of all orders (confirm + pending)
+     * @param pendingProgress Progress of the pending circle (0 to 1) to determine start position
      */
-    private void setConfirmQtyCircle(int confirmQty, int totalOrders) {
+    private void setConfirmQtyCircle(int confirmQty, int totalOrders, double pendingProgress) {
         confrimQtyCircle.setVisible(true);
         confrimQty.setText(String.valueOf(confirmQty));
         
@@ -1087,6 +1090,12 @@ public class managerOrderManagementController {
         // Set circular progress animation with confirm color #6d8196
         double circumference = 2 * Math.PI * confrimQtyCircle.getRadius();
         confrimQtyCircle.getStrokeDashArray().setAll(circumference, circumference);
+        
+        // Rotate the inner circle to start where outer circle ends
+        // Pending circle ends at: -90 + (pendingProgress * 360) degrees
+        double startAngle = -90 + (pendingProgress * 360);
+        confrimQtyCircle.setRotate(startAngle);
+        
         // Offset decreases as progress increases (0 offset = full circle)
         confrimQtyCircle.setStrokeDashOffset(circumference - (circumference * progressConfirm));
     }
@@ -1126,6 +1135,10 @@ public class managerOrderManagementController {
         // Set circular progress animation with pending color #e67e22
         double circumference = 2 * Math.PI * pendingQtyCircle.getRadius();
         pendingQtyCircle.getStrokeDashArray().setAll(circumference, circumference);
+        
+        // Start from top (rotate -90 degrees so stroke starts at 12 o'clock position)
+        pendingQtyCircle.setRotate(-90);
+        
         // Offset decreases as progress increases (0 offset = full circle)
         pendingQtyCircle.setStrokeDashOffset(circumference - (circumference * progressPending));
     }
