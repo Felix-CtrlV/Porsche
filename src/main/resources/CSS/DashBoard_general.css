@@ -6,6 +6,10 @@
     -fx-margin: 0;
 }
 
+.bg-img-pane {
+    -fx-background-color: black;
+}
+
 .settings-item-hover:hover {
     -fx-background-color: #f1f5f9;
 }
@@ -309,7 +313,27 @@
     -fx-control-inner-background: #1E1E1E;
     -fx-text-fill: #E0E0E0;
 }
-<<<<<<< HEAD
+
+.dark .heading { 
+    -fx-text-fill: #FFFFFF; 
+}
+
+.dark .transparent-button { 
+    -fx-text-fill: #E0E0E0; 
+}
+
+.dark .transparent-button:hover { 
+    -fx-text-fill: #4a90e2; 
+}
+
+.dark .transparent-button:pressed { 
+    -fx-text-fill: #2a6bbf; 
+}
+
+.dark .arrow-button { 
+    -fx-border-color: #FFFFFF; 
+    -fx-text-fill: #FFFFFF;
+}
 
 .carousel-stackpane {
     -fx-background-color: white;
@@ -322,10 +346,3 @@
 .carousel-vbox {
     -fx-background-radius: 16;
 }
-=======
-.dark .heading { -fx-text-fill: #FFFFFF; }
-.dark .transparent-button { -fx-text-fill: #E0E0E0; }
-.dark .transparent-button:hover { -fx-text-fill: #4a90e2; }
-.dark .transparent-button:pressed { -fx-text-fill: #2a6bbf; }
-.dark .arrow-button { -fx-border-color: #FFFFFF; -fx-text-fill:
->>>>>>> Malivuuuuuu

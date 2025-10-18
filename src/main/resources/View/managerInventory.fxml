@@ -47,7 +47,7 @@
                                  <StackPane minHeight="45.0" prefHeight="65.0" prefWidth="280.0">
                                      <children>
                                          <TextField fx:id="searchBar" minHeight="45.0" prefHeight="35.0" prefWidth="300.0" promptText="Search by model, VIN, or ID..." style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #e0e0e0; -fx-background-color: #fafafa; -fx-padding: 0 15 0 15; -fx-font-size: 13; -fx-border-width: 1.5;" StackPane.alignment="CENTER" />
-                                         <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#clickSearchBtn" prefHeight="43.0" prefWidth="62.0" style="-fx-background-color: transparent; -fx-background-radius: 18; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.4), 8, 0, 0, 2); -fx-text-fill: red; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 6, 0, 0, 2);" text="🔍" StackPane.alignment="CENTER_RIGHT">
+                                         <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#clickSearchBtn" prefHeight="43.0" prefWidth="48.0" style="-fx-background-color: transparent; -fx-background-radius: 18; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(213,0,28,0.4), 8, 0, 0, 2); -fx-text-fill: red; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 6, 0, 0, 2);" text="🔍" StackPane.alignment="CENTER_RIGHT">
                                              <StackPane.margin>
                                                  <Insets />
                                              </StackPane.margin>

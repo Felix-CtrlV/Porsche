@@ -1145,7 +1145,7 @@ public class managerInventoryController {
     private void populateCarNamesComboBox() {
         // Set up autocomplete for part relative car field
         partRelativeComboBox.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText.isEmpty()) {
+            if (newText == null || newText.isEmpty()) {
                 partCarSuggestions.hide();
                 return;
             }
@@ -1210,7 +1210,7 @@ public class managerInventoryController {
     private void populateEditPartCarNames() {
         // Set up autocomplete for edit part car field
         editPartForCar.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText.isEmpty()) {
+            if (newText == null || newText.isEmpty()) {
                 editPartCarSuggestions.hide();
                 return;
             }
@@ -2301,10 +2301,33 @@ public class managerInventoryController {
         
         // The procedure will parse fullCarName: "911 Carrera T" -> model="911 Carrera", trim="T"
         
-        // Handle image
+        // Handle image - Copy to project Images folder for cross-computer compatibility
         String photoPath = editPath.getPhoto(); // Keep existing photo by default
         if (!file.isEmpty()) {
-            photoPath = file.get(0).getAbsolutePath();
+            File selectedFile = file.get(0);
+            String projectRoot = System.getProperty("user.dir");
+            File imagesDir = new File(projectRoot, "Images");
+            
+            // Create Images directory if it doesn't exist
+            if (!imagesDir.exists()) {
+                imagesDir.mkdirs();
+            }
+            
+            // Copy file to Images directory and store relative path
+            String fileName = selectedFile.getName();
+            File targetFile = new File(imagesDir, fileName);
+            
+            try {
+                // Copy the selected file to Images directory
+                java.nio.file.Files.copy(selectedFile.toPath(), targetFile.toPath(), 
+                                       java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                // Store relative path: Images/filename.jpg
+                photoPath = "Images/" + fileName;
+            } catch (IOException e) {
+                System.err.println("Failed to copy image: " + e.getMessage());
+                // Fallback to absolute path if copy fails
+                photoPath = selectedFile.getAbsolutePath();
+            }
         }
         
         // Call updateFullCar stored procedure
@@ -2354,10 +2377,33 @@ public class managerInventoryController {
         int qty = Integer.parseInt(editPartQty.getText().trim());
         double price = Double.parseDouble(editPartPrice.getText().trim());
         
-        // Handle image
+        // Handle image - Copy to project Images folder for cross-computer compatibility
         String photoPath = editPath.getPhoto(); // Keep existing photo by default
         if (!file.isEmpty()) {
-            photoPath = file.get(0).getAbsolutePath();
+            File selectedFile = file.get(0);
+            String projectRoot = System.getProperty("user.dir");
+            File imagesDir = new File(projectRoot, "Images");
+            
+            // Create Images directory if it doesn't exist
+            if (!imagesDir.exists()) {
+                imagesDir.mkdirs();
+            }
+            
+            // Copy file to Images directory and store relative path
+            String fileName = selectedFile.getName();
+            File targetFile = new File(imagesDir, fileName);
+            
+            try {
+                // Copy the selected file to Images directory
+                java.nio.file.Files.copy(selectedFile.toPath(), targetFile.toPath(), 
+                                       java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                // Store relative path: Images/filename.jpg
+                photoPath = "Images/" + fileName;
+            } catch (IOException e) {
+                System.err.println("Failed to copy image: " + e.getMessage());
+                // Fallback to absolute path if copy fails
+                photoPath = selectedFile.getAbsolutePath();
+            }
         }
         
         // Call updateFullPart stored procedure
@@ -2408,8 +2454,11 @@ public class managerInventoryController {
             return null;
         }
         
-        // Handle network (UNC) paths: \\ServerName\SharedFolder\...
-        if (photoPath.startsWith("\\\\") || photoPath.startsWith("//")) {
+        // Normalize path - replace backslashes with forward slashes
+        photoPath = photoPath.replace("\\", "/");
+        
+        // Handle network (UNC) paths: //ServerName/SharedFolder/...
+        if (photoPath.startsWith("//")) {
             File networkFile = new File(photoPath);
             if (networkFile.exists()) {
                 return networkFile;
@@ -2426,31 +2475,36 @@ public class managerInventoryController {
             return imageFile;
         }
         
-        // Try to resolve as relative path from project directory
         // Get the project root directory (where src folder is located)
         String projectRoot = System.getProperty("user.dir");
         
         // Remove leading slash if present for relative path construction
-        String relativePath = photoPath.startsWith("/") || photoPath.startsWith("\\") 
-                              ? photoPath.substring(1) 
-                              : photoPath;
+        String relativePath = photoPath.startsWith("/") ? photoPath.substring(1) : photoPath;
         
-        // First try from project root
+        // Strategy 1: Try from project root (most common: Images/filename.jpg)
         File relativeFile = new File(projectRoot, relativePath);
         if (relativeFile.exists()) {
             return relativeFile;
         }
         
-        // Try from src/main/resources
+        // Strategy 2: If path doesn't start with "Images/", try prepending it
+        if (!relativePath.startsWith("Images/")) {
+            File withImagesPrefix = new File(projectRoot, "Images/" + relativePath);
+            if (withImagesPrefix.exists()) {
+                return withImagesPrefix;
+            }
+        }
+        
+        // Strategy 3: Try from src/main/resources
         File resourceFile = new File(projectRoot, "src/main/resources/" + relativePath);
         if (resourceFile.exists()) {
             return resourceFile;
         }
         
-        // Try from Images folder in project root (common location)
-        File imagesFolder = new File(projectRoot, "Images/" + relativePath);
-        if (imagesFolder.exists()) {
-            return imagesFolder;
+        // Strategy 4: Try backup folder
+        File backupFolder = new File(projectRoot, "backup/Image/" + relativePath);
+        if (backupFolder.exists()) {
+            return backupFolder;
         }
         
         System.err.println("Image not found at any location: " + photoPath);
@@ -2458,7 +2512,7 @@ public class managerInventoryController {
         System.err.println("  1. " + photoPath + " (absolute)");
         System.err.println("  2. " + relativeFile.getAbsolutePath());
         System.err.println("  3. " + resourceFile.getAbsolutePath());
-        System.err.println("  4. " + imagesFolder.getAbsolutePath());
+        System.err.println("  4. " + backupFolder.getAbsolutePath());
         
         // Return original file object even if it doesn't exist (for error handling)
         return imageFile;

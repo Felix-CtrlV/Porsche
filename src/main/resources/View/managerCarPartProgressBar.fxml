@@ -18,7 +18,7 @@
             <!-- Left Section - Car Info -->
             <VBox alignment="CENTER_LEFT" prefWidth="220.0" spacing="8" HBox.hgrow="ALWAYS">
                 <children>
-                    <Label fx:id="Name" maxWidth="210.0" style="-fx-text-fill: #1e293b; -fx-font-weight: bold;" text="TOYOTA CAMRY" wrapText="true">
+                    <Label fx:id="Name" maxWidth="210.0" minHeight="20.0" style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-text-overrun: ellipsis;" text="TOYOTA CAMRY" wrapText="false">
                         <font>
                             <Font name="System Bold" size="15" />
                         </font>
