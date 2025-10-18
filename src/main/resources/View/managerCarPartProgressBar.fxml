@@ -16,11 +16,11 @@
 
               <children>
             <!-- Left Section - Car Info -->
-            <VBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="8" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER_LEFT" prefWidth="220.0" spacing="8" HBox.hgrow="ALWAYS">
                 <children>
-                    <Label fx:id="Name" style="-fx-text-fill: #1e293b; -fx-font-weight: bold;" text="TOYOTA CAMRY" wrapText="true">
+                    <Label fx:id="Name" maxWidth="210.0" style="-fx-text-fill: #1e293b; -fx-font-weight: bold;" text="TOYOTA CAMRY" wrapText="true">
                         <font>
-                            <Font name="System Bold" size="16" />
+                            <Font name="System Bold" size="15" />
                         </font>
                     </Label>
                     <HBox alignment="CENTER_LEFT" spacing="15">
