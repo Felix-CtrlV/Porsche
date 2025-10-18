@@ -29,6 +29,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
 import org.slf4j.Logger;
@@ -480,14 +484,7 @@ public class adminAccountController {
             return;
 
         attendancePercent.setText(String.format("%.0f%%", percent));
-
-        // Update circle stroke dash to show percentage - use actual radius from FXML
-        double radius = attendanceCircle.getRadius();
-        double circumference = 2 * Math.PI * radius;
-        double dashLength = (percent / 100.0) * circumference;
-        attendanceCircle.getStrokeDashArray().setAll(dashLength, circumference);
-        attendanceCircle.setRotate(-90); // Start from top
-        attendanceCircle.setVisible(true);
+        updateCircleProgress(attendanceCircle, percent);
     }
 
     // ---------- Targets ----------
@@ -564,9 +561,39 @@ public class adminAccountController {
 
         double radius = circle.getRadius();
         double circumference = 2 * Math.PI * radius;
-        double dashLength = (percent / 100.0) * circumference;
-        circle.getStrokeDashArray().setAll(dashLength, circumference);
+        double clampedPercent = Math.max(0, Math.min(percent, 100));
+
+        if (!circle.getStyle().contains("-fx-stroke-line-cap")) {
+            circle.setStyle(circle.getStyle() + "; -fx-stroke-line-cap: round;");
+        }
+
+        circle.getStrokeDashArray().clear();
+        circle.getStrokeDashArray().addAll(circumference, circumference);
+
+        Double previousOffset = (Double) circle.getProperties().get("progressPrevOffset");
+        if (previousOffset == null) {
+            previousOffset = circumference;
+        }
+
+        double targetOffset = circumference - (clampedPercent / 100.0) * circumference;
+
+        Timeline existing = (Timeline) circle.getProperties().get("progressTimeline");
+        if (existing != null) {
+            existing.stop();
+        }
+
+        circle.setStrokeDashOffset(previousOffset);
         circle.setRotate(-90); // Start from top
+        circle.setVisible(true);
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(circle.strokeDashOffsetProperty(), previousOffset)),
+                new KeyFrame(Duration.seconds(1.2), new KeyValue(circle.strokeDashOffsetProperty(), targetOffset, Interpolator.EASE_OUT))
+        );
+
+        timeline.setOnFinished(e -> circle.getProperties().put("progressPrevOffset", targetOffset));
+        circle.getProperties().put("progressTimeline", timeline);
+        timeline.play();
     }
 
     private void clearAttendanceAndTargets() {
@@ -1124,7 +1151,7 @@ public class adminAccountController {
                 showToast("warning", "No Bonus", "There is no bonus to apply for this employee.");
                 return;
             }else {
-                dashboardController.showConfirmDialog("Confrim Apply Bonus", String.format("Are you sure you want to apply bonus of $ %.2f?", bonusAmount), "⚠", () -> applyBonusAsync(bonusAmount));
+                dashboardController.showConfirmDialog("Confirm Apply Bonus", String.format("Are you sure you want to apply bonus of $ %.2f?", bonusAmount), "⚠", () -> applyBonusAsync(bonusAmount));
             }
         } catch (
                 NumberFormatException e) {
@@ -1171,16 +1198,8 @@ public class adminAccountController {
         }
 
         // Confirm termination
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirm Employee Termination");
-        confirm.setHeaderText("⚠ WARNING: This action cannot be undone!");
-        confirm.setContentText("Are you sure you want to terminate this employee?\n\nReason: " + reason);
 
-        confirm.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                terminateEmployeeAsync(reason);
-            }
-        });
+        dashboardController.showConfirmDialog("Confirm Employee Termination", ("⚠ WARNING: This action cannot be undone!\nAre you sure you want to terminate this employee?\n\nReason: " + reason), "⚠", () -> terminateEmployeeAsync(reason));
     }
 
     private void terminateEmployeeAsync(String reason) {

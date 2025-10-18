@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
-<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.BarChart?>
@@ -19,7 +18,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1250.0" styleClass="dashboard-root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOverviewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1250.0" styleClass="dashboard-root" stylesheets="@../CSS/porsche_admin_overview.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOverviewController">
 
     <center>
         <VBox minHeight="750.0" minWidth="1250.0" spacing="20.0" style="-fx-border-radius: 2;" BorderPane.alignment="CENTER">
@@ -204,7 +203,7 @@
                         <!-- Left Chart - Monthly Sales -->
                         <VBox styleClass="panel" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_LEFT" maxHeight="44.0" minHeight="33.0" prefHeight="55.0" prefWidth="200.0" spacing="20.0" style="-fx-background-color: skyblue;" styleClass="panel-header">
+                                <HBox alignment="CENTER_LEFT" maxHeight="44.0" minHeight="33.0" prefHeight="55.0" prefWidth="200.0" spacing="20.0" style="-fx-background-color: linear-gradient(to right, #92d8ff, #6cb7dc);" styleClass="panel-header">
                                     <children>
                                         <Label styleClass="panel-title" text="📊 Monthly Sales">
                                  <HBox.margin>
@@ -236,7 +235,7 @@
                         <!-- Right Chart - Revenue Analysis -->
                         <VBox styleClass="panel" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_LEFT" minHeight="33.0" prefHeight="55.0" prefWidth="200.0" style="-fx-background-color: skyblue;" styleClass="panel-header">
+                                <HBox alignment="CENTER_LEFT" minHeight="33.0" prefHeight="55.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to right, #92d8ff, #6cb7dc);" styleClass="panel-header">
                                     <children>
                                         <Label styleClass="panel-title" text="📈 Revenue Analysis">
                                  <HBox.margin>
@@ -244,7 +243,7 @@
                                  </HBox.margin></Label>
                                     </children>
                                 </HBox>
-                                <AreaChart fx:id="areaChart" animated="false" styleClass="admin-chart">
+                                <AreaChart fx:id="areaChart" animated="false" styleClass="admin-overview-chart">
                                     <xAxis>
                                         <CategoryAxis side="BOTTOM" />
                                     </xAxis>
@@ -332,7 +331,7 @@
                         <!-- Pie Chart - Sales Distribution -->
                         <VBox prefHeight="250.0" prefWidth="620.0" styleClass="panel">
                             <children>
-                                <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: skyblue;" styleClass="panel-header">
+                                <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #92d8ff, #6cb7dc);" styleClass="panel-header">
                                     <children>
                                         <Label styleClass="panel-title" text="📈 Car Distribution" />
                                     </children>
@@ -349,7 +348,7 @@
                         </VBox>
                   <VBox layoutX="347.0" layoutY="10.0" prefHeight="250.0" prefWidth="620.0" styleClass="panel">
                      <children>
-                        <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: skyblue;" styleClass="panel-header">
+                        <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right, #92d8ff, #6cb7dc);" styleClass="panel-header">
                            <children>
                               <Label styleClass="panel-title" text="📈 Part Distribution" />
                            </children>
@@ -372,8 +371,4 @@
             </children>
         </VBox>
     </center>
-   <stylesheets>
-      <URL value="@../CSS/porsche_admin_overview.css" />
-      <URL value="@../CSS/admin_accounts.css" />
-   </stylesheets>
 </BorderPane>
