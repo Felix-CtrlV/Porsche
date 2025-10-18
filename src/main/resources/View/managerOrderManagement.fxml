@@ -290,7 +290,7 @@
                               </HBox>
                            </children>
                            <VBox.margin>
-                              <Insets top="20.0" />
+                              <Insets top="21.0" />
                            </VBox.margin>
                         </VBox>
                      </children>
