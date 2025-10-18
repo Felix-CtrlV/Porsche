@@ -26,14 +26,15 @@ public class managerCarPartProgressBarController {
     private Label soldQty;
 
     public void setDate(managerOverview overview) {
-        // Handle long car names with smart truncation
-        String carName = overview.getInventoryName();
-        if (carName != null && carName.length() > 25) {
-            // Truncate and add ellipsis for very long names
-            carName = carName.substring(0, 22) + "...";
+        // Handle long car/part names with smart truncation
+        String itemName = overview.getInventoryName();
+        if (itemName != null) {
+            Name.setText(itemName);
+            // Always add tooltip to show full name on hover
+            Name.setTooltip(new javafx.scene.control.Tooltip(itemName));
+        } else {
+            Name.setText("Unknown");
         }
-        Name.setText(carName);
-        Name.setTooltip(new javafx.scene.control.Tooltip(overview.getInventoryName())); // Show full name on hover
         
         rank.setText(overview.getRank());
         soldQty.setText(String.valueOf(overview.getSoldQty()) + " Units");

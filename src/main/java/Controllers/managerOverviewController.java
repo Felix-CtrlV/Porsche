@@ -836,12 +836,12 @@ public class managerOverviewController {
                     bestCarPartList.add(item);
                 }
             } else if (besti.equals("part")) {
-                // getBestSellingParts returns: rank, partName, targetQty, soldQty, partId
+                // getBestSellingParts returns: part_rank, target_qty, sold_qty, inventory_name, part_id, achievement_percentage
                 while (rs.next()) {
-                    int rank = rs.getInt(1);
-                    String inventoryName = rs.getString(2);  // partName
-                    int targetQty = rs.getInt(3);
-                    int soldQty = rs.getInt(4);
+                    int rank = rs.getInt(1);           // part_rank
+                    int targetQty = rs.getInt(2);      // target_qty
+                    int soldQty = rs.getInt(3);        // sold_qty
+                    String inventoryName = rs.getString(4); // inventory_name (part_name)
                     managerOverview item = new managerOverview(
                             rank, targetQty, soldQty, inventoryName
                     );

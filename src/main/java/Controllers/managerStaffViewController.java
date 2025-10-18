@@ -108,6 +108,12 @@ public class managerStaffViewController {
     private Label StaffPhoneLabel;
 
     @FXML
+    private Label StaffReasonLabel;
+
+    @FXML
+    private javafx.scene.layout.HBox terminationReasonBox;
+
+    @FXML
     private TextField StaffSearchText;
 
     @FXML
@@ -461,6 +467,23 @@ public class managerStaffViewController {
 
 //        StaffImage.setImage(new Image(staff.getImagePath()));
 
+        // Show/hide termination reason for inactive employees
+        boolean isInactive = "Inactive".equalsIgnoreCase(staff.getIs_active());
+        System.out.println("DEBUG: Staff status = " + staff.getIs_active() + ", isInactive = " + isInactive);
+        System.out.println("DEBUG: Staff reason = " + staff.getReason());
+        System.out.println("DEBUG: terminationReasonBox is null? " + (terminationReasonBox == null));
+        System.out.println("DEBUG: StaffReasonLabel is null? " + (StaffReasonLabel == null));
+        
+        if (terminationReasonBox != null) {
+            terminationReasonBox.setVisible(isInactive);
+            terminationReasonBox.setManaged(isInactive);
+            if (isInactive && StaffReasonLabel != null) {
+                String reasonText = staff.getReason() != null ? staff.getReason() : "No reason provided";
+                StaffReasonLabel.setText(reasonText);
+                System.out.println("DEBUG: Set reason text to: " + reasonText);
+            }
+        }
+
         highlightSelectedCard(staff.getId());
         selectedStaffId = staff.getId();
 
@@ -704,6 +727,8 @@ public class managerStaffViewController {
         CallableStatement cs = null;
         ResultSet rs = null;
         
+        System.out.println("DEBUG addStaffCard: Loading " + (check ? "ACTIVE" : "INACTIVE") + " staff for manager ID=" + managerId);
+        
         try {
             cs = con.prepareCall("CALL createCards(?,?)");
             cs.setInt(1, managerId);
@@ -723,11 +748,15 @@ public class managerStaffViewController {
             java.sql.Date sqlEnd = rs.getDate("end_date");
             String reason = rs.getString("reason");
 
+            System.out.println("DEBUG addStaffCard: Loading staff ID=" + id + ", name=" + name + ", status=" + status + ", reason=" + reason);
+
             LocalDate str = (sqlStart != null) ? sqlStart.toLocalDate() : null;
             LocalDate end = (sqlEnd != null) ? sqlEnd.toLocalDate() : null;
 
             user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status, str, end, reason);
             staffInfoList.add(staff);
+            
+            System.out.println("DEBUG addStaffCard: Created user object, getReason()=" + staff.getReason());
 
             // Use cached loader or create new one
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/userCards.fxml"));
@@ -749,6 +778,8 @@ public class managerStaffViewController {
             });
             staffListContainer.getChildren().add(staffCard);
             }
+            
+            System.out.println("DEBUG addStaffCard: Loaded " + staffInfoList.size() + " staff members");
 
             boolean selectedExists = false;
         for (user u : staffInfoList) {
