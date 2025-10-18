@@ -465,7 +465,24 @@ public class managerStaffViewController {
         StaffAddressLabel.setText(staff.getAddress());
         StaffDOBLabel.setText(staff.getDob().toString());
 
-//        StaffImage.setImage(new Image(staff.getImagePath()));
+        // Load staff image with proper path resolution
+        if (staff.getImagePath() != null && !staff.getImagePath().trim().isEmpty()) {
+            File imageFile = resolveImagePath(staff.getImagePath());
+            if (imageFile != null && imageFile.exists() && imageFile.isFile()) {
+                try {
+                    Image img = new Image(new FileInputStream(imageFile));
+                    StaffImage.setImage(img);
+                } catch (FileNotFoundException e) {
+                    System.err.println("Staff image file not found: " + staff.getImagePath());
+                    StaffImage.setImage(null);
+                }
+            } else {
+                System.err.println("Staff image file does not exist: " + staff.getImagePath());
+                StaffImage.setImage(null);
+            }
+        } else {
+            StaffImage.setImage(null);
+        }
 
         // Show/hide termination reason for inactive employees
         boolean isInactive = "Inactive".equalsIgnoreCase(staff.getIs_active());
@@ -747,6 +764,13 @@ public class managerStaffViewController {
             java.sql.Date sqlStart = rs.getDate("start_date");
             java.sql.Date sqlEnd = rs.getDate("end_date");
             String reason = rs.getString("reason");
+            String imagePath = null;
+            try {
+                imagePath = rs.getString("user_photo");
+            } catch (SQLException e) {
+                // Column might not exist in older database versions
+                System.out.println("Note: user_photo column not found in createCards result");
+            }
 
             System.out.println("DEBUG addStaffCard: Loading staff ID=" + id + ", name=" + name + ", status=" + status + ", reason=" + reason);
 
@@ -754,6 +778,7 @@ public class managerStaffViewController {
             LocalDate end = (sqlEnd != null) ? sqlEnd.toLocalDate() : null;
 
             user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status, str, end, reason);
+            staff.setImagePath(imagePath);
             staffInfoList.add(staff);
             
             System.out.println("DEBUG addStaffCard: Created user object, getReason()=" + staff.getReason());
@@ -1254,5 +1279,81 @@ public class managerStaffViewController {
             // Normal row: regular text
             row.setStyle("-fx-background-color: white; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
         }
+    }
+    
+    /**
+     * Resolves image path - handles absolute, relative, and network (UNC) paths
+     * Supports:
+     * - Network paths: \\\\ServerName\\SharedFolder\\Image\\staff.png
+     * - Absolute paths: D:\\Porsche\\Image\\staff.png
+     * - Relative paths: /Image/staff.png or Image/staff.png
+     */
+    private File resolveImagePath(String photoPath) {
+        if (photoPath == null || photoPath.trim().isEmpty()) {
+            return null;
+        }
+        
+        // Normalize path - replace backslashes with forward slashes
+        photoPath = photoPath.replace("\\\\", "/");
+        
+        // Handle network (UNC) paths: //ServerName/SharedFolder/...
+        if (photoPath.startsWith("//")) {
+            File networkFile = new File(photoPath);
+            if (networkFile.exists()) {
+                return networkFile;
+            } else {
+                System.err.println("Network path not accessible: " + photoPath);
+                return networkFile; // Return anyway for error handling
+            }
+        }
+        
+        File imageFile = new File(photoPath);
+        
+        // If it's already an absolute path and exists, return it
+        if (imageFile.isAbsolute() && imageFile.exists()) {
+            return imageFile;
+        }
+        
+        // Get the project root directory (where src folder is located)
+        String projectRoot = System.getProperty("user.dir");
+        
+        // Remove leading slash if present for relative path construction
+        String relativePath = photoPath.startsWith("/") ? photoPath.substring(1) : photoPath;
+        
+        // Strategy 1: Try from project root (most common: Images/filename.jpg)
+        File relativeFile = new File(projectRoot, relativePath);
+        if (relativeFile.exists()) {
+            return relativeFile;
+        }
+        
+        // Strategy 2: If path doesn't start with "Images/", try prepending it
+        if (!relativePath.startsWith("Images/")) {
+            File withImagesPrefix = new File(projectRoot, "Images/" + relativePath);
+            if (withImagesPrefix.exists()) {
+                return withImagesPrefix;
+            }
+        }
+        
+        // Strategy 3: Try from src/main/resources
+        File resourceFile = new File(projectRoot, "src/main/resources/" + relativePath);
+        if (resourceFile.exists()) {
+            return resourceFile;
+        }
+        
+        // Strategy 4: Try backup folder
+        File backupFolder = new File(projectRoot, "backup/Image/" + relativePath);
+        if (backupFolder.exists()) {
+            return backupFolder;
+        }
+        
+        System.err.println("Image not found at any location: " + photoPath);
+        System.err.println("Tried locations:");
+        System.err.println("  1. " + photoPath + " (absolute)");
+        System.err.println("  2. " + relativeFile.getAbsolutePath());
+        System.err.println("  3. " + resourceFile.getAbsolutePath());
+        System.err.println("  4. " + backupFolder.getAbsolutePath());
+        
+        // Return original file object even if it doesn't exist (for error handling)
+        return imageFile;
     }
 }

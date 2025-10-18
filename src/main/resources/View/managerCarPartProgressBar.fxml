@@ -16,7 +16,7 @@
 
               <children>
             <!-- Left Section - Car Info -->
-            <VBox alignment="CENTER_LEFT" prefWidth="220.0" spacing="8" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER_LEFT" prefHeight="76.0" prefWidth="317.0" spacing="8" HBox.hgrow="ALWAYS">
                 <children>
                     <Label fx:id="Name" maxWidth="210.0" minHeight="20.0" style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-text-overrun: ellipsis;" text="TOYOTA CAMRY" wrapText="false">
                         <font>
@@ -72,11 +72,11 @@
                   <Insets left="5.0" />
                </padding>
                     </HBox>
-            <ProgressBar fx:id="progressBar" prefHeight="17.0" prefWidth="350.0" progress="0.43" style="-fx-background-radius: 10; -fx-accent: #10b981; -fx-border-radius: 10; -fx-background-color: #f1f5f9; -fx-border-color: #e2e8f0; -fx-border-width: 1;" />
+            <ProgressBar fx:id="progressBar" prefHeight="36.0" prefWidth="287.0" progress="0.43" style="-fx-background-radius: 10; -fx-accent: #10b981; -fx-border-radius: 10; -fx-background-color: #f1f5f9; -fx-border-color: #e2e8f0; -fx-border-width: 1;" />
 
                           <HBox alignment="CENTER_RIGHT" prefWidth="350.0">
                         <children>
-                            <Label fx:id="message" style="-fx-text-fill: #10b981; -fx-font-size: 11; -fx-font-weight: bold; -fx-font-style: italic;" text="Excellent progress! Only 250 units to reach target" wrapText="true" />
+                            <Label fx:id="message" prefHeight="16.0" prefWidth="302.0" style="-fx-text-fill: #10b981; -fx-font-size: 11; -fx-font-weight: bold; -fx-font-style: italic;" text="Excellent progress! Only 250 units to reach target" wrapText="true" />
                         </children>
                     </HBox>
                 </children>
