@@ -6,6 +6,10 @@
     -fx-margin: 0;
 }
 
+.bg-img-pane {
+    -fx-background-color: black;
+}
+
 .settings-item-hover:hover {
     -fx-background-color: #f1f5f9;
 }

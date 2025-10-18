@@ -144,22 +144,22 @@
 .default-color1.chart-series-line { -fx-stroke: #388e3c; }
 
 /* Area Chart styling - matching admin accounts */
-.admin-chart {
+.admin-overview-chart {
     -fx-background-color: transparent;
 }
 
-.admin-chart .chart-title {
+.admin-overview-chart .chart-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill: #374151;
 }
 
-.admin-chart .axis {
+.admin-overview-chart .axis {
     -fx-tick-label-fill: #6b7280;
     -fx-tick-label-font-size: 12px;
 }
 
-.admin-chart .axis-label {
+.admin-overview-chart .axis-label {
     -fx-text-fill: #6b7280;
     -fx-font-size: 12px;
 }
@@ -171,28 +171,35 @@
     -fx-stroke-line-join: round;
 }
 .chart-series-area-fill { 
-    -fx-fill: rgba(109, 129, 150, 0.2);
+    -fx-fill: rgba(226, 232, 240, 0.75);
     -fx-fill-rule: even-odd;
 }
 .default-color0.chart-series-area-line { 
-    -fx-stroke: #6d8196; 
+    -fx-stroke: #6366f1;
     -fx-stroke-width: 3px;
     -fx-stroke-line-cap: round;
     -fx-stroke-line-join: round;
 }
 .default-color0.chart-series-area-fill { 
-    -fx-fill: rgba(109, 129, 150, 0.2);
+    -fx-fill: rgba(226, 232, 240, 0.75);
     -fx-fill-rule: even-odd;
 }
 .default-color1.chart-series-area-line { 
-    -fx-stroke: #3b82f6; 
+    -fx-stroke: #818cf8;
     -fx-stroke-width: 3px;
     -fx-stroke-line-cap: round;
     -fx-stroke-line-join: round;
 }
 .default-color1.chart-series-area-fill { 
-    -fx-fill: rgba(59, 130, 246, 0.2);
+    -fx-fill: rgba(226, 232, 240, 0.5);
     -fx-fill-rule: even-odd;
+}
+.chart-line-symbol { 
+    background-color: #6366f1;
+    -fx-background-color: #ffffff, #6366f1;
+    -fx-background-insets: 0, 2;
+    padding: 6px;
+    -fx-padding: 6;
 }
 
 /* Bar Chart Colors - Light mode professional colors */

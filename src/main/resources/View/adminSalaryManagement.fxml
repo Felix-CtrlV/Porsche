@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -12,16 +11,11 @@
     <content>
         <VBox spacing="20.0" style="-fx-background-color: #f5f7fa;">
             <padding>
-                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                <Insets bottom="30.0" left="30.0" right="30.0" top="10.0" />
             </padding>
             
             <!-- Header -->
-            <VBox spacing="10.0">
-                <Label style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="💰 Salary Management" />
-                <Label style="-fx-font-size: 14; -fx-text-fill: #64748b;" text="Manage month-end salary processing and notifications" />
-            </VBox>
-            
-            <Separator />
+            <VBox spacing="10.0" />
             
             <!-- Scheduler Status -->
             <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25;">
