@@ -65,7 +65,6 @@
 
                 <Line endX="920" strokeWidth="2" styleClass="divider" />
 
-                <!-- Payment Method Section -->
                 <VBox spacing="15">
                     <Label styleClass="section-title" text="Payment Method" />
                     <VBox spacing="12">
