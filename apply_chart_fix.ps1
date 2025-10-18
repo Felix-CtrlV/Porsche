@@ -27,7 +27,7 @@ if (-not $mysqlPath) {
 }
 
 # Execute the SQL file
-$sqlFile = Join-Path $PSScriptRoot "database\getSalesChartData_SIMPLE.sql"
+$sqlFile = Join-Path $PSScriptRoot "database\getSalesChartData_WORKING.sql"
 
 if (-not (Test-Path $sqlFile)) {
     Write-Host "ERROR: SQL file not found at: $sqlFile" -ForegroundColor Red
