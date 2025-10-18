@@ -34,6 +34,7 @@ public class staffToolsController {
     @FXML private Label subtotalLabel, taxLabelCart, totalLabel;
     @FXML private StackPane cartModalOverlay;
 
+    @FXML
     private ToggleGroup categoryToggleGroup;
 
     private int currentSlide = 0;

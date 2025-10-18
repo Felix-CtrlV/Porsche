@@ -90,7 +90,6 @@
                     </VBox>
                 </VBox>
 
-                <!-- Installment Options Section (Initially Hidden) -->
                 <VBox fx:id="installmentOptionsContainer" managed="false" spacing="15" visible="false">
                     <Label styleClass="subsection-title" text="Select Installment Plan" />
 
