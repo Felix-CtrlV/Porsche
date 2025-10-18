@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<StackPane prefHeight="800" prefWidth="1200" styleClass="root-container" stylesheets="@../CSS/staffasset.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffToolsController">
+<StackPane prefHeight="800" prefWidth="1200" styleClass="root-container" stylesheets="@../CSS/staffasset.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffassetController">
 
     <VBox spacing="0">
         <HBox alignment="CENTER_LEFT" spacing="30" styleClass="header-container">

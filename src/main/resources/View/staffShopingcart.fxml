@@ -30,7 +30,6 @@
                     <Insets bottom="30" left="30" right="30" top="30" />
                 </padding>
 
-                <!-- Configuration Details Section -->
                 <VBox spacing="15">
                     <Label styleClass="section-title" text="Configuration Details" />
                     <VBox spacing="12" styleClass="details-container">
