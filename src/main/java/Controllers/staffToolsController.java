@@ -79,7 +79,6 @@ public class staffToolsController {
 
     @FXML
     public void initialize() {
-        // Initialize toggle group safely
         categoryToggleGroup = new ToggleGroup();
         allCategoryButton.setToggleGroup(categoryToggleGroup);
         accessoriesButton.setToggleGroup(categoryToggleGroup);

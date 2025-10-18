@@ -105,7 +105,6 @@
                         </VBox>
                     </HBox>
 
-                    <!-- Installment Details Card -->
                     <VBox spacing="12" styleClass="installment-details-card">
                         <padding>
                             <Insets bottom="20" left="20" right="20" top="20" />

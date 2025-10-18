@@ -142,7 +142,6 @@
     -fx-text-fill: #b80000;
 }
 
-/* Summary Section */
 .summary-container {
     -fx-background-color: rgba(255,255,255,0.9);
     -fx-background-radius: 15px;
