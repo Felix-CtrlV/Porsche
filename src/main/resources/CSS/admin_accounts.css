@@ -224,6 +224,7 @@
     -fx-fill-rule: even-odd;
 }
 
+
 /* Progress circle styling */
 .progress-circle {
     -fx-stroke-width: 12;

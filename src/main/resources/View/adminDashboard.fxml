@@ -78,17 +78,14 @@
             </stylesheets>
             <children>
                 <!-- Header -->
-                <HBox alignment="CENTER" minHeight="40.0" prefHeight="53.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-padding: 25; -fx-background-radius: 20 0 0 0;">
+                <HBox alignment="CENTER" minHeight="50.0" prefHeight="58.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: #f8f9fa; -fx-padding: 25; -fx-background-radius: 20 0 0 0;">
                     <children>
-                        <Label style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI Semibold';" text="⚙  Settings" />
+                        <Label prefHeight="51.0" prefWidth="132.0" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: black; -fx-font-family: 'Segoe UI Semibold';" text="⚙  Settings" />
                     </children>
                 </HBox>
                 
                 <!-- Settings Content -->
                 <VBox spacing="0.0" style="-fx-background-color: #f8f9fa;" VBox.vgrow="ALWAYS">
-                    <padding>
-                        <Insets top="20.0" />
-                    </padding>
                     <children>
                         <!-- Profile Section -->
                         <VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
@@ -288,20 +285,32 @@
         <VBox fx:id="profilePane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20;" translateX="420" visible="false" StackPane.alignment="CENTER_RIGHT">
             <children>
                 <!-- Header with Back Button -->
-                <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="53.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-padding: 20; -fx-background-radius: 20 0 0 0;">
+                <HBox alignment="CENTER_LEFT" minHeight="45.0" prefHeight="53.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-background-radius: 20 0 0 0; -fx-border-color: transparent transparent c8c8c8 transparent;">
                     <children>
-                        <Label fx:id="backToSettingsBtn" style="-fx-font-size: 24; -fx-text-fill: white; -fx-cursor: hand;" text="‹">
+                        <Label fx:id="backToSettingsBtn" style="-fx-font-size: 24; -fx-text-fill: black; -fx-cursor: hand;" text="‹">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
+                     <HBox.margin>
+                        <Insets bottom="4.0" />
+                     </HBox.margin>
                         </Label>
-                        <Label prefHeight="32.0" prefWidth="317.0" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI Semibold';" text="My Profile" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="editProfileBtn" style="-fx-font-size: 20; -fx-text-fill: white; -fx-cursor: hand;" text="✏" visible="true">
+                        <Label prefHeight="44.0" prefWidth="317.0" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: black; -fx-font-family: 'Segoe UI Semibold';" text="My Profile" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets bottom="4.0" />
+                     </HBox.margin></Label>
+                        <Label fx:id="editProfileBtn" style="-fx-font-size: 20; -fx-text-fill: black; -fx-cursor: hand;" text="✏" visible="true">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
+                     <HBox.margin>
+                        <Insets bottom="4.0" />
+                     </HBox.margin>
                         </Label>
                     </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
                 </HBox>
                 
                 <!-- Profile Content -->
@@ -390,7 +399,7 @@
                                 <!-- Action Buttons -->
                                 <VBox spacing="12.0">
                                     <children>
-                                        <Button fx:id="saveProfileBtn" onAction="#onSaveProfile" prefHeight="48.0" prefWidth="380.0" style="-fx-background-color: linear-gradient(to right, #1a1a1a, #2d2d2d); -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;" text="💾  Save Changes" visible="false">
+                                        <Button fx:id="saveProfileBtn" onAction="#onSaveProfile" prefHeight="48.0" prefWidth="380.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;" text="💾  Save Changes" visible="false">
                                             <cursor>
                                                 <Cursor fx:constant="HAND" />
                                             </cursor>
@@ -413,15 +422,24 @@
         <VBox fx:id="targetPane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 25, 0, -8, 0);" translateX="420" visible="false" StackPane.alignment="CENTER_RIGHT">
             <children>
                 <!-- Header -->
-                <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="53.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-padding: 15 25; -fx-background-radius: 20 0 0 0;">
+                <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="53.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: #f8f9fa; -fx-padding: 15 25; -fx-background-radius: 20 0 0 0; -fx-border-color: transparent transparent c8c8c8 transparent;">
                     <children>
-                        <Label fx:id="backToSettingsFromTarget" style="-fx-font-size: 24; -fx-text-fill: white; -fx-cursor: hand;" text="‹">
+                        <Label fx:id="backToSettingsFromTarget" style="-fx-font-size: 24; -fx-text-fill: black; -fx-cursor: hand;" text="‹">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
+                     <HBox.margin>
+                        <Insets bottom="6.0" />
+                     </HBox.margin>
                         </Label>
-                        <Label style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI Semibold';" text="🎯  Sales Targets" HBox.hgrow="ALWAYS" />
+                        <Label style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: black; -fx-font-family: 'Segoe UI Semibold';" text="🎯  Sales Targets" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets bottom="6.0" />
+                     </HBox.margin></Label>
                     </children>
+               <VBox.margin>
+                  <Insets top="6.0" />
+               </VBox.margin>
                 </HBox>
                 
                 <!-- Target Content (will be loaded from adminTargetManagement.fxml) -->
@@ -438,15 +456,24 @@
         <VBox fx:id="salaryPane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 25, 0, -8, 0);" translateX="420" visible="false" StackPane.alignment="CENTER_RIGHT">
             <children>
                 <!-- Header -->
-                <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="53.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-padding: 15 25; -fx-background-radius: 20 0 0 0;">
+                <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="53.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: #f8f9fa; -fx-padding: 15 25; -fx-background-radius: 20 0 0 0;">
                     <children>
-                        <Label fx:id="backToSettingsFromSalary" style="-fx-font-size: 24; -fx-text-fill: white; -fx-cursor: hand;" text="‹">
+                        <Label fx:id="backToSettingsFromSalary" style="-fx-font-size: 24; -fx-text-fill: black; -fx-cursor: hand;" text="‹">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
+                     <HBox.margin>
+                        <Insets bottom="5.0" />
+                     </HBox.margin>
                         </Label>
-                        <Label style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI Semibold';" text="💰  Salary Management" HBox.hgrow="ALWAYS" />
+                        <Label style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: black; -fx-font-family: 'Segoe UI Semibold';" text="💰  Salary Management" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets bottom="5.0" />
+                     </HBox.margin></Label>
                     </children>
+               <VBox.margin>
+                  <Insets top="7.0" />
+               </VBox.margin>
                 </HBox>
                 
                 <!-- Salary Content (will be loaded from adminSalaryManagement.fxml) -->
@@ -530,7 +557,7 @@
                         <StackPane minHeight="40.0" minWidth="40.0" style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 20;">
                             <Label style="-fx-font-size: 20; -fx-text-fill: white;" text="🔐" />
                         </StackPane>
-                        <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: white;" text="Change Password" HBox.hgrow="ALWAYS" />
+                        <Label prefHeight="20.0" prefWidth="275.0" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: white;" text="Change Password" HBox.hgrow="ALWAYS" />
                         <Label fx:id="closePasswordDialogBtn" onMouseClicked="#closePasswordDialog" style="-fx-font-size: 18; -fx-text-fill: white; -fx-cursor: hand;" text="✕">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
