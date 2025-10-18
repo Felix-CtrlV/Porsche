@@ -2322,7 +2322,7 @@ public class managerInventoryController {
                 java.nio.file.Files.copy(selectedFile.toPath(), targetFile.toPath(), 
                                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 // Store relative path: Images/filename.jpg
-                photoPath = "Images/" + fileName;
+                photoPath = "/Images/" + fileName;
             } catch (IOException e) {
                 System.err.println("Failed to copy image: " + e.getMessage());
                 // Fallback to absolute path if copy fails
