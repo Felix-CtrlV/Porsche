@@ -57,7 +57,6 @@
 
                 <Line endX="920" strokeWidth="2" styleClass="divider" />
 
-                <!-- Selected Accessories Section -->
                 <VBox spacing="15">
                     <Label styleClass="section-title" text="Selected Accessories" />
                     <VBox fx:id="accessoriesContainer" spacing="8" styleClass="accessories-container" />
