@@ -48,7 +48,7 @@
                 
                 <VBox spacing="10.0" style="-fx-background-color: #fef3c7; -fx-background-radius: 8; -fx-padding: 15;">
                     <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #92400e;" text="⚠️ Warning" />
-                    <Label style="-fx-font-size: 12; -fx-text-fill: #92400e;" text="This will send emails to ALL employees and reset their bonuses to $0. [FOR TESTING PURPOSE}" wrapText="true" />
+                    <Label style="-fx-font-size: 12; -fx-text-fill: #92400e;" text="This will send emails to ALL employees. [FOR TESTING PURPOSE}" wrapText="true" />
                 </VBox>
                 
                 <Button fx:id="manualProcessBtn" onAction="#onManualProcess" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="Process Now" />
@@ -63,7 +63,7 @@
                         <Label style="-fx-font-size: 24; -fx-text-fill: #667eea;" text="1" />
                         <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                             <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Bonus Accumulation" />
-                            <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="Throughout the month, employee bonuses are accumulated in the database based on performance." wrapText="true" />
+                            <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="Throughout the month, employee bonuses are accumulated based on performance." wrapText="true" />
                         </VBox>
                     </HBox>
                     

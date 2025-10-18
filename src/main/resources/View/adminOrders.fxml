@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #f8fafc;" stylesheets="@../CSS/porsche_admin_overview.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOrderController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOrderController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -26,11 +27,11 @@
                   <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;">
                      <children>
                         <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                        <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" stylesheets="@../CSS/general.css" />
+                        <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" styleClass="admin-choice-box" stylesheets="@../CSS/general.css" />
                         <Button fx:id="NextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                         <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
                         <Button fx:id="PreviousYearbtn" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                        <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" stylesheets="@../CSS/general.css" />
+                        <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" styleClass="admin-choice-box" stylesheets="@../CSS/general.css" />
                         <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
                      </children>
                   </HBox>
@@ -84,7 +85,7 @@
                   </TableView>
                   
                   <!-- Order Detail Pane (Hidden by default) -->
-                  <VBox fx:id="detailPane" managed="false" maxHeight="280" prefHeight="280" spacing="0.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);" visible="false">
+                  <VBox fx:id="detailPane" managed="false" maxHeight="350" prefHeight="350" spacing="0.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="10.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 12 12 0 0; -fx-padding: 10 15;">
                            <children>
@@ -93,7 +94,7 @@
                               <Button fx:id="closeDetailBtn" mnemonicParsing="false" onAction="#closeDetailPane" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 16; -fx-cursor: hand;" text="✕" />
                            </children>
                         </HBox>
-                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="240.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="310.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
                            <content>
                               <VBox fx:id="detailContent" spacing="10.0" style="-fx-padding: 15;" />
                            </content>
@@ -152,4 +153,8 @@
          </padding>
       </HBox>
    </center>
+   <stylesheets>
+      <URL value="@../CSS/porsche_admin_overview.css" />
+      <URL value="@../CSS/admin_accounts.css" />
+   </stylesheets>
 </BorderPane>
