@@ -955,7 +955,7 @@ public class managerStaffViewController {
             }
             targetPartMessagelbl.setStyle("-fx-text-fill: #ef4444; -fx-font-weight:bold; -fx-font-size:18;");
         }
-        targetCar.setStyle("-fx-font-size:18;-fx-font-weight:bold; -fx-text-fill:  #ffa500;");
+        targetPart.setStyle("-fx-font-size:18;-fx-font-weight:bold; -fx-text-fill:  #ffa500;");
 
         double circulerPart = 2 * Math.PI * partCircle.getRadius();
         partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);

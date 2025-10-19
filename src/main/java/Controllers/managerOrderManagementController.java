@@ -52,6 +52,7 @@ public class managerOrderManagementController {
     private ObservableList<managerOrderView> searchResultData = FXCollections.observableArrayList();
     private int managerId;
     private ContextMenu searchSuggestions = new ContextMenu();
+    private boolean dataLoaded = false; // Track if data has been loaded from database
     
     private LocalDate today = LocalDate.now();
     private int currentMonth;
@@ -191,20 +192,21 @@ public class managerOrderManagementController {
             currentYear++;
         }
         updateYearMonthLabel();
-        loadOrder(); // Reload with new month/year
+        filterOrders(); // Filter with new month/year
         refreshRevenueChart(); // Refresh the active chart view
     }
 
     @FXML
     void clickNextYearbtn(ActionEvent event) {
-        currentYear++;
-        if (today.getYear() == currentYear) {
-            if (currentMonth > today.getMonthValue()) {
+        if (currentYear < today.getYear()) {
+            currentYear++;
+            if (currentYear == today.getYear()) {
+                // Reset to current month when reaching current year
                 currentMonth = today.getMonthValue();
             }
         }
         updateYearMonthLabel();
-        loadOrder(); // Reload with new year
+        filterOrders(); // Filter with new year
         refreshRevenueChart(); // Refresh the active chart view
     }
 
@@ -216,7 +218,7 @@ public class managerOrderManagementController {
             currentYear--;
         }
         updateYearMonthLabel();
-        loadOrder(); // Reload with new month/year
+        filterOrders(); // Filter with new month/year
         refreshRevenueChart(); // Refresh the active chart view
     }
 
@@ -224,7 +226,7 @@ public class managerOrderManagementController {
     void clickPreviousYearbtn(ActionEvent event) {
         currentYear--;
         updateYearMonthLabel();
-        loadOrder(); // Reload with new year
+        filterOrders(); // Filter with new year
         refreshRevenueChart(); // Refresh the active chart view
     }
 
@@ -439,8 +441,11 @@ public class managerOrderManagementController {
         // Initialize month and year choice boxes with today's date
         initializeMonthYearBoxes();
         
-        // Load all orders initially (will be filtered by current month/year)
-        loadOrder();
+        // Load all orders initially from database (only once)
+        loadAllOrdersFromDatabase();
+        
+        // Filter and display orders for current month/year
+        filterOrders();
         
         // Initialize revenue chart buttons and show weekly chart by default
         activateRevenueButton(weeklyRevenue);
@@ -458,7 +463,7 @@ public class managerOrderManagementController {
                     currentYear = newVal;
                     updateMonthBoxForYear(currentYear); // Update available months based on selected year
                     updateYearMonthLabel();
-                    loadOrder(); // Reload with filter (also recalculates quantities)
+                    filterOrders(); // Filter with new year (also recalculates quantities)
                     refreshRevenueChart(); // Refresh the active chart view
                 }
             });
@@ -469,7 +474,7 @@ public class managerOrderManagementController {
                     Month parsedMonth = Month.from(fmt.parse(newVal));
                     currentMonth = parsedMonth.getValue();
                     updateYearMonthLabel();
-                    loadOrder(); // Reload with filter (also recalculates quantities)
+                    filterOrders(); // Filter with new month (also recalculates quantities)
                     refreshRevenueChart(); // Refresh the active chart view
                 }
             });
@@ -478,7 +483,16 @@ public class managerOrderManagementController {
         }
     }
 
-    public void loadOrder(){
+    /**
+     * Load all orders from database ONCE (called only during initialization)
+     * This method queries the database and stores all orders in memory
+     */
+    private void loadAllOrdersFromDatabase(){
+        // Skip if data already loaded
+        if (dataLoaded) {
+            return;
+        }
+        
         CallableStatement cs = null;
         ResultSet rs = null;
         Connection tempCon = null;
@@ -490,8 +504,7 @@ public class managerOrderManagementController {
             
             List<managerOrderView> ordersList = new ArrayList<>();
             
-            // Call stored procedure to get ALL orders
-            // Pass NULL for month/year to get all orders (needed for search and charts)
+            // Call stored procedure to get ALL orders (no month/year filter)
             cs = tempCon.prepareCall("CALL getAllOrders(?, ?, ?)");
             cs.setInt(1, managerId);
             cs.setNull(2, java.sql.Types.INTEGER);  // month = NULL (get all months)
@@ -527,54 +540,13 @@ public class managerOrderManagementController {
             // Store all orders in allOrdersData
             allOrdersData.clear();
             allOrdersData.addAll(ordersList);
+            dataLoaded = true; // Mark data as loaded
             
-            // Debug: Uncomment these lines if you need to troubleshoot data loading
-            
-            // Filter orders based on selected month/year
-            List<managerOrderView> filteredOrders = new ArrayList<>();
-            if (currentMonth > 0 && currentYear > 0) {
-                // Filter by month and year
-                for (managerOrderView order : allOrdersData) {
-                    if (order.getOrder_date() != null) {
-                        // Convert java.sql.Date to LocalDate
-                        LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
-                        if (orderDate.getMonthValue() == currentMonth && orderDate.getYear() == currentYear) {
-                            filteredOrders.add(order);
-                        }
-                    }
-                }
-                ObservableList<managerOrderView> observableList = FXCollections.observableArrayList(filteredOrders);
-                orderTable.setItems(observableList);
-                orderTable.refresh(); // Force table refresh
-                
-                // Auto-select first row if data exists and display details
-                if (!filteredOrders.isEmpty()) {
-                    orderTable.getSelectionModel().selectFirst();
-                    displaySelectedOrderDetails();
-                } else {
-                    orderTable.getSelectionModel().clearSelection();
-                    clearOrderDetails();
-                }
-            } else {
-                // Show all orders
-                orderTable.setItems(allOrdersData);
-                orderTable.refresh(); // Force table refresh
-                
-                // Auto-select first row if data exists and display details
-                if (!allOrdersData.isEmpty()) {
-                    orderTable.getSelectionModel().selectFirst();
-                    displaySelectedOrderDetails();
-                } else {
-                    orderTable.getSelectionModel().clearSelection();
-                    clearOrderDetails();
-                }
-            }
-            
-            logger.info("Loaded {} orders successfully", ordersList.size());
+            logger.info("Loaded {} orders from database successfully", ordersList.size());
             
         } catch (SQLException e) {
             logger.error("Error loading orders from database", e);
-            // You might want to show an alert to the user here
+            dataLoaded = false;
         } finally {
             // Clean up resources
             try {
@@ -585,8 +557,54 @@ public class managerOrderManagementController {
                 logger.error("Error closing database resources", e);
             }
         }
+    }
+    
+    /**
+     * Filter already-loaded orders based on current month/year
+     * This method works with in-memory data (no database query)
+     */
+    private void filterOrders() {
+        // Filter orders based on selected month/year
+        List<managerOrderView> filteredOrders = new ArrayList<>();
+        if (currentMonth > 0 && currentYear > 0) {
+            // Filter by month and year
+            for (managerOrderView order : allOrdersData) {
+                if (order.getOrder_date() != null) {
+                    // Convert java.sql.Date to LocalDate
+                    LocalDate orderDate = new java.sql.Date(order.getOrder_date().getTime()).toLocalDate();
+                    if (orderDate.getMonthValue() == currentMonth && orderDate.getYear() == currentYear) {
+                        filteredOrders.add(order);
+                    }
+                }
+            }
+            ObservableList<managerOrderView> observableList = FXCollections.observableArrayList(filteredOrders);
+            orderTable.setItems(observableList);
+            orderTable.refresh(); // Force table refresh
+            
+            // Auto-select first row if data exists and display details
+            if (!filteredOrders.isEmpty()) {
+                orderTable.getSelectionModel().selectFirst();
+                displaySelectedOrderDetails();
+            } else {
+                orderTable.getSelectionModel().clearSelection();
+                clearOrderDetails();
+            }
+        } else {
+            // Show all orders
+            orderTable.setItems(allOrdersData);
+            orderTable.refresh(); // Force table refresh
+            
+            // Auto-select first row if data exists and display details
+            if (!allOrdersData.isEmpty()) {
+                orderTable.getSelectionModel().selectFirst();
+                displaySelectedOrderDetails();
+            } else {
+                orderTable.getSelectionModel().clearSelection();
+                clearOrderDetails();
+            }
+        }
         
-        // Calculate quantities and prices after loading orders
+        // Calculate quantities and prices after filtering orders
         calculateSoldQuantities();
     }
 
@@ -600,6 +618,9 @@ public class managerOrderManagementController {
         
         // Set up text change listener for suggestions
         SearchText.textProperty().addListener((obs, oldText, newText) -> {
+            // Clear stored search value when user manually types
+            SearchText.setUserData(null);
+            
             if (newText.isEmpty()) {
                 searchSuggestions.hide();
                 return;
@@ -635,26 +656,35 @@ public class managerOrderManagementController {
                     || orderDate.contains(searchText)
                     || itemNamesStr.contains(searchText)) {
                     
-                    // Create suggestion text with matched field
+                    // Create suggestion text with matched field and determine search value
                     String matchType = "";
+                    String searchValue = ""; // The actual value to search for
                     if (cusName.contains(searchText)) {
                         matchType = "Customer: " + order.getCus_name();
+                        searchValue = order.getCus_name();
                     } else if (staffName.contains(searchText)) {
                         matchType = "Staff: " + order.getStaff_name();
+                        searchValue = order.getStaff_name();
                     } else if (orderDate.contains(searchText)) {
                         matchType = "Date: " + orderDate;
+                        searchValue = orderDate;
                     } else if (itemNamesStr.contains(searchText)) {
                         matchType = "Items: " + (itemNames.length > 0 ? itemNames[0] : "");
+                        searchValue = itemNames.length > 0 ? itemNames[0] : "";
                     } else {
                         matchType = "Order #" + orderId;
+                        searchValue = orderId;
                     }
                     
                     String suggestionText = matchType + " - $" + String.format("%.2f", order.getTotal_amount());
                     MenuItem item = new MenuItem(suggestionText);
                     
                     // Set action for when suggestion is clicked
+                    final String finalSearchValue = searchValue; // Make effectively final for lambda
+                    final String finalSuggestionText = suggestionText;
                     item.setOnAction(e -> {
-                        SearchText.setText(newText);
+                        SearchText.setText(finalSuggestionText); // Display full text in search bar
+                        SearchText.setUserData(finalSearchValue); // Store actual search value
                         searchSuggestions.hide();
                         handleSearch();
                     });
@@ -694,9 +724,13 @@ public class managerOrderManagementController {
             return;
         }
         
+        // Use stored search value if available (from suggestion click), otherwise use the text field value
+        String actualSearchValue = SearchText.getUserData() != null ? 
+                                   SearchText.getUserData().toString() : searchText;
+        
         // Search through all orders
         searchResultData.clear();
-        String searchLower = searchText.toLowerCase();
+        String searchLower = actualSearchValue.toLowerCase();
         
         for (managerOrderView order : allOrdersData) {
             String orderId = String.valueOf(order.getOrder_id());
@@ -859,8 +893,8 @@ public class managerOrderManagementController {
             yearBox.setValue(currentYear);
         }
         
-        // Reload orders for the selected month/year
-        loadOrder();
+        // Filter orders for the selected month/year (no database query)
+        filterOrders();
     }
 
     private void orderDetails(managerOrderView orders) throws IOException {
@@ -1002,42 +1036,6 @@ public class managerOrderManagementController {
             }
         }
         
-        // Fetch target data from database
-        int targetCar = 0;
-        int targetPart = 0;
-        
-        Connection tempCon = null;
-        CallableStatement cs = null;
-        ResultSet rs = null;
-        
-        try {
-            Porsche_DB db = new Porsche_DB();
-            tempCon = db.connect();
-            
-            cs = tempCon.prepareCall("CALL targetViewChart(?,?,?)");
-            cs.setInt(1, managerId);
-            cs.setInt(2, currentMonth);
-            cs.setInt(3, currentYear);
-            
-            rs = cs.executeQuery();
-            if (rs.next()) {
-                targetCar = rs.getInt(4);    // Column 4: target_car
-                targetPart = rs.getInt(5);   // Column 5: target_part
-                // We use confirmQty and pendingQty from orders, not columns 6 & 7
-            }
-        } catch (SQLException e) {
-            logger.error("Error fetching target data", e);
-            // Continue with targets as 0
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (cs != null) cs.close();
-                if (tempCon != null) tempCon.close();
-            } catch (SQLException e) {
-                logger.error("Error closing database resources in calculateSoldQuantities", e);
-            }
-        }
-        
         // Calculate total orders for percentage calculation
         int totalOrders = confirmQty + pendingQty;
         
@@ -1096,8 +1094,24 @@ public class managerOrderManagementController {
         double startAngle = -90 + (pendingProgress * 360);
         confrimQtyCircle.setRotate(startAngle);
         
-        // Offset decreases as progress increases (0 offset = full circle)
-        confrimQtyCircle.setStrokeDashOffset(circumference - (circumference * progressConfirm));
+        // Calculate final offset
+        double finalOffset = circumference - (circumference * progressConfirm);
+        
+        // Start with full offset (hidden) and animate to final offset
+        confrimQtyCircle.setStrokeDashOffset(circumference);
+        
+        // Create wave animation
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline();
+        javafx.animation.KeyFrame keyFrame = new javafx.animation.KeyFrame(
+            javafx.util.Duration.millis(1500), // 1.5 seconds
+            new javafx.animation.KeyValue(
+                confrimQtyCircle.strokeDashOffsetProperty(),
+                finalOffset,
+                javafx.animation.Interpolator.EASE_OUT
+            )
+        );
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
     }
     
     /**
@@ -1139,8 +1153,24 @@ public class managerOrderManagementController {
         // Start from top (rotate -90 degrees so stroke starts at 12 o'clock position)
         pendingQtyCircle.setRotate(-90);
         
-        // Offset decreases as progress increases (0 offset = full circle)
-        pendingQtyCircle.setStrokeDashOffset(circumference - (circumference * progressPending));
+        // Calculate final offset
+        double finalOffset = circumference - (circumference * progressPending);
+        
+        // Start with full offset (hidden) and animate to final offset
+        pendingQtyCircle.setStrokeDashOffset(circumference);
+        
+        // Create wave animation
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline();
+        javafx.animation.KeyFrame keyFrame = new javafx.animation.KeyFrame(
+            javafx.util.Duration.millis(1500), // 1.5 seconds
+            new javafx.animation.KeyValue(
+                pendingQtyCircle.strokeDashOffsetProperty(),
+                finalOffset,
+                javafx.animation.Interpolator.EASE_OUT
+            )
+        );
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
     }
     
     private void setCarPrice(double totalPrice) {
@@ -1290,11 +1320,18 @@ public class managerOrderManagementController {
         revenueChart.getData().add(series);
         revenueChart.setLegendVisible(false);
         revenueChart.setAnimated(false); // Disable animation to prevent label overlap issues
-        revenueChart.setCreateSymbols(false); // Remove dots on the line
+        revenueChart.setCreateSymbols(true); // Enable symbols for smooth curve styling
         
         // Force layout update after adding data
         revenueChart.layout();
         
+        // Hide chart temporarily to prevent showing sharp lines
+        revenueChart.setOpacity(0);
+        
+        // Apply smooth curves after a short delay to ensure paths are created
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
+        pause.setOnFinished(e -> applySmoothCurves());
+        pause.play();
         
         } catch (Exception e) {
             System.err.println("ERROR in showWeeklyRevenueChart: " + e.getMessage());
@@ -1354,11 +1391,18 @@ public class managerOrderManagementController {
         revenueChart.getData().add(series);
         revenueChart.setLegendVisible(false);
         revenueChart.setAnimated(false); // Disable animation to prevent label overlap issues
-        revenueChart.setCreateSymbols(false); // Remove dots on the line
+        revenueChart.setCreateSymbols(true); // Enable symbols for smooth curve styling
         
         // Force layout update after adding data
         revenueChart.layout();
         
+        // Hide chart temporarily to prevent showing sharp lines
+        revenueChart.setOpacity(0);
+        
+        // Apply smooth curves after a short delay to ensure paths are created
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
+        pause.setOnFinished(e -> applySmoothCurves());
+        pause.play();
         
         } catch (Exception e) {
             System.err.println("ERROR in showMonthlyRevenueChart: " + e.getMessage());
@@ -1379,6 +1423,223 @@ public class managerOrderManagementController {
             // Normal row: regular text
             row.setStyle("-fx-background-color: white; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
         }
+    }
+    
+    // ---------- Smooth Curve Methods ----------
+    private void applySmoothCurves() {
+        if (revenueChart == null)
+            return;
+
+        // Check if paths are ready, if not, retry after a short delay
+        var linePaths = revenueChart.lookupAll(".chart-series-area-line");
+        var fillPaths = revenueChart.lookupAll(".chart-series-area-fill");
+
+        if (linePaths.isEmpty() || fillPaths.isEmpty()) {
+            // Paths not ready yet, try again after 50ms
+            javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(50));
+            pause.setOnFinished(e -> applySmoothCurves());
+            pause.play();
+            return;
+        }
+
+        // Store the smoothed line elements to copy to fill area
+        java.util.List<javafx.scene.shape.PathElement> smoothedLineElements = new java.util.ArrayList<>();
+
+        // Smooth the line first and store the elements
+        linePaths.forEach(node -> {
+            if (node instanceof javafx.scene.shape.Path) {
+                javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
+                smoothPath(path, false);
+                // Copy the smoothed elements
+                smoothedLineElements.addAll(new java.util.ArrayList<>(path.getElements()));
+            }
+        });
+
+        // Apply the same smooth curve to the fill area
+        fillPaths.forEach(node -> {
+            if (node instanceof javafx.scene.shape.Path && !smoothedLineElements.isEmpty()) {
+                javafx.scene.shape.Path fillPath = (javafx.scene.shape.Path) node;
+                var originalFillElements = new java.util.ArrayList<>(fillPath.getElements());
+
+                // Find the baseline (bottom of chart) from original fill path
+                double baselineY = 0;
+                double startX = 0;
+                double endX = 0;
+
+                for (var element : originalFillElements) {
+                    if (element instanceof javafx.scene.shape.LineTo) {
+                        javafx.scene.shape.LineTo lt = (javafx.scene.shape.LineTo) element;
+                        baselineY = Math.max(baselineY, lt.getY());
+                    }
+                }
+
+                // Get start and end X coordinates from smoothed line
+                if (smoothedLineElements.get(0) instanceof javafx.scene.shape.MoveTo) {
+                    javafx.scene.shape.MoveTo firstMove = (javafx.scene.shape.MoveTo) smoothedLineElements.get(0);
+                    startX = firstMove.getX();
+                }
+
+                var lastElement = smoothedLineElements.get(smoothedLineElements.size() - 1);
+                if (lastElement instanceof javafx.scene.shape.CubicCurveTo) {
+                    javafx.scene.shape.CubicCurveTo lastCurve = (javafx.scene.shape.CubicCurveTo) lastElement;
+                    endX = lastCurve.getX();
+                }
+
+                // Clear and rebuild: smooth line + close to baseline
+                fillPath.getElements().clear();
+
+                // Add the smoothed line elements
+                for (var element : smoothedLineElements) {
+                    if (element instanceof javafx.scene.shape.MoveTo) {
+                        javafx.scene.shape.MoveTo mt = (javafx.scene.shape.MoveTo) element;
+                        fillPath.getElements().add(new javafx.scene.shape.MoveTo(mt.getX(), mt.getY()));
+                    } else if (element instanceof javafx.scene.shape.CubicCurveTo) {
+                        javafx.scene.shape.CubicCurveTo cc = (javafx.scene.shape.CubicCurveTo) element;
+                        fillPath.getElements().add(new javafx.scene.shape.CubicCurveTo(
+                                cc.getControlX1(), cc.getControlY1(),
+                                cc.getControlX2(), cc.getControlY2(),
+                                cc.getX(), cc.getY()
+                        ));
+                    }
+                }
+
+                // Close the path to baseline
+                fillPath.getElements().add(new javafx.scene.shape.LineTo(endX, baselineY));
+                fillPath.getElements().add(new javafx.scene.shape.LineTo(startX, baselineY));
+                fillPath.getElements().add(new javafx.scene.shape.ClosePath());
+            }
+        });
+
+        // Show chart after smoothing is complete
+        revenueChart.setOpacity(1);
+        
+        // Apply wave animation (drawing effect from left to right) to both line and fill
+        applyWaveAnimation(linePaths, fillPaths);
+    }
+
+    private void smoothPath(javafx.scene.shape.Path path, boolean isFillArea) {
+        var elements = path.getElements();
+        if (elements.size() < 3)
+            return;
+
+        // Extract points from path
+        java.util.List<Double> xPoints = new java.util.ArrayList<>();
+        java.util.List<Double> yPoints = new java.util.ArrayList<>();
+
+        for (var element : elements) {
+            if (element instanceof javafx.scene.shape.MoveTo) {
+                javafx.scene.shape.MoveTo moveTo = (javafx.scene.shape.MoveTo) element;
+                xPoints.add(moveTo.getX());
+                yPoints.add(moveTo.getY());
+            } else if (element instanceof javafx.scene.shape.LineTo) {
+                javafx.scene.shape.LineTo lineTo = (javafx.scene.shape.LineTo) element;
+                xPoints.add(lineTo.getX());
+                yPoints.add(lineTo.getY());
+            }
+        }
+
+        if (xPoints.size() < 3)
+            return;
+
+        // Find the baseline (bottom of chart) for clamping
+        double baseline = yPoints.stream().mapToDouble(Double::doubleValue).max().orElse(0);
+
+        // Clear existing elements and rebuild with smooth curves
+        elements.clear();
+
+        // Start at first point
+        elements.add(new javafx.scene.shape.MoveTo(xPoints.get(0), yPoints.get(0)));
+
+        // Create smooth Catmull-Rom spline curves between points
+        for (int i = 0; i < xPoints.size() - 1; i++) {
+            double x0 = i > 0 ? xPoints.get(i - 1) : xPoints.get(i);
+            double y0 = i > 0 ? yPoints.get(i - 1) : yPoints.get(i);
+            double x1 = xPoints.get(i);
+            double y1 = yPoints.get(i);
+            double x2 = xPoints.get(i + 1);
+            double y2 = yPoints.get(i + 1);
+            double x3 = i < xPoints.size() - 2 ? xPoints.get(i + 2) : x2;
+            double y3 = i < xPoints.size() - 2 ? yPoints.get(i + 2) : y2;
+
+            // Calculate control points for cubic Bezier curve
+            double cp1x = x1 + (x2 - x0) / 6.0;
+            double cp1y = y1 + (y2 - y0) / 6.0;
+            double cp2x = x2 - (x3 - x1) / 6.0;
+            double cp2y = y2 - (y3 - y1) / 6.0;
+
+            // Strict clamping to prevent overshooting
+            // Control points must stay between the two data points
+            double minY = Math.min(y1, y2);
+            double maxY = Math.max(y1, y2);
+
+            // Clamp control points strictly within the range of the two endpoints
+            cp1y = Math.max(minY, Math.min(cp1y, maxY));
+            cp2y = Math.max(minY, Math.min(cp2y, maxY));
+
+            // Also ensure they don't go below baseline
+            cp1y = Math.min(cp1y, baseline);
+            cp2y = Math.min(cp2y, baseline);
+
+            elements.add(new javafx.scene.shape.CubicCurveTo(cp1x, cp1y, cp2x, cp2y, x2, y2));
+        }
+    }
+    
+    // Apply wave animation (drawing effect from left to right)
+    private void applyWaveAnimation(java.util.Set<javafx.scene.Node> linePaths, java.util.Set<javafx.scene.Node> fillPaths) {
+        // Get the chart bounds for clipping
+        double chartWidth = revenueChart.getWidth();
+        double chartHeight = revenueChart.getHeight();
+        
+        // Create a rectangle for clipping animation
+        javafx.scene.shape.Rectangle clipRect = new javafx.scene.shape.Rectangle(0, 0, 0, chartHeight);
+        
+        // Apply clip to both line and fill paths
+        linePaths.forEach(node -> {
+            if (node instanceof javafx.scene.shape.Path) {
+                javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
+                path.setClip(clipRect);
+            }
+        });
+        
+        fillPaths.forEach(node -> {
+            if (node instanceof javafx.scene.shape.Path) {
+                javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
+                // Create a separate clip rectangle for fill (they need independent clips)
+                javafx.scene.shape.Rectangle fillClip = new javafx.scene.shape.Rectangle(0, 0, 0, chartHeight);
+                path.setClip(fillClip);
+                
+                // Bind fill clip width to line clip width for synchronized animation
+                fillClip.widthProperty().bind(clipRect.widthProperty());
+            }
+        });
+        
+        // Create timeline animation for the clip rectangle
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline();
+        javafx.animation.KeyFrame keyFrame = new javafx.animation.KeyFrame(
+            javafx.util.Duration.millis(2000), // Animation duration: 2 seconds
+            new javafx.animation.KeyValue(
+                clipRect.widthProperty(), 
+                chartWidth, 
+                javafx.animation.Interpolator.EASE_OUT
+            )
+        );
+        timeline.getKeyFrames().add(keyFrame);
+        
+        // Remove clips after animation completes
+        timeline.setOnFinished(e -> {
+            linePaths.forEach(node -> {
+                if (node instanceof javafx.scene.shape.Path) {
+                    ((javafx.scene.shape.Path) node).setClip(null);
+                }
+            });
+            fillPaths.forEach(node -> {
+                if (node instanceof javafx.scene.shape.Path) {
+                    ((javafx.scene.shape.Path) node).setClip(null);
+                }
+            });
+        });
+        
+        timeline.play();
     }
 
 }
