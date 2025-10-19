@@ -600,6 +600,9 @@ public class managerOrderManagementController {
         
         // Set up text change listener for suggestions
         SearchText.textProperty().addListener((obs, oldText, newText) -> {
+            // Clear stored search value when user manually types
+            SearchText.setUserData(null);
+            
             if (newText.isEmpty()) {
                 searchSuggestions.hide();
                 return;
@@ -635,26 +638,35 @@ public class managerOrderManagementController {
                     || orderDate.contains(searchText)
                     || itemNamesStr.contains(searchText)) {
                     
-                    // Create suggestion text with matched field
+                    // Create suggestion text with matched field and determine search value
                     String matchType = "";
+                    String searchValue = ""; // The actual value to search for
                     if (cusName.contains(searchText)) {
                         matchType = "Customer: " + order.getCus_name();
+                        searchValue = order.getCus_name();
                     } else if (staffName.contains(searchText)) {
                         matchType = "Staff: " + order.getStaff_name();
+                        searchValue = order.getStaff_name();
                     } else if (orderDate.contains(searchText)) {
                         matchType = "Date: " + orderDate;
+                        searchValue = orderDate;
                     } else if (itemNamesStr.contains(searchText)) {
                         matchType = "Items: " + (itemNames.length > 0 ? itemNames[0] : "");
+                        searchValue = itemNames.length > 0 ? itemNames[0] : "";
                     } else {
                         matchType = "Order #" + orderId;
+                        searchValue = orderId;
                     }
                     
                     String suggestionText = matchType + " - $" + String.format("%.2f", order.getTotal_amount());
                     MenuItem item = new MenuItem(suggestionText);
                     
                     // Set action for when suggestion is clicked
+                    final String finalSearchValue = searchValue; // Make effectively final for lambda
+                    final String finalSuggestionText = suggestionText;
                     item.setOnAction(e -> {
-                        SearchText.setText(newText);
+                        SearchText.setText(finalSuggestionText); // Display full text in search bar
+                        SearchText.setUserData(finalSearchValue); // Store actual search value
                         searchSuggestions.hide();
                         handleSearch();
                     });
@@ -694,9 +706,13 @@ public class managerOrderManagementController {
             return;
         }
         
+        // Use stored search value if available (from suggestion click), otherwise use the text field value
+        String actualSearchValue = SearchText.getUserData() != null ? 
+                                   SearchText.getUserData().toString() : searchText;
+        
         // Search through all orders
         searchResultData.clear();
-        String searchLower = searchText.toLowerCase();
+        String searchLower = actualSearchValue.toLowerCase();
         
         for (managerOrderView order : allOrdersData) {
             String orderId = String.valueOf(order.getOrder_id());
