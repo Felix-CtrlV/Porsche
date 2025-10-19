@@ -301,6 +301,10 @@ public class managerInventoryController {
     @FXML
     private  TextField editCarProductAt;
     @FXML
+    private TextField editCarSpeed;  // TODO: Add this field to FXML
+    @FXML
+    private TextArea editCarDescription;  // TODO: Add this field to FXML
+    @FXML
     private  Button editCarApply;
     @FXML
     private Button editCarRevert;
@@ -1588,12 +1592,12 @@ public class managerInventoryController {
     }
 
     private void setCarsTable(){
-        try{
-            carsData.clear();
+        try {
             carsOffData.clear();
+            carsData.clear();
             CallableStatement cs = con.prepareCall("CALL getAllCars()");
             ResultSet rs = cs.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 int id = rs.getInt(1);
                 String name = rs.getString(2);
                 String extColor = rs.getString(3);
@@ -1604,23 +1608,38 @@ public class managerInventoryController {
                 Double price = rs.getDouble(8);
                 String photoUrl = rs.getString(9);
                 Boolean check = rs.getBoolean(10);
-                String status = (qty !=0) ?"On" : "Out";
+                String speed = rs.getString(11);
+                String description = rs.getString(12);
+                
+                // Normalize photo path to ensure it starts with "Images/"
+                if (photoUrl != null && !photoUrl.isEmpty()) {
+                    // Remove leading slash if present
+                    if (photoUrl.startsWith("/")) {
+                        photoUrl = photoUrl.substring(1);
+                    }
+                    // Add "Images/" prefix if not present
+                    if (!photoUrl.startsWith("Images/")) {
+                        photoUrl = "Images/" + photoUrl;
+                    }
+                }
+
+                String status = (qty != 0) ? "On" : "Out";
                 String inventoryId = String.format("C-%03d", id);
                 
                 // Separate based on check boolean and qty
                 if(check){
                     // Available items (check = true)
-                    carsData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl));
+                    carsData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl, speed, description));
                 }else {
                     // check = false
                     if(qty > 0){
                         // Has quantity but marked unavailable - show in available table with different color
                         status = "Unavailable";
-                        carsData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl));
+                        carsData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl, speed, description));
                     }else{
                         // No quantity and marked unavailable - show in unavailable table
                         status = "Unavailable";
-                        carsOffData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl));
+                        carsOffData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl, speed, description));
                     }
                 }
 
@@ -1650,6 +1669,18 @@ public class managerInventoryController {
                 Double price = rs.getDouble(6);
                 String photoUrl = rs.getString(7);
                 Boolean check = rs.getBoolean(8);
+                
+                // Normalize photo path to ensure it starts with "Images/"
+                if (photoUrl != null && !photoUrl.isEmpty()) {
+                    // Remove leading slash if present
+                    if (photoUrl.startsWith("/")) {
+                        photoUrl = photoUrl.substring(1);
+                    }
+                    // Add "Images/" prefix if not present
+                    if (!photoUrl.startsWith("Images/")) {
+                        photoUrl = "Images/" + photoUrl;
+                    }
+                }
 
                 String status = (qty !=0) ?"On" : "Out";
                 String inventoryId = String.format("P-%03d", id);
@@ -2216,9 +2247,9 @@ public class managerInventoryController {
         cs.setInt(6, year);
         cs.setInt(7, qty);
         cs.setDouble(8, price);
-        cs.setString(9, combinedSpeed);  // Parameter 9: car_speed (combined)
-        cs.setString(10, description);  // Parameter 10: car_description
-        cs.setString(11, photoPath);  // Parameter 11: car_photo
+        cs.setString(9, photoPath);      // Parameter 9: car_photo
+        cs.setString(10, combinedSpeed);  // Parameter 10: car_speed (combined)
+        cs.setString(11, description);   // Parameter 11: car_description
         
         cs.execute();
         cs.close();
@@ -2349,6 +2380,12 @@ public class managerInventoryController {
         int qty = Integer.parseInt(editCarQty.getText().trim());
         double price = Double.parseDouble(editCarPrice.getText().trim());
         
+        // Get speed and description (will be empty strings if fields don't exist yet)
+        String speed = (editCarSpeed != null && editCarSpeed.getText() != null) 
+                       ? editCarSpeed.getText().trim() : "";
+        String description = (editCarDescription != null && editCarDescription.getText() != null) 
+                            ? editCarDescription.getText().trim() : "";
+        
         // The procedure will parse fullCarName: "911 Carrera T" -> model="911 Carrera", trim="T"
         
         // Handle image - Copy to project Images folder for cross-computer compatibility
@@ -2382,7 +2419,7 @@ public class managerInventoryController {
         
         // Call updateFullCar stored procedure
         // This handles: model parsing, photo overwrite, and car update
-        CallableStatement cs = con.prepareCall("{CALL updateFullCar(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+        CallableStatement cs = con.prepareCall("{CALL updateFullCar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
         cs.setInt(1, editPath.getId());           // in_car_id
         cs.setString(2, fullCarName);              // in_car_name (will be parsed by procedure)
         cs.setString(3, extColor);                 // in_car_color
@@ -2392,6 +2429,8 @@ public class managerInventoryController {
         cs.setInt(7, qty);                         // in_car_qty
         cs.setDouble(8, price);                    // in_price
         cs.setString(9, photoPath);                // in_photo_url
+        cs.setString(10, speed);                   // in_car_speed
+        cs.setString(11, description);             // in_car_description
         
         cs.execute();
         cs.close();
