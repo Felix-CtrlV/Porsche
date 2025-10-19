@@ -3,19 +3,20 @@ package Controllers;
 import Database.DatabaseConnectionManager;
 import Utils.OTPService;
 import Utils.ThreadPoolManager;
-import javafx.animation.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.slf4j.Logger;
@@ -55,31 +56,25 @@ public class ForgotPasswordController {
     private Button backToLoginBtn;
 
     @FXML
-    private Label statusLabel;
+    private StackPane loadingPane;
 
     @FXML
-    private Label statusMessage1;
+    private StackPane messagePane;
 
     @FXML
-    private Label statusMessage2;
+    private Label messageLabel;
 
     @FXML
-    private Label statusMessage3;
+    private VBox emailPane;
 
     @FXML
-    private AnchorPane emailPane;
+    private VBox otpPane;
 
     @FXML
-    private AnchorPane otpPane;
+    private VBox passwordPane;
 
     @FXML
-    private AnchorPane passwordPane;
-
-    @FXML
-    private ImageView closeimg;
-
-    @FXML
-    private ImageView porsche_logo_image;
+    private Label closeBtn;
 
     @FXML
     private Label emailDisplayLabel;
@@ -91,25 +86,13 @@ public class ForgotPasswordController {
     private String verifiedUsername = null;
     private String userInputEmail = null;
 
+    private SequentialTransition currentAnimation;
+
     @FXML
     public void initialize() {
         // Show only email pane initially
         showEmailPane();
 
-        // Load images
-        try {
-            Image porsche_logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/porsche_logo.png")));
-            porsche_logo_image.setImage(porsche_logo);
-            Image close = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/close.png")));
-            closeimg.setImage(close);
-        } catch (Exception e) {
-            logger.error("Failed to load images", e);
-        }
-
-        closeimg.setOnMouseClicked(e -> {
-            System.exit(0);
-        });
-        
         // Add Enter key listeners
         emailTxt.setOnKeyPressed(e -> {
             if (e.getCode().toString().equals("ENTER")) {
@@ -128,46 +111,30 @@ public class ForgotPasswordController {
                 clickResetPassword(new ActionEvent());
             }
         });
+
+        hideMessage();
+        showLoading(false);
     }
 
     private void showEmailPane() {
         emailPane.setVisible(true);
         otpPane.setVisible(false);
         passwordPane.setVisible(false);
+        emailTxt.requestFocus();
     }
 
     private void showOtpPane() {
         emailPane.setVisible(false);
         otpPane.setVisible(true);
         passwordPane.setVisible(false);
+        otpTxt.requestFocus();
     }
 
     private void showPasswordPane() {
         emailPane.setVisible(false);
         otpPane.setVisible(false);
         passwordPane.setVisible(true);
-    }
-
-    private void showStatus(Label statusLabel, String message, boolean isError) {
-        statusLabel.setText(message);
-        statusLabel.setVisible(true);
-        
-        if (isError) {
-            statusLabel.setStyle("-fx-text-fill: #d5001c; -fx-font-size: 12px; -fx-background-color: rgba(213, 0, 28, 0.1); -fx-padding: 8px; -fx-background-radius: 4px;");
-        } else {
-            statusLabel.setStyle("-fx-text-fill: #00ff00; -fx-font-size: 12px; -fx-background-color: rgba(0, 255, 0, 0.1); -fx-padding: 8px; -fx-background-radius: 4px;");
-        }
-        
-        // Auto-hide after 5 seconds
-        PauseTransition pause = new PauseTransition(Duration.seconds(5));
-        pause.setOnFinished(e -> statusLabel.setVisible(false));
-        pause.play();
-    }
-
-    private void hideAllStatus() {
-        statusMessage1.setVisible(false);
-        statusMessage2.setVisible(false);
-        statusMessage3.setVisible(false);
+        newPasswordTxt.requestFocus();
     }
 
     @FXML
@@ -175,12 +142,13 @@ public class ForgotPasswordController {
         String input = emailTxt.getText().trim();
 
         if (input.isEmpty()) {
-            showStatus(statusMessage1, "Please enter your email or username", true);
+            showMessage("Please enter your email or username", false);
             return;
         }
         
-        hideAllStatus();
+        hideMessage();
 
+        showLoading(true);
         sendOtpBtn.setDisable(true);
         sendOtpBtn.setText("Sending...");
 
@@ -217,29 +185,31 @@ public class ForgotPasswordController {
         };
 
         task.setOnSucceeded(e -> {
+            showLoading(false);
             String result = task.getValue();
             sendOtpBtn.setDisable(false);
-            sendOtpBtn.setText("Send OTP");
+            sendOtpBtn.setText("Send Verification Code");
 
             if ("NOT_FOUND".equals(result)) {
-                showStatus(statusMessage1, "No account found with this email or username", true);
+                showMessage("No account found with this email or username", false);
             } else if (result == null) {
-                showStatus(statusMessage1, "Failed to send verification code. Please try again", true);
+                showMessage("Failed to send verification code. Please try again", false);
             } else {
                 String[] parts = result.split("\\|");
                 verifiedUsername = parts[0];
                 String email = parts[1];
                 emailDisplayLabel.setText(email);
                 showOtpPane();
-                showStatus(statusMessage2, "Verification code sent successfully!", false);
+                showMessage("Verification code sent successfully!", true);
             }
         });
 
         task.setOnFailed(e -> {
             logger.error("Failed to send OTP", task.getException());
-            showStatus(statusMessage1, "Failed to send verification code. Please try again", true);
+            showLoading(false);
+            showMessage("Failed to send verification code. Please try again", false);
             sendOtpBtn.setDisable(false);
-            sendOtpBtn.setText("SEND VERIFICATION CODE");
+            sendOtpBtn.setText("Send Verification Code");
         });
 
         ThreadPoolManager.getInstance().execute(task);
@@ -248,11 +218,12 @@ public class ForgotPasswordController {
     @FXML
     void clickResendOtp(ActionEvent event) {
         if (userInputEmail == null) {
-            showStatus(statusMessage2, "Please start from the beginning", true);
+            showMessage("Please start from the beginning", false);
             return;
         }
         
-        hideAllStatus();
+        hideMessage();
+        showLoading(true);
         resendOtpBtn.setDisable(true);
         resendOtpBtn.setText("Sending...");
 
@@ -264,22 +235,24 @@ public class ForgotPasswordController {
         };
 
         task.setOnSucceeded(e -> {
+            showLoading(false);
             boolean sent = task.getValue();
             resendOtpBtn.setDisable(false);
             resendOtpBtn.setText("Resend OTP");
 
             if (sent) {
-                showStatus(statusMessage2, "Verification code resent successfully!", false);
+                showMessage("Verification code resent successfully!", true);
             } else {
-                showStatus(statusMessage2, "Failed to resend code. Please try again", true);
+                showMessage("Failed to resend code. Please try again", false);
             }
         });
 
         task.setOnFailed(e -> {
             logger.error("Failed to resend OTP", task.getException());
-            showStatus(statusMessage2, "Failed to resend code. Please try again", true);
+            showLoading(false);
+            showMessage("Failed to resend code. Please try again", false);
             resendOtpBtn.setDisable(false);
-            resendOtpBtn.setText("Resend Code");
+            resendOtpBtn.setText("Resend OTP");
         });
 
         ThreadPoolManager.getInstance().execute(task);
@@ -290,17 +263,18 @@ public class ForgotPasswordController {
         String otp = otpTxt.getText().trim();
 
         if (otp.isEmpty()) {
-            showStatus(statusMessage2, "Please enter the verification code", true);
+            showMessage("Please enter the verification code", false);
             return;
         }
 
         if (otp.length() != 6) {
-            showStatus(statusMessage2, "Verification code must be 6 digits", true);
+            showMessage("Verification code must be 6 digits", false);
             return;
         }
         
-        hideAllStatus();
+        hideMessage();
 
+        showLoading(true);
         verifyOtpBtn.setDisable(true);
         verifyOtpBtn.setText("Verifying...");
 
@@ -312,6 +286,7 @@ public class ForgotPasswordController {
         };
 
         task.setOnSucceeded(e -> {
+            showLoading(false);
             boolean verified = task.getValue();
             verifyOtpBtn.setDisable(false);
             verifyOtpBtn.setText("Verify OTP");
@@ -319,17 +294,18 @@ public class ForgotPasswordController {
             if (verified) {
                 verifiedEmail = userInputEmail;
                 showPasswordPane();
-                showStatus(statusMessage3, "Code verified! Please set your new password", false);
+                showMessage("Code verified! Please set your new password", true);
             } else {
-                showStatus(statusMessage2, "Invalid or expired verification code", true);
+                showMessage("Invalid or expired verification code", false);
             }
         });
 
         task.setOnFailed(e -> {
             logger.error("Failed to verify OTP", task.getException());
-            showStatus(statusMessage2, "Failed to verify code. Please try again", true);
+            showLoading(false);
+            showMessage("Failed to verify code. Please try again", false);
             verifyOtpBtn.setDisable(false);
-            verifyOtpBtn.setText("VERIFY CODE");
+            verifyOtpBtn.setText("Verify OTP");
         });
 
         ThreadPoolManager.getInstance().execute(task);
@@ -341,27 +317,28 @@ public class ForgotPasswordController {
         String confirmPassword = confirmPasswordTxt.getText();
 
         if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            showStatus(statusMessage3, "Please fill in all password fields", true);
+            showMessage("Please fill in all password fields", false);
             return;
         }
 
         if (newPassword.length() < 6) {
-            showStatus(statusMessage3, "Password must be at least 6 characters", true);
+            showMessage("Password must be at least 6 characters", false);
             return;
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            showStatus(statusMessage3, "Passwords do not match", true);
+            showMessage("Passwords do not match", false);
             return;
         }
 
         if (verifiedEmail == null || verifiedUsername == null) {
-            showStatus(statusMessage3, "Please verify your email first", true);
+            showMessage("Please verify your email first", false);
             return;
         }
         
-        hideAllStatus();
+        hideMessage();
 
+        showLoading(true);
         resetPasswordBtn.setDisable(true);
         resetPasswordBtn.setText("Resetting...");
 
@@ -383,12 +360,13 @@ public class ForgotPasswordController {
         };
 
         task.setOnSucceeded(e -> {
+            showLoading(false);
             boolean success = task.getValue();
             resetPasswordBtn.setDisable(false);
             resetPasswordBtn.setText("Reset Password");
 
             if (success) {
-                showStatus(statusMessage3, "Password reset successfully! Redirecting to login...", false);
+                showMessage("Password reset successfully! Redirecting to login...", true);
                 // Wait 2 seconds then go back to login
                 PauseTransition pause = new PauseTransition(Duration.seconds(2));
                 pause.setOnFinished(ev -> {
@@ -400,13 +378,14 @@ public class ForgotPasswordController {
                 });
                 pause.play();
             } else {
-                showStatus(statusMessage3, "Failed to reset password", true);
+                showMessage("Failed to reset password", false);
             }
         });
 
         task.setOnFailed(e -> {
             logger.error("Failed to reset password", task.getException());
-            showStatus(statusMessage3, "Failed to reset password. Please try again", true);
+            showLoading(false);
+            showMessage("Failed to reset password. Please try again", false);
             resetPasswordBtn.setDisable(false);
             resetPasswordBtn.setText("RESET PASSWORD");
         });
@@ -426,5 +405,83 @@ public class ForgotPasswordController {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
+    }
+
+    private void showMessage(String message, boolean isSuccess) {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+            currentAnimation = null;
+        }
+
+        messageLabel.setText(message);
+
+        if (isSuccess) {
+            messagePane.setStyle("-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(34, 197, 94); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(22, 163, 74);");
+        } else {
+            messagePane.setStyle("-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(255, 60, 41); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(255, 102, 40);");
+        }
+
+        messagePane.setVisible(true);
+        messagePane.setOpacity(0);
+        messagePane.setTranslateY(42);
+
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), messagePane);
+        slideIn.setFromY(42);
+        slideIn.setToY(4);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), messagePane);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        ParallelTransition show = new ParallelTransition(slideIn, fadeIn);
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), messagePane);
+        slideOut.setFromY(4);
+        slideOut.setToY(42);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), messagePane);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+
+        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+        hide.setOnFinished(e -> messagePane.setVisible(false));
+
+        currentAnimation = new SequentialTransition(show, pause, hide);
+        currentAnimation.setOnFinished(e -> {
+            messagePane.setVisible(false);
+            messagePane.setOpacity(0);
+            messagePane.setTranslateY(42);
+            currentAnimation = null;
+        });
+        currentAnimation.play();
+    }
+
+    private void hideMessage() {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+            currentAnimation = null;
+        }
+        if (messagePane != null) {
+            messagePane.setVisible(false);
+            messagePane.setOpacity(0);
+            messagePane.setTranslateY(42);
+        }
+    }
+
+    private void showLoading(boolean show) {
+        if (loadingPane != null) {
+            loadingPane.setVisible(show);
+        }
+    }
+
+    @FXML
+    private void onCloseClicked() {
+        try {
+            returnToLogin();
+        } catch (IOException e) {
+            logger.error("Failed to return to login", e);
+        }
     }
 }

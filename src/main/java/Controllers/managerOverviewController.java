@@ -242,7 +242,7 @@ public class managerOverviewController {
     void clickCarChart(ActionEvent event) throws SQLException {
         System.out.println("Car chart button clicked - switching to car mode");
         chartMode = "car";
-        setCharts(); // Refresh charts to show car data
+        setBarChartOnly(); // Refresh ONLY bar chart to show car data
         activateChartButton(carChart);
         System.out.println("Car chart data loaded. Car series size: " + carSeries.getData().size());
     }
@@ -251,7 +251,7 @@ public class managerOverviewController {
     void clickPartChart(ActionEvent event) throws SQLException {
         System.out.println("Part chart button clicked - switching to part mode");
         chartMode = "part";
-        setCharts(); // Refresh charts to show part data
+        setBarChartOnly(); // Refresh ONLY bar chart to show part data
         activateChartButton(partChart);
         System.out.println("Part chart data loaded. Part series size: " + partSeries.getData().size());
     }
@@ -404,7 +404,12 @@ public class managerOverviewController {
         int curyear = today.getYear();
         Month nmonth = Month.of(currentMonth);
         int curmonth = today.getMonthValue();
+        
+        // Define earliest date (company start date: October 2020)
+        final int EARLIEST_YEAR = 2020;
+        final int EARLIEST_MONTH = 10;
 
+        // Handle Next buttons (future dates)
         if (currentYear >= curyear) {
             NextYearbtn.setDisable(true);
             NextYearbtn.setVisible(false);
@@ -420,6 +425,24 @@ public class managerOverviewController {
             NextYearbtn.setVisible(true);
             NextMonthbtn.setDisable(false);
             NextMonthbtn.setVisible(true);
+        }
+        
+        // Handle Previous buttons (past dates)
+        if (currentYear <= EARLIEST_YEAR) {
+            PreviousYearbth.setDisable(true);
+            PreviousYearbth.setVisible(false);
+            if (currentMonth <= EARLIEST_MONTH) {
+                PreviousMonthbtn.setDisable(true);
+                PreviousMonthbtn.setVisible(false);
+            } else {
+                PreviousMonthbtn.setDisable(false);
+                PreviousMonthbtn.setVisible(true);
+            }
+        } else {
+            PreviousYearbth.setDisable(false);
+            PreviousYearbth.setVisible(true);
+            PreviousMonthbtn.setDisable(false);
+            PreviousMonthbtn.setVisible(true);
         }
 
         // 🔹 Sync ComboBoxes with updated currentMonth/currentYear
@@ -445,6 +468,11 @@ public class managerOverviewController {
     private void updateMonthBoxForYear(int year) {
         int startMonth = 1;
         int endMonth = 12;
+        
+        // Company started in October 2020
+        if (year == 2020) {
+            startMonth = 10; // October
+        }
 
         if (year == today.getYear()) {
             endMonth = today.getMonthValue();
@@ -527,7 +555,25 @@ public class managerOverviewController {
 
         double circulerCar = 2 * Math.PI * carCircle.getRadius();
         carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
-        carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
+        
+        // Calculate final offset
+        double finalOffset = circulerCar * (1 - progressCar);
+        
+        // Start with full offset (hidden) and animate to final offset
+        carCircle.setStrokeDashOffset(circulerCar);
+        
+        // Create wave animation
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline();
+        javafx.animation.KeyFrame keyFrame = new javafx.animation.KeyFrame(
+            javafx.util.Duration.millis(1500), // 1.5 seconds
+            new javafx.animation.KeyValue(
+                carCircle.strokeDashOffsetProperty(),
+                finalOffset,
+                javafx.animation.Interpolator.EASE_OUT
+            )
+        );
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
     }
     private void setPartCircle(int target, int achieve) {
         targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
@@ -568,7 +614,25 @@ public class managerOverviewController {
 
         double circulerPart = 2 * Math.PI * partCircle.getRadius();
         partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
-        partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
+        
+        // Calculate final offset
+        double finalOffset = circulerPart * (1 - progressPart);
+        
+        // Start with full offset (hidden) and animate to final offset
+        partCircle.setStrokeDashOffset(circulerPart);
+        
+        // Create wave animation
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline();
+        javafx.animation.KeyFrame keyFrame = new javafx.animation.KeyFrame(
+            javafx.util.Duration.millis(1500), // 1.5 seconds
+            new javafx.animation.KeyValue(
+                partCircle.strokeDashOffsetProperty(),
+                finalOffset,
+                javafx.animation.Interpolator.EASE_OUT
+            )
+        );
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
     }
 
     //attendance table side
@@ -704,6 +768,31 @@ public class managerOverviewController {
     private ObservableList<managerOverview> bestSellerList;
     private ObservableList<managerOverview> bestCarPartList;
     
+    /**
+     * Updates ONLY the bar chart series without affecting revenue chart
+     */
+    private void updateBarChartSeries() {
+        // Clear existing series from bar chart
+        qtyBarChart.getData().clear();
+        
+        // Add appropriate series based on chart mode
+        if (chartMode.equals("car")) {
+            qtyBarChart.getData().add(carSeries);
+            System.out.println("Added car series to bar chart. Car series data points: " + carSeries.getData().size());
+        } else if (chartMode.equals("part")) {
+            qtyBarChart.getData().add(partSeries);
+            System.out.println("Added part series to bar chart. Part series data points: " + partSeries.getData().size());
+        }
+        
+        System.out.println("Chart mode: " + chartMode + ", Bar chart series count: " + qtyBarChart.getData().size());
+        
+        // Apply styling to bar chart only
+        styleBarChartOnly();
+    }
+    
+    /**
+     * Updates BOTH bar chart and revenue chart series
+     */
     private void updateChartSeries() {
         // Clear existing series from bar chart
         qtyBarChart.getData().clear();
@@ -725,6 +814,49 @@ public class managerOverviewController {
         styleCharts();
     }
     
+    /**
+     * Updates ONLY the bar chart (car/part quantities) without affecting the revenue chart
+     */
+    private void setBarChartOnly() throws SQLException {
+        carSeries.getData().clear();
+        partSeries.getData().clear();
+
+        String selectedPeriod = saleComboBox.getValue();
+        
+        try {
+            // Call getSalesChartData procedure directly
+            CallableStatement cs = con.prepareCall("CALL getSalesChartData(?,?,?,?)");
+            cs.setInt(1, managerId);
+            cs.setInt(2, currentMonth);
+            cs.setInt(3, currentYear);
+            cs.setString(4, selectedPeriod);
+
+            ResultSet rs = cs.executeQuery();
+            while (rs.next()){
+                String periodLabel = rs.getString("period_label");
+                int carQty = rs.getInt("car_qty");
+                int partQty = rs.getInt("part_qty");
+                // Don't read revenue data - we're not updating revenue chart
+
+                carSeries.getData().add(new XYChart.Data<>(periodLabel, carQty));
+                partSeries.getData().add(new XYChart.Data<>(periodLabel, partQty));
+                // Don't add to revenueSeries - keep revenue chart unchanged
+            }
+            rs.close();
+            cs.close();
+            
+            // Update only bar chart series
+            updateBarChartSeries();
+            
+        } catch (Exception e) {
+            System.err.println("Error loading bar chart data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Updates BOTH bar chart and revenue chart (used when month/year changes)
+     */
     private void setCharts() throws SQLException {
         carSeries.getData().clear();
         partSeries.getData().clear();
@@ -762,6 +894,29 @@ public class managerOverviewController {
             e.printStackTrace();
         }
     }
+    /**
+     * Styles ONLY the bar chart without affecting revenue chart
+     */
+    private void styleBarChartOnly() {
+        // Style bar chart - hide default legend, we have custom legend in FXML
+        qtyBarChart.setLegendVisible(false);
+        qtyBarChart.setAnimated(false);
+        qtyBarChart.setCategoryGap(20);
+
+        // Apply custom colors to match the selected mode (car or part)
+        Platform.runLater(() -> {
+            String color = chartMode.equals("car") ? "#6D8196" : "#ffa500";
+            
+            // Apply styling to all bars using lookupAll
+            qtyBarChart.lookupAll(".chart-bar").forEach(node -> {
+                node.setStyle("-fx-bar-fill: " + color + ";");
+            });
+        });
+    }
+    
+    /**
+     * Styles BOTH bar chart and revenue chart
+     */
     private void styleCharts() {
         // Style bar chart - hide default legend, we have custom legend in FXML
         qtyBarChart.setLegendVisible(false);

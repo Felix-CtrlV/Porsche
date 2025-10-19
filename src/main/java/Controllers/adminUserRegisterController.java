@@ -1,16 +1,17 @@
 package Controllers;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import Database.Porsche_DB;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -20,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -28,8 +30,18 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.OptionalInt;
 
 public class adminUserRegisterController {
 
@@ -61,6 +73,8 @@ public class adminUserRegisterController {
     private Label photoPathLabel;
     
     private String selectedPhotoPath = null;
+
+    private static final String DEFAULT_PHOTO_STORAGE_PATH = "/Image/defaultUserProfile.jpg";
 
     @FXML
     private DatePicker dob;
@@ -112,9 +126,7 @@ public class adminUserRegisterController {
         rolecombo.getSelectionModel().clearSelection();
         salarytx.clear();
         managerCombo.getSelectionModel().clearSelection();
-        selectedPhotoPath = null;
-        photoPreview.setImage(null);
-        photoPathLabel.setText("No file selected");
+        setDefaultProfileImage();
     }
     
     @FXML
@@ -133,10 +145,12 @@ public class adminUserRegisterController {
             photoPathLabel.setText(selectedFile.getName());
             
             try {
-                Image image = new Image(selectedPhotoPath);
+                Image image = new Image(selectedPhotoPath, false);
                 photoPreview.setImage(image);
+                applyCircularClip(photoPreview);
             } catch (Exception e) {
                 showToast("Error", "Failed to load image. Please select a valid image file.", "error");
+                setDefaultProfileImage();
             }
         }
     }
@@ -212,9 +226,11 @@ public class adminUserRegisterController {
     void clickregister(ActionEvent event) throws SQLException, ClassNotFoundException, IOException {
 
         // Validation
-        boolean isStaff = "Staff".equals(rolecombo.getValue());
+        String selectedRole = rolecombo.getValue();
+        boolean isStaff = "Staff".equals(selectedRole);
+        boolean isManager = "Manager".equals(selectedRole);
         
-        if (usernametx.getText().isBlank() || emailtx.getText().isBlank() || nrc_first.getValue() == null || nrc_second.getValue() == null || nrc_third.getValue() == null || nrc_number.getText().isBlank() || addresstx.getText().isBlank() || phonetx.getText().isBlank() || rolecombo.getValue() == null || dob.getValue() == null || salarytx.getText().isBlank() || (isStaff && managerCombo.getValue() == null)) {
+        if (usernametx.getText().isBlank() || emailtx.getText().isBlank() || nrc_first.getValue() == null || nrc_second.getValue() == null || nrc_third.getValue() == null || nrc_number.getText().isBlank() || addresstx.getText().isBlank() || phonetx.getText().isBlank() || selectedRole == null || dob.getValue() == null || salarytx.getText().isBlank() || (isStaff && managerCombo.getValue() == null)) {
 
             String errorMsg = "";
             
@@ -249,41 +265,148 @@ public class adminUserRegisterController {
             String Nrc = nrc_first.getValue() + "/" + nrc_second.getValue() + "(" + nrc_third.getValue() + ")" + nrc_number.getText();
             String address = addresstx.getText();
             String phone = phonetx.getText();
-            String role = rolecombo.getValue();
+            String role = selectedRole;
             String date_of_birth = String.valueOf(dob.getValue());
             String defaultPassword = "123456";
             double salary = Double.parseDouble(salarytx.getText().replace("$", "").replace(",", ""));
-            String managerName = isStaff ? managerCombo.getValue() : null;
+            String managerName;
+
+            if (isStaff) {
+                managerName = managerCombo.getValue();
+            } else if (isManager) {
+                managerName = getAdminUsername();
+                if (managerName == null || managerName.isBlank()) {
+                    showToast("Setup Error", "No admin account found to assign as manager. Please create an admin first.", "error");
+                    return;
+                }
+            } else {
+                managerName = null;
+            }
             
             Porsche_DB connect = new Porsche_DB();
             Connection con = connect.connect();
-            
-            // Call the stored procedure
-            CallableStatement cs = con.prepareCall("{call createUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-            cs.setString(1, selectedPhotoPath != null ? selectedPhotoPath : "");
-            cs.setString(2, name);
-            cs.setString(3, email);
-            cs.setString(4, Nrc);
-            cs.setString(5, address);
-            cs.setString(6, phone);
-            cs.setString(7, role);
-            cs.setString(8, date_of_birth);
-            cs.setString(9, defaultPassword);
-            cs.setDouble(10, salary);
-            cs.setString(11, managerName);
 
-            cs.execute();
-            
+            String photoSource = (selectedPhotoPath != null && !selectedPhotoPath.isBlank())
+                    ? selectedPhotoPath
+                    : getDefaultProfilePath();
+            if (photoSource == null || photoSource.isBlank()) {
+                URL defaultResource = getClass().getResource(DEFAULT_PHOTO_STORAGE_PATH);
+                if (defaultResource != null) {
+                    photoSource = defaultResource.toExternalForm();
+                }
+            }
+
+            try (CallableStatement cs = con.prepareCall("{call createUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
+                cs.setString(1, DEFAULT_PHOTO_STORAGE_PATH);
+                cs.setString(2, name);
+                cs.setString(3, email);
+                cs.setString(4, Nrc);
+                cs.setString(5, address);
+                cs.setString(6, phone);
+                cs.setString(7, role);
+                cs.setString(8, date_of_birth);
+                cs.setString(9, defaultPassword);
+                cs.setDouble(10, salary);
+                cs.setString(11, managerName);
+
+                cs.execute();
+            }
+
+            OptionalInt newUserId = fetchUserIdByEmail(con, email);
+            if (newUserId.isPresent()) {
+                String storedRelativePath = saveUserPhotoToImages(photoSource, name, newUserId.getAsInt());
+                if (storedRelativePath != null) {
+                    updateUserPhoto(con, newUserId.getAsInt(), storedRelativePath);
+                } else {
+                    updateUserPhoto(con, newUserId.getAsInt(), DEFAULT_PHOTO_STORAGE_PATH);
+                }
+            }
+
             showToast("Success", "User registered successfully! Default password: 123456", "success");
-            
+
             // Clear form after successful registration
             clickClear(null);
-            
+
             connect.disconnect();
         }
     }
 
+    private String getAdminUsername() {
+        Porsche_DB connect = new Porsche_DB();
+        Connection con = null;
+        try {
+            con = connect.connect();
+
+            String query = "SELECT user_name FROM user_info WHERE user_role = 'Admin' ORDER BY user_id LIMIT 1";
+            try (PreparedStatement ps = con.prepareStatement(query);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("user_name");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                try {
+                    connect.disconnect();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+    private void setDefaultProfileImage() {
+        String defaultPath = getDefaultProfilePath();
+        selectedPhotoPath = defaultPath;
+        if (photoPathLabel != null) {
+            photoPathLabel.setText("defaultUserProfile.jpg");
+        }
+        if (photoPreview != null) {
+            try {
+                if (defaultPath != null && !defaultPath.isBlank()) {
+                    photoPreview.setImage(new Image(defaultPath, false));
+                } else {
+                    photoPreview.setImage(null);
+                }
+                applyCircularClip(photoPreview);
+            } catch (Exception e) {
+                photoPreview.setImage(null);
+            }
+        }
+    }
+
+    private String getDefaultProfilePath() {
+        try {
+            return Objects.requireNonNull(getClass().getResource("/Image/defaultUserProfile.jpg")).toExternalForm();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private void applyCircularClip(ImageView imageView) {
+        if (imageView == null) {
+            return;
+        }
+
+        Circle clip;
+        if (imageView.getClip() instanceof Circle existing) {
+            clip = existing;
+        } else {
+            clip = new Circle();
+            imageView.setClip(clip);
+        }
+
+        clip.radiusProperty().bind(Bindings.min(imageView.fitWidthProperty(), imageView.fitHeightProperty()).divide(2));
+        clip.centerXProperty().bind(imageView.fitWidthProperty().divide(2));
+        clip.centerYProperty().bind(imageView.fitHeightProperty().divide(2));
+    }
+
     public void initialize() {
+        setDefaultProfileImage();
+        applyCircularClip(photoPreview);
         // Load managers for the dropdown
         loadManagers();
         
@@ -418,6 +541,98 @@ public class adminUserRegisterController {
                 nrc_number.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
+    }
+
+    private OptionalInt fetchUserIdByEmail(Connection con, String email) {
+        String sql = "SELECT user_id FROM user_info WHERE user_email = ? ORDER BY user_id DESC LIMIT 1";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return OptionalInt.of(rs.getInt("user_id"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return OptionalInt.empty();
+    }
+
+    private String saveUserPhotoToImages(String sourcePath, String userName, int userId) {
+        try {
+            String effectiveSource = sourcePath;
+            if (effectiveSource == null || effectiveSource.isBlank()) {
+                effectiveSource = getDefaultProfilePath();
+            }
+            if (effectiveSource == null || effectiveSource.isBlank()) {
+                URL defaultResource = getClass().getResource(DEFAULT_PHOTO_STORAGE_PATH);
+                if (defaultResource != null) {
+                    effectiveSource = defaultResource.toExternalForm();
+                }
+            }
+            if (effectiveSource == null || effectiveSource.isBlank()) {
+                return null;
+            }
+
+            URI uri = URI.create(effectiveSource);
+
+            String originalName = "photo";
+            if (uri.getPath() != null) {
+                int slashIndex = uri.getPath().lastIndexOf('/');
+                if (slashIndex >= 0 && slashIndex < uri.getPath().length() - 1) {
+                    originalName = uri.getPath().substring(slashIndex + 1);
+                }
+            }
+
+            String extension = extractExtension(originalName);
+            String sanitizedName = sanitizeForFileName(userName);
+            String fileName = String.format("user_%d_%s%s", userId, sanitizedName, extension);
+
+            Path imagesDir = Paths.get(System.getProperty("user.dir"), "Images");
+            Files.createDirectories(imagesDir);
+            Path target = imagesDir.resolve(fileName);
+
+            if ("file".equalsIgnoreCase(uri.getScheme()) || uri.getScheme() == null) {
+                Path source = Paths.get(uri);
+                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                try (InputStream stream = uri.toURL().openStream()) {
+                    Files.copy(stream, target, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+
+            return "Images/" + fileName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String extractExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex >= 0 && dotIndex < fileName.length() - 1) {
+            return fileName.substring(dotIndex);
+        }
+        return ".png";
+    }
+
+    private String sanitizeForFileName(String input) {
+        String sanitized = input == null ? "" : input.trim().replaceAll("[^a-zA-Z0-9]+", "_");
+        if (sanitized.isBlank()) {
+            sanitized = "user";
+        }
+        return sanitized.toLowerCase(Locale.ENGLISH);
+    }
+
+    private void updateUserPhoto(Connection con, int userId, String photoPath) {
+        String sql = "UPDATE user_info SET user_photo = ? WHERE user_id = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, photoPath);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     private void showToast(String title, String message, String type) {

@@ -21,7 +21,7 @@ public class AdminAccountDAO {
 
     public List<user> getStaffCards(String status, String role) throws SQLException {
         String sql = """
-            SELECT user_id, user_name, user_phone, user_email, user_address, dob, start_date, end_date, user_status, reason
+            SELECT user_id, user_name, user_phone, user_email, user_address, dob, start_date, end_date, user_status, reason, user_photo
             FROM user_info
             WHERE user_role = ? AND user_status = ?
             ORDER BY user_id
@@ -34,7 +34,7 @@ public class AdminAccountDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    list.add(new user(
+                    user staff = new user(
                             rs.getInt("user_id"),
                             rs.getString("user_name"),
                             rs.getString("user_phone"),
@@ -45,7 +45,13 @@ public class AdminAccountDAO {
                             rs.getDate("start_date") != null ? rs.getDate("start_date").toLocalDate() : null,
                             rs.getDate("end_date") != null ? rs.getDate("end_date").toLocalDate() : null,
                             rs.getString("reason")
-                    ));
+                    );
+                    try {
+                        staff.setImagePath(rs.getString("user_photo"));
+                    } catch (SQLException ignored) {
+                        // user_photo column may be absent in some schema versions
+                    }
+                    list.add(staff);
                 }
             }
         }

@@ -22,7 +22,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -268,14 +271,31 @@ public class loginController {
         forgotPasswordLink.setOnMouseClicked(e -> {
             try {
                 Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/forgotPassword.fxml")));
-                Stage stage = (Stage) forgotPasswordLink.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.centerOnScreen();
+
+                // Rounded corners
+                Rectangle clip = new Rectangle(400, 435);
+                clip.setArcHeight(30);
+                clip.setArcWidth(3);
+                root.setClip(clip);
+
+                Scene scene = new Scene(root, 400, 435);
+                scene.setFill(Color.TRANSPARENT);
+
+                // Create a NEW transparent stage
+                Stage forgotStage = new Stage();
+                forgotStage.initStyle(StageStyle.TRANSPARENT);
+                forgotStage.setScene(scene);
+                forgotStage.centerOnScreen();
+                forgotStage.show();
+
+                // (optional) hide the current window if you want
+                ((Stage) forgotPasswordLink.getScene().getWindow()).close();
+
             } catch (Exception ex) {
-                logger.error("Failed to load forgot password screen");
-                ex.printStackTrace();
+                logger.error("Failed to load forgot password screen", ex);
                 slideError("Failed to load forgot password screen: " + ex.getMessage());
             }
         });
+
     }
 }
