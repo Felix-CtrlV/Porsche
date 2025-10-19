@@ -585,24 +585,8 @@ public class adminDashboardController {
     private void closeAllPanesAndResetToSettings() {
         // Determine which pane is currently visible and close it
         if (profilePane.isVisible()) {
-            // Close profile pane directly
-            TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), profilePane);
-            slideOut.setFromX(0);
-            slideOut.setToX(420);
-            
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
-            fadeOut.setFromValue(0.5);
-            fadeOut.setToValue(0);
-            
-            ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
-            hide.setOnFinished(e -> {
-                profilePane.setVisible(false);
-                settingPane.setVisible(false); // Also hide settings pane
-                overlayPane.setVisible(false);
-                root.setEffect(null);
-                root.setDisable(false);
-            });
-            hide.play();
+            closeProfilePane(false);
+            return;
         } else if (targetPane.isVisible()) {
             // Close target pane directly
             TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), targetPane);
@@ -704,8 +688,7 @@ public class adminDashboardController {
         String sessionPassword = current.getPassword();
         
         if (sessionPassword != null && sessionPassword.equals(enteredPassword)) {
-            // Password correct - show profile
-            hidePasswordVerification();
+            // Password correct - transition directly to profile pane
             showProfilePane();
         } else {
             passwordErrorLabel.setText("Incorrect password");
@@ -744,6 +727,10 @@ public class adminDashboardController {
     private void showProfilePane() {
         // Settings pane is already hidden from verification step, no need to touch it
         
+        if (settingPane != null) {
+            settingPane.setVisible(false);
+        }
+
         // Refresh profile data from session first
         if (current != null) {
             profileName.setText(current.getUsername() != null ? current.getUsername() : "");
@@ -794,26 +781,54 @@ public class adminDashboardController {
     }
     
     private void hideProfilePane() {
-        // Prepare settings pane off-screen BEFORE starting any animation (while still invisible)
-        settingPane.setTranslateX(420);
-        
-        // Slide out profile pane first
+        closeProfilePane(true);
+    }
+
+    private void closeProfilePane(boolean reopenSettings) {
+        if (!profilePane.isVisible()) {
+            return;
+        }
+
         TranslateTransition slideOutProfile = new TranslateTransition(Duration.millis(300), profilePane);
         slideOutProfile.setFromX(0);
         slideOutProfile.setToX(420);
-        slideOutProfile.setOnFinished(e -> {
-            profilePane.setVisible(false);
-            
-            // Now make settings pane visible (it's already positioned at 420)
-            settingPane.setVisible(true);
-            
-            // Then slide in settings pane
-            TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
-            slideInSettings.setFromX(420);
-            slideInSettings.setToX(0);
-            slideInSettings.play();
-        });
-        slideOutProfile.play();
+
+        if (reopenSettings) {
+            slideOutProfile.setOnFinished(e -> {
+                profilePane.setVisible(false);
+                profilePane.setTranslateX(0);
+
+                if (settingPane != null) {
+                    settingPane.setTranslateX(420);
+                    settingPane.setVisible(true);
+                    TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
+                    slideInSettings.setFromX(420);
+                    slideInSettings.setToX(0);
+                    slideInSettings.play();
+                }
+            });
+            slideOutProfile.play();
+        } else {
+            slideOutProfile.setOnFinished(e -> {
+                profilePane.setVisible(false);
+                profilePane.setTranslateX(0);
+                if (settingPane != null) {
+                    settingPane.setVisible(false);
+                }
+
+                FadeTransition fadeOverlay = new FadeTransition(Duration.millis(200), overlayPane);
+                fadeOverlay.setFromValue(overlayPane.getOpacity());
+                fadeOverlay.setToValue(0);
+                fadeOverlay.setOnFinished(ev -> {
+                    overlayPane.setVisible(false);
+                    overlayPane.setOpacity(0.5);
+                    root.setEffect(null);
+                    root.setDisable(false);
+                });
+                fadeOverlay.play();
+            });
+            slideOutProfile.play();
+        }
     }
     
     private void toggleEditMode() {
