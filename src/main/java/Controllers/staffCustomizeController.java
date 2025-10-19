@@ -1,6 +1,6 @@
 package Controllers;
 
-import javafx.animation.FadeTransition;
+import Utils.AppStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,13 +12,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -30,17 +26,14 @@ public class staffCustomizeController implements Initializable {
     @FXML private Label car_description;
     @FXML private Label car_frame_num;
     @FXML private Label fuel_type;
-
     @FXML private Button confirm_btn;
     @FXML private Button back_btn;
-
     @FXML private Button leftbtn;
     @FXML private Button rightbtn;
     @FXML private Button leftbtn1;
     @FXML private Button rightbtn1;
     @FXML private Button leftbtn2;
     @FXML private Button rightbtn2;
-
     @FXML private ScrollPane wheels_scroll;
     @FXML private ScrollPane color_scroll;
     @FXML private ScrollPane interior_scroll;
@@ -49,19 +42,19 @@ public class staffCustomizeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         model_name.setText("Carrera GTS");
         model_price.setText("$140000");
-        car_description.setText("The 911 Carrera GTS epitomizes precision and driving passion. Its naturally aspirated flat-six, razor-sharp handling, and track-focused aerodynamics deliver uncompromising performance—every roar and shift a statement of speed, control, and automotive excellence.");
+        car_description.setText("The 911 Carrera GTS epitomizes precision and driving passion.");
         car_frame_num.setText("911");
         fuel_type.setText("GASOLINE");
     }
 
     @FXML
     private void clickConfirm(ActionEvent event) {
-        navigate(event, "/View/staffFinalize.fxml");
+        navigate("/View/staffFinalize.fxml");
     }
 
     @FXML
     private void back(ActionEvent event) {
-        navigate(event, "/View/staffModelSelect.fxml");
+        navigate("/View/staffModelSelect.fxml");
     }
 
     @FXML
@@ -84,23 +77,12 @@ public class staffCustomizeController implements Initializable {
         return null;
     }
 
-    private void navigate(ActionEvent event, String path) {
+    private void navigate(String path) {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(path)));
-            Stage stage = (Stage)((Button)event.getSource()).getScene().getWindow();
-            root.setOpacity(0);
-            Scene newScene = new Scene(root, 1376, 768);
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), stage.getScene().getRoot());
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
-            fadeOut.setOnFinished(e -> {
-                stage.setScene(newScene);
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
-                fadeIn.setFromValue(0);
-                fadeIn.setToValue(1);
-                fadeIn.play();
-            });
-            fadeOut.play();
+            Scene newScene = new Scene(root, 1300, 850);
+            AppStage.getStage().setScene(newScene);
+            AppStage.getStage().centerOnScreen();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

@@ -1,6 +1,6 @@
 package Controllers;
 
-import Model.car;
+import Utils.AppStage;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -33,6 +32,7 @@ public class staffShopingCartController {
     @FXML private Label modelLabel, colorLabel, engineLabel;
     @FXML private Button backButton;
     @FXML private Button confirmButton;
+    @FXML private Button loadAssetButton; // matches FXML fx:id
     @FXML private Label confirmationMessageLabel;
 
     @FXML private ToggleGroup paymentMethodGroup;
@@ -58,13 +58,11 @@ public class staffShopingCartController {
         int months;
         double apr;
         double downPayment;
-
         InstallmentPlan(int months, double apr, double downPayment) {
             this.months = months;
             this.apr = apr;
             this.downPayment = downPayment;
         }
-
         @Override
         public String toString() {
             return months + " Months (" + apr + "% APR)";
@@ -73,6 +71,11 @@ public class staffShopingCartController {
 
     private List<InstallmentPlan> installmentPlans = new ArrayList<>();
     private InstallmentPlan selectedPlan;
+    private boolean cameFromAsset = false;
+
+    public void setCameFromAsset(boolean value) {
+        this.cameFromAsset = value;
+    }
 
     @FXML
     public void initialize() {
@@ -90,13 +93,13 @@ public class staffShopingCartController {
         }
 
         initializeInstallmentPlans();
-
         setupPaymentMethodListeners();
 
+        // Navigation buttons
         backButton.setOnAction(e -> goBack());
         confirmButton.setOnAction(e -> confirmPurchase());
+        loadAssetButton.setOnAction(e -> loadStaffAsset());
 
-        addSampleAccessories();
         updatePriceLabels();
     }
 
@@ -107,11 +110,9 @@ public class staffShopingCartController {
         installmentPlans.add(new InstallmentPlan(48, 4.9, 25000));
 
         ObservableList<String> planNames = FXCollections.observableArrayList();
-        for (InstallmentPlan plan : installmentPlans) {
-            planNames.add(plan.toString());
-        }
+        for (InstallmentPlan plan : installmentPlans) planNames.add(plan.toString());
         installmentPlanCombo.setItems(planNames);
-        installmentPlanCombo.getSelectionModel().select(1); // Default to 24 months
+        installmentPlanCombo.getSelectionModel().select(1);
         selectedPlan = installmentPlans.get(1);
 
         installmentPlanCombo.setOnAction(e -> {
@@ -139,15 +140,12 @@ public class staffShopingCartController {
 
     private void updateInstallmentDetails() {
         if (selectedPlan == null) return;
-
         double total = calculateGrandTotal();
         double amountToFinance = total - selectedPlan.downPayment;
         double monthlyRate = (selectedPlan.apr / 100) / 12;
-
         double monthlyPayment = amountToFinance *
                 (monthlyRate * Math.pow(1 + monthlyRate, selectedPlan.months)) /
                 (Math.pow(1 + monthlyRate, selectedPlan.months) - 1);
-
         double totalPayments = monthlyPayment * selectedPlan.months;
         double totalInterest = totalPayments - amountToFinance;
         double totalWithInterest = total + totalInterest;
@@ -162,10 +160,25 @@ public class staffShopingCartController {
 
     private void goBack() {
         try {
-            Stage stage = (Stage) backButton.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/staffFinalize.fxml"));
+            if (cameFromAsset) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffAsset.fxml"));
+                Scene scene = new Scene(loader.load());
+                AppStage.getStage().setScene(scene);
+            } else {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffFinalize.fxml"));
+                Scene scene = new Scene(loader.load());
+                AppStage.getStage().setScene(scene);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void loadStaffAsset() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffAsset.fxml"));
             Scene scene = new Scene(loader.load());
-            stage.setScene(scene);
+            AppStage.getStage().setScene(scene);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -173,8 +186,7 @@ public class staffShopingCartController {
 
     private void confirmPurchase() {
         String paymentMethod = installmentRadio.isSelected() ? "Installment" : "Full Payment";
-        String message = "Purchase Confirmed!\n\n";
-        message += "Payment Method: " + paymentMethod;
+        String message = "Purchase Confirmed!\n\nPayment Method: " + paymentMethod;
 
         if (installmentRadio.isSelected() && selectedPlan != null) {
             double total = calculateGrandTotal();
@@ -191,26 +203,8 @@ public class staffShopingCartController {
         confirmationMessageLabel.setText(message);
         confirmationMessageLabel.setVisible(true);
         confirmationMessageLabel.setManaged(true);
-
-        // Disable confirm button after purchase
         confirmButton.setDisable(true);
-
-        System.out.println("Purchase confirmed: " + message);
     }
-
-//    public void setCarData(car selectedCar, String color, String engine) {
-//        if (selectedCar != null) {
-//            modelLabel.setText(selectedCar.getModelid());
-//            basePrice = selectedCar.getCurrent_price();
-//        }
-//        if (color != null) {
-//            colorLabel.setText(color);
-//        }
-//        if (engine != null) {
-//            engineLabel.setText(engine);
-//        }
-//        updatePriceLabels();
-//    }
 
     public void addAccessory(String name, double price) {
         accessoriesPrice += price;
@@ -229,18 +223,6 @@ public class staffShopingCartController {
         accessoriesContainer.getChildren().add(accessoryRow);
 
         updatePriceLabels();
-    }
-
-    public void removeAccessory(int index) {
-        if (index >= 0 && index < accessoriesContainer.getChildren().size()) {
-            accessoriesContainer.getChildren().remove(index);
-        }
-        updatePriceLabels();
-    }
-
-    private void addSampleAccessories() {
-        addAccessory("Premium Sound System", 3500);
-        addAccessory("Carbon Fiber Package", 8500);
     }
 
     private double calculateSubtotal() {

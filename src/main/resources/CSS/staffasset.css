@@ -476,3 +476,29 @@
 .checkout-button-modal:pressed {
     -fx-background-color: #B71C1C;
 }
+
+.back-button {
+    -fx-background-color: white;
+    -fx-border-color: #D32F2F;
+    -fx-border-width: 2px;
+    -fx-text-fill: #D32F2F;
+    -fx-font-family: "Montserrat", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(211, 47, 47, 0.3), 8, 0.2, 0, 2);
+}
+
+.back-button:hover {
+    -fx-background-color: #D32F2F;
+    -fx-text-fill: white;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.back-button:pressed {
+    -fx-background-color: #B71C1C;
+    -fx-text-fill: white;
+}

@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Objects;
 
 public class login extends Application {
@@ -19,25 +18,21 @@ public class login extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
-            // Load splash screen immediately
             FXMLLoader splashLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/View/splash.fxml")));
             Parent splashRoot = splashLoader.load();
-            
-            // Get controller and set stage
+
             SplashController splashController = splashLoader.getController();
             splashController.setStage(primaryStage);
-            
+
             Scene splashScene = new Scene(splashRoot);
-            
             primaryStage.initStyle(StageStyle.UNDECORATED);
             primaryStage.setScene(splashScene);
             primaryStage.setResizable(false);
             primaryStage.centerOnScreen();
             primaryStage.show();
-            
+
         } catch (Exception e) {
             logger.error("Failed to load splash screen", e);
-            // Fallback to login screen directly
             loadLoginScreen(primaryStage);
         }
     }
@@ -46,7 +41,7 @@ public class login extends Application {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/login.fxml")));
             Scene scene = new Scene(root);
-            
+
             Platform.runLater(() -> {
                 stage.initStyle(StageStyle.UNDECORATED);
                 stage.setScene(scene);
@@ -59,11 +54,11 @@ public class login extends Application {
         }
     }
 
-    /**
-     * Starts the application directly at the login screen, skipping the splash screen.
-     * Used for logout functionality.
-     */
     public void startDirectLogin(Stage primaryStage) throws Exception {
         loadLoginScreen(primaryStage);
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

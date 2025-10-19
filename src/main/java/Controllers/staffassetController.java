@@ -1,5 +1,6 @@
 package Controllers;
 
+import Utils.AppStage;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -14,7 +15,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -29,13 +29,11 @@ public class staffassetController {
     @FXML private ToggleButton allCategoryButton, accessoriesButton, equipmentButton;
     @FXML private VBox productsContainer;
     @FXML private Label cartCountLabel, cartItemCountLabel;
-    @FXML private Button viewCartButton, clearCartButton, checkoutButton, closeCartButton;
+    @FXML private Button viewCartButton, clearCartButton, checkoutButton, closeCartButton, backButton;
     @FXML private VBox cartItemsContainer;
     @FXML private Label subtotalLabel, taxLabelCart, totalLabel;
     @FXML private StackPane cartModalOverlay;
-
-    @FXML
-    private ToggleGroup categoryToggleGroup;
+    @FXML private ToggleGroup categoryToggleGroup;
 
     private int currentSlide = 0;
     private Timeline autoSlideTimeline;
@@ -90,6 +88,7 @@ public class staffassetController {
         setupSlider();
         setupCategoryFilters();
         setupCartButtons();
+        setupBackButton();
         displayProducts("all");
         updateCartDisplay();
     }
@@ -97,15 +96,15 @@ public class staffassetController {
     private void initializeSliderData() {
         sliderItems.add(new SliderItem("/Image/Porsche Classic Car Cover.png", "Porsche Classic Car Cover", "Custom-fitted Car Cover"));
         sliderItems.add(new SliderItem("/Image/Illuminated Door Sill Guards.png", "Door Sill Guards", "Protects Your Door Edges"));
-        sliderItems.add(new SliderItem("/Image/Porsche Design Child Seat.png", "Porsche Design Child Seat", "Prevents Your Child From Getting Yeeted"));
+        sliderItems.add(new SliderItem("/Image/Porsche Design Child Seat.png", "Porsche Design Child Seat", "Safe and Comfortable"));
         sliderItems.add(new SliderItem("/Image/Porsche Cleaning and Care Kit.png", "Cleaning Kit", "Cleans That Goofy Ass Dirt"));
     }
 
     private void initializeProducts() {
-        allProducts.add(new Product("acc001", "Porsche Classic Car Cover", "accessories", 299, "Protective car cover for your porsche", "/Image/Porsche Classic Car Cover.png"));
-        allProducts.add(new Product("acc002", "Illuminated Door Sill Guards", "accessories", 179, "Genuine leather steering wheel cover with ergonomic grip", "/Image/Illuminated Door Sill Guards.png"));
-        allProducts.add(new Product("eq001", "Porsche Design Child Seat", "equipment", 599, "Porsche Design Child Seat", "/Image/Porsche Design Child Seat.png"));
-        allProducts.add(new Product("eq002", "Porsche Cleaning and Care Kit", "equipment", 899, "147-piece tool set with premium storage case", "/Image/Porsche Cleaning and Care Kit.png"));
+        allProducts.add(new Product("acc001", "Porsche Classic Car Cover", "accessories", 299, "Protective car cover for your Porsche", "/Image/Porsche Classic Car Cover.png"));
+        allProducts.add(new Product("acc002", "Illuminated Door Sill Guards", "accessories", 179, "Stylish door sill protection", "/Image/Illuminated Door Sill Guards.png"));
+        allProducts.add(new Product("eq001", "Porsche Design Child Seat", "equipment", 599, "Safe child seat design", "/Image/Porsche Design Child Seat.png"));
+        allProducts.add(new Product("eq002", "Porsche Cleaning and Care Kit", "equipment", 899, "147-piece tool set with premium case", "/Image/Porsche Cleaning and Care Kit.png"));
     }
 
     private void setupSlider() {
@@ -129,6 +128,7 @@ public class staffassetController {
             });
             sliderIndicators.getChildren().add(indicator);
         }
+        StackPane.setMargin(sliderIndicators, new Insets(0, 0, 30, 0));
     }
 
     private void updateSlide() {
@@ -139,7 +139,6 @@ public class staffassetController {
             sliderImage.setImage(image);
         } catch (Exception e) {
             sliderImage.setImage(null);
-            System.out.println("Image not found: " + item.imagePath);
         }
         sliderTitle.setText(item.title);
         sliderDescription.setText(item.description);
@@ -173,20 +172,29 @@ public class staffassetController {
     private VBox createProductCard(Product product) {
         VBox card = new VBox(15);
         card.getStyleClass().add("product-card");
-        card.setPadding(new Insets(20));
+        card.setPadding(new Insets(15));
 
-        HBox contentBox = new HBox(20);
+        HBox contentBox = new HBox(15);
         contentBox.setAlignment(Pos.CENTER_LEFT);
 
         VBox imageContainer = new VBox();
         imageContainer.getStyleClass().add("product-image-container");
         imageContainer.setPrefSize(120, 120);
         imageContainer.setAlignment(Pos.CENTER);
-        Label imagePlaceholder = new Label("📦"); // fallback if image missing
-        imagePlaceholder.setStyle("-fx-font-size: 48px;");
-        imageContainer.getChildren().add(imagePlaceholder);
 
-        VBox detailsBox = new VBox(8);
+        try {
+            ImageView imgView = new ImageView(new Image(getClass().getResourceAsStream(product.imagePath)));
+            imgView.setFitWidth(120);
+            imgView.setFitHeight(120);
+            imgView.setPreserveRatio(true);
+            imageContainer.getChildren().add(imgView);
+        } catch (Exception e) {
+            Label imagePlaceholder = new Label("📦");
+            imagePlaceholder.setStyle("-fx-font-size: 48px;");
+            imageContainer.getChildren().add(imagePlaceholder);
+        }
+
+        VBox detailsBox = new VBox(6);
         detailsBox.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(detailsBox, javafx.scene.layout.Priority.ALWAYS);
 
@@ -196,36 +204,36 @@ public class staffassetController {
         Label descLabel = new Label(product.description);
         descLabel.getStyleClass().add("product-description");
         descLabel.setWrapText(true);
-        descLabel.setMaxWidth(500);
+        descLabel.setMaxWidth(400);
 
         Label categoryLabel = new Label(product.category.toUpperCase());
         categoryLabel.getStyleClass().add("product-category");
 
         detailsBox.getChildren().addAll(nameLabel, descLabel, categoryLabel);
 
-        VBox controlsBox = new VBox(12);
+        VBox controlsBox = new VBox(10);
         controlsBox.setAlignment(Pos.CENTER_RIGHT);
-        controlsBox.setMinWidth(250);
+        controlsBox.setMinWidth(200);
 
         Label priceLabel = new Label(currencyFormat.format(product.price));
         priceLabel.getStyleClass().add("product-price");
 
-        HBox quantityBox = new HBox(10);
+        HBox quantityBox = new HBox(8);
         quantityBox.setAlignment(Pos.CENTER_RIGHT);
 
-        Label qtyLabel = new Label("Quantity:");
+        Label qtyLabel = new Label("Qty:");
         qtyLabel.getStyleClass().add("quantity-label");
 
         Spinner<Integer> quantitySpinner = new Spinner<>(1, 99, 1);
         quantitySpinner.getStyleClass().add("quantity-spinner");
-        quantitySpinner.setPrefWidth(80);
+        quantitySpinner.setPrefWidth(60);
         quantitySpinner.setEditable(true);
 
         quantityBox.getChildren().addAll(qtyLabel, quantitySpinner);
 
         Button addButton = new Button("ADD TO CART");
         addButton.getStyleClass().add("add-to-cart-button");
-        addButton.setPrefWidth(200);
+        addButton.setPrefWidth(150);
         addButton.setOnAction(e -> addToCart(product, quantitySpinner.getValue()));
 
         controlsBox.getChildren().addAll(priceLabel, quantityBox, addButton);
@@ -248,6 +256,18 @@ public class staffassetController {
         clearCartButton.setOnAction(e -> clearCart());
         checkoutButton.setOnAction(e -> proceedToCheckout());
         closeCartButton.setOnAction(e -> closeCartModal());
+    }
+
+    private void setupBackButton() {
+        backButton.setOnAction(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffWelcome.fxml"));
+                Scene scene = new Scene(loader.load());
+                AppStage.getStage().setScene(scene);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     private void openCartModal() {
@@ -342,17 +362,16 @@ public class staffassetController {
         }
         closeCartModal();
         try {
-            Stage stage = (Stage) checkoutButton.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/staffShopingCart.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffShopingCart.fxml"));
             Scene scene = new Scene(loader.load());
-            stage.setScene(scene);
+            staffShopingCartController controller = loader.getController();
+            controller.setCameFromAsset(true);
+            for (CartItem item : shoppingCart.values()) {
+                controller.addAccessory(item.product.name, item.getTotal());
+            }
+            AppStage.getStage().setScene(scene);
         } catch (IOException ex) {
             ex.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Navigation Error");
-            alert.setContentText("Could not load checkout page.");
-            alert.showAndWait();
         }
     }
 }
