@@ -405,9 +405,9 @@ public class managerOverviewController {
         Month nmonth = Month.of(currentMonth);
         int curmonth = today.getMonthValue();
         
-        // Define earliest date (company start date)
+        // Define earliest date (company start date: October 2020)
         final int EARLIEST_YEAR = 2020;
-        final int EARLIEST_MONTH = 1;
+        final int EARLIEST_MONTH = 10;
 
         // Handle Next buttons (future dates)
         if (currentYear >= curyear) {
@@ -468,6 +468,11 @@ public class managerOverviewController {
     private void updateMonthBoxForYear(int year) {
         int startMonth = 1;
         int endMonth = 12;
+        
+        // Company started in October 2020
+        if (year == 2020) {
+            startMonth = 10; // October
+        }
 
         if (year == today.getYear()) {
             endMonth = today.getMonthValue();
