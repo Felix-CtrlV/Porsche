@@ -11,7 +11,7 @@ USE car_show_room;
 -- 1. FIXED: getAllCars
 -- ============================================
 -- Java expects: car_id, car_name, car_color, interior_color, fuel_type, 
---               production_year, car_qty, price, car_photo, car_status
+--               production_year, car_qty, price, car_photo, car_status, car_speed, car_description
 
 DROP PROCEDURE IF EXISTS getAllCars;
 
@@ -28,7 +28,9 @@ BEGIN
         c.car_qty,                                     -- Column 7
         c.price,                                       -- Column 8
         c.car_photo,                                   -- Column 9
-        c.car_status                                   -- Column 10
+        c.car_status,                                  -- Column 10
+        c.car_speed,                                   -- Column 11
+        c.car_description                              -- Column 12
     FROM cars c
     ORDER BY c.car_id;
 END$$
@@ -79,7 +81,9 @@ CREATE DEFINER="avnadmin"@"%" PROCEDURE "insertFullCar"(
     IN in_production_year INT,
     IN in_car_qty INT,
     IN in_price DOUBLE(15,3),
-    IN in_photo_url LONGTEXT
+    IN in_photo_url LONGTEXT,
+    IN in_car_speed LONGTEXT,
+    IN in_car_description LONGTEXT
 )
 BEGIN
     DECLARE v_fuel_storage VARCHAR(40);
@@ -116,7 +120,9 @@ BEGIN
         car_qty,
         price,
         car_photo,
-        car_status
+        car_status,
+        car_speed,
+        car_description
     ) VALUES (
         in_model_name,
         in_trim_name,
@@ -127,7 +133,9 @@ BEGIN
         in_car_qty,
         in_price,
         in_photo_url,
-        TRUE  -- Default to available
+        TRUE,  -- Default to available
+        in_car_speed,
+        in_car_description
     );
     
     COMMIT;
@@ -222,7 +230,9 @@ CREATE DEFINER="avnadmin"@"%" PROCEDURE "updateFullCar"(
     IN in_production_year INT,
     IN in_car_qty INT,
     IN in_price DOUBLE(15,3),
-    IN in_photo_url LONGTEXT
+    IN in_photo_url LONGTEXT,
+    IN in_car_speed LONGTEXT,
+    IN in_car_description LONGTEXT
 )
 BEGIN
     DECLARE v_fuel_storage VARCHAR(40);
@@ -288,6 +298,14 @@ BEGIN
         car_photo = CASE 
             WHEN in_photo_url IS NOT NULL AND in_photo_url != '' THEN in_photo_url
             ELSE car_photo  -- Keep existing photo if no new one provided
+        END,
+        car_speed = CASE 
+            WHEN in_car_speed IS NOT NULL AND in_car_speed != '' THEN in_car_speed
+            ELSE car_speed  -- Keep existing speed if no new one provided
+        END,
+        car_description = CASE 
+            WHEN in_car_description IS NOT NULL AND in_car_description != '' THEN in_car_description
+            ELSE car_description  -- Keep existing description if no new one provided
         END
     WHERE car_id = in_car_id;
     
