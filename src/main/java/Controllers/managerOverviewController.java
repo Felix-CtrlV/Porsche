@@ -404,7 +404,12 @@ public class managerOverviewController {
         int curyear = today.getYear();
         Month nmonth = Month.of(currentMonth);
         int curmonth = today.getMonthValue();
+        
+        // Define earliest date (company start date)
+        final int EARLIEST_YEAR = 2020;
+        final int EARLIEST_MONTH = 1;
 
+        // Handle Next buttons (future dates)
         if (currentYear >= curyear) {
             NextYearbtn.setDisable(true);
             NextYearbtn.setVisible(false);
@@ -420,6 +425,24 @@ public class managerOverviewController {
             NextYearbtn.setVisible(true);
             NextMonthbtn.setDisable(false);
             NextMonthbtn.setVisible(true);
+        }
+        
+        // Handle Previous buttons (past dates)
+        if (currentYear <= EARLIEST_YEAR) {
+            PreviousYearbth.setDisable(true);
+            PreviousYearbth.setVisible(false);
+            if (currentMonth <= EARLIEST_MONTH) {
+                PreviousMonthbtn.setDisable(true);
+                PreviousMonthbtn.setVisible(false);
+            } else {
+                PreviousMonthbtn.setDisable(false);
+                PreviousMonthbtn.setVisible(true);
+            }
+        } else {
+            PreviousYearbth.setDisable(false);
+            PreviousYearbth.setVisible(true);
+            PreviousMonthbtn.setDisable(false);
+            PreviousMonthbtn.setVisible(true);
         }
 
         // 🔹 Sync ComboBoxes with updated currentMonth/currentYear
