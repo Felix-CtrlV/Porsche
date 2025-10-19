@@ -177,7 +177,7 @@
                     <center>
                   <StackPane maxHeight="10000.0" prefHeight="613.0" prefWidth="454.0">
                      <children>
-                              <VBox fx:id="addPane" maxWidth="448.0" minHeight="382.0" minWidth="448.0" prefHeight="614.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                              <VBox fx:id="addPane" maxWidth="448.0" minHeight="382.0" minWidth="448.0" prefHeight="614.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
                                   <children>
                                       <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                           <children>
@@ -531,7 +531,7 @@
                               </StackPane>
                                   </children>
                               </VBox>
-                        <VBox fx:id="editPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
+                        <VBox fx:id="editPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
                            <children>
                               <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                  <children>
@@ -549,7 +549,7 @@
                               </HBox>
                               <StackPane maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0">
                                  <children>
-                                    <VBox fx:id="editPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;">
+                                    <VBox fx:id="editPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;" visible="false">
                                        <children>
                                           <HBox prefHeight="226.0" prefWidth="408.0" spacing="12.0">
                                              <children>
@@ -642,9 +642,9 @@
                                           </HBox>
                                        </children>
                                     </VBox>
-                                    <VBox fx:id="editCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;" visible="false">
+                                    <VBox fx:id="editCar" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="10.0" style="-fx-padding: 20;">
                                        <children>
-                                          <HBox prefHeight="226.0" prefWidth="408.0" spacing="12.0">
+                                          <HBox minHeight="190.0" prefHeight="226.0" prefWidth="408.0" spacing="12.0">
                                              <children>
                                                 <VBox prefHeight="210.0" prefWidth="247.0" spacing="25.0">
                                                    <children>
@@ -677,8 +677,11 @@
                                                             </HBox>
                                                             <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="190.0" spacing="8">
                                                                <children>
-                                                                  <Label style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="usage" />
-                                                                  <TextField fx:id="editCarUsage" promptText="usage" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35; -fx-pref-width: 140;" />
+                                                                  <Label prefHeight="18.0" prefWidth="74.0" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="usage" />
+                                                                  <TextField fx:id="editCarUsage" maxWidth="128.0" minWidth="128.0" promptText="usage" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35; -fx-pref-width: 140;">
+                                                                     <HBox.margin>
+                                                                        <Insets left="40.0" />
+                                                                     </HBox.margin></TextField>
                                                                </children>
                                                             </HBox>
                                                             <HBox alignment="CENTER_LEFT" spacing="8">
@@ -705,19 +708,54 @@
                                                 </VBox>
                                              </children>
                                           </HBox>
-                                          <VBox maxHeight="280.0" maxWidth="408.0" minHeight="159.0" minWidth="408.0" prefHeight="159.0" prefWidth="408.0" style="-fx-border-color: #e2e8f0; -fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12;">
+                                          <HBox alignment="CENTER_LEFT" spacing="100.0" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-background-radius: 12; -fx-border-radius: 12;">
+                                             <children>
+                                                <VBox>
+                                                   <children>
+                                                      <Label style="-fx-text-fill: #374151; -fx-font-weight: bold; -fx-font-size: 14;" text="PERFORMANCE">
+                                                         <VBox.margin>
+                                                            <Insets bottom="10.0" top="10.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <HBox spacing="100.0">
+                                                         <children>
+                                                            <VBox spacing="5">
+                                                               <children>
+                                                                  <Label style="-fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 12;" text="TOP SPEED" />
+                                                                  <TextField fx:id="carYearText21" prefHeight="40.0" prefWidth="120.0" promptText="km/h" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-background-color: #f8fafc; -fx-border-color: #d1d5db; -fx-padding: 0 12 0 12;" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox spacing="5">
+                                                               <children>
+                                                                  <Label style="-fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 12;" text="0-100 km/h" />
+                                                                  <TextField fx:id="carAccelerationText" prefHeight="40.0" prefWidth="120.0" promptText="seconds" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-background-color: #f8fafc; -fx-border-color: #d1d5db; -fx-padding: 0 12 0 12;" />
+                                                               </children>
+                                                            </VBox>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <padding>
+                                                <Insets bottom="15.0" left="15.0" />
+                                             </padding>
+                                          </HBox>
+                                          <VBox maxHeight="1000.0" maxWidth="408.0" minHeight="180.0" minWidth="408.0" prefHeight="159.0" prefWidth="408.0" style="-fx-border-color: #e2e8f0; -fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12;">
                                              <children>
                                                 <Label style="-fx-text-fill: #374151; -fx-font-weight: bold; -fx-font-size: 13;" text="CAR DETAILS">
                                                    <VBox.margin>
                                                       <Insets bottom="8.0" left="15.0" top="8.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <VBox prefHeight="123.0" prefWidth="406.0" spacing="20.0" style="-fx-padding: 0 15 15 15;">
+                                                <VBox prefHeight="123.0" prefWidth="406.0" spacing="10.0" style="-fx-padding: 0 15 15 15;">
                                                    <children>
                                                       <HBox alignment="CENTER_LEFT" spacing="12">
                                                          <children>
                                                             <Label style="-fx-text-fill: #374151; -fx-font-weight: bold; -fx-min-width: 100;" text="Quantity" />
-                                                            <TextField fx:id="editCarQty" prefWidth="279.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                            <TextField fx:id="editCarQty" minHeight="25.6" prefWidth="279.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                          </children>
                                                       </HBox>
                                                       <HBox alignment="CENTER_LEFT" spacing="12">
@@ -726,9 +764,18 @@
                                                             <TextField fx:id="editCarPrice" prefWidth="275.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                          </children>
                                                       </HBox>
+                                                      <HBox alignment="CENTER_LEFT" minHeight="50.0" prefHeight="44.0" prefWidth="376.0" spacing="12">
+                                                         <children>
+                                                            <Label style="-fx-text-fill: #374151; -fx-font-weight: bold; -fx-min-width: 100;" text="Description" />
+                                                            <TextField fx:id="editCarPrice1" minHeight="50.0" prefHeight="70.0" prefWidth="265.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                         </children>
+                                                      </HBox>
                                                    </children>
                                                 </VBox>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
                                           </VBox>
                                           <HBox alignment="CENTER_RIGHT" style="-fx-padding: 12 20 12 20;">
                                              <children>
