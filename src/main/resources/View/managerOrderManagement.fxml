@@ -138,7 +138,7 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="240.0" prefWidth="748.0" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <AreaChart fx:id="revenueChart" animated="false" prefHeight="150.0" prefWidth="213.0" style="-fx-background-color: transparent; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                                        <AreaChart fx:id="revenueChart" animated="false" prefHeight="150.0" prefWidth="213.0" styleClass="manager-revenue-chart" stylesheets="@../CSS/manager.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                             <xAxis>
                                                 <CategoryAxis side="BOTTOM" tickLabelRotation="0" />
                                             </xAxis>
