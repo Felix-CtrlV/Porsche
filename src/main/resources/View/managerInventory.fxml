@@ -23,6 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.TextArea?>
 <BorderPane maxHeight="10000.0" maxWidth="10000.0" minHeight="690.0" minWidth="1366.0" style="-fx-background-color: linear-gradient(to bottom right, #f0f2f5, #e1e5eb);" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerInventoryController">
 
     <center>
@@ -722,13 +723,13 @@
                                                             <VBox spacing="5">
                                                                <children>
                                                                   <Label style="-fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 12;" text="TOP SPEED" />
-                                                                  <TextField fx:id="carYearText21" prefHeight="40.0" prefWidth="120.0" promptText="km/h" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-background-color: #f8fafc; -fx-border-color: #d1d5db; -fx-padding: 0 12 0 12;" />
+                                                                  <TextField fx:id="editCarSpeed" prefHeight="40.0" prefWidth="120.0" promptText="km/h" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-background-color: #f8fafc; -fx-border-color: #d1d5db; -fx-padding: 0 12 0 12;" />
                                                                </children>
                                                             </VBox>
                                                             <VBox spacing="5">
                                                                <children>
                                                                   <Label style="-fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 12;" text="0-100 km/h" />
-                                                                  <TextField fx:id="carAccelerationText" prefHeight="40.0" prefWidth="120.0" promptText="seconds" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-background-color: #f8fafc; -fx-border-color: #d1d5db; -fx-padding: 0 12 0 12;" />
+                                                                  <TextField fx:id="editCarSpeed2" prefHeight="40.0" prefWidth="120.0" promptText="seconds" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-background-color: #f8fafc; -fx-border-color: #d1d5db; -fx-padding: 0 12 0 12;" />
                                                                </children>
                                                             </VBox>
                                                          </children>
@@ -764,12 +765,12 @@
                                                             <TextField fx:id="editCarPrice" prefWidth="275.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                          </children>
                                                       </HBox>
-                                                      <HBox alignment="CENTER_LEFT" minHeight="50.0" prefHeight="44.0" prefWidth="376.0" spacing="12">
+                                                      <VBox spacing="8">
                                                          <children>
-                                                            <Label style="-fx-text-fill: #374151; -fx-font-weight: bold; -fx-min-width: 100;" text="Description" />
-                                                            <TextField fx:id="editCarPrice1" minHeight="50.0" prefHeight="70.0" prefWidth="265.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                            <Label style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Description" />
+                                                            <TextArea fx:id="editCarDescription" prefHeight="80.0" prefWidth="378.0" promptText="Enter car description..." style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-background-color: #f8fafc; -fx-border-color: #d1d5db;" wrapText="true" />
                                                          </children>
-                                                      </HBox>
+                                                      </VBox>
                                                    </children>
                                                 </VBox>
                                              </children>

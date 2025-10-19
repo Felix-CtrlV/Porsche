@@ -301,9 +301,11 @@ public class managerInventoryController {
     @FXML
     private  TextField editCarProductAt;
     @FXML
-    private TextField editCarSpeed;  // TODO: Add this field to FXML
+    private TextField editCarSpeed;  // Top speed field
     @FXML
-    private TextArea editCarDescription;  // TODO: Add this field to FXML
+    private TextField editCarSpeed2;  // 0-100 km/h acceleration field
+    @FXML
+    private TextArea editCarDescription;  // Description field
     @FXML
     private  Button editCarApply;
     @FXML
@@ -858,6 +860,8 @@ public class managerInventoryController {
                 boolean allEmpty = true;
                 if (path.contains("carsAdd")) {
                     String img = file.isEmpty() ? "" : String.valueOf(file.get(0));
+                    String model = carModelText.getText().trim();
+                    String year = carYearText.getText().trim();
                     String trim = carTrimText.getText().trim();
                     String extColor = carExtColorText.getText().trim();
                     String intColor = carIntColorText.getText().trim();
@@ -869,7 +873,7 @@ public class managerInventoryController {
                     String speed2 = carSpeed2Text.getText().trim();
                     String description = descriptionText.getText().trim();
 
-                    allEmpty = img.isEmpty() && trim.isEmpty() &&
+                    allEmpty = img.isEmpty() && model.isEmpty() && year.isEmpty() && trim.isEmpty() &&
                             extColor.isEmpty() && intColor.isEmpty() &&
                             fuel_type.isEmpty() && qty.isEmpty() && price.isEmpty() &&
                             speed1.isEmpty() && speed2.isEmpty() && description.isEmpty();
@@ -1963,6 +1967,27 @@ public class managerInventoryController {
         editCarPrice.setText(String.valueOf(editPath.getPrice()));
         editCarProductAt.setText(String.valueOf(editPath.getProductYear()));
         
+        // Populate speed and description fields
+        // Split combined speed value (e.g., "250 + 4.5" -> "250" and "4.5")
+        if (editCarSpeed != null && editCarSpeed2 != null) {
+            String speedValue = editPath.getSpeed();
+            if (speedValue != null && !speedValue.isEmpty()) {
+                String[] speedParts = speedValue.split("\\+");
+                editCarSpeed.setText(speedParts[0].trim());
+                if (speedParts.length > 1) {
+                    editCarSpeed2.setText(speedParts[1].trim());
+                } else {
+                    editCarSpeed2.setText("");
+                }
+            } else {
+                editCarSpeed.setText("");
+                editCarSpeed2.setText("");
+            }
+        }
+        if (editCarDescription != null) {
+            editCarDescription.setText(editPath.getDescription() != null ? editPath.getDescription() : "");
+        }
+        
         // Convert database fuel type abbreviations to display names
         String fuelType = editPath.getFuelType().toUpperCase().trim();
         String fuel = "";
@@ -2380,9 +2405,13 @@ public class managerInventoryController {
         int qty = Integer.parseInt(editCarQty.getText().trim());
         double price = Double.parseDouble(editCarPrice.getText().trim());
         
-        // Get speed and description (will be empty strings if fields don't exist yet)
-        String speed = (editCarSpeed != null && editCarSpeed.getText() != null) 
-                       ? editCarSpeed.getText().trim() : "";
+        // Combine both speed values (speed + second value) - same as insertCar
+        String speed1 = (editCarSpeed != null && editCarSpeed.getText() != null) 
+                        ? editCarSpeed.getText().trim() : "";
+        String speed2 = (editCarSpeed2 != null && editCarSpeed2.getText() != null) 
+                        ? editCarSpeed2.getText().trim() : "";
+        String combinedSpeed = speed1 + (speed2.isEmpty() ? "" : " + " + speed2);  // e.g., "250 + 4.5"
+        
         String description = (editCarDescription != null && editCarDescription.getText() != null) 
                             ? editCarDescription.getText().trim() : "";
         
@@ -2429,7 +2458,7 @@ public class managerInventoryController {
         cs.setInt(7, qty);                         // in_car_qty
         cs.setDouble(8, price);                    // in_price
         cs.setString(9, photoPath);                // in_photo_url
-        cs.setString(10, speed);                   // in_car_speed
+        cs.setString(10, combinedSpeed);           // in_car_speed (combined: "250 + 4.5")
         cs.setString(11, description);             // in_car_description
         
         cs.execute();
