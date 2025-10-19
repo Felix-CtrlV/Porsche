@@ -1,6 +1,8 @@
 package Controllers;
 
-import javafx.animation.*;
+import Utils.AppStage;
+import javafx.animation.ScaleTransition;
+import javafx.animation.ParallelTransition;
 import javafx.beans.binding.DoubleBinding;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -33,8 +35,6 @@ public class staffWelcomeController {
     @FXML private StackPane imageContainer;
     @FXML private VBox settingsPopup;
 
-    private static final Duration FADE_DURATION = Duration.millis(400);
-
     public void initialize() {
         Image image = new Image(Objects.requireNonNull(
                 getClass().getResource("/Image/startUpImage.png")
@@ -57,7 +57,6 @@ public class staffWelcomeController {
             }
         });
 
-        // Remove entrance animation
         vbox.setOpacity(1);
         vbox.setTranslateY(0);
     }
@@ -74,68 +73,37 @@ public class staffWelcomeController {
         pulse.setToY(0.95);
         pulse.setAutoReverse(true);
         pulse.setCycleCount(2);
-
-        FadeTransition flash = new FadeTransition(Duration.millis(120), node);
-        flash.setFromValue(1.0);
-        flash.setToValue(0.8);
-        flash.setAutoReverse(true);
-        flash.setCycleCount(2);
-
-        new ParallelTransition(pulse, flash).play();
+        new ParallelTransition(pulse).play();
     }
 
     private void navigate(Event event, String fxmlPath) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        Parent root;
-
         try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+            Scene newScene = new Scene(root, 1300, 850);
+            AppStage.getStage().setScene(newScene);
+            AppStage.getStage().centerOnScreen();
         } catch (IOException | NullPointerException ex) {
             System.err.println("Failed to navigate: " + fxmlPath);
             ex.printStackTrace();
-            return;
         }
-
-        root.setOpacity(0);
-        Scene newScene = new Scene(root, 1133, 580);
-
-        FadeTransition fadeOut = new FadeTransition(FADE_DURATION, stage.getScene().getRoot());
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-        fadeOut.setOnFinished(e -> {
-            stage.setScene(newScene);
-            stage.centerOnScreen();
-            FadeTransition fadeIn = new FadeTransition(FADE_DURATION, root);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-            fadeIn.play();
-        });
-        fadeOut.play();
     }
 
     @FXML
     private void discover(ActionEvent event) {
         createClickFeedback(discoverbtn);
-        PauseTransition pause = new PauseTransition(Duration.millis(250));
-        pause.setOnFinished(e -> navigate(event, "/View/staffCars.fxml"));
-        pause.play();
+        navigate(event, "/View/staffCars.fxml");
     }
 
     @FXML
     private void logout(ActionEvent event) {
         createClickFeedback(logoutbtn);
-        PauseTransition pause = new PauseTransition(Duration.millis(250));
-        pause.setOnFinished(e -> navigate(event, "/View/login.fxml"));
-        pause.play();
+        navigateToLogin(event);
     }
 
     @FXML
     private void clickaccessorybtn(ActionEvent event) {
         createClickFeedback(accessorybtn);
-        PauseTransition pause = new PauseTransition(Duration.millis(250));
-        pause.setOnFinished(e -> navigate(event, "/View/staffasset.fxml"));
-        pause.play();
+        navigate(event, "/View/staffasset.fxml");
     }
 
     @FXML
@@ -149,18 +117,25 @@ public class staffWelcomeController {
         boolean isVisible = settingsPopup.isVisible();
         settingsPopup.setVisible(!isVisible);
         settingsPopup.setManaged(!isVisible);
+        settingsPopup.setOpacity(1);
+    }
 
-        if (!isVisible) {
-            settingsPopup.setOpacity(0);
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), settingsPopup);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-            fadeIn.play();
-        } else {
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(200), settingsPopup);
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
-            fadeOut.play();
+    @FXML
+    private void settingsLogout(ActionEvent event) {
+        createClickFeedback((Node) event.getSource());
+        navigateToLogin(event);
+    }
+
+    private void navigateToLogin(Event event) {
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/login.fxml")));
+            Scene newScene = new Scene(root, 1300, 850);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(newScene);
+            stage.centerOnScreen();
+        } catch (IOException ex) {
+            System.err.println("Failed to navigate to login.fxml");
+            ex.printStackTrace();
         }
     }
 }

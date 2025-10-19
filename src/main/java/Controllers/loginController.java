@@ -5,6 +5,7 @@ import Model.user;
 import Utils.Session;
 import Utils.ThreadPoolManager;
 import Utils.defaultStage;
+import Utils.AppStage; // <--- added
 import javafx.animation.*;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -141,14 +142,14 @@ public class loginController {
                 protected user call() throws Exception {
                     String name = nametxt.getText();
                     String password = pwtxt.getText();
-                    
+
                     try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
                          CallableStatement p1 = con.prepareCall("call login(?,?,?)")) {
-                        
+
                         p1.setString(1, name);
                         p1.setString(2, password);
                         p1.setString(3, String.valueOf(LocalDateTime.now()));
-                        
+
                         try (ResultSet rs = p1.executeQuery()) {
                             if (rs.next()) {
                                 int id = rs.getInt(1);
@@ -201,13 +202,14 @@ public class loginController {
                         case "staff" -> FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/staffWelcome.fxml")));
                         default -> throw new IllegalStateException("Unknown role: " + role);
                     };
-                    Stage stage = new Stage();
-                    stage.setScene(new Scene(root));
-                    defaultStage DStage = new defaultStage();
-                    DStage.setStage(stage);
+
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // get current stage
+                    Scene scene = new Scene(root);
+                    AppStage.setStage(stage);
+                    stage.setScene(scene);
+                    stage.centerOnScreen();
                     stage.show();
-                    Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    home.close();
+
                 } catch (IOException ex) {
                     logger.error("Failed to load dashboard for role: " + role, ex);
                     slideError("Failed to load dashboard. Please contact support.");

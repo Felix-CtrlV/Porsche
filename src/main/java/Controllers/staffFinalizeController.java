@@ -1,6 +1,6 @@
 package Controllers;
 
-import javafx.animation.FadeTransition;
+import Utils.AppStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,16 +28,13 @@ public class staffFinalizeController implements Initializable {
     @FXML private Label interior_price;
     @FXML private Label handling_price;
     @FXML private Label totalPriceLabel;
-
-    @FXML private ImageView previewImage; // make sure this exists in FXML
+    @FXML private ImageView previewImage;
     @FXML private ImageView selected_model_image;
-
     @FXML private Button confirm_btn;
     @FXML private Button goback_btn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Default example values
         basic_price.setText("$100,000");
         colorLabel.setText("Crayon Grey");
         color_price.setText("$4,500");
@@ -50,7 +45,6 @@ public class staffFinalizeController implements Initializable {
         handling_price.setText("$200");
         totalPriceLabel.setText("$116,400");
 
-        // Default image example
         try {
             Image img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/911_select_model.png")));
             selected_model_image.setImage(img);
@@ -62,48 +56,30 @@ public class staffFinalizeController implements Initializable {
 
     @FXML
     private void confirmOrder(ActionEvent event) {
-        System.out.println("✅ Finalized configuration saved!");
-        navigate(event, "/View/staffShopingcart.fxml");
+        navigate("/View/staffShopingcart.fxml");
     }
 
     @FXML
     private void goback(ActionEvent event) {
-        navigate(event, "/View/staffCustomize.fxml");
+        navigate("/View/staffCustomize.fxml");
     }
 
-    private void navigate(ActionEvent event, String path) {
+    private void navigate(String path) {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(path)));
-            Stage stage = (Stage)((Button)event.getSource()).getScene().getWindow();
-
-            root.setOpacity(0);
-            Scene newScene = new Scene(root, 1376, 768);
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), stage.getScene().getRoot());
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
-            fadeOut.setOnFinished(e -> {
-                stage.setScene(newScene);
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
-                fadeIn.setFromValue(0);
-                fadeIn.setToValue(1);
-                fadeIn.play();
-            });
-            fadeOut.play();
+            Scene newScene = new Scene(root, 1300, 850);
+            AppStage.getStage().setScene(newScene);
+            AppStage.getStage().centerOnScreen();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
-    /**
-     * Dynamically set the car configuration info.
-     */
     public void setCarData(String color, String wheels, String interior, String totalPrice, String imagePath) {
         if (colorLabel != null) colorLabel.setText(color);
         if (wheelLabel != null) wheelLabel.setText(wheels);
         if (interiorLabel != null) interiorLabel.setText(interior);
         if (totalPriceLabel != null) totalPriceLabel.setText(totalPrice);
-
-        // Optional: update image
         if (imagePath != null && selected_model_image != null) {
             try {
                 Image img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));

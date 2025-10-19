@@ -1,6 +1,9 @@
 package Controllers;
 
-import javafx.animation.*;
+import Utils.AppStage;
+import javafx.animation.ScaleTransition;
+import javafx.animation.ParallelTransition;
+import javafx.beans.binding.DoubleBinding;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +18,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -35,7 +37,6 @@ public class staffCarsController implements Initializable {
 
     private List<ImageView> allImages;
     private static final Color PORSCHE_RED = Color.web("#D5001C");
-    private static final Duration FADE_DURATION = Duration.millis(400);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -45,7 +46,6 @@ public class staffCarsController implements Initializable {
         );
         loadImages();
         setupImageInteractions();
-        animateImagesOnLoad();
     }
 
     private void loadImages() {
@@ -60,14 +60,10 @@ public class staffCarsController implements Initializable {
 
         imageMap.forEach((imageView, path) -> {
             try (InputStream stream = getClass().getResourceAsStream(path)) {
-                if (stream == null) {
-                    System.err.println("⚠️ Image not found: " + path);
-                    return;
-                }
+                if (stream == null) return;
                 Image image = new Image(stream, 0, 0, true, true);
                 imageView.setImage(image);
             } catch (IOException e) {
-                System.err.println("Failed to load image: " + path);
                 e.printStackTrace();
             }
         });
@@ -103,44 +99,17 @@ public class staffCarsController implements Initializable {
         scaleTransition.play();
     }
 
-    private void animateImagesOnLoad() {
-        int delay = 0;
-        for (ImageView imageView : allImages) {
-            imageView.setOpacity(0);
-            imageView.setTranslateY(30);
-
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(500), imageView);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-            fadeIn.setDelay(Duration.millis(delay));
-
-            TranslateTransition slideUp = new TranslateTransition(Duration.millis(500), imageView);
-            slideUp.setFromY(30);
-            slideUp.setToY(0);
-            slideUp.setDelay(Duration.millis(delay));
-
-            new ParallelTransition(fadeIn, slideUp).play();
-            delay += 100;
-        }
-    }
-
     @FXML
     private void home(ActionEvent event) {
-        Button btn = (Button) event.getSource();
-        createClickFeedback(btn);
-        PauseTransition pause = new PauseTransition(Duration.millis(250));
-        pause.setOnFinished(e -> navigate(event, "/View/staffWelcome.fxml"));
-        pause.play();
+        createClickFeedback((Button) event.getSource());
+        navigate(event, "/View/staffWelcome.fxml");
     }
 
     @FXML
     private void redirect(MouseEvent event) {
         ImageView clicked = (ImageView) event.getSource();
-        System.out.println("Model selected: " + clicked.getId());
         createClickFeedback(clicked);
-        PauseTransition pause = new PauseTransition(Duration.millis(250));
-        pause.setOnFinished(e -> navigate(event, "/View/staffModelSelect.fxml"));
-        pause.play();
+        navigate(event, "/View/staffModelSelect.fxml");
     }
 
     private void createClickFeedback(Node node) {
@@ -149,54 +118,17 @@ public class staffCarsController implements Initializable {
         pulse.setToY(0.95);
         pulse.setAutoReverse(true);
         pulse.setCycleCount(2);
-
-        FadeTransition flash = new FadeTransition(Duration.millis(120), node);
-        flash.setFromValue(1.0);
-        flash.setToValue(0.8);
-        flash.setAutoReverse(true);
-        flash.setCycleCount(2);
-
-        new ParallelTransition(pulse, flash).play();
+        new ParallelTransition(pulse).play();
     }
 
     private void navigate(Event event, String fxmlPath) {
-        Node source = (Node) event.getSource();
-        Scene currentScene = source.getScene();
-        Parent root;
-
         try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+            Scene newScene = new Scene(root, 1300, 850);
+            AppStage.getStage().setScene(newScene);
+            AppStage.getStage().centerOnScreen();
         } catch (IOException | NullPointerException ex) {
-            System.err.println("Failed to navigate: " + fxmlPath);
             ex.printStackTrace();
-            return;
         }
-
-        root.setOpacity(0);
-        Stage stage = (Stage) currentScene.getWindow();
-        Scene newScene = new Scene(root, 1133, 580);
-        FadeTransition fadeOut = new FadeTransition(FADE_DURATION, currentScene.getRoot());
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-        fadeOut.setOnFinished(e -> {
-            stage.setScene(newScene);
-            stage.centerOnScreen();
-            FadeTransition fadeIn = new FadeTransition(FADE_DURATION, root);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-            fadeIn.play();
-        });
-        fadeOut.play();
-    }
-
-    public void preloadAllImages() {
-        allImages.stream()
-                .map(ImageView::getImage)
-                .filter(Objects::nonNull)
-                .forEach(img -> {
-                    if (!img.isBackgroundLoading()) {
-                        System.out.println("Image loaded successfully");
-                    }
-                });
     }
 }
