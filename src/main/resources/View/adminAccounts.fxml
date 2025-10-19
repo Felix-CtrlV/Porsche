@@ -120,14 +120,17 @@
                                 <!-- Profile Header -->
                                 <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #f0f9ff; -fx-background-radius: 12; -fx-padding: 20;">
                                     <children>
-                                        <StackPane>
+                                        <StackPane alignment="CENTER" prefHeight="110.0" prefWidth="110.0">
                                             <children>
-                                                <ImageView fx:id="StaffImage" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 3);">
+                                                <ImageView fx:id="StaffImage" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="false">
+                                                    <StackPane.margin>
+                                                        <Insets />
+                                                    </StackPane.margin>
                                                     <image>
                                                         <Image url="@../Image/usericon.png" />
                                                     </image>
                                                     <clip>
-                                                        <javafx.scene.shape.Circle centerX="50.0" centerY="50.0" radius="50.0" />
+                                                        <Circle centerX="50.0" centerY="50.0" radius="50.0" />
                                                     </clip>
                                                 </ImageView>
                                             </children>

@@ -13,6 +13,7 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.chart.AreaChart;
@@ -153,6 +154,10 @@ public class adminAccountController {
         currentMonth = today.getMonthValue();
         currentYear = today.getYear();
 
+        if (StaffImage != null) {
+            applyCircularClip(StaffImage);
+        }
+
         // Initialize role combo
         roleCombo.setItems(FXCollections.observableArrayList("Manager", "Staff"));
         roleCombo.setValue("Manager");
@@ -171,6 +176,24 @@ public class adminAccountController {
 
         StaffListTitleLabel.setText("List (Active)");
         loadStaffCardsAsync(showActive);
+    }
+
+    private void applyCircularClip(ImageView imageView) {
+        if (imageView == null) {
+            return;
+        }
+
+        Circle clip;
+        if (imageView.getClip() instanceof Circle existing) {
+            clip = existing;
+        } else {
+            clip = new Circle();
+            imageView.setClip(clip);
+        }
+
+        clip.radiusProperty().bind(Bindings.min(imageView.fitWidthProperty(), imageView.fitHeightProperty()).divide(2));
+        clip.centerXProperty().bind(imageView.fitWidthProperty().divide(2));
+        clip.centerYProperty().bind(imageView.fitHeightProperty().divide(2));
     }
 
     private void openUserRegistration(MouseEvent event) {
@@ -644,7 +667,7 @@ public class adminAccountController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/userCards.fxml"));
                 Node card = loader.load();
                 if (loader.getController() instanceof cardController cc)
-                    cc.setData(staff.getId(), staff.getUsername(), staff.getIs_active());
+                    cc.setData(staff.getId(), staff.getUsername(), staff.getIs_active(), staff.getImagePath());
 
                 card.setUserData(staff.getId());
                 card.setOnMouseClicked(e -> {
@@ -728,10 +751,19 @@ public class adminAccountController {
                         ? path
                         : new File(path).toURI().toString();
                 StaffImage.setImage(new Image(uri, true));
+                applyCircularClip(StaffImage);
+            } else {
+                StaffImage.setImage(new Image(getClass().getResource("/Image/defaultUserProfile.jpg").toExternalForm(), true));
+                applyCircularClip(StaffImage);
             }
         } catch (
                 Exception e) {
             logger.warn("Failed to load image for staff ID: " + staff.getId(), e);
+            try {
+                StaffImage.setImage(new Image(getClass().getResource("/Image/defaultUserProfile.jpg").toExternalForm(), true));
+                applyCircularClip(StaffImage);
+            } catch (Exception ignored) {
+            }
         }
 
         selectedStaffId = staff.getId();

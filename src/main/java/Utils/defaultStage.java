@@ -1,5 +1,6 @@
 package Utils;
 
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class defaultStage {
@@ -8,8 +9,14 @@ public class defaultStage {
 
     public void setStage(Stage stage){
         this.stage = stage;
-        stage.setWidth(1300);
-        stage.setHeight(850);
+        stage.setMaximized(true);
+
+        // Fallback in case maximizing is disallowed by the OS or stage style
+        if (!stage.isMaximized()) {
+            Screen.getPrimary().getVisualBounds();
+            stage.setWidth(Screen.getPrimary().getVisualBounds().getWidth());
+            stage.setHeight(Screen.getPrimary().getVisualBounds().getHeight());
+        }
     }
 
 }

@@ -1424,20 +1424,20 @@ public class managerInventoryController {
     
     // for showTable check ("cars" , "parts" ,"search")
     private void showTable(String check){
-        int sItems =0;
+        int showing = 0;
         int total = 0;
        if("cars".equals(check)){
-           sItems = showCarsTable();
-           total = carsData.size();
+           showing = showCarsTable();
+           total = carsData.size() + carsOffData.size(); // Total includes both available and unavailable cars
        }else if("parts".equals(check)){
-          sItems = showPartsTable();
-          total = partsData.size();
+          showing = showPartsTable();
+          total = partsData.size() + partsOffDate.size(); // Total includes both available and unavailable parts
        }else{
-           sItems = showSearchItemTable();
+           showing = showSearchItemTable();
            total = inventoryData.size();
        }
 
-        showTableRows.setText("Showing " + total + " of " + sItems + " items");
+        showTableRows.setText("Showing " + showing + " of " + total + " items");
     }
 
     private void showAvailableItems(){
@@ -1483,10 +1483,12 @@ public class managerInventoryController {
             }
             
             inventoryTable.setItems(filterData);
-            showTableRows.setText("Showing " + filterData.size() + " of " + carsOffData.size() + " items");
+            int totalCars = carsData.size() + carsOffData.size(); // Total includes both available and unavailable cars
+            showTableRows.setText("Showing " + filterData.size() + " of " + totalCars + " items");
         } else {
             inventoryTable.setItems(partsOffDate);
-            showTableRows.setText("Showing " + partsOffDate.size() + " of " + partsOffDate.size() + " items");
+            int totalParts = partsData.size() + partsOffDate.size(); // Total includes both available and unavailable parts
+            showTableRows.setText("Showing " + partsOffDate.size() + " of " + totalParts + " items");
         }
     }
 
@@ -1621,109 +1623,53 @@ public class managerInventoryController {
         inventoryTable.setItems(filterData);
         return partsData.size();
     }
-    private ContextMenu searchSuggestions = new ContextMenu();
     private void setupSearchBar() {
-        // Set up key listener for Enter key
-        searchBar.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                handleSearch();
-            }
-        });
-        // Set up text change listener for suggestions
+        // Set up text change listener to filter table in real-time
         searchBar.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText.isEmpty()) {
-                searchSuggestions.hide();
+            if (newText == null || newText.trim().isEmpty()) {
+                // If search bar is empty, show all inventory data
+                showTable("all");
                 return;
             }
-            // Clear previous suggestions
-            searchSuggestions.getItems().clear();
-
-            // Find matching items
-            List<MenuItem> matches = new ArrayList<>();
-            String searchText = newText.toLowerCase();
+            
+            // Clear search results and find matching items
+            searchDate.clear();
+            String searchText = newText.toLowerCase().trim();
             
             // Search in available items
             for (inventory i : inventoryData) {
-                String id = String.valueOf(i.getInventoryId().toLowerCase());
+                String id = i.getInventoryId().toLowerCase();
                 String name = i.getName().toLowerCase();
-
-                String forCarInfo = (i.getForCar() != null && !i.getForCar().isEmpty()) ? i.getForCar() : "Universal";
-                if (id.contains(searchText) || name.contains(searchText) || forCarInfo.toLowerCase().contains(searchText)) {
-                    String suggestionText = i.getInventoryId() + " - " + i.getName() + " (" + forCarInfo + ")";
-                    MenuItem item = new MenuItem(suggestionText);
-
-                    // Set action for when suggestion is clicked
-                    item.setOnAction(e -> {
-                        searchBar.setText(suggestionText);
-                        searchSuggestions.hide();
-                        searchDate.clear();
-                        searchDate.add(i);
-                        showTable("search");
-                    });
-
-                    matches.add(item);
+                String forCarInfo = (i.getForCar() != null && !i.getForCar().isEmpty()) ? i.getForCar().toLowerCase() : "universal";
+                
+                if (id.contains(searchText) || name.contains(searchText) || forCarInfo.contains(searchText)) {
+                    searchDate.add(i);
                 }
             }
             
             // Search in unavailable cars
             for (inventory i : carsOffData) {
-                String id = String.valueOf(i.getInventoryId().toLowerCase());
+                String id = i.getInventoryId().toLowerCase();
                 String name = i.getName().toLowerCase();
-
+                
                 if (id.contains(searchText) || name.contains(searchText)) {
-                    String suggestionText = i.getInventoryId() + " - " + i.getName() + " (Unavailable)";
-                    MenuItem item = new MenuItem(suggestionText);
-
-                    // Set action for when suggestion is clicked
-                    item.setOnAction(e -> {
-                        searchBar.setText(i.getInventoryId() + " - " + i.getName());
-                        searchSuggestions.hide();
-                        searchDate.clear();
-                        searchDate.add(i);
-                        showTable("search");
-                    });
-
-                    matches.add(item);
+                    searchDate.add(i);
                 }
             }
             
             // Search in unavailable parts
             for (inventory i : partsOffDate) {
-                String id = String.valueOf(i.getInventoryId().toLowerCase());
+                String id = i.getInventoryId().toLowerCase();
                 String name = i.getName().toLowerCase();
-                String forCarInfo = (i.getForCar() != null && !i.getForCar().isEmpty()) ? i.getForCar() : "Universal";
-
-                if (id.contains(searchText) || name.contains(searchText) || forCarInfo.toLowerCase().contains(searchText)) {
-                    String suggestionText = i.getInventoryId() + " - " + i.getName() + " (" + forCarInfo + ", Unavailable)";
-                    MenuItem item = new MenuItem(suggestionText);
-
-                    // Set action for when suggestion is clicked
-                    item.setOnAction(e -> {
-                        searchBar.setText(i.getInventoryId() + " - " + i.getName());
-                        searchSuggestions.hide();
-                        searchDate.clear();
-                        searchDate.add(i);
-                        showTable("search");
-                    });
-
-                    matches.add(item);
+                String forCarInfo = (i.getForCar() != null && !i.getForCar().isEmpty()) ? i.getForCar().toLowerCase() : "universal";
+                
+                if (id.contains(searchText) || name.contains(searchText) || forCarInfo.contains(searchText)) {
+                    searchDate.add(i);
                 }
             }
-
-            // Show suggestions if matches found
-            if (!matches.isEmpty()) {
-                searchSuggestions.getItems().addAll(matches);
-                searchSuggestions.show(searchBar, Side.BOTTOM, 0, 0);
-            } else {
-                searchSuggestions.hide();
-            }
-        });
-
-        // Hide suggestions when text field loses focus
-        searchBar.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal) {
-                searchSuggestions.hide();
-            }
+            
+            // Display filtered results in the table
+            showTable("search");
         });
     }
     private void handleSearch() {

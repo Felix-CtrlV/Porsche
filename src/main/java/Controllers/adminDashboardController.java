@@ -4,6 +4,7 @@ import Database.DatabaseConnectionManager;
 import MainUI.login;
 import Utils.OTPService;
 import Utils.Session;
+import javafx.stage.FileChooser;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
@@ -21,18 +22,26 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -99,6 +108,9 @@ public class adminDashboardController {
     
     @FXML
     private Button verifyPasswordBtn, cancelVerifyBtn, saveProfileBtn;
+
+    @FXML
+    private Button editProfilePhotoBtn;
     
     @FXML
     private HBox toastNotification;
@@ -154,10 +166,48 @@ public class adminDashboardController {
 
     private Button activeButton;
 
+    private File selectedProfilePhoto;
+    private String cachedPhotoPath;
+
     @FXML
     void clickAccount(ActionEvent event) throws IOException {
         loadView("/View/adminAccounts.fxml");
         setActiveButton(accountbtn);
+    }
+
+    private void applyCircularClip(ImageView imageView, double size) {
+        if (imageView == null) {
+            return;
+        }
+
+        imageView.setFitWidth(size);
+        imageView.setFitHeight(size);
+        double radius = size / 2.0;
+        Circle clip = new Circle(radius, radius, radius);
+        imageView.setClip(clip);
+    }
+
+    @FXML
+    private void onEditProfileImage() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Profile Photo");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+
+        Stage stage = (Stage) admin_anc.getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if (selectedFile == null) {
+            return;
+        }
+
+        selectedProfilePhoto = selectedFile;
+        if (pfImage != null) {
+            pfImage.setImage(new Image(selectedFile.toURI().toString()));
+        }
+        if (profileImage != null) {
+            profileImage.setImage(new Image(selectedFile.toURI().toString()));
+        }
+
+        saveProfileBtn.setVisible(true);
     }
 
     @FXML
@@ -315,6 +365,15 @@ public class adminDashboardController {
                 });
             }
         });
+
+        applyCircularClip(pfImage, 120);
+        applyCircularClip(profileImage, 48);
+
+        if (editProfilePhotoBtn != null) {
+            editProfilePhotoBtn.setVisible(false);
+        }
+
+        loadCurrentProfilePhoto();
     }
 
     private void loadView(String fxmlPath) {
@@ -526,24 +585,8 @@ public class adminDashboardController {
     private void closeAllPanesAndResetToSettings() {
         // Determine which pane is currently visible and close it
         if (profilePane.isVisible()) {
-            // Close profile pane directly
-            TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), profilePane);
-            slideOut.setFromX(0);
-            slideOut.setToX(420);
-            
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
-            fadeOut.setFromValue(0.5);
-            fadeOut.setToValue(0);
-            
-            ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
-            hide.setOnFinished(e -> {
-                profilePane.setVisible(false);
-                settingPane.setVisible(false); // Also hide settings pane
-                overlayPane.setVisible(false);
-                root.setEffect(null);
-                root.setDisable(false);
-            });
-            hide.play();
+            closeProfilePane(false);
+            return;
         } else if (targetPane.isVisible()) {
             // Close target pane directly
             TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), targetPane);
@@ -645,8 +688,7 @@ public class adminDashboardController {
         String sessionPassword = current.getPassword();
         
         if (sessionPassword != null && sessionPassword.equals(enteredPassword)) {
-            // Password correct - show profile
-            hidePasswordVerification();
+            // Password correct - transition directly to profile pane
             showProfilePane();
         } else {
             passwordErrorLabel.setText("Incorrect password");
@@ -685,6 +727,10 @@ public class adminDashboardController {
     private void showProfilePane() {
         // Settings pane is already hidden from verification step, no need to touch it
         
+        if (settingPane != null) {
+            settingPane.setVisible(false);
+        }
+
         // Refresh profile data from session first
         if (current != null) {
             profileName.setText(current.getUsername() != null ? current.getUsername() : "");
@@ -735,26 +781,54 @@ public class adminDashboardController {
     }
     
     private void hideProfilePane() {
-        // Prepare settings pane off-screen BEFORE starting any animation (while still invisible)
-        settingPane.setTranslateX(420);
-        
-        // Slide out profile pane first
+        closeProfilePane(true);
+    }
+
+    private void closeProfilePane(boolean reopenSettings) {
+        if (!profilePane.isVisible()) {
+            return;
+        }
+
         TranslateTransition slideOutProfile = new TranslateTransition(Duration.millis(300), profilePane);
         slideOutProfile.setFromX(0);
         slideOutProfile.setToX(420);
-        slideOutProfile.setOnFinished(e -> {
-            profilePane.setVisible(false);
-            
-            // Now make settings pane visible (it's already positioned at 420)
-            settingPane.setVisible(true);
-            
-            // Then slide in settings pane
-            TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
-            slideInSettings.setFromX(420);
-            slideInSettings.setToX(0);
-            slideInSettings.play();
-        });
-        slideOutProfile.play();
+
+        if (reopenSettings) {
+            slideOutProfile.setOnFinished(e -> {
+                profilePane.setVisible(false);
+                profilePane.setTranslateX(0);
+
+                if (settingPane != null) {
+                    settingPane.setTranslateX(420);
+                    settingPane.setVisible(true);
+                    TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
+                    slideInSettings.setFromX(420);
+                    slideInSettings.setToX(0);
+                    slideInSettings.play();
+                }
+            });
+            slideOutProfile.play();
+        } else {
+            slideOutProfile.setOnFinished(e -> {
+                profilePane.setVisible(false);
+                profilePane.setTranslateX(0);
+                if (settingPane != null) {
+                    settingPane.setVisible(false);
+                }
+
+                FadeTransition fadeOverlay = new FadeTransition(Duration.millis(200), overlayPane);
+                fadeOverlay.setFromValue(overlayPane.getOpacity());
+                fadeOverlay.setToValue(0);
+                fadeOverlay.setOnFinished(ev -> {
+                    overlayPane.setVisible(false);
+                    overlayPane.setOpacity(0.5);
+                    root.setEffect(null);
+                    root.setDisable(false);
+                });
+                fadeOverlay.play();
+            });
+            slideOutProfile.play();
+        }
     }
     
     private void toggleEditMode() {
@@ -772,6 +846,9 @@ public class adminDashboardController {
             profilePhone.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: #3b82f6; -fx-border-width: 2; -fx-border-radius: 8;");
             profileAddress.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: #3b82f6; -fx-border-width: 2; -fx-border-radius: 8;");
             saveProfileBtn.setVisible(true);
+            if (editProfilePhotoBtn != null) {
+                editProfilePhotoBtn.setVisible(true);
+            }
             editProfileBtn.setText("✖");
         } else {
             // Disable editing
@@ -794,37 +871,143 @@ public class adminDashboardController {
             profileAddress.setText(current.getAddress());
             profileEmail.setText(current.getEmail());
             profilePhone.setText(current.getPhone());
+
+            selectedProfilePhoto = null;
+            applyPhotoToImages(cachedPhotoPath);
         }
     }
     
     @FXML
     private void onSaveProfile() {
         try {
-            Connection con = DatabaseConnectionManager.getInstance().getConnection();
-            PreparedStatement p = con.prepareStatement("UPDATE user_info SET user_email = ?, user_phone = ?, user_address = ? WHERE user_id = ?");
-            p.setString(1, profileEmail.getText());
-            p.setString(2, profilePhone.getText());
-            p.setString(3, profileAddress.getText());
-            p.setInt(4, current.getUserid());
-            p.execute();
-            
-            // Update session
+            String photoPath = cachedPhotoPath;
+            if (selectedProfilePhoto != null) {
+                photoPath = saveProfileImage(selectedProfilePhoto, current.getUsername(), current.getUserid());
+            }
+
+            try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
+                 PreparedStatement ps = con.prepareStatement("UPDATE user_info SET user_email = ?, user_phone = ?, user_address = ?, user_photo = ? WHERE user_id = ?")) {
+                ps.setString(1, profileEmail.getText());
+                ps.setString(2, profilePhone.getText());
+                ps.setString(3, profileAddress.getText());
+                ps.setString(4, photoPath);
+                ps.setInt(5, current.getUserid());
+                ps.executeUpdate();
+            }
+
+            cachedPhotoPath = photoPath;
+            selectedProfilePhoto = null;
+
+            // Update session copy
             current.setEmail(profileEmail.getText());
             current.setAddress(profileAddress.getText());
             current.setPhone(profilePhone.getText());
             Session.setInstance(current);
-            
+
+            applyPhotoToImages(cachedPhotoPath);
+
             // Disable editing
             toggleEditMode();
-            
+
+            if (editProfilePhotoBtn != null) {
+                editProfilePhotoBtn.setVisible(false);
+            }
+            saveProfileBtn.setVisible(false);
+
             // Show success toast
             showToast("Success", "Profile updated successfully!", "success");
-            
+
         } catch (SQLException ex) {
             // Show error toast
             showToast("Error", "Failed to update profile", "error");
             ex.printStackTrace();
         }
+    }
+
+    private void loadCurrentProfilePhoto() {
+        cachedPhotoPath = fetchPhotoFromDatabase();
+        applyPhotoToImages(cachedPhotoPath);
+    }
+
+    private String fetchPhotoFromDatabase() {
+        String sql = "SELECT user_photo FROM user_info WHERE user_id = ?";
+        try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, current.getUserid());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("user_photo");
+                }
+            }
+        } catch (SQLException ignored) {
+        }
+        return null;
+    }
+
+    private void applyPhotoToImages(String storedPath) {
+        Image image = null;
+
+        if (storedPath != null && !storedPath.isBlank()) {
+            Optional<String> resolved = UserPhotoResolver.resolve(storedPath);
+            if (resolved.isPresent()) {
+                try {
+                    image = new Image(resolved.get(), true);
+                } catch (Exception ignored) {
+                    image = null;
+                }
+            }
+        }
+
+        if (image == null) {
+            try {
+                image = new Image(Objects.requireNonNull(getClass().getResource("/Image/defaultUserProfile.jpg")).toExternalForm(), true);
+            } catch (Exception ignored) {
+                image = null;
+            }
+        }
+
+        if (image != null) {
+            if (pfImage != null) {
+                pfImage.setImage(image);
+            }
+            if (profileImage != null) {
+                profileImage.setImage(image);
+            }
+        }
+    }
+
+    private String saveProfileImage(File file, String username, int userId) {
+        try {
+            String extension = extractExtension(file.getName());
+            String sanitizedName = sanitizeForFileName(username);
+            String fileName = String.format("user_%d_%s%s", userId, sanitizedName, extension);
+
+            Path imagesDir = Paths.get(System.getProperty("user.dir"), "Images");
+            Files.createDirectories(imagesDir);
+            Path target = imagesDir.resolve(fileName);
+
+            Files.copy(file.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
+
+            return "Images/" + fileName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cachedPhotoPath;
+    }
+
+    private String extractExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex >= 0 && dotIndex < fileName.length() - 1) {
+            return fileName.substring(dotIndex);
+        }
+        return ".png";
+    }
+
+    private String sanitizeForFileName(String value) {
+        if (value == null || value.isBlank()) {
+            return "user";
+        }
+        return value.trim().toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9]+", "_");
     }
     
     public void showToast(String title, String message, String type) {
@@ -1134,47 +1317,14 @@ public class adminDashboardController {
     private void showPasswordMessage(String message, boolean isSuccess) {
         if (currentPasswordAnimation != null) {
             currentPasswordAnimation.stop();
-            passwordMessagePane.setTranslateY(40);
         }
-        
-        passwordMessageLabel.setText(message);
-        
-        // Set colors based on type (login notification style)
-        if (isSuccess) {
-            passwordMessagePane.setStyle("-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(34, 197, 94); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(22, 163, 74);");
-            passwordMessageLabel.setStyle("-fx-text-fill: white;");
-        } else {
-            passwordMessagePane.setStyle("-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(255, 60, 41); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(255, 102, 40);");
-            passwordMessageLabel.setStyle("-fx-text-fill: white;");
-        }
-        
-        // Slide in from bottom
-        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), passwordMessagePane);
-        slideIn.setFromY(40);
-        slideIn.setToY(3);
-        
-        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), passwordMessagePane);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        
-        ParallelTransition show = new ParallelTransition(slideIn, fadeIn);
-        
-        // Pause for 3 seconds
-        PauseTransition pause = new PauseTransition(Duration.seconds(3));
-        
-        // Slide out to bottom
-        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), passwordMessagePane);
-        slideOut.setFromY(3);
-        slideOut.setToY(40);
-        
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), passwordMessagePane);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-        
-        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
-        
-        currentPasswordAnimation = new SequentialTransition(show, pause, hide);
-        currentPasswordAnimation.play();
+
+        passwordMessagePane.setVisible(false);
+
+        String type = isSuccess ? "success" : "error";
+        String title = isSuccess ? "Success" : "Error";
+
+        showToast(title, message, type);
     }
     
     // ========== TARGET PANE METHODS ==========
