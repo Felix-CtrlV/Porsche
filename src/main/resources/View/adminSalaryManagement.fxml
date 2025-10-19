@@ -41,7 +41,7 @@
                 <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="Manually trigger salary processing and email notifications to all employees." wrapText="true" />
                 
                 <VBox spacing="10.0" style="-fx-background-color: #fef3c7; -fx-background-radius: 8; -fx-padding: 15;">
-                    <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #92400e;" text="⚠️ Warning" />
+                    <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #92400e;" text="⚠ Warning" />
                     <Label style="-fx-font-size: 12; -fx-text-fill: #92400e;" text="This will send emails to ALL employees. [FOR TESTING PURPOSE}" wrapText="true" />
                 </VBox>
                 

@@ -15,8 +15,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 
 <StackPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminUserRegisterController">
    <children>
@@ -41,24 +42,44 @@
                </padding>
                <children>
                   <!-- Photo Section -->
-                  <VBox minHeight="150.0" prefHeight="169.0" prefWidth="578.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1;">
+                  <VBox minHeight="150.0" prefHeight="179.0" prefWidth="578.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1;">
                      <padding>
-                        <Insets bottom="20.0" left="25.0" right="25.0" top="20.0" />
+                        <Insets bottom="20.0" left="25.0" right="25.0" top="10.0" />
                      </padding>
                      <children>
                         <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #334155;" text="Profile Photo" />
                         <HBox alignment="CENTER_LEFT" spacing="20.0">
                            <children>
-                              <ImageView fx:id="photoPreview" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-color: #cbd5e1; -fx-border-radius: 50; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" />
+                              <StackPane alignment="CENTER" minHeight="110.0" minWidth="110.0" prefHeight="110.0" prefWidth="110.0">
+                                 <children>
+                                    <Circle radius="55.0" style="-fx-fill: linear-gradient(to right, #667eea, #764ba2);" />
+                                    <ImageView fx:id="photoPreview" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="false">
+                                             <StackPane.margin>
+                                                <Insets right="1.0" />
+                                             </StackPane.margin></ImageView>
+                                 </children>
+                              </StackPane>
                               <VBox spacing="10.0">
                                  <children>
-                                    <Button fx:id="uploadPhotoBtn" mnemonicParsing="false" onAction="#clickUploadPhoto" prefHeight="38.0" prefWidth="150.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" text="Upload Photo" />
-                                    <Label fx:id="photoPathLabel" style="-fx-text-fill: #64748b; -fx-font-size: 12;" text="No file selected" wrapText="true" />
+                                    <Button fx:id="uploadPhotoBtn" mnemonicParsing="false" onAction="#clickUploadPhoto" prefHeight="38.0" prefWidth="150.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" text="Upload Photo">
+                                             <VBox.margin>
+                                                <Insets top="30.0" />
+                                             </VBox.margin></Button>
+                                    <Label fx:id="photoPathLabel" style="-fx-text-fill: #64748b; -fx-font-size: 12;" text="No file selected" wrapText="true">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin></Label>
                                  </children>
                               </VBox>
                            </children>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
                         </HBox>
                      </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
                   </VBox>
                   
                   <!-- Personal Information -->
@@ -115,7 +136,7 @@
                               <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <children>
                                     <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #475569;" text="Date of Birth *" />
-                                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
                                        <children>
                                           <DatePicker fx:id="dob" prefHeight="40.0" prefWidth="180.0" promptText="Select date" style="-fx-background-color: #f8fafc; -fx-background-radius: 8; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-border-width: 1;" />
                                           <Label fx:id="ageLbl" style="-fx-text-fill: #3b82f6; -fx-font-size: 13; -fx-font-weight: bold;" text="" />

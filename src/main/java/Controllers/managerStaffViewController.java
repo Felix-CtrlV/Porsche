@@ -794,7 +794,8 @@ public class managerStaffViewController {
             cardController.setData(
                     staff.getId(),
                     staff.getUsername(),
-                    staff.getIs_active()
+                    staff.getIs_active(),
+                    staff.getImagePath()
             );
 
             final user currentStaff = staff;
