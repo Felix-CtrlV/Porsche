@@ -177,7 +177,7 @@
                     <center>
                   <StackPane maxHeight="10000.0" prefHeight="613.0" prefWidth="454.0">
                      <children>
-                              <VBox fx:id="addPane" maxWidth="448.0" minHeight="382.0" minWidth="448.0" prefHeight="614.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
+                              <VBox fx:id="addPane" maxWidth="448.0" minHeight="382.0" minWidth="448.0" prefHeight="614.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
                                   <children>
                                       <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                           <children>
@@ -415,7 +415,7 @@
                                                     </VBox>
                                        </content>
                                     </ScrollPane>
-                                    <ScrollPane hbarPolicy="NEVER" hmax="0.0" vbarPolicy="NEVER" vmax="0.0">
+                                    <ScrollPane hbarPolicy="NEVER" hmax="0.0" vbarPolicy="NEVER" visible="false" vmax="0.0">
                                        <content>
                                           <VBox fx:id="addPart" maxHeight="595.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" prefHeight="595.0" prefWidth="448.0" spacing="5.0" style="-fx-padding: 20;">
                                              <children>
@@ -526,7 +526,7 @@
                               </StackPane>
                                   </children>
                               </VBox>
-                        <VBox fx:id="editPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                        <VBox fx:id="editPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
                            <children>
                               <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                  <children>
