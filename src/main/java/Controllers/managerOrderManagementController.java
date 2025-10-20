@@ -377,7 +377,13 @@ public class managerOrderManagementController {
 
             row.setOnMouseEntered(e -> {
                 if (!row.isEmpty() && !row.isSelected()) {
-                    row.setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
+                    row.setStyle("-fx-background-color: #f8f9fa; " +
+                                "-fx-text-fill: black !important; " +
+                                "-fx-font-size: 14px !important; " +
+                                "-fx-font-weight: normal; " +
+                                "-fx-border-color: #e9ecef; " +
+                                "-fx-border-width: 0 0 1 0; " +
+                                "-fx-padding: 8 0 8 0;");
                 }
             });
 
@@ -425,6 +431,44 @@ public class managerOrderManagementController {
         installmentPriceCol.setCellValueFactory(cellData -> {
             String[] parts = cellData.getValue().split("\\|");
             return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
+        });
+        
+        // Set up installment table row factory for spacing
+        installmentTable.setRowFactory(tv -> {
+            TableRow<String> row = new TableRow<>();
+            
+            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+                if (row.isEmpty()) {
+                    row.setStyle("");
+                } else {
+                    // Add spacing and border to installment rows
+                    row.setStyle("-fx-background-color: white; " +
+                                "-fx-border-color: #e9ecef; " +
+                                "-fx-border-width: 0 0 1 0; " +
+                                "-fx-padding: 6 0 6 0;");
+                }
+            });
+            
+            // Add hover effect
+            row.setOnMouseEntered(e -> {
+                if (!row.isEmpty()) {
+                    row.setStyle("-fx-background-color: #f8f9fa; " +
+                                "-fx-border-color: #e9ecef; " +
+                                "-fx-border-width: 0 0 1 0; " +
+                                "-fx-padding: 6 0 6 0;");
+                }
+            });
+            
+            row.setOnMouseExited(e -> {
+                if (!row.isEmpty()) {
+                    row.setStyle("-fx-background-color: white; " +
+                                "-fx-border-color: #e9ecef; " +
+                                "-fx-border-width: 0 0 1 0; " +
+                                "-fx-padding: 6 0 6 0;");
+                }
+            });
+            
+            return row;
         });
         
         // Connect search button to searchOrder method
@@ -1417,11 +1461,23 @@ public class managerOrderManagementController {
         if (row.isEmpty()) {
             row.setStyle("");
         } else if (row.isSelected()) {
-            // Selected row: bold text with highlight background
-            row.setStyle("-fx-background-color: #e3f2fd; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: bold; -fx-border-color: #2196f3; -fx-border-width: 0 0 1 0;");
+            // Selected row: bold text with highlight background and spacing
+            row.setStyle("-fx-background-color: #e3f2fd; " +
+                        "-fx-text-fill: black !important; " +
+                        "-fx-font-size: 14px !important; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-border-color: #2196f3; " +
+                        "-fx-border-width: 0 0 2 0; " +
+                        "-fx-padding: 8 0 8 0;");
         } else {
-            // Normal row: regular text
-            row.setStyle("-fx-background-color: white; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
+            // Normal row: regular text with spacing
+            row.setStyle("-fx-background-color: white; " +
+                        "-fx-text-fill: black !important; " +
+                        "-fx-font-size: 14px !important; " +
+                        "-fx-font-weight: normal; " +
+                        "-fx-border-color: #e9ecef; " +
+                        "-fx-border-width: 0 0 1 0; " +
+                        "-fx-padding: 8 0 8 0;");
         }
     }
     
