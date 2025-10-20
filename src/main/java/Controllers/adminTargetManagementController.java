@@ -338,31 +338,23 @@ public class adminTargetManagementController {
         periodLabel.setText(months[month - 1] + " " + year);
         
         // Update car progress
-        if (carPercent >= 100) {
+        if (carTarget > 0) {
             int excess = carAchieve - carTarget;
-            carProgressLabel.setText("100%");
-            if (excess > 0) {
-                carAchieveLabel.setText(carAchieve + " / " + carTarget + " (+" + excess + ")");
-            } else {
-                carAchieveLabel.setText(carAchieve + " / " + carTarget);
-            }
+            carProgressLabel.setText(carPercent >= 100 ? "100%" : String.format("%.1f%%", carPercent));
+            carAchieveLabel.setText(Math.min(carAchieve, carTarget) + " / " + carTarget + (excess > 0 ? " (+" + excess + ")" : ""));
         } else {
-            carProgressLabel.setText(String.format("%.1f%%", carPercent));
-            carAchieveLabel.setText(carAchieve + " / " + carTarget);
+            carProgressLabel.setText("0%");
+            carAchieveLabel.setText("0 / 0");
         }
         
         // Update part progress
-        if (partPercent >= 100) {
+        if (partTarget > 0) {
             int excess = partAchieve - partTarget;
-            partProgressLabel.setText("100%");
-            if (excess > 0) {
-                partAchieveLabel.setText(partAchieve + " / " + partTarget + " (+" + excess + ")");
-            } else {
-                partAchieveLabel.setText(partAchieve + " / " + partTarget);
-            }
+            partProgressLabel.setText(partPercent >= 100 ? "100%" : String.format("%.1f%%", partPercent));
+            partAchieveLabel.setText(Math.min(partAchieve, partTarget) + " / " + partTarget + (excess > 0 ? " (+" + excess + ")" : ""));
         } else {
-            partProgressLabel.setText(String.format("%.1f%%", partPercent));
-            partAchieveLabel.setText(partAchieve + " / " + partTarget);
+            partProgressLabel.setText("0%");
+            partAchieveLabel.setText("0 / 0");
         }
         
         // Animate progress circles (cap at 100% for visual)

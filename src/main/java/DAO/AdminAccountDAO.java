@@ -91,22 +91,99 @@ public class AdminAccountDAO {
         return weeks;
     }
 
-    public double getMonthlyAttendance(int staffId, int month, int year) throws SQLException {
+    public AttendanceSummary getMonthlyAttendance(int requesterId, int month, int year) throws SQLException {
         String sql = "CALL getMonthlyAttendance(?,?,?)";
-        
+
         try (CallableStatement cs = conn.prepareCall(sql)) {
-            cs.setInt(1, staffId);
+            cs.setInt(1, requesterId);
             cs.setInt(2, month);
             cs.setInt(3, year);
-            
+
             try (ResultSet rs = cs.executeQuery()) {
-                if (rs.next()) {
-                    // Returns: present_day, absent_day, total_day, attendance_percentage
-                    return rs.getDouble(4); // attendance_percentage
+                List<AttendanceRecord> records = new ArrayList<>();
+                while (rs.next()) {
+                    int userId = rs.getInt(1);
+                    String userName = rs.getString(2);
+                    String role = rs.getString(3);
+                    int presentDays = rs.getInt(4);
+                    int absentDays = rs.getInt(5);
+                    int totalDays = rs.getInt(6);
+                    double percentage = rs.getDouble(7);
+                    records.add(new AttendanceRecord(userId, userName, role, presentDays, absentDays, totalDays, percentage));
                 }
+                return new AttendanceSummary(records);
             }
         }
-        return 0.0;
+    }
+
+    public static class AttendanceSummary {
+        private final List<AttendanceRecord> records;
+
+        public AttendanceSummary(List<AttendanceRecord> records) {
+            this.records = records;
+        }
+
+        public List<AttendanceRecord> getRecords() {
+            return records;
+        }
+
+        public AttendanceRecord findByUserId(int userId) {
+            if (records == null)
+                return null;
+            for (AttendanceRecord record : records) {
+                if (record.userId == userId)
+                    return record;
+            }
+            return null;
+        }
+    }
+
+    public static class AttendanceRecord {
+        private final int userId;
+        private final String userName;
+        private final String role;
+        private final int presentDays;
+        private final int absentDays;
+        private final int totalDays;
+        private final double attendancePercentage;
+
+        public AttendanceRecord(int userId, String userName, String role, int presentDays, int absentDays, int totalDays, double attendancePercentage) {
+            this.userId = userId;
+            this.userName = userName;
+            this.role = role;
+            this.presentDays = presentDays;
+            this.absentDays = absentDays;
+            this.totalDays = totalDays;
+            this.attendancePercentage = attendancePercentage;
+        }
+
+        public int getUserId() {
+            return userId;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public int getPresentDays() {
+            return presentDays;
+        }
+
+        public int getAbsentDays() {
+            return absentDays;
+        }
+
+        public int getTotalDays() {
+            return totalDays;
+        }
+
+        public double getAttendancePercentage() {
+            return attendancePercentage;
+        }
     }
 
     public int[][] getTargetData(int userId, int month, int year) throws SQLException {
