@@ -177,7 +177,7 @@
                     <center>
                   <StackPane maxHeight="10000.0" prefHeight="613.0" prefWidth="454.0">
                      <children>
-                              <VBox fx:id="addPane" maxWidth="448.0" minHeight="382.0" minWidth="448.0" prefHeight="614.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
+                              <VBox fx:id="addPane" maxWidth="448.0" minHeight="382.0" minWidth="448.0" prefHeight="614.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
                                   <children>
                                       <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                           <children>
@@ -208,8 +208,8 @@
                                                                           </StackPane>
                                                             <VBox alignment="CENTER" spacing="8.0">
                                                                <children>
-                                                                  <Button fx:id="partUploadBtn1" mnemonicParsing="false" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-background-radius: 6; -fx-padding: 8 16 8 16; -fx-pref-width: 100; -fx-cursor: hand;" text="Upload" />
-                                                                  <Label fx:id="partFileStatusLabel1" maxWidth="200.0" style="-fx-text-fill: #64748b; -fx-font-size: 10; -fx-font-style: italic; -fx-wrap-text: true;" text="No file selected" wrapText="true" />
+                                                                  <Button fx:id="carUploadBtn" mnemonicParsing="false" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-background-radius: 6; -fx-padding: 8 16 8 16; -fx-pref-width: 100; -fx-cursor: hand;" text="Upload" />
+                                                                  <Label fx:id="carFileStatusLabel" maxWidth="200.0" style="-fx-text-fill: #64748b; -fx-font-size: 10; -fx-font-style: italic; -fx-wrap-text: true;" text="No file selected" wrapText="true" />
                                                                </children>
                                                             </VBox>
                                                          </children>
@@ -415,9 +415,9 @@
                                                     </VBox>
                                        </content>
                                     </ScrollPane>
-                                    <ScrollPane hbarPolicy="NEVER" hmax="0.0" vbarPolicy="NEVER" vmax="0.0">
+                                    <ScrollPane fx:id="addPart" hbarPolicy="NEVER" hmax="0.0" vbarPolicy="NEVER" visible="false" vmax="0.0">
                                        <content>
-                                          <VBox fx:id="addPart" maxHeight="595.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" prefHeight="595.0" prefWidth="448.0" spacing="5.0" style="-fx-padding: 20;">
+                                          <VBox  maxHeight="595.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" prefHeight="595.0" prefWidth="448.0" spacing="5.0" style="-fx-padding: 20;">
                                              <children>
                                                 <VBox prefHeight="188.0" prefWidth="393.0" spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 20; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-border-width: 1;">
                                                    <children>
@@ -526,7 +526,7 @@
                               </StackPane>
                                   </children>
                               </VBox>
-                        <VBox fx:id="editPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                        <VBox fx:id="editPane" maxHeight="626.0" maxWidth="448.0" minHeight="626.0" minWidth="448.0" prefHeight="601.0" prefWidth="448.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;" visible="false">
                            <children>
                               <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" style="-fx-background-color: #1e293b; -fx-background-radius: 10 10 0 0;">
                                  <children>
@@ -544,9 +544,9 @@
                               </HBox>
                               <StackPane maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0">
                                  <children>
-                                    <ScrollPane hbarPolicy="NEVER" hmax="0.0" vbarPolicy="NEVER" visible="false" vmax="0.0">
+                                    <ScrollPane fx:id="editPart" hbarPolicy="NEVER" hmax="0.0" vbarPolicy="NEVER" vmax="0.0">
                                        <content>
-                                          <VBox fx:id="editPart" maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;">
+                                          <VBox maxHeight="571.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="22.0" style="-fx-padding: 20;">
                                              <children>
                                                 <HBox prefHeight="226.0" prefWidth="408.0" spacing="12.0">
                                                    <children>
@@ -641,7 +641,7 @@
                                           </VBox>
                                        </content>
                                     </ScrollPane>
-                                    <ScrollPane fx:id="editCar" hbarPolicy="NEVER" hmax="0.0">
+                                    <ScrollPane fx:id="editCar" hbarPolicy="NEVER" hmax="0.0" visible="false">
                                        <content>
                                           <VBox maxHeight="1000.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="5.0" style="-fx-padding: 20;">
                                              <children>
@@ -754,13 +754,13 @@
                                                          <children>
                                                             <VBox>
                                                                <children>
-                                                                  <Label fx:id="carExtColorLbl1" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Exterior Color *" />
+                                                                  <Label style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Exterior Color " />
                                                                   <TextField fx:id="editCarExtColor" maxHeight="35.2" minHeight="35.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                                </children>
                                                             </VBox>
                                                             <VBox>
                                                                <children>
-                                                                  <Label fx:id="carIntColorLbl1" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Interior Color *" />
+                                                                  <Label style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Interior Color " />
                                                                   <TextField fx:id="editCarIntColor" maxHeight="35.2" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                                </children>
                                                             </VBox>

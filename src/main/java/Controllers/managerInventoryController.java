@@ -65,7 +65,7 @@ public class managerInventoryController {
     private Button addCarbtn;
 
     @FXML
-    private VBox addPart;  // VBox (matches FXML)
+    private ScrollPane addPart;  // VBox (matches FXML)
 
     @FXML
     private Button addPartbtn;
@@ -312,7 +312,7 @@ public class managerInventoryController {
     private Button editCarRevert;
 
     @FXML
-    private VBox editPart;
+    private ScrollPane editPart;
     @FXML
     private Label editPartId;
     @FXML
