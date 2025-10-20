@@ -1008,10 +1008,37 @@ public class managerStaffViewController {
         }
         targetCar.setStyle("-fx-font-size:18;-fx-font-weight:bold; -fx-text-fill:  #6d8196;");
 
+        // Set stroke properties
+        carCircle.setStroke(javafx.scene.paint.Color.web("#6d8196"));
+        carCircle.setStrokeWidth(6);
+        carCircle.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+        carCircle.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        
+        // Set circular progress animation
         double circulerCar = 2 * Math.PI * carCircle.getRadius();
         carCircle.getStrokeDashArray().setAll(circulerCar, circulerCar);
-        carCircle.setStrokeDashOffset(circulerCar * (1 - progressCar));
-        carCircle.setRotate(-90); // Start from top
+        
+        // Start from top
+        carCircle.setRotate(-90);
+        
+        // Calculate final offset
+        double finalOffset = circulerCar * (1 - progressCar);
+        
+        // Start with full offset (hidden) and animate to final offset
+        carCircle.setStrokeDashOffset(circulerCar);
+        
+        // Create wave animation
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline();
+        javafx.animation.KeyFrame keyFrame = new javafx.animation.KeyFrame(
+            javafx.util.Duration.millis(1500), // 1.5 seconds
+            new javafx.animation.KeyValue(
+                carCircle.strokeDashOffsetProperty(),
+                finalOffset,
+                javafx.animation.Interpolator.EASE_OUT
+            )
+        );
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
     }
     private void setPartCircle(int target, int achieve) {
         targetPart.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
@@ -1050,10 +1077,37 @@ public class managerStaffViewController {
         }
         targetPart.setStyle("-fx-font-size:18;-fx-font-weight:bold; -fx-text-fill:  #ffa500;");
 
+        // Set stroke properties
+        partCircle.setStroke(javafx.scene.paint.Color.web("#ffa500"));
+        partCircle.setStrokeWidth(6);
+        partCircle.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+        partCircle.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        
+        // Set circular progress animation
         double circulerPart = 2 * Math.PI * partCircle.getRadius();
         partCircle.getStrokeDashArray().setAll(circulerPart, circulerPart);
-        partCircle.setStrokeDashOffset(circulerPart * (1 - progressPart));
-        partCircle.setRotate(-90); // Start from top
+        
+        // Start from top
+        partCircle.setRotate(-90);
+        
+        // Calculate final offset
+        double finalOffset = circulerPart * (1 - progressPart);
+        
+        // Start with full offset (hidden) and animate to final offset
+        partCircle.setStrokeDashOffset(circulerPart);
+        
+        // Create wave animation
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline();
+        javafx.animation.KeyFrame keyFrame = new javafx.animation.KeyFrame(
+            javafx.util.Duration.millis(1500), // 1.5 seconds
+            new javafx.animation.KeyValue(
+                partCircle.strokeDashOffsetProperty(),
+                finalOffset,
+                javafx.animation.Interpolator.EASE_OUT
+            )
+        );
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
     }
 
     // Fetch attendance data without UI updates (for async use)
@@ -1092,14 +1146,40 @@ public class managerStaffViewController {
         attendanceBackCircle.setVisible(true);
         attendanceCircle.setVisible(true);
 
+        // Set stroke properties
+        attendanceCircle.setStroke(javafx.scene.paint.Color.web("#3b82f6"));
+        attendanceCircle.setStrokeWidth(6);
+        attendanceCircle.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+        attendanceCircle.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        
         // Use attendanceCircle's radius
         double attendCircle = 2 * Math.PI * attendanceCircle.getRadius();
         double progress = attendance_percentage / 100;
 
         // Set up the dash array for smooth circular progress
         attendanceCircle.getStrokeDashArray().setAll(attendCircle, attendCircle);
-        attendanceCircle.setStrokeDashOffset(attendCircle * (1 - progress));
-        attendanceCircle.setRotate(-90); // Start from top
+        
+        // Start from top
+        attendanceCircle.setRotate(-90);
+        
+        // Calculate final offset
+        double finalOffset = attendCircle * (1 - progress);
+        
+        // Start with full offset (hidden) and animate to final offset
+        attendanceCircle.setStrokeDashOffset(attendCircle);
+        
+        // Create wave animation
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline();
+        javafx.animation.KeyFrame keyFrame = new javafx.animation.KeyFrame(
+            javafx.util.Duration.millis(1500), // 1.5 seconds
+            new javafx.animation.KeyValue(
+                attendanceCircle.strokeDashOffsetProperty(),
+                finalOffset,
+                javafx.animation.Interpolator.EASE_OUT
+            )
+        );
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
 
         // Show/hide circles based on data
         attendanceCircle.setVisible(present_day > 0);
