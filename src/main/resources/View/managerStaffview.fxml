@@ -223,8 +223,8 @@
                                           <children>
                                              <Group>
                                                 <children>
-                                                   <Circle fx:id="attendanceBackCircle1" fill="transparent" radius="60" stroke="#e5e7eb" strokeWidth="12" styleClass="progress-circle-background" />
-                                                   <Circle fx:id="attendanceCircle1" fill="transparent" radius="60" stroke="#3b82f6" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="12" styleClass="progress-circle progress-circle-attendance" visible="false" />
+                                                   <Circle fx:id="attendanceBackCircle" fill="transparent" radius="60" stroke="#e5e7eb" strokeWidth="12" styleClass="progress-circle-background" />
+                                                   <Circle fx:id="attendanceCircle" fill="transparent" radius="60" stroke="#3b82f6" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="12" styleClass="progress-circle progress-circle-attendance" visible="false" />
                                                 </children>
                                              </Group>
                                              <Text fx:id="attendancePercent1" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: #1f2937;" text="10%" />

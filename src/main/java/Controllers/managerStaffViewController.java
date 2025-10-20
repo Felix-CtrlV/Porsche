@@ -1010,7 +1010,7 @@ public class managerStaffViewController {
 
         // Set stroke properties
         carCircle.setStroke(javafx.scene.paint.Color.web("#6d8196"));
-        carCircle.setStrokeWidth(6);
+        carCircle.setStrokeWidth(10);
         carCircle.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
         carCircle.setFill(javafx.scene.paint.Color.TRANSPARENT);
         
@@ -1079,7 +1079,7 @@ public class managerStaffViewController {
 
         // Set stroke properties
         partCircle.setStroke(javafx.scene.paint.Color.web("#ffa500"));
-        partCircle.setStrokeWidth(6);
+        partCircle.setStrokeWidth(10);
         partCircle.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
         partCircle.setFill(javafx.scene.paint.Color.TRANSPARENT);
         
@@ -1148,7 +1148,7 @@ public class managerStaffViewController {
 
         // Set stroke properties
         attendanceCircle.setStroke(javafx.scene.paint.Color.web("#3b82f6"));
-        attendanceCircle.setStrokeWidth(6);
+        attendanceCircle.setStrokeWidth(10);
         attendanceCircle.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
         attendanceCircle.setFill(javafx.scene.paint.Color.TRANSPARENT);
         
