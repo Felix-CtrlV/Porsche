@@ -5,7 +5,6 @@ import Model.user;
 import Utils.Session;
 import Utils.ThreadPoolManager;
 import Utils.defaultStage;
-import Utils.AppStage; // <--- added
 import javafx.animation.*;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -206,12 +205,13 @@ public class loginController {
                         default -> throw new IllegalStateException("Unknown role: " + role);
                     };
 
-                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // get current stage
-                    Scene scene = new Scene(root);
-                    AppStage.setStage(stage);
-                    stage.setScene(scene);
-                    stage.centerOnScreen();
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root));
+                    defaultStage DStage = new defaultStage();
+                    DStage.setStage(stage);
                     stage.show();
+                    Stage home = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    home.close();
 
                 } catch (IOException ex) {
                     logger.error("Failed to load dashboard for role: " + role, ex);
