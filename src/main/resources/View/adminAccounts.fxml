@@ -27,7 +27,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1280.0" stylesheets="@../CSS/admin_accounts.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminAccountController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="801.0" prefWidth="1280.0" stylesheets="@../CSS/admin_accounts.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminAccountController">
 <BorderPane>
     <left>
         <VBox minWidth="301.0" prefHeight="700.0" prefWidth="301.0" spacing="10.0" style="-fx-background-color: #f8f9fa;">
@@ -37,15 +37,15 @@
             <children>
                 <HBox alignment="CENTER_LEFT" prefWidth="250.0" spacing="10.0">
                     <children>
-                        <StackPane prefHeight="38.0" prefWidth="179.0">
+                        <StackPane prefHeight="38.0" prefWidth="169.0">
                             <children>
-                                <TextField fx:id="StaffSearchText" prefHeight="32.0" prefWidth="169.0" promptText="Search" style="-fx-background-radius: 20; -fx-border-radius: 20;" StackPane.alignment="CENTER" />
-                                <Button fx:id="SearchNamebtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="48.0" style="-fx-background-color: transparent;" text="🔍" StackPane.alignment="CENTER_RIGHT">
+                                <TextField fx:id="StaffSearchText" prefHeight="32.0" prefWidth="220.0" promptText="Search" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 0 34 0 14;" StackPane.alignment="CENTER" />
+                                <Button fx:id="SearchNamebtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="34.0" style="-fx-background-color: transparent;" text="🔍" StackPane.alignment="CENTER_RIGHT">
                                     <StackPane.margin>
                                         <Insets />
                                     </StackPane.margin>
                                     <padding>
-                                        <Insets left="9.0" />
+                                        <Insets />
                                     </padding>
                                 </Button>
                             </children>
@@ -64,7 +64,7 @@
                         <Insets top="20.0" />
                     </VBox.margin>
                 </HBox>
-            <HBox alignment="CENTER_LEFT">
+            <HBox alignment="CENTER_LEFT" prefWidth="271.0">
                <children>
                   <ComboBox fx:id="roleCombo" prefHeight="30.0" prefWidth="106.0" style="-fx-padding: 0;" styleClass="admin-choice-box">
                       <items>
@@ -276,7 +276,7 @@
                                 <!-- Sales Performance Card -->
                                 <VBox maxHeight="400.0" spacing="15.0" styleClass="admin-card" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label styleClass="admin-label-subtitle" text="📈 Sales Performance" />
+                                        <Label fx:id="performanceLabel" styleClass="admin-label-subtitle" text="👥 Members" />
                                         
                                         <StackPane HBox.hgrow="ALWAYS">
                                             <children>
@@ -317,10 +317,10 @@
                                         <!-- Car Sales Target -->
                                         <VBox spacing="15.0" style="-fx-padding: 0;" styleClass="target-card" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: linear-gradient(to right, #92d8ff, #6cb7dc); -fx-background-radius: 12 12 0 0;" styleClass="target-card-header target-card-header-car">
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #6eaef3; -fx-background-radius: 12 12 0 0;" styleClass="target-card-header target-card-header-car">
                                                     <children>
                                                         <Label styleClass="target-card-header-label" text="🚗" />
-                                                        <Label styleClass="target-card-header-label" text="CAR SALES" />
+                                                        <Label styleClass="target-card-header-label" text="CARS SALES" />
                                                     </children>
                                           <padding>
                                              <Insets bottom="15.0" left="15.0" top="15.0" />
@@ -367,7 +367,7 @@
                                         <!-- Parts Sales Target -->
                                         <VBox spacing="15.0" style="-fx-padding: 0;" styleClass="target-card" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: linear-gradient(to right, #92d8ff, #6cb7dc); -fx-background-radius: 12 12 0 0;" styleClass="target-card-header target-card-header-parts">
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #6eaef3; -fx-background-radius: 12 12 0 0;" styleClass="target-card-header target-card-header-parts">
                                                     <children>
                                                         <Label styleClass="target-card-header-label" text="🔧" />
                                                         <Label styleClass="target-card-header-label" text="PARTS SALES" />

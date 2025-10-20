@@ -2,10 +2,13 @@ package Controllers;
 
 import DAO.AdminAccountDAO;
 import Model.user;
+import Utils.Session;
 import Utils.ThreadPoolManager;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,6 +47,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +61,7 @@ import java.util.Set;
 
 public class adminAccountController {
     private static final Logger logger = LoggerFactory.getLogger(adminAccountController.class);
+    private static final DateTimeFormatter SHORT_MONTH_FORMATTER = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
 
     // ---------- Staff Info ----------
     @FXML
@@ -103,6 +108,8 @@ public class adminAccountController {
     private TextArea terminationReasonField;
     @FXML
     private Label carTargetLabel, partTargetLabel, carBonusLabel, partBonusLabel, totalBonusLabel, bonusBreakdownLabel;
+    @FXML
+    private Label performanceLabel;
 
     // ---------- Month / Year ----------
     @FXML
@@ -126,6 +133,9 @@ public class adminAccountController {
     private boolean showActive = true;
     private final AdminAccountDAO dao;
     private final ObservableList<user> staffList = FXCollections.observableArrayList();
+    private final FilteredList<user> filteredStaff = new FilteredList<>(staffList, s -> true);
+    private final PauseTransition searchDebounce = new PauseTransition(Duration.millis(500));
+    private String pendingSearchText = "";
     private int selectedStaffId = 0;
     private final ContextMenu searchMenu = new ContextMenu();
     private final LocalDate today = LocalDate.now();
@@ -161,7 +171,11 @@ public class adminAccountController {
         // Initialize role combo
         roleCombo.setItems(FXCollections.observableArrayList("Manager", "Staff"));
         roleCombo.setValue("Manager");
-        roleCombo.valueProperty().addListener((obs, o, n) -> loadStaffCardsAsync(showActive));
+        updatePerformanceLabel("Manager");
+        roleCombo.valueProperty().addListener((obs, o, n) -> {
+            updatePerformanceLabel(n);
+            loadStaffCardsAsync(showActive);
+        });
 
         // Setup addUser click handler
         if (addUser != null) {
@@ -176,6 +190,17 @@ public class adminAccountController {
 
         StaffListTitleLabel.setText("List (Active)");
         loadStaffCardsAsync(showActive);
+    }
+
+    private void updatePerformanceLabel(String role) {
+        if (performanceLabel == null)
+            return;
+
+        if ("Manager".equals(role)) {
+            performanceLabel.setText("👥 Members");
+        } else {
+            performanceLabel.setText("📈 Sale Performance");
+        }
     }
 
     private void applyCircularClip(ImageView imageView) {
@@ -487,27 +512,39 @@ public class adminAccountController {
         if (staffId == 0)
             return;
 
-        Task<Double> task = new Task<>() {
+        Task<AdminAccountDAO.AttendanceSummary> task = new Task<>() {
             @Override
-            protected Double call() throws Exception {
-                return dao.getMonthlyAttendance(staffId, month, year);
+            protected AdminAccountDAO.AttendanceSummary call() throws Exception {
+                return dao.getMonthlyAttendance(getCurrentUserId(), month, year);
             }
         };
 
-        task.setOnSucceeded(e -> updateAttendance(task.getValue()));
+        task.setOnSucceeded(e -> {
+            AdminAccountDAO.AttendanceSummary summary = task.getValue();
+            AdminAccountDAO.AttendanceRecord record = summary != null ? summary.findByUserId(staffId) : null;
+            updateAttendance(record);
+        });
         task.setOnFailed(e -> {
             logger.error("Failed to load attendance", task.getException());
-            Platform.runLater(() -> updateAttendance(0.0));
+            Platform.runLater(() -> updateAttendance(null));
         });
         ThreadPoolManager.getInstance().execute(task);
     }
 
-    private void updateAttendance(double percent) {
+    private void updateAttendance(AdminAccountDAO.AttendanceRecord record) {
         if (attendancePercent == null || attendanceCircle == null)
             return;
 
+        double percent = record != null ? record.getAttendancePercentage() : 0.0;
         attendancePercent.setText(String.format("%.0f%%", percent));
         updateCircleProgress(attendanceCircle, percent);
+    }
+
+    private int getCurrentUserId() {
+        Session current = Session.getInstance();
+        if (current != null)
+            return current.getUserid();
+        return 0;
     }
 
     // ---------- Targets ----------
@@ -540,7 +577,7 @@ public class adminAccountController {
         // Car targets
         int carAchieved = carData[0];
         int carTarget = carData[1];
-        targetCar.setText(carAchieved + "/" + carTarget);
+        targetCar.setText(Math.min(carAchieved, carTarget) + "/" + carTarget);
 
         if (carTarget > 0) {
             int carOver = carAchieved - carTarget;
@@ -560,7 +597,7 @@ public class adminAccountController {
         // Part targets
         int partAchieved = partData[0];
         int partTarget = partData[1];
-        targetPart.setText(partAchieved + "/" + partTarget);
+        targetPart.setText(Math.min(partAchieved, partTarget) + "/" + partTarget);
 
         if (partTarget > 0) {
             int partOver = partAchieved - partTarget;
@@ -649,7 +686,7 @@ public class adminAccountController {
 
         task.setOnSucceeded(e -> {
             staffList.setAll(task.getValue());
-            populateStaffCards();
+            applyStaffFilter(StaffSearchText != null ? StaffSearchText.getText() : "");
         });
 
         task.setOnFailed(e -> {
@@ -662,7 +699,7 @@ public class adminAccountController {
     private void populateStaffCards() {
         staffListContainer.getChildren().clear();
 
-        for (user staff : staffList) {
+        for (user staff : filteredStaff) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/userCards.fxml"));
                 Node card = loader.load();
@@ -682,9 +719,13 @@ public class adminAccountController {
             }
         }
 
-        if (!staffList.isEmpty()) {
-            showStaffDetails(staffList.get(0));
-            loadDataForSelectedUser(staffList.get(0).getId());
+        if (!filteredStaff.isEmpty()) {
+            user currentSelection = filteredStaff.stream()
+                    .filter(s -> s.getId() == selectedStaffId)
+                    .findFirst()
+                    .orElse(filteredStaff.get(0));
+            showStaffDetails(currentSelection);
+            loadDataForSelectedUser(currentSelection.getId());
         } else {
             selectedStaffId = 0;
             setupEmptyChart();
@@ -699,11 +740,13 @@ public class adminAccountController {
             // For managers, show staff table instead of weekly sales chart
             lineChart.setVisible(false);
             staffTableView.setVisible(true);
+            updatePerformanceLabel("Manager");
             loadStaffUnderManagerAsync(userId);
         } else {
             // For staff, show weekly sales chart
             lineChart.setVisible(true);
             staffTableView.setVisible(false);
+            updatePerformanceLabel("Staff");
             loadWeeklySalesAsync(userId, currentMonth, currentYear);
         }
 
@@ -784,44 +827,45 @@ public class adminAccountController {
     // ---------- Search ----------
     private void setupSearch() {
         StaffSearchText.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER)
+            if (e.getCode() == KeyCode.ENTER) {
+                searchDebounce.stop();
+                applyStaffFilter(StaffSearchText.getText());
                 searchStaff();
+            }
         });
         SearchNamebtn.setOnMouseClicked(e -> searchStaff());
 
         StaffSearchText.textProperty().addListener((obs, o, text) -> {
-            if (text == null || text.isEmpty()) {
-                searchMenu.hide();
-                return;
-            }
-
-            List<MenuItem> matches = new ArrayList<>();
-            String lower = text.toLowerCase();
-
-            for (user s : staffList) {
-                if (String.valueOf(s.getId()).contains(lower) || s.getUsername().toLowerCase().contains(lower)) {
-                    MenuItem item = new MenuItem(s.getId() + " - " + s.getUsername());
-                    item.setOnAction(ev -> {
-                        StaffSearchText.setText(s.getUsername());
-                        searchMenu.hide();
-                        showStaffDetails(s);
-                        loadDataForSelectedUser(s.getId());
-                    });
-                    matches.add(item);
-                }
-            }
-
-            if (!matches.isEmpty()) {
-                searchMenu.getItems().setAll(matches);
-                searchMenu.show(StaffSearchText, Side.BOTTOM, 0, 0);
-            } else
+            pendingSearchText = text;
+            searchDebounce.playFromStart();
+            if (searchMenu.isShowing())
                 searchMenu.hide();
         });
+
+        searchDebounce.setOnFinished(ev -> applyStaffFilter(pendingSearchText));
 
         StaffSearchText.focusedProperty().addListener((obs, o, focus) -> {
             if (!focus)
                 searchMenu.hide();
         });
+    }
+
+    private void applyStaffFilter(String text) {
+        String filter = text == null ? "" : text.trim().toLowerCase();
+
+        if (filter.isEmpty()) {
+            filteredStaff.setPredicate(s -> true);
+        } else {
+            filteredStaff.setPredicate(s -> {
+                if (s == null)
+                    return false;
+                String name = Optional.ofNullable(s.getUsername()).orElse("").toLowerCase();
+                String idString = String.valueOf(s.getId());
+                return name.contains(filter) || idString.contains(filter);
+            });
+        }
+
+        populateStaffCards();
     }
 
     private void searchStaff() {
@@ -845,11 +889,18 @@ public class adminAccountController {
         monthBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (updatingDateBox || newVal == null)
                 return;
-            int selectedMonth = Month.valueOf(newVal.toUpperCase(Locale.ENGLISH)).getValue();
+            int selectedMonth;
+            try {
+                selectedMonth = Month.from(SHORT_MONTH_FORMATTER.parse(newVal)).getValue();
+            } catch (DateTimeParseException ex) {
+                logger.warn("Failed to parse month value: {}", newVal, ex);
+                return;
+            }
             if (selectedMonth != currentMonth) {
                 currentMonth = selectedMonth;
                 updateDateControls();
-                loadDataForSelectedUser(selectedStaffId);
+                if (selectedStaffId != 0)
+                    loadDataForSelectedUser(selectedStaffId);
             }
         });
 

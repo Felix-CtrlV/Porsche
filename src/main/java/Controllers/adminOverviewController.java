@@ -25,8 +25,11 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
 import java.util.*;
 
@@ -54,10 +57,13 @@ public class adminOverviewController implements Initializable {
     @FXML
     private Circle carRevenueCircle, partRevenueCircle;
 
-    private LocalDate today = LocalDate.now();
+    private final LocalDate today = LocalDate.now();
     private int currentMonth;
     private int currentYear;
     private boolean updatingDateBox = false;
+    private LocalDate overviewStartDate;
+    private LocalDate overviewEndDate;
+    private static final DateTimeFormatter SHORT_MONTH_FORMATTER = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
     private String currentBarChartType = "car";
 
     int year;
@@ -74,7 +80,11 @@ public class adminOverviewController implements Initializable {
             areaChart.setAnimated(false);
         }
 
+        overviewStartDate = getOverviewEarliestDate();
+        overviewEndDate = today;
+
         setupMonthYear();
+        updateYearBox();
         updateMonthBox();
         updateDateControls();
 
@@ -96,23 +106,20 @@ public class adminOverviewController implements Initializable {
     }
 
     private void setupMonthYear() {
-        yearBox.getItems().clear();
-        for (int y = 2020; y <= today.getYear(); y++) {
-            yearBox.getItems().add(y);
-        }
-        yearBox.setValue(currentYear);
-
         monthBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (updatingDateBox || newVal == null)
                 return;
-            int selectedMonthIndex = monthBox.getItems().indexOf(newVal);
-            if (selectedMonthIndex >= 0) {
-                int selectedMonth = selectedMonthIndex + 1;
-                if (selectedMonth != currentMonth) {
-                    currentMonth = selectedMonth;
-                    updateDateControls();
-                    loadAllData(false);
-                }
+            int selectedMonth;
+            try {
+                selectedMonth = Month.from(SHORT_MONTH_FORMATTER.parse(newVal)).getValue();
+            } catch (DateTimeParseException ex) {
+                logger.warn("Failed to parse month value: {}", newVal, ex);
+                return;
+            }
+            if (selectedMonth != currentMonth) {
+                currentMonth = selectedMonth;
+                updateDateControls();
+                loadAllData(false);
             }
         });
 
@@ -130,41 +137,132 @@ public class adminOverviewController implements Initializable {
 
     private void updateMonthBox() {
         updatingDateBox = true;
+
         List<String> months = new ArrayList<>();
 
-        // Limit months to current month if viewing current year
-        int maxMonth = (currentYear == today.getYear()) ? today.getMonthValue() : 12;
+        int startMonth = (currentYear == overviewStartDate.getYear()) ? overviewStartDate.getMonthValue() : 1;
+        int endMonth = (currentYear == overviewEndDate.getYear()) ? overviewEndDate.getMonthValue() : 12;
 
-        for (int i = 1; i <= maxMonth; i++) {
+        for (int i = startMonth; i <= endMonth; i++)
             months.add(Month.of(i).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
-        }
+
         monthBox.setItems(FXCollections.observableArrayList(months));
 
-        // If current month exceeds max available, reset to max
-        if (currentMonth > maxMonth) {
-            currentMonth = maxMonth;
-        }
-        if (currentMonth < 1) {
-            currentMonth = 1;
-        }
+        if (currentMonth < startMonth || currentMonth > endMonth)
+            currentMonth = startMonth;
+
         monthBox.setValue(Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+
+        updatingDateBox = false;
+    }
+
+    private void updateYearBox() {
+        updatingDateBox = true;
+
+        yearBox.getItems().clear();
+        int startYear = overviewStartDate.getYear();
+        int endYear = overviewEndDate.getYear();
+
+        for (int y = startYear; y <= endYear; y++)
+            yearBox.getItems().add(y);
+
+        if (currentYear < startYear)
+            currentYear = startYear;
+        if (currentYear > endYear)
+            currentYear = endYear;
+
+        yearBox.setValue(currentYear);
+
         updatingDateBox = false;
     }
 
     private void updateDateControls() {
-        boolean isCurrentYear = currentYear == today.getYear();
-        boolean isCurrentMonth = isCurrentYear && currentMonth == today.getMonthValue();
+        boolean isEndYear = currentYear == overviewEndDate.getYear();
+        boolean isEndMonth = isEndYear && currentMonth == overviewEndDate.getMonthValue();
+        NextMonthbtn.setDisable(isEndMonth);
+        NextYearbtn.setDisable(isEndYear);
+        NextMonthbtn.setVisible(!isEndMonth);
+        NextYearbtn.setVisible(!isEndYear);
 
-        NextMonthbtn.setDisable(isCurrentMonth);
-        NextYearbtn.setDisable(isCurrentYear);
-        NextMonthbtn.setVisible(!isCurrentMonth);
-        NextYearbtn.setVisible(!isCurrentYear);
+        boolean isStartYear = currentYear == overviewStartDate.getYear();
+        boolean isStartMonth = isStartYear && currentMonth == overviewStartDate.getMonthValue();
+        PreviousMonthbtn.setDisable(isStartMonth);
+        PreviousYearbtn.setDisable(isStartYear);
+        PreviousMonthbtn.setVisible(!isStartMonth);
+        PreviousYearbtn.setVisible(!isStartYear);
+    }
+
+    private LocalDate getOverviewEarliestDate() {
+        LocalDate earliest = today.withDayOfMonth(1);
+        try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT MIN(order_date) FROM orders")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Date date = rs.getDate(1);
+                    if (date != null)
+                        earliest = date.toLocalDate().withDayOfMonth(1);
+                }
+            }
+        } catch (SQLException ex) {
+            logger.warn("Failed to determine earliest order date", ex);
+        }
+        return earliest;
+    }
+
+    @FXML
+    private void clickNextMonth(ActionEvent e) {
+        if (currentMonth == 12) {
+            currentMonth = 1;
+            currentYear++;
+            yearBox.setValue(currentYear);
+        } else {
+            currentMonth++;
+        }
+        updateMonthBox();
+        updateDateControls();
+        loadAllData(true);
+    }
+
+    @FXML
+    private void clickPreviousMonth(ActionEvent e) {
+        if (currentMonth == 1) {
+            currentMonth = 12;
+            currentYear--;
+            yearBox.setValue(currentYear);
+        } else {
+            currentMonth--;
+        }
+        updateMonthBox();
+        updateDateControls();
+        loadAllData(true);
+    }
+
+    @FXML
+    private void clickNextYear(ActionEvent e) {
+        currentYear++;
+        yearBox.setValue(currentYear);
+        updateMonthBox();
+        updateDateControls();
+        loadAllData(true);
+    }
+
+    @FXML
+    private void clickPreviousYear(ActionEvent e) {
+        currentYear--;
+        yearBox.setValue(currentYear);
+        updateMonthBox();
+        updateDateControls();
+        loadAllData(true);
     }
 
     private void loadAllData() {
-        if (year != yearBox.getValue()) {
+        Integer selectedYear = yearBox.getValue();
+        if (selectedYear == null) {
             loadAllData(true);
-            year = yearBox.getValue();
+            year = currentYear;
+        } else if (year != selectedYear) {
+            loadAllData(true);
+            year = selectedYear;
         } else {
             loadAllData(false);
         }
@@ -194,7 +292,7 @@ public class adminOverviewController implements Initializable {
 
                     // Get car sales (quantity and paid value)
                     String carQuery = """
-                            SELECT COALESCE(SUM(d.qty), 0) as qty, 
+                            SELECT COALESCE(SUM(d.qty), 0) as qty,
                                    COALESCE(SUM(d.total_price), 0) as amount
                             FROM orders o 
                             JOIN order_details d ON o.order_id = d.order_id 
@@ -213,7 +311,7 @@ public class adminOverviewController implements Initializable {
 
                     // Get part sales (quantity and paid value)
                     String partQuery = """
-                            SELECT COALESCE(SUM(d.qty), 0) as qty, 
+                            SELECT COALESCE(SUM(d.qty), 0) as qty,
                                    COALESCE(SUM(d.total_price), 0) as amount
                             FROM orders o 
                             JOIN order_details d ON o.order_id = d.order_id 
@@ -232,7 +330,7 @@ public class adminOverviewController implements Initializable {
 
                     // Get customize sales (quantity and paid value)
                     String customQuery = """
-                            SELECT COUNT(d.detail_id) as qty, 
+                            SELECT COUNT(d.detail_id) as qty,
                                    COALESCE(SUM(d.total_price), 0) as amount
                             FROM orders o 
                             JOIN order_details d ON o.order_id = d.order_id 
@@ -249,18 +347,53 @@ public class adminOverviewController implements Initializable {
                         }
                     }
 
+                    String nonInstallmentRevenueQuery = """
+                            SELECT COALESCE(SUM(d.total_price), 0) as amount
+                            FROM orders o
+                            JOIN order_details d ON o.order_id = d.order_id
+                            WHERE o.order_date >= ? AND o.order_date < ? AND o.is_installment = 0
+                            """;
+                    try (PreparedStatement ps = con.prepareStatement(nonInstallmentRevenueQuery)) {
+                        ps.setString(1, startDate.toString());
+                        ps.setString(2, endDate.toString());
+                        try (ResultSet rs = ps.executeQuery()) {
+                            if (rs.next()) {
+                                metrics.put("nonInstallmentRevenue", rs.getDouble("amount"));
+                            }
+                        }
+                    }
+
+                    String installmentPaidQuery = """
+                            SELECT COALESCE(SUM(COALESCE(o.paid_amount, 0)), 0) as amount
+                            FROM orders o
+                            WHERE o.order_date >= ? AND o.order_date < ? AND o.is_installment = 1
+                            """;
+                    try (PreparedStatement ps = con.prepareStatement(installmentPaidQuery)) {
+                        ps.setString(1, startDate.toString());
+                        ps.setString(2, endDate.toString());
+                        try (ResultSet rs = ps.executeQuery()) {
+                            if (rs.next()) {
+                                metrics.put("installmentPaid", rs.getDouble("amount"));
+                            }
+                        }
+                    }
+
                     // Get previous month paid revenue for growth calculation
                     LocalDate prevStartDate = startDate.minusMonths(1);
                     LocalDate prevEndDate = startDate;
                     String prevRevenueQuery = """
-                            SELECT COALESCE(SUM(ot.order_total), 0) as amount 
-                            FROM orders o 
-                            JOIN (
-                                SELECT order_id, SUM(total_price) as order_total
-                                FROM order_details
-                                GROUP BY order_id
-                            ) ot ON o.order_id = ot.order_id
-                            WHERE o.order_date >= ? AND o.order_date < ?
+                            SELECT 
+                                COALESCE(SUM(CASE WHEN is_installment = 0 THEN order_total ELSE COALESCE(paid_amount, 0) END), 0) as amount
+                            FROM (
+                                SELECT o.order_id,
+                                       o.is_installment,
+                                       o.paid_amount,
+                                       SUM(d.total_price) as order_total
+                                FROM orders o
+                                JOIN order_details d ON o.order_id = d.order_id
+                                WHERE o.order_date >= ? AND o.order_date < ?
+                                GROUP BY o.order_id, o.is_installment, o.paid_amount
+                            ) sub
                             """;
                     try (PreparedStatement ps = con.prepareStatement(prevRevenueQuery)) {
                         ps.setString(1, prevStartDate.toString());
@@ -285,9 +418,11 @@ public class adminOverviewController implements Initializable {
             double partAmount = (double) metrics.getOrDefault("partAmount", 0.0);
             int customQty = (int) metrics.getOrDefault("customQty", 0);
             double customAmount = (double) metrics.getOrDefault("customAmount", 0.0);
+            double nonInstallmentRevenue = (double) metrics.getOrDefault("nonInstallmentRevenue", 0.0);
+            double installmentPaid = (double) metrics.getOrDefault("installmentPaid", 0.0);
             double prevRevenue = (double) metrics.getOrDefault("prevRevenue", 0.0);
 
-            double totalRevenue = carAmount + partAmount + customAmount;
+            double totalRevenue = nonInstallmentRevenue + installmentPaid;
 
             totalSalesLbl.setText(carQty + " SOLD");
             totalSalesValueLbl.setText(String.format("$%,.2f", carAmount));
@@ -541,6 +676,9 @@ public class adminOverviewController implements Initializable {
     private void applySmoothCurves() {
         if (areaChart == null)
             return;
+
+        areaChart.applyCss();
+        areaChart.layout();
 
         // Check if paths are ready, if not, retry after a short delay
         var linePaths = areaChart.lookupAll(".chart-series-area-line");
@@ -972,53 +1110,6 @@ public class adminOverviewController implements Initializable {
         circle.getProperties().put("progressTimeline", timeline);
         timeline.play();
     }
-
-    @FXML
-    void clickNextMonth(ActionEvent event) {
-        if (currentMonth == 12) {
-            currentMonth = 1;
-            currentYear++;
-            yearBox.setValue(currentYear);
-        } else {
-            currentMonth++;
-        }
-        updateMonthBox();
-        updateDateControls();
-        loadAllData();
-    }
-
-    @FXML
-    void clickPreviousMonth(ActionEvent event) {
-        if (currentMonth == 1) {
-            currentMonth = 12;
-            currentYear--;
-            yearBox.setValue(currentYear);
-        } else {
-            currentMonth--;
-        }
-        updateMonthBox();
-        updateDateControls();
-        loadAllData();
-    }
-
-    @FXML
-    void clickNextYear(ActionEvent event) {
-        currentYear++;
-        yearBox.setValue(currentYear);
-        updateMonthBox();
-        updateDateControls();
-        loadAllData();
-    }
-
-    @FXML
-    void clickPreviousYear(ActionEvent event) {
-        currentYear--;
-        yearBox.setValue(currentYear);
-        updateMonthBox();
-        updateDateControls();
-        loadAllData();
-    }
-
     @FXML
     void clickCarbtn(ActionEvent event) {
         currentBarChartType = "car";

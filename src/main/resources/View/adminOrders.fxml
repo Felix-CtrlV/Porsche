@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -15,7 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOrderController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #f8fafc;" stylesheets="@../CSS/admin_accounts.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOrderController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -24,7 +23,7 @@
                <children>
                   <Label styleClass="heading" stylesheets="@../CSS/DashBoard_general.css" text="Orders" />
                   <Region prefHeight="38.0" prefWidth="889.0" HBox.hgrow="ALWAYS" />
-                  <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="501.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;">
+                  <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="423.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;">
                      <children>
                         <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
                         <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" styleClass="admin-choice-box" stylesheets="@../CSS/general.css" />
@@ -32,7 +31,10 @@
                         <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
                         <Button fx:id="PreviousYearbtn" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
                         <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" styleClass="admin-choice-box" stylesheets="@../CSS/general.css" />
-                        <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
+                        <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶">
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin></Button>
                      </children>
                   </HBox>
                </children>
@@ -153,8 +155,4 @@
          </padding>
       </HBox>
    </center>
-   <stylesheets>
-      <URL value="@../CSS/porsche_admin_overview.css" />
-      <URL value="@../CSS/admin_accounts.css" />
-   </stylesheets>
 </BorderPane>
