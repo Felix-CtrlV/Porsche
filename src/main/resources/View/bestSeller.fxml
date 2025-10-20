@@ -49,7 +49,7 @@
                       <!-- Profile Section - 30% Secondary Color Area -->
                       <StackPane prefHeight="120.0" prefWidth="105.0" style="-fx-background-color: #f8fafc;" HBox.hgrow="ALWAYS">
                           <children>
-                        <ImageView fx:id="image" fitHeight="111.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="image" fitHeight="111.0" fitWidth="200.0" onMouseClicked="#clickStaffImage" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../Image/usericon.png" />
                            </image>

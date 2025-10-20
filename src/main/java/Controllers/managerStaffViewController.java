@@ -287,6 +287,45 @@ public class managerStaffViewController {
         TotalAmountCol.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().getTotal_amount()));
         IsInstallmentCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getIs_installmenat()));
         
+        // Add text wrapping to CustomerName column
+        CustomerNameCol.setCellFactory(column -> {
+            TableCell<managerOrderView, String> cell = new TableCell<managerOrderView, String>() {
+                private final Text text = new Text();
+                {
+                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                    setGraphic(text);
+                    setStyle("-fx-text-fill: black; -fx-alignment: CENTER-LEFT;");
+                }
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        text.setText(null);
+                    } else {
+                        text.setText(item);
+                    }
+                }
+            };
+            return cell;
+        });
+        
+        // Add text wrapping to No column
+        NoCol.setCellFactory(column -> {
+            TableCell<managerOrderView, Integer> cell = new TableCell<managerOrderView, Integer>() {
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(String.valueOf(item));
+                    }
+                }
+            };
+            return cell;
+        });
+        
         // Format TotalAmount column with currency
         TotalAmountCol.setCellFactory(column -> new TableCell<managerOrderView, Double>() {
             @Override
@@ -389,9 +428,53 @@ public class managerStaffViewController {
             return new SimpleStringProperty(parts.length > 1 ? parts[1] : "");
         });
         
+        // Add text wrapping to Qty column
+        installmentQtyCol.setCellFactory(column -> {
+            TableCell<String, String> cell = new TableCell<String, String>() {
+                private final Text text = new Text();
+                {
+                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                    setGraphic(text);
+                    setStyle("-fx-alignment: CENTER;");
+                }
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        text.setText(null);
+                    } else {
+                        text.setText(item);
+                    }
+                }
+            };
+            return cell;
+        });
+        
         installmentPriceCol.setCellValueFactory(cellData -> {
             String[] parts = cellData.getValue().split("\\|");
             return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
+        });
+        
+        // Add text wrapping to Price column
+        installmentPriceCol.setCellFactory(column -> {
+            TableCell<String, String> cell = new TableCell<String, String>() {
+                private final Text text = new Text();
+                {
+                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                    setGraphic(text);
+                    setStyle("-fx-alignment: CENTER-RIGHT;");
+                }
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        text.setText(null);
+                    } else {
+                        text.setText(item);
+                    }
+                }
+            };
+            return cell;
         });
 
         // Initialize listeners only once
@@ -504,7 +587,17 @@ public class managerStaffViewController {
         highlightSelectedCard(staff.getId());
         selectedStaffId = staff.getId();
 
-        currentDateSelect();
+        // For inactive staff, set date to their end_date instead of today
+        // (isInactive already declared above at line 488)
+        if (isInactive && staff.getEnd_date() != null) {
+            // Set to end_date for inactive staff
+            currentMonth = staff.getEnd_date().getMonthValue();
+            currentYear = staff.getEnd_date().getYear();
+        } else {
+            // Set to today for active staff
+            currentDateSelect();
+        }
+        
         insertMonthYearChoiceBox(staff);
         updateChoiceBoxes();
         
@@ -1110,29 +1203,8 @@ public class managerStaffViewController {
 
     private void updateYearMonthLabel() {
         Year nyear = Year.of(currentYear);
-        int curyear = today.getYear();
-
         Month nmonth = Month.of(currentMonth);
         String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-
-        int curmonth = today.getMonthValue();
-
-        if (currentYear >= curyear) {
-            NextYearbtn.setDisable(true);
-            NextYearbtn.setVisible(false);
-            if (currentMonth >= curmonth) {
-                NextMonthbtn.setDisable(true);
-                NextMonthbtn.setVisible(false);
-            } else {
-                NextMonthbtn.setDisable(false);
-                NextMonthbtn.setVisible(true);
-            }
-        } else {
-            NextYearbtn.setDisable(false);
-            NextYearbtn.setVisible(true);
-            NextMonthbtn.setDisable(false);
-            NextMonthbtn.setVisible(true);
-        }
 
         if (!staffInfoList.isEmpty()) {
             user selected = staffInfoList.stream()
@@ -1142,6 +1214,33 @@ public class managerStaffViewController {
 
             if (selected != null && selected.getStart_date() != null) {
                 LocalDate start = selected.getStart_date();
+                
+                // For inactive staff, use end_date as the limit; for active staff, use today
+                boolean isInactive = "Inactive".equalsIgnoreCase(selected.getIs_active());
+                LocalDate endLimit = (isInactive && selected.getEnd_date() != null) 
+                                     ? selected.getEnd_date() 
+                                     : today;
+                
+                int limitYear = endLimit.getYear();
+                int limitMonth = endLimit.getMonthValue();
+
+                // Check if we're at or past the end limit (end_date for inactive, today for active)
+                if (currentYear >= limitYear) {
+                    NextYearbtn.setDisable(true);
+                    NextYearbtn.setVisible(false);
+                    if (currentMonth >= limitMonth) {
+                        NextMonthbtn.setDisable(true);
+                        NextMonthbtn.setVisible(false);
+                    } else {
+                        NextMonthbtn.setDisable(false);
+                        NextMonthbtn.setVisible(true);
+                    }
+                } else {
+                    NextYearbtn.setDisable(false);
+                    NextYearbtn.setVisible(true);
+                    NextMonthbtn.setDisable(false);
+                    NextMonthbtn.setVisible(true);
+                }
 
 
 

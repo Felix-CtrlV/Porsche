@@ -2,13 +2,13 @@ package Model;
 
 public class inventory {
    private int id,qty,productYear;
-   private String name,description,intColor,extColor,fuelType,series,forCar,status,models,inventoryId,photo;
+   private String name,description,intColor,extColor,fuelType,series,forCar,status,models,inventoryId,photo,speed;
    private double price ;
 
    public inventory(){}
 
     //for car table
-    public inventory(int id ,String inventoryId, String name, String extColor, String intColor, String fuelType, int productYear, int qty, double price, String status,String photo) {
+    public inventory(int id ,String inventoryId, String name, String extColor, String intColor, String fuelType, int productYear, int qty, double price, String status, String photo, String speed, String description) {
         this.id = id;
         this.inventoryId = inventoryId;
         this.name = name;
@@ -22,6 +22,8 @@ public class inventory {
         this.price = price;
         this.status = status;
         this.photo = photo;
+        this.speed = speed;
+        this.description = description;
     }
 
     //for part table
@@ -162,5 +164,13 @@ public class inventory {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(String speed) {
+        this.speed = speed;
     }
 }

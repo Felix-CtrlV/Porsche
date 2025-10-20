@@ -59,13 +59,13 @@ public class managerInventoryController {
     private TableColumn<inventory,inventory> actionCol;
 
     @FXML
-    private VBox addCar;
+    private ScrollPane addCar;  // ScrollPane (matches FXML)
 
     @FXML
     private Button addCarbtn;
 
     @FXML
-    private VBox addPart;
+    private VBox addPart;  // VBox (matches FXML)
 
     @FXML
     private Button addPartbtn;
@@ -117,6 +117,36 @@ public class managerInventoryController {
 
     @FXML
     private TextField carYearText;
+
+    @FXML
+    private TextField carSpeedText;  // First speed value (rename from carYearText21)
+
+    @FXML
+    private TextField carSpeed2Text;  // Second speed value (rename from secondText)
+
+    @FXML
+    private Label speedLabel;
+
+    @FXML
+    private Label secondLabel;  // Label for second speed field
+
+    @FXML
+    private TextField descriptionText;  // Car description field
+
+    @FXML
+    private Label descriptionLabel;
+
+    @FXML
+    private Button carUploadBtn;
+
+    @FXML
+    private Label carFileStatusLabel;
+
+    @FXML
+    private Button partUploadBtn;
+
+    @FXML
+    private Label partFileStatusLabel;
 
     @FXML
     private RadioButton dieselRadio;
@@ -270,6 +300,12 @@ public class managerInventoryController {
     private ImageView editCarImg;
     @FXML
     private  TextField editCarProductAt;
+    @FXML
+    private TextField editCarSpeed;  // Top speed field
+    @FXML
+    private TextField editCarSpeed2;  // 0-100 km/h acceleration field
+    @FXML
+    private TextArea editCarDescription;  // Description field
     @FXML
     private  Button editCarApply;
     @FXML
@@ -540,16 +576,6 @@ public class managerInventoryController {
         setSelect(seriesSelectAll.isSelected(),seriesSelectAll);
     }
     @FXML
-    private void clickCarImage(MouseEvent event) {
-        handleImageSelection(carImage);
-    }
-
-    @FXML
-    private void clickPartImage(MouseEvent event) {
-        handleImageSelection(partImage);
-    }
-
-    @FXML
     private void clickEditCarImage(MouseEvent event) {
         handleImageSelection(editCarImg);
     }
@@ -643,6 +669,12 @@ public class managerInventoryController {
             setupFloatingLabel(carPriceText, carPriceLbl);
             setupFloatingLabel(carExtColorText, carExtColorLbl);
             setupFloatingLabel(carIntColorText, carIntColorLbl);
+            setupFloatingLabel(carSpeedText, speedLabel);  // First speed field
+            setupFloatingLabel(carSpeed2Text, secondLabel);  // Second speed field
+            setupFloatingLabel(descriptionText, descriptionLabel);  // Car description field
+
+            // Setup upload button handlers
+            setupUploadButtons();
 
             // Setup autocomplete for part car names (only once)
             populateCarNamesComboBox();
@@ -673,12 +705,9 @@ public class managerInventoryController {
 
             showTable("cars");
 
-            carImage.setCursor(Cursor.HAND);
-            partImage.setCursor(Cursor.HAND);
+            // Only edit images are clickable
             editCarImg.setCursor(Cursor.HAND);
             editPartImg.setCursor(Cursor.HAND);
-            carImage.setPickOnBounds(true);
-            partImage.setPickOnBounds(true);
             editCarImg.setPickOnBounds(true);
             editPartImg.setPickOnBounds(true);
 
@@ -831,6 +860,8 @@ public class managerInventoryController {
                 boolean allEmpty = true;
                 if (path.contains("carsAdd")) {
                     String img = file.isEmpty() ? "" : String.valueOf(file.get(0));
+                    String model = carModelText.getText().trim();
+                    String year = carYearText.getText().trim();
                     String trim = carTrimText.getText().trim();
                     String extColor = carExtColorText.getText().trim();
                     String intColor = carIntColorText.getText().trim();
@@ -838,10 +869,14 @@ public class managerInventoryController {
                     String fuel_type = (selectedFuel != null) ? selectedFuel.getText() : "";
                     String qty = carQtyText.getText().trim();
                     String price = carPriceText.getText().trim();
+                    String speed1 = carSpeedText.getText().trim();
+                    String speed2 = carSpeed2Text.getText().trim();
+                    String description = descriptionText.getText().trim();
 
-                    allEmpty = img.isEmpty() && trim.isEmpty() &&
+                    allEmpty = img.isEmpty() && model.isEmpty() && year.isEmpty() && trim.isEmpty() &&
                             extColor.isEmpty() && intColor.isEmpty() &&
-                            fuel_type.isEmpty() && qty.isEmpty() && price.isEmpty();
+                            fuel_type.isEmpty() && qty.isEmpty() && price.isEmpty() &&
+                            speed1.isEmpty() && speed2.isEmpty() && description.isEmpty();
 
                 } else if (path.contains("partsAdd")) {
                     String img = file.isEmpty() ? "" : String.valueOf(file.get(0));
@@ -1079,11 +1114,16 @@ public class managerInventoryController {
                     carIntColorText.clear();
                     carPriceText.clear();
                     carQtyText.clear();
+                    carSpeedText.clear();  // Clear first speed field
+                    carSpeed2Text.clear();  // Clear second speed field
+                    descriptionText.clear();  // Clear description field
                     carImage.setImage(null);
+                    carFileStatusLabel.setText("No file selected");  // Reset file status
+                    carFileStatusLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 10; -fx-font-style: italic;");
                     gasolineRadio.setSelected(false);
                     electricRadio.setSelected(false);
-                    hybridRadio.setSelected(false);
                     dieselRadio.setSelected(false);
+                    hybridRadio.setSelected(false);
                     file.clear();
                 }
                 if (addPartbtn.isDisable()) {
@@ -1092,6 +1132,8 @@ public class managerInventoryController {
                     partPriceText.clear();
                     partQtyText.clear();
                     partImage.setImage(null);
+                    partFileStatusLabel.setText("No file selected");  // Reset file status
+                    partFileStatusLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 10; -fx-font-style: italic;");
                     partRelativeComboBox.clear();
                     file.clear();
                 }
@@ -1141,6 +1183,67 @@ public class managerInventoryController {
     
     private ContextMenu partCarSuggestions = new ContextMenu();
     private ContextMenu editPartCarSuggestions = new ContextMenu();
+    
+    /**
+     * Setup upload button handlers for car and part photo uploads
+     */
+    private void setupUploadButtons() {
+        // Car upload button
+        carUploadBtn.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Car Image");
+            fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
+            );
+            
+            File selectedFile = fileChooser.showOpenDialog(carUploadBtn.getScene().getWindow());
+            if (selectedFile != null) {
+                file.clear();
+                file.add(selectedFile);
+                
+                // Update image preview
+                try {
+                    Image img = new Image(new FileInputStream(selectedFile));
+                    carImage.setImage(img);
+                } catch (FileNotFoundException ex) {
+                    System.err.println("Failed to load image: " + ex.getMessage());
+                }
+                
+                // Update status label with filename (will wrap automatically)
+                String fileName = selectedFile.getName();
+                carFileStatusLabel.setText(fileName);
+                carFileStatusLabel.setStyle("-fx-text-fill: #10b981; -fx-font-size: 10; -fx-font-style: italic;");
+            }
+        });
+        
+        // Part upload button
+        partUploadBtn.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Part Image");
+            fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
+            );
+            
+            File selectedFile = fileChooser.showOpenDialog(partUploadBtn.getScene().getWindow());
+            if (selectedFile != null) {
+                file.clear();
+                file.add(selectedFile);
+                
+                // Update image preview
+                try {
+                    Image img = new Image(new FileInputStream(selectedFile));
+                    partImage.setImage(img);
+                } catch (FileNotFoundException ex) {
+                    System.err.println("Failed to load image: " + ex.getMessage());
+                }
+                
+                // Update status label with filename (will wrap automatically)
+                String fileName = selectedFile.getName();
+                partFileStatusLabel.setText(fileName);
+                partFileStatusLabel.setStyle("-fx-text-fill: #10b981; -fx-font-size: 10; -fx-font-style: italic;");
+            }
+        });
+    }
     
     private void populateCarNamesComboBox() {
         // Set up autocomplete for part relative car field
@@ -1493,12 +1596,12 @@ public class managerInventoryController {
     }
 
     private void setCarsTable(){
-        try{
-            carsData.clear();
+        try {
             carsOffData.clear();
+            carsData.clear();
             CallableStatement cs = con.prepareCall("CALL getAllCars()");
             ResultSet rs = cs.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 int id = rs.getInt(1);
                 String name = rs.getString(2);
                 String extColor = rs.getString(3);
@@ -1509,23 +1612,38 @@ public class managerInventoryController {
                 Double price = rs.getDouble(8);
                 String photoUrl = rs.getString(9);
                 Boolean check = rs.getBoolean(10);
-                String status = (qty !=0) ?"On" : "Out";
+                String speed = rs.getString(11);
+                String description = rs.getString(12);
+                
+                // Normalize photo path to ensure it starts with "Images/"
+                if (photoUrl != null && !photoUrl.isEmpty()) {
+                    // Remove leading slash if present
+                    if (photoUrl.startsWith("/")) {
+                        photoUrl = photoUrl.substring(1);
+                    }
+                    // Add "Images/" prefix if not present
+                    if (!photoUrl.startsWith("Images/")) {
+                        photoUrl = "Images/" + photoUrl;
+                    }
+                }
+
+                String status = (qty != 0) ? "On" : "Out";
                 String inventoryId = String.format("C-%03d", id);
                 
                 // Separate based on check boolean and qty
                 if(check){
                     // Available items (check = true)
-                    carsData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl));
+                    carsData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl, speed, description));
                 }else {
                     // check = false
                     if(qty > 0){
                         // Has quantity but marked unavailable - show in available table with different color
                         status = "Unavailable";
-                        carsData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl));
+                        carsData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl, speed, description));
                     }else{
                         // No quantity and marked unavailable - show in unavailable table
                         status = "Unavailable";
-                        carsOffData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl));
+                        carsOffData.add(new inventory(id, inventoryId, name, extColor, intColor, fuels, productYear, qty, price, status, photoUrl, speed, description));
                     }
                 }
 
@@ -1555,6 +1673,18 @@ public class managerInventoryController {
                 Double price = rs.getDouble(6);
                 String photoUrl = rs.getString(7);
                 Boolean check = rs.getBoolean(8);
+                
+                // Normalize photo path to ensure it starts with "Images/"
+                if (photoUrl != null && !photoUrl.isEmpty()) {
+                    // Remove leading slash if present
+                    if (photoUrl.startsWith("/")) {
+                        photoUrl = photoUrl.substring(1);
+                    }
+                    // Add "Images/" prefix if not present
+                    if (!photoUrl.startsWith("Images/")) {
+                        photoUrl = "Images/" + photoUrl;
+                    }
+                }
 
                 String status = (qty !=0) ?"On" : "Out";
                 String inventoryId = String.format("P-%03d", id);
@@ -1837,6 +1967,27 @@ public class managerInventoryController {
         editCarPrice.setText(String.valueOf(editPath.getPrice()));
         editCarProductAt.setText(String.valueOf(editPath.getProductYear()));
         
+        // Populate speed and description fields
+        // Split combined speed value (e.g., "250 + 4.5" -> "250" and "4.5")
+        if (editCarSpeed != null && editCarSpeed2 != null) {
+            String speedValue = editPath.getSpeed();
+            if (speedValue != null && !speedValue.isEmpty()) {
+                String[] speedParts = speedValue.split("\\+");
+                editCarSpeed.setText(speedParts[0].trim());
+                if (speedParts.length > 1) {
+                    editCarSpeed2.setText(speedParts[1].trim());
+                } else {
+                    editCarSpeed2.setText("");
+                }
+            } else {
+                editCarSpeed.setText("");
+                editCarSpeed2.setText("");
+            }
+        }
+        if (editCarDescription != null) {
+            editCarDescription.setText(editPath.getDescription() != null ? editPath.getDescription() : "");
+        }
+        
         // Convert database fuel type abbreviations to display names
         String fuelType = editPath.getFuelType().toUpperCase().trim();
         String fuel = "";
@@ -2074,6 +2225,13 @@ public class managerInventoryController {
         int qty = Integer.parseInt(carQtyText.getText().trim());
         double price = Double.parseDouble(carPriceText.getText().trim());
         
+        // Combine both speed values (speed + second value)
+        String speed1 = carSpeedText.getText().trim();
+        String speed2 = carSpeed2Text.getText().trim();
+        String combinedSpeed = speed1 + (speed2.isEmpty() ? "" : " + " + speed2);  // e.g., "250 + 4.5"
+        
+        String description = descriptionText.getText().trim();  // Get description
+        
         // Handle image - Copy to project Images folder for cross-computer compatibility
         String photoPath = null;
         if (!file.isEmpty()) {
@@ -2103,8 +2261,8 @@ public class managerInventoryController {
             }
         }
         
-        // Call stored procedure
-        String sql = "{CALL insertFullCar(?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+        // Call stored procedure with combined speed and description
+        String sql = "{CALL insertFullCar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
         CallableStatement cs = con.prepareCall(sql);
         cs.setString(1, modelName);
         cs.setString(2, trimName);
@@ -2114,7 +2272,9 @@ public class managerInventoryController {
         cs.setInt(6, year);
         cs.setInt(7, qty);
         cs.setDouble(8, price);
-        cs.setString(9, photoPath);
+        cs.setString(9, photoPath);      // Parameter 9: car_photo
+        cs.setString(10, combinedSpeed);  // Parameter 10: car_speed (combined)
+        cs.setString(11, description);   // Parameter 11: car_description
         
         cs.execute();
         cs.close();
@@ -2245,6 +2405,16 @@ public class managerInventoryController {
         int qty = Integer.parseInt(editCarQty.getText().trim());
         double price = Double.parseDouble(editCarPrice.getText().trim());
         
+        // Combine both speed values (speed + second value) - same as insertCar
+        String speed1 = (editCarSpeed != null && editCarSpeed.getText() != null) 
+                        ? editCarSpeed.getText().trim() : "";
+        String speed2 = (editCarSpeed2 != null && editCarSpeed2.getText() != null) 
+                        ? editCarSpeed2.getText().trim() : "";
+        String combinedSpeed = speed1 + (speed2.isEmpty() ? "" : " + " + speed2);  // e.g., "250 + 4.5"
+        
+        String description = (editCarDescription != null && editCarDescription.getText() != null) 
+                            ? editCarDescription.getText().trim() : "";
+        
         // The procedure will parse fullCarName: "911 Carrera T" -> model="911 Carrera", trim="T"
         
         // Handle image - Copy to project Images folder for cross-computer compatibility
@@ -2278,7 +2448,7 @@ public class managerInventoryController {
         
         // Call updateFullCar stored procedure
         // This handles: model parsing, photo overwrite, and car update
-        CallableStatement cs = con.prepareCall("{CALL updateFullCar(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+        CallableStatement cs = con.prepareCall("{CALL updateFullCar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
         cs.setInt(1, editPath.getId());           // in_car_id
         cs.setString(2, fullCarName);              // in_car_name (will be parsed by procedure)
         cs.setString(3, extColor);                 // in_car_color
@@ -2288,6 +2458,8 @@ public class managerInventoryController {
         cs.setInt(7, qty);                         // in_car_qty
         cs.setDouble(8, price);                    // in_price
         cs.setString(9, photoPath);                // in_photo_url
+        cs.setString(10, combinedSpeed);           // in_car_speed (combined: "250 + 4.5")
+        cs.setString(11, description);             // in_car_description
         
         cs.execute();
         cs.close();
