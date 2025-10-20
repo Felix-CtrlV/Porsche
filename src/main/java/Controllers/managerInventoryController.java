@@ -65,7 +65,7 @@ public class managerInventoryController {
     private Button addCarbtn;
 
     @FXML
-    private VBox addPart;  // VBox (matches FXML)
+    private ScrollPane addPart;  // VBox (matches FXML)
 
     @FXML
     private Button addPartbtn;
@@ -312,7 +312,7 @@ public class managerInventoryController {
     private Button editCarRevert;
 
     @FXML
-    private VBox editPart;
+    private ScrollPane editPart;
     @FXML
     private Label editPartId;
     @FXML
@@ -939,7 +939,31 @@ public class managerInventoryController {
                         // Original had no photo, but new photo selected - different
                         sameImage = false;
                     }
-                    allEmpty = sameImage &&
+                    
+                    // Get current speed values from edit form
+                    String currentSpeed1 = (editCarSpeed != null && editCarSpeed.getText() != null) 
+                                            ? editCarSpeed.getText().trim() : "";
+                    String currentSpeed2 = (editCarSpeed2 != null && editCarSpeed2.getText() != null) 
+                                            ? editCarSpeed2.getText().trim() : "";
+                    String currentCombinedSpeed = currentSpeed1 + (currentSpeed2.isEmpty() ? "" : " + " + currentSpeed2);
+                    
+                    // Get original speed from database (may be null or empty)
+                    String originalSpeed = (editPath.getSpeed() != null) ? editPath.getSpeed().trim() : "";
+                    
+                    // Compare speeds
+                    boolean sameSpeed = Objects.equals(currentCombinedSpeed, originalSpeed);
+                    
+                    // Get current description from edit form
+                    String currentDescription = (editCarDescription != null && editCarDescription.getText() != null) 
+                                                ? editCarDescription.getText().trim() : "";
+                    
+                    // Get original description from database (may be null or empty)
+                    String originalDescription = (editPath.getDescription() != null) ? editPath.getDescription().trim() : "";
+                    
+                    // Compare descriptions
+                    boolean sameDescription = Objects.equals(currentDescription, originalDescription);
+                    
+                    allEmpty = sameImage && sameSpeed && sameDescription &&
                             Objects.equals(editCarName.getText().trim(), editPath.getName() != null ? editPath.getName().trim() : null)
                             && Objects.equals(editCarUsage.getText().trim(), fuel)
                             && Objects.equals(editCarProductAt.getText().trim(), String.valueOf(editPath.getProductYear()))
@@ -1076,16 +1100,76 @@ public class managerInventoryController {
                 });
             }else if( in.equals("carsDelete") || in.equals("partsDelete")){
                 alertController.confirmBtn.setOnAction(e -> {
-                   tableAddUpdateDelete(false);
-                    alertStage.close();
+                    try {
+                        boolean success = tableAddUpdateDelete(false);
+                        alertStage.close();
+                        
+                        if (success) {
+                            // Show success message
+                            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                            successAlert.setTitle("Success");
+                            successAlert.setHeaderText(null);
+                            if (in.equals("carsDelete")) {
+                                successAlert.setContentText("Car has been marked as unavailable!");
+                            } else {
+                                successAlert.setContentText("Part has been marked as unavailable!");
+                            }
+                            successAlert.showAndWait();
+                        } else {
+                            // Show error message
+                            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                            errorAlert.setTitle("Delete Failed");
+                            errorAlert.setHeaderText(null);
+                            errorAlert.setContentText("Failed to delete the item. Please try again.");
+                            errorAlert.showAndWait();
+                        }
+                    } catch (Exception ex) {
+                        alertStage.close();
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Error");
+                        errorAlert.setHeaderText(null);
+                        errorAlert.setContentText("An error occurred: " + ex.getMessage());
+                        errorAlert.showAndWait();
+                        ex.printStackTrace();
+                    }
                 });
                 alertController.cancelBtn.setOnAction(e -> {
                     alertStage.close();
                 });
             }else if( in.equals("carsRestore") || in.equals("partsRestore")){
                 alertController.confirmBtn.setOnAction(e -> {
-                   tableAddUpdateDelete(true);
-                    alertStage.close();
+                    try {
+                        boolean success = tableAddUpdateDelete(true);
+                        alertStage.close();
+                        
+                        if (success) {
+                            // Show success message
+                            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                            successAlert.setTitle("Success");
+                            successAlert.setHeaderText(null);
+                            if (in.equals("carsRestore")) {
+                                successAlert.setContentText("Car has been restored successfully!");
+                            } else {
+                                successAlert.setContentText("Part has been restored successfully!");
+                            }
+                            successAlert.showAndWait();
+                        } else {
+                            // Show error message
+                            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                            errorAlert.setTitle("Restore Failed");
+                            errorAlert.setHeaderText(null);
+                            errorAlert.setContentText("Failed to restore the item. Please try again.");
+                            errorAlert.showAndWait();
+                        }
+                    } catch (Exception ex) {
+                        alertStage.close();
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Error");
+                        errorAlert.setHeaderText(null);
+                        errorAlert.setContentText("An error occurred: " + ex.getMessage());
+                        errorAlert.showAndWait();
+                        ex.printStackTrace();
+                    }
                 });
                 alertController.cancelBtn.setOnAction(e -> {
                     alertStage.close();
@@ -1418,16 +1502,74 @@ public class managerInventoryController {
                 });
 
                 restoreButton.setOnAction(event -> {
-                    inventory item = getTableView().getItems().get(getIndex());
+                    // Capture the item immediately to avoid stale reference issues
+                    final inventory item = getTableView().getItems().get(getIndex());
                     editPath = item;
+                    
+                    // Create and show alert with captured item reference
                     try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/alert.fxml"));
+                        Parent root = loader.load();
+                        alertController alertCtrl = loader.getController();
+                        
                         if (item.getInventoryId().contains("C")) {
-                            alertForm(false, "carsRestore");
+                            alertCtrl.setAlert("Do you want to restore this car?");
                         } else {
-                            alertForm(false, "partsRestore");
+                            alertCtrl.setAlert("Do you want to restore this part?");
                         }
+                        
+                        Stage alertStage = new Stage();
+                        alertStage.initModality(Modality.APPLICATION_MODAL);
+                        alertStage.initStyle(StageStyle.TRANSPARENT);
+                        alertStage.setScene(new Scene(root));
+                        
+                        alertCtrl.confirmBtn.setOnAction(e -> {
+                            try {
+                                // Use the captured item reference
+                                editPath = item;
+                                boolean success = tableAddUpdateDelete(true);
+                                alertStage.close();
+                                
+                                if (success) {
+                                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                                    successAlert.setTitle("Success");
+                                    successAlert.setHeaderText(null);
+                                    if (item.getInventoryId().contains("C")) {
+                                        successAlert.setContentText("Car has been restored successfully!");
+                                    } else {
+                                        successAlert.setContentText("Part has been restored successfully!");
+                                    }
+                                    successAlert.showAndWait();
+                                } else {
+                                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                                    errorAlert.setTitle("Restore Failed");
+                                    errorAlert.setHeaderText(null);
+                                    errorAlert.setContentText("Failed to restore the item. Please try again.");
+                                    errorAlert.showAndWait();
+                                }
+                            } catch (Exception ex) {
+                                alertStage.close();
+                                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                                errorAlert.setTitle("Error");
+                                errorAlert.setHeaderText(null);
+                                errorAlert.setContentText("An error occurred: " + ex.getMessage());
+                                errorAlert.showAndWait();
+                                ex.printStackTrace();
+                            }
+                        });
+                        
+                        alertCtrl.cancelBtn.setOnAction(e -> {
+                            alertStage.close();
+                        });
+                        
+                        alertStage.showAndWait();
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Error");
+                        errorAlert.setHeaderText(null);
+                        errorAlert.setContentText("Failed to show restore dialog: " + e.getMessage());
+                        errorAlert.showAndWait();
+                        e.printStackTrace();
                     }
                 });
 
@@ -1509,16 +1651,26 @@ public class managerInventoryController {
                 if (empty || item == null) {
                     setStyle("");
                 } else {
-                    // Apply different colors based on status
+                    // Apply different colors based on status with row separation
                     if ("Unavailable".equals(item.getStatus())) {
-                        // Yellow/warning color for items with qty but marked unavailable
-                        setStyle("-fx-background-color: #fff3cd; -fx-text-fill: #856404;");
+                        // Yellow/warning color for unavailable items with border separation
+                        setStyle("-fx-background-color: #fff3cd; " +
+                                "-fx-text-fill: #856404; " +
+                                "-fx-border-color: #ffc107; " +
+                                "-fx-border-width: 0 0 2 0; " +
+                                "-fx-padding: 8 0 8 0;");
                     } else if ("Out".equals(item.getStatus()) || item.getQty() <= 0) {
-                        // Light gray for out of stock items
-                        setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: #6c757d;");
+                        // Light gray for out of stock items with border separation
+                        setStyle("-fx-background-color: #f8f9fa; " +
+                                "-fx-text-fill: #6c757d; " +
+                                "-fx-border-color: #dee2e6; " +
+                                "-fx-border-width: 0 0 1 0; " +
+                                "-fx-padding: 8 0 8 0;");
                     } else {
-                        // Normal styling for available items
-                        setStyle("");
+                        // Normal styling for available items with subtle separation
+                        setStyle("-fx-border-color: #e9ecef; " +
+                                "-fx-border-width: 0 0 1 0; " +
+                                "-fx-padding: 8 0 8 0;");
                     }
                 }
             }
@@ -1743,6 +1895,22 @@ public class managerInventoryController {
             }
         }
         
+        // Sort: Available items first, then Unavailable items at the bottom
+        filterData.sort((item1, item2) -> {
+            boolean isUnavailable1 = "Unavailable".equals(item1.getStatus());
+            boolean isUnavailable2 = "Unavailable".equals(item2.getStatus());
+            
+            // If one is unavailable and the other is not, unavailable goes to bottom
+            if (isUnavailable1 && !isUnavailable2) {
+                return 1; // item1 goes after item2
+            } else if (!isUnavailable1 && isUnavailable2) {
+                return -1; // item1 goes before item2
+            } else {
+                // Both have same status, maintain original order
+                return 0;
+            }
+        });
+        
         inventoryTable.setItems(filterData);
         return  filterData.size();
     }
@@ -1750,6 +1918,23 @@ public class managerInventoryController {
         inventoryTable.getItems().clear();
         ObservableList<inventory> filterData = FXCollections.observableArrayList();
         filterData.addAll(partsData);
+        
+        // Sort: Available items first, then Unavailable items at the bottom
+        filterData.sort((item1, item2) -> {
+            boolean isUnavailable1 = "Unavailable".equals(item1.getStatus());
+            boolean isUnavailable2 = "Unavailable".equals(item2.getStatus());
+            
+            // If one is unavailable and the other is not, unavailable goes to bottom
+            if (isUnavailable1 && !isUnavailable2) {
+                return 1; // item1 goes after item2
+            } else if (!isUnavailable1 && isUnavailable2) {
+                return -1; // item1 goes before item2
+            } else {
+                // Both have same status, maintain original order
+                return 0;
+            }
+        });
+        
         inventoryTable.setItems(filterData);
         return partsData.size();
     }
