@@ -279,7 +279,7 @@ public class managerInventoryController {
     private Label editTitle;
 
     @FXML
-    private VBox editCar;
+    private ScrollPane editCar;
     @FXML
     private Label editCarId;
     @FXML

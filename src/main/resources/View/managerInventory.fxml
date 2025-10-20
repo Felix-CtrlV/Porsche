@@ -643,9 +643,9 @@
                                           </HBox>
                                        </children>
                                     </VBox>
-                                    <ScrollPane hbarPolicy="NEVER">
+                                    <ScrollPane fx:id="editCar" hbarPolicy="NEVER">
                                        <content>
-                                          <VBox fx:id="editCar" maxHeight="1000.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="5.0" style="-fx-padding: 20;">
+                                          <VBox maxHeight="1000.0" maxWidth="448.0" minHeight="571.0" minWidth="448.0" spacing="5.0" style="-fx-padding: 20;">
                                              <children>
                                                 <HBox minHeight="190.0" prefHeight="226.0" prefWidth="408.0" spacing="12.0">
                                                    <children>
@@ -697,7 +697,7 @@
                                                                   <VBox minHeight="90.0" spacing="8">
                                                                      <children>
                                                                         <Label style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Description" />
-                                                                        <TextArea fx:id="editCarDescription1" minHeight="70.0" prefHeight="22.0" prefWidth="214.0" promptText="Enter car description..." style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-background-color: #f8fafc; -fx-border-color: #d1d5db;" wrapText="true" />
+                                                                        <TextArea fx:id="editCarDescription" minHeight="70.0" prefHeight="22.0" prefWidth="214.0" promptText="Enter car description..." style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-background-color: #f8fafc; -fx-border-color: #d1d5db;" wrapText="true" />
                                                                      </children>
                                                                   </VBox>
                                                                </children>
@@ -757,13 +757,13 @@
                                                             <VBox>
                                                                <children>
                                                                   <Label fx:id="carExtColorLbl1" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Exterior Color *" />
-                                                                  <TextField fx:id="carExtColorText1" maxHeight="35.2" minHeight="35.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                                  <TextField fx:id="editCarExtColor" maxHeight="35.2" minHeight="35.0" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                                </children>
                                                             </VBox>
                                                             <VBox>
                                                                <children>
                                                                   <Label fx:id="carIntColorLbl1" style="-fx-text-fill: #374151; -fx-font-weight: bold;" text="Interior Color *" />
-                                                                  <TextField fx:id="carIntColorText1" maxHeight="35.2" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
+                                                                  <TextField fx:id="editCarIntColor" maxHeight="35.2" style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-pref-height: 35;" />
                                                                </children>
                                                             </VBox>
                                                          </children>
