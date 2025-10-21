@@ -263,13 +263,13 @@
                         </VBox>
 
                         <!-- Performance Metrics Row -->
-                        <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+                        <HBox minHeight="400.0" spacing="20.0" VBox.vgrow="ALWAYS">
                             <children>
                            <VBox maxWidth="10000.0" minHeight="336.8" minWidth="580.0" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 4);">
                               <children>
                                  <Label style="-fx-font-size: 20;" styleClass="admin-label-subtitle" text="Target Overview">
                                     <VBox.margin>
-                                       <Insets />
+                                       <Insets top="18.0" />
                                     </VBox.margin>
                                     <font>
                                        <Font size="15.0" />
@@ -373,13 +373,16 @@
                                        </VBox>
                                     </children>
                                     <VBox.margin>
-                                       <Insets left="24.0" />
+                                       <Insets left="24.0" top="20.0" />
                                     </VBox.margin>
                                  </HBox>
                               </children>
                               <padding>
                                  <Insets left="30.0" top="5.0" />
                               </padding>
+                              <HBox.margin>
+                                 <Insets />
+                              </HBox.margin>
                            </VBox>
 
                                                 <!-- Monthly Stats Card -->
