@@ -5,6 +5,10 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -15,6 +19,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
@@ -70,225 +75,556 @@
             </top>
         </BorderPane>
         <Pane fx:id="overlayPane" opacity="0.5" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
-        <AnchorPane fx:id="settingPane" maxWidth="350.0" prefHeight="580.0" prefWidth="1060.0" style="-fx-background-radius: 30 0 0 30;" styleClass="black-pane" visible="false" StackPane.alignment="CENTER_RIGHT">
+        <VBox fx:id="settingPane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 25, 0, -8, 0);" translateX="420" StackPane.alignment="CENTER_RIGHT">
             <stylesheets>
                 <URL value="@../CSS/DashBoard_general.css" />
                 <URL value="@../CSS/login.css" />
             </stylesheets>
             <children>
-                <Button fx:id="logoutbtn" layoutX="17.0" layoutY="519.0" onAction="#clickLogout" prefHeight="47.0" prefWidth="322.0" style="-fx-background-radius: 20 0 0 20;" styleClass="logoutbtn" text="LogOut" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="11.0" />
-                <Label layoutX="138.0" layoutY="14.0" style="-fx-text-fill: black;" styleClass="topic_font" text="Setting" />
-                <VBox alignment="CENTER" layoutY="67.0" prefHeight="184.0" prefWidth="350.0">
+                <!-- Header -->
+                <HBox alignment="CENTER" minHeight="50.0" prefHeight="58.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: #f8f9fa; -fx-padding: 25; -fx-background-radius: 20 0 0 0;">
                     <children>
-                        <HBox fx:id="optionProfile" alignment="CENTER_LEFT" spacing="8.0" styleClass="hoversmth">
+                        <Label prefHeight="51.0" prefWidth="132.0" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: black; -fx-font-family: 'Segoe UI Semibold';" text="⚙  Settings" />
+                    </children>
+                </HBox>
+                
+                <!-- Settings Content -->
+                <VBox spacing="0.0" style="-fx-background-color: #f8f9fa;" VBox.vgrow="ALWAYS">
+                    <children>
+                        <!-- Profile Section -->
+                        <VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                            <VBox.margin>
+                                <Insets bottom="15.0" left="15.0" right="15.0" />
+                            </VBox.margin>
                             <children>
-                                <Label prefHeight="30.0" prefWidth="35.0" style="-fx-font-size: 25; -fx-alignment: center;" styleClass="slipFont" text="👤" />
-                                <Label styleClass="slipFont" text="View Profile" />
-                            </children>
-                            <padding>
-                                <Insets bottom="10.0" left="17.0" top="10.0" />
-                            </padding>
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor>
-                        </HBox>
-                        <Line endX="221.5" startX="-100.0" />
-                        <HBox fx:id="optionTarget" alignment="CENTER_LEFT" styleClass="hoversmth">
-                            <children>
-                                <Label prefHeight="30.0" prefWidth="41.0" style="-fx-font-size: 25; -fx-alignment: center;" styleClass="slipFont" text="🎯">
-                                    <HBox.margin>
-                                        <Insets right="2.0" />
-                                    </HBox.margin>
-                                </Label>
-                                <Label styleClass="slipFont" text="Target" />
-                            </children>
-                            <padding>
-                                <Insets bottom="10.0" left="17.0" top="10.0" />
-                            </padding>
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor>
-                        </HBox>
-                        <Line endX="221.5" startX="-100.0" />
-                        <HBox alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="323.0">
-                            <children>
-                                <Label prefHeight="30.0" prefWidth="27.0" style="-fx-font-size: 25; -fx-alignment: center;" styleClass="slipFont" text="🌙">
-                                    <HBox.margin>
-                                        <Insets right="16.0" />
-                                    </HBox.margin>
-                                </Label>
-                                <Label prefHeight="17.0" prefWidth="219.0" styleClass="slipFont" text="Switch to Light" />
-                                <ToggleButton fx:id="Mode" minWidth="43.0" mnemonicParsing="false" prefWidth="43.0" styleClass="toggle-switch" text="Dark">
+                                <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280; -fx-letter-spacing: 0.5;" text="ACCOUNT" />
+                                
+                                <HBox fx:id="optionProfile" alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: transparent; -fx-background-radius: 10; -fx-padding: 14; -fx-cursor: hand;" styleClass="settings-item-hover">
+                                    <children>
+                                        <StackPane minHeight="48.0" minWidth="48.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 12;">
+                                            <children>
+                                                <Label style="-fx-font-size: 22; -fx-text-fill: white;" text="👤" />
+                                            </children>
+                                        </StackPane>
+                                        <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="View Profile" />
+                                                <Label style="-fx-font-size: 12; -fx-text-fill: #6b7280;" text="Manage your account details" />
+                                            </children>
+                                        </VBox>
+                                        <Label style="-fx-font-size: 18; -fx-text-fill: #9ca3af;" text="›" />
+                                    </children>
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
-                                </ToggleButton>
+                                </HBox>
+                                
+                                <HBox fx:id="optionAttendance" alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: transparent; -fx-background-radius: 10; -fx-padding: 14; -fx-cursor: hand;" styleClass="settings-item-hover">
+                                    <children>
+                                        <StackPane minHeight="48.0" minWidth="48.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 12;">
+                                            <children>
+                                                <Label style="-fx-font-size: 22; -fx-text-fill: white;" text="📅" />
+                                            </children>
+                                        </StackPane>
+                                        <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Attendance" />
+                                                <Label style="-fx-font-size: 12; -fx-text-fill: #6b7280;" text="View your attendance records" />
+                                            </children>
+                                        </VBox>
+                                        <Label style="-fx-font-size: 18; -fx-text-fill: #9ca3af;" text="›" />
+                                    </children>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </HBox>
                             </children>
-                            <padding>
-                                <Insets bottom="10.0" left="17.0" top="10.0" />
-                            </padding>
+                        </VBox>
+                        
+                        <!-- Preferences Section -->
+                        <VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                            <VBox.margin>
+                                <Insets bottom="15.0" left="15.0" right="15.0" />
+                            </VBox.margin>
+                            <children>
+                                <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280; -fx-letter-spacing: 0.5;" text="PREFERENCES" />
+                                
+                                <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: transparent; -fx-background-radius: 10; -fx-padding: 14;">
+                                    <children>
+                                        <StackPane minHeight="48.0" minWidth="48.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 12;">
+                                            <children>
+                                                <Label style="-fx-font-size: 22; -fx-text-fill: white;" text="🌙" />
+                                            </children>
+                                        </StackPane>
+                                        <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Dark Mode" />
+                                                <Label style="-fx-font-size: 12; -fx-text-fill: #6b7280;" text="Toggle dark/light theme" />
+                                            </children>
+                                        </VBox>
+                                        <ToggleButton fx:id="Mode" minWidth="52.0" prefHeight="28.0" prefWidth="52.0" style="-fx-background-color: #d1d5db; -fx-background-radius: 14; -fx-border-radius: 14;" text="">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </ToggleButton>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                        
+                        <!-- Security Section -->
+                        <VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                            <VBox.margin>
+                                <Insets bottom="15.0" left="15.0" right="15.0" />
+                            </VBox.margin>
+                            <children>
+                                <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280; -fx-letter-spacing: 0.5;" text="SECURITY" />
+                                
+                                <HBox fx:id="optionChange" alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: transparent; -fx-background-radius: 10; -fx-padding: 14; -fx-cursor: hand;" styleClass="settings-item-hover">
+                                    <children>
+                                        <StackPane minHeight="48.0" minWidth="48.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 12;">
+                                            <children>
+                                                <Label style="-fx-font-size: 22; -fx-text-fill: white;" text="🔐" />
+                                            </children>
+                                        </StackPane>
+                                        <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Change Password" />
+                                                <Label style="-fx-font-size: 12; -fx-text-fill: #6b7280;" text="Update your password" />
+                                            </children>
+                                        </VBox>
+                                        <Label style="-fx-font-size: 18; -fx-text-fill: #9ca3af;" text="›" />
+                                    </children>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+                
+                <!-- Logout Button at Bottom -->
+                <HBox alignment="CENTER" style="-fx-background-color: #f8f9fa; -fx-padding: 20;">
+                    <children>
+                        <Button fx:id="logoutbtn" onAction="#clickLogout" prefHeight="50.0" prefWidth="380.0" style="-fx-background-color: linear-gradient(to right, #C21E2B, #af1b27); -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 12; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);" text="🚪  Logout">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        
+        <!-- Password Verification Overlay -->
+        <VBox fx:id="passwordVerifyPane" alignment="CENTER" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20;" translateX="420" visible="false" StackPane.alignment="CENTER_RIGHT">
+            <children>
+                <VBox alignment="CENTER" maxWidth="350.0" spacing="25.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 5);">
+                    <children>
+                        <!-- Lock Icon -->
+                        <StackPane prefHeight="49.0" prefWidth="270.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 40;">
+                            <children>
+                                <Label prefHeight="43.0" prefWidth="40.0" style="-fx-font-size: 30; -fx-alignment: center; -fx-text-fill: white;" text="🔐" />
+                            </children>
+                        </StackPane>
+                        
+                        <VBox alignment="CENTER" spacing="8.0">
+                            <children>
+                                <Label style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Verify Your Identity" />
+                                <Label style="-fx-font-size: 14; -fx-text-fill: #6b7280; -fx-text-alignment: center; -fx-wrap-text: true;" text="Please enter your password to view your profile" textAlignment="CENTER" wrapText="true" />
+                            </children>
+                        </VBox>
+                        
+                        <!-- Password Field -->
+                        <VBox spacing="10.0" style="-fx-pref-width: 300;">
+                            <children>
+                                <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #374151;" text="Password" />
+                                <javafx.scene.control.PasswordField fx:id="verifyPasswordField" promptText="Enter your password" style="-fx-background-color: #f3f4f6; -fx-background-radius: 10; -fx-padding: 12; -fx-font-size: 14; -fx-border-color: #e5e7eb; -fx-border-radius: 10; -fx-border-width: 1;" />
+                                <Label fx:id="passwordErrorLabel" style="-fx-text-fill: #dc2626; -fx-font-size: 12;" text="" visible="false" />
+                            </children>
+                        </VBox>
+                        
+                        <!-- Buttons -->
+                        <HBox alignment="CENTER" spacing="12.0" style="-fx-pref-width: 300;">
+                            <children>
+                                <Button fx:id="cancelVerifyBtn" onAction="#onCancelVerify" prefHeight="45.0" prefWidth="140.0" style="-fx-background-color: #e5e7eb; -fx-text-fill: #374151; -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;" text="Cancel">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                                <Button fx:id="verifyPasswordBtn" onAction="#onVerifyPassword" prefHeight="45.0" prefWidth="140.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;" text="Verify">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                            </children>
                         </HBox>
                     </children>
-                    <padding>
-                        <Insets top="20.0" />
-                    </padding>
                 </VBox>
-                <AnchorPane fx:id="profilePane" layoutY="44.0" prefHeight="496.0" prefWidth="350.0" style="-fx-background-color: rgb(71, 71, 71);" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0">
+            </children>
+        </VBox>
+        
+        <!-- Profile View Pane -->
+        <VBox fx:id="profilePane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20;" translateX="420" visible="false" StackPane.alignment="CENTER_RIGHT">
+            <children>
+                <!-- Header with Back Button -->
+                <HBox alignment="CENTER_LEFT" minHeight="45.0" prefHeight="53.0" prefWidth="420.0" spacing="15.0" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-background-radius: 20 0 0 0; -fx-border-color: transparent transparent c8c8c8 transparent;">
                     <children>
-                        <ImageView fx:id="pfImage" fitHeight="100.0" fitWidth="100.0" layoutX="125.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../Image/usericon.png" />
-                            </image>
-                        </ImageView>
-                        <VBox layoutY="98.0" prefHeight="397.0" prefWidth="350.0">
+                        <Label fx:id="backToSettingsBtn" style="-fx-font-size: 24; -fx-text-fill: black; -fx-cursor: hand;" text="‹">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                     <HBox.margin>
+                        <Insets bottom="4.0" />
+                     </HBox.margin>
+                        </Label>
+                        <Label prefHeight="44.0" prefWidth="317.0" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: black; -fx-font-family: 'Segoe UI Semibold';" text="My Profile" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets bottom="4.0" />
+                     </HBox.margin></Label>
+                        <Label fx:id="editProfileBtn" style="-fx-font-size: 20; -fx-text-fill: black; -fx-cursor: hand;" text="✏" visible="true">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                     <HBox.margin>
+                        <Insets bottom="4.0" />
+                     </HBox.margin>
+                        </Label>
+                    </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+                </HBox>
+                
+                <!-- Profile Content -->
+                <javafx.scene.control.ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                    <content>
+                        <VBox spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 20;">
                             <children>
-                                <Label styleClass="slipFont" text="Account Details">
-                                    <VBox.margin>
-                                        <Insets />
-                                    </VBox.margin>
-                                    <padding>
-                                        <Insets left="10.0" />
-                                    </padding>
-                                </Label>
-                                <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="340.0">
+                                <!-- Profile Picture -->
+                                <VBox alignment="CENTER" spacing="15.0">
                                     <children>
-                                        <Label style="-fx-font-size: 25;" text="👤">
-                                            <padding>
-                                                <Insets left="5.0" />
-                                            </padding>
-                                            <HBox.margin>
-                                                <Insets />
-                                            </HBox.margin>
-                                        </Label>
-                                        <Label fx:id="profileName" styleClass="selected_dash_font" text="Name">
-                                            <HBox.margin>
-                                                <Insets left="10.0" />
-                                            </HBox.margin>
-                                        </Label>
+                                        <StackPane alignment="CENTER" prefHeight="130.0" prefWidth="130.0">
+                                            <children>
+                                                <Circle radius="65.0" style="-fx-fill: linear-gradient(to right, #667eea, #764ba2);" />
+                                                <ImageView fx:id="pfImage" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="false" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 3);">
+                                                    <image>
+                                                        <Image url="@../Image/usericon.png" />
+                                                    </image>
+                                                    <clip>
+                                                        <javafx.scene.shape.Circle centerX="60.0" centerY="60.0" radius="60.0" />
+                                                    </clip>
+                                                </ImageView>
+                                                <VBox alignment="BOTTOM_RIGHT" prefHeight="130.0" prefWidth="130.0" spacing="10.0" StackPane.alignment="CENTER">
+                                                    <children>
+                                                        <Button fx:id="editProfilePhotoBtn" mnemonicParsing="false" onAction="#onEditProfileImage" prefHeight="36.0" prefWidth="36.0" style="-fx-background-color: white; -fx-background-radius: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 2); -fx-cursor: hand;">
+                                                            <graphic>
+                                                                <Label style="-fx-text-fill: #667eea; -fx-font-size: 16;" text="✏" />
+                                                            </graphic>
+                                                        </Button>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </StackPane>
+                                        <Label fx:id="profileName" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="" />
                                     </children>
-                                    <VBox.margin>
-                                        <Insets />
-                                    </VBox.margin>
-                                    <padding>
-                                        <Insets left="10.0" />
-                                    </padding>
-                                </HBox>
-                                <Line endX="232.2928924560547" endY="-0.9142136573791504" startX="-100.0">
-                                    <VBox.margin>
-                                        <Insets left="10.0" />
-                                    </VBox.margin>
-                                </Line>
-                                <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="37.0" prefHeight="49.0" prefWidth="340.0">
+                                </VBox>
+                                
+                                <!-- Account Details Card -->
+                                <VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
                                     <children>
-                                        <Label style="-fx-font-size: 25;" text="📩">
-                                            <HBox.margin>
-                                                <Insets left="10.0" />
-                                            </HBox.margin>
-                                            <padding>
-                                                <Insets left="5.0" />
-                                            </padding>
-                                        </Label>
-                                        <Label fx:id="profileEmail" styleClass="selected_dash_font" text="Email">
-                                            <HBox.margin>
-                                                <Insets left="10.0" />
-                                            </HBox.margin>
-                                        </Label>
+                                        <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280; -fx-letter-spacing: 0.5;" text="ACCOUNT DETAILS" />
+                                        
+                                        <!-- Email -->
+                                        <VBox spacing="8.0">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 18; -fx-text-fill: #6b7280;" text="📧" />
+                                                        <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280;" text="Email" />
+                                                    </children>
+                                                </HBox>
+                                                <TextField fx:id="profileEmail" editable="false" style="-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;" text="" />
+                                            </children>
+                                        </VBox>
+                                        
+                                        <!-- Phone -->
+                                        <VBox spacing="8.0">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 18; -fx-text-fill: #6b7280;" text="📱" />
+                                                        <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280;" text="Phone" />
+                                                    </children>
+                                                </HBox>
+                                                <TextField fx:id="profilePhone" editable="false" style="-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;" text="" />
+                                            </children>
+                                        </VBox>
+                                        
+                                        <!-- Address -->
+                                        <VBox spacing="8.0">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 18; -fx-text-fill: #6b7280;" text="🏠" />
+                                                        <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280;" text="Address" />
+                                                    </children>
+                                                </HBox>
+                                                <TextField fx:id="profileAddress" editable="false" style="-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;" text="" />
+                                            </children>
+                                        </VBox>
+                                        
+                                        <!-- Date of Birth -->
+                                        <VBox spacing="8.0">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 18; -fx-text-fill: #6b7280;" text="🎂" />
+                                                        <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #6b7280;" text="Date of Birth" />
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="profileDOB" style="-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937;" text="" />
+                                            </children>
+                                        </VBox>
                                     </children>
-                                    <VBox.margin>
-                                        <Insets />
-                                    </VBox.margin>
-                                </HBox>
-                                <Line endX="232.2928924560547" endY="-0.9142136573791504" layoutX="121.0" layoutY="88.0" startX="-100.0">
-                                    <VBox.margin>
-                                        <Insets left="10.0" />
-                                    </VBox.margin>
-                                </Line>
-                                <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="89.0" prefHeight="49.0" prefWidth="340.0">
+                                </VBox>
+                                
+                                <!-- Action Buttons -->
+                                <VBox spacing="12.0">
                                     <children>
-                                        <Label style="-fx-font-size: 25;" text="🎂">
-                                            <HBox.margin>
-                                                <Insets left="10.0" />
-                                            </HBox.margin>
-                                            <padding>
-                                                <Insets left="5.0" />
-                                            </padding>
-                                        </Label>
-                                        <Label fx:id="profileDOB" styleClass="selected_dash_font" text="Date of Birth">
-                                            <HBox.margin>
-                                                <Insets left="10.0" />
-                                            </HBox.margin>
-                                        </Label>
+                                        <Button fx:id="saveProfileBtn" onAction="#onSaveProfile" prefHeight="48.0" prefWidth="380.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;" text="💾  Save Changes" visible="false">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </Button>
+                                        <Button fx:id="changePasswordBtn" onAction="#showChangePasswordDialog" prefHeight="48.0" prefWidth="380.0" style="-fx-background-color: white; -fx-text-fill: #1f2937; -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: #e5e7eb; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;" text="🔐  Change Password">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </Button>
                                     </children>
-                                    <VBox.margin>
-                                        <Insets />
-                                    </VBox.margin>
-                                </HBox>
-                                <Line endX="232.2928924560547" endY="-0.9142136573791504" layoutX="121.0" layoutY="140.0" startX="-100.0">
-                                    <VBox.margin>
-                                        <Insets left="10.0" />
-                                    </VBox.margin>
-                                </Line>
-                                <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="141.0" prefHeight="49.0" prefWidth="340.0">
-                                    <children>
-                                        <Label style="-fx-font-size: 25;" text="🏠">
-                                            <HBox.margin>
-                                                <Insets left="10.0" />
-                                            </HBox.margin>
-                                            <padding>
-                                                <Insets left="5.0" />
-                                            </padding>
-                                        </Label>
-                                        <Label fx:id="profileAddress" styleClass="selected_dash_font" text="Address">
-                                            <HBox.margin>
-                                                <Insets left="10.0" />
-                                            </HBox.margin>
-                                        </Label>
-                                    </children>
-                                    <VBox.margin>
-                                        <Insets />
-                                    </VBox.margin>
-                                </HBox>
-                                <Line endX="232.2928924560547" endY="-0.9142136573791504" layoutX="121.0" layoutY="192.0" startX="-100.0">
-                                    <VBox.margin>
-                                        <Insets left="10.0" />
-                                    </VBox.margin>
-                                </Line>
-                                <HBox fx:id="optionChange" alignment="CENTER_LEFT" layoutX="20.0" layoutY="193.0" prefHeight="49.0" prefWidth="340.0">
-                                    <children>
-                                        <Label style="-fx-font-size: 25;" text="🔏">
-                                            <HBox.margin>
-                                                <Insets left="10.0" />
-                                            </HBox.margin>
-                                            <padding>
-                                                <Insets left="5.0" />
-                                            </padding>
-                                        </Label>
-                                        <Label styleClass="selected_dash_font" text="Change Password">
-                                            <HBox.margin>
-                                                <Insets left="10.0" />
-                                            </HBox.margin>
-                                        </Label>
-                                    </children>
-                                    <VBox.margin>
-                                        <Insets />
-                                    </VBox.margin>
-                                    <cursor>
-                                        <Cursor fx:constant="HAND" />
-                                    </cursor>
-                                </HBox>
+                                </VBox>
                             </children>
-                            <padding>
-                                <Insets top="10.0" />
-                            </padding>
                         </VBox>
-                        <Label fx:id="backButton" layoutX="4.0" layoutY="8.0" prefHeight="30.0" prefWidth="35.0" style="-fx-font-size: 25; -fx-alignment: center;" text="◀">
+                    </content>
+                </javafx.scene.control.ScrollPane>
+            </children>
+        </VBox>
+        
+        <!-- Toast Notification (top center) -->
+        <HBox fx:id="toastNotification" alignment="CENTER_LEFT" maxHeight="60.0" maxWidth="360.0" spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 12 16; -fx-border-color: #e5e7eb; -fx-border-width: 2; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 15, 0, 0, 4);" translateY="-100" visible="false" StackPane.alignment="TOP_CENTER">
+            <StackPane.margin>
+                <Insets top="60.0" />
+            </StackPane.margin>
+            <children>
+                <StackPane minHeight="36.0" minWidth="36.0" style="-fx-background-color: #10b981; -fx-background-radius: 18;">
+                    <children>
+                        <Label fx:id="toastIcon" style="-fx-font-size: 18; -fx-text-fill: white;" text="✓" />
+                    </children>
+                </StackPane>
+                <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label fx:id="toastTitle" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Success" />
+                        <Label fx:id="toastMessage" style="-fx-font-size: 11; -fx-text-fill: #6b7280;" text="Operation completed successfully" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        
+        <!-- Confirmation Dialog Overlay -->
+        <Pane fx:id="confirmOverlay" style="-fx-background-color: rgba(0,0,0,0.4);" visible="false" />
+        
+        <!-- Confirmation Dialog (top center) -->
+        <VBox fx:id="confirmDialog" alignment="CENTER" maxHeight="-Infinity" maxWidth="400.0" spacing="0.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 25, 0, 0, 5);" translateY="-600.0" visible="false" StackPane.alignment="TOP_CENTER">
+            <StackPane.margin>
+                <Insets top="100.0" />
+            </StackPane.margin>
+            <children>
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" minHeight="57.0" prefHeight="57.0" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 12 12 0 0; -fx-padding: 15 20;">
+                    <children>
+                        <StackPane minHeight="40.0" minWidth="40.0" style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 20;">
+                            <children>
+                                <Label fx:id="confirmIcon" style="-fx-font-size: 20; -fx-text-fill: white;" text="⚠" />
+                            </children>
+                        </StackPane>
+                        <Label fx:id="confirmTitle" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: white;" text="Confirm Action" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+                
+                <!-- Content -->
+                <VBox fx:id="confirmContent" spacing="10.0" style="-fx-padding: 15;">
+                    <children>
+                        <Label fx:id="confirmMessage" style="-fx-font-size: 13; -fx-text-fill: #374151; -fx-wrap-text: true;" text="Are you sure you want to proceed?" wrapText="true" />
+                    </children>
+                </VBox>
+                
+                <!-- Buttons -->
+                <HBox alignment="CENTER" spacing="10.0" style="-fx-padding: 0 15 15 15;">
+                    <children>
+                        <Button fx:id="confirmCancelBtn" onAction="#onConfirmCancel" prefHeight="38.0" prefWidth="170.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #64748b; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Cancel">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        <Button fx:id="confirmOkBtn" onAction="#onConfirmOk" prefHeight="38.0" prefWidth="170.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.3), 8, 0, 0, 2);" text="Confirm">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        
+        <!-- Change Password Dialog (slides from top) -->
+        <VBox fx:id="changePasswordDialog" alignment="CENTER" maxHeight="-Infinity" maxWidth="400.0" spacing="0.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 25, 0, 0, 5);" translateY="-700.0" visible="false">
+            <children>
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="57.0" prefWidth="370.0" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 12 12 0 0; -fx-padding: 15 20;">
+                    <children>
+                        <StackPane minHeight="40.0" minWidth="40.0" style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 20;">
+                            <Label style="-fx-font-size: 20; -fx-text-fill: white;" text="🔐" />
+                        </StackPane>
+                        <Label prefHeight="20.0" prefWidth="275.0" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: white;" text="Change Password" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="closePasswordDialogBtn" onMouseClicked="#closePasswordDialog" style="-fx-font-size: 18; -fx-text-fill: white; -fx-cursor: hand;" text="✕">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Label>
                     </children>
-                </AnchorPane>
+                </HBox>
+                
+                <!-- Content Area -->
+                <StackPane style="-fx-padding: 15;">
+                    <!-- Step 1: Current Password -->
+                    <VBox fx:id="passwordVerificationPane" alignment="CENTER" spacing="10.0" visible="true">
+                        <VBox alignment="CENTER" spacing="3.0">
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Step 1: Verify Current Password" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: #64748b; -fx-text-alignment: center;" text="Enter your current password to proceed" textAlignment="CENTER" wrapText="true" />
+                        </VBox>
+                        
+                        <VBox spacing="6.0" style="-fx-max-width: 340;">
+                            <Label style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #374151;" text="Current Password" />
+                            <PasswordField fx:id="currentPasswordField" promptText="Enter your current password" style="-fx-background-color: #f9fafb; -fx-background-radius: 8; -fx-padding: 10; -fx-font-size: 13; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                        </VBox>
+                        
+                        <Button fx:id="verifyCurrentPasswordBtn" onAction="#onVerifyCurrentPassword" prefHeight="38.0" prefWidth="340.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.3), 8, 0, 0, 2);" text="Verify &amp; Send OTP">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        
+                        <Label fx:id="passwordVerifyStatus" style="-fx-font-size: 12; -fx-text-fill: #64748b; -fx-text-alignment: center;" textAlignment="CENTER" wrapText="true" />
+                    </VBox>
+                    
+                    <!-- Step 2: OTP Verification -->
+                    <VBox fx:id="otpVerificationPane" alignment="CENTER" spacing="10.0" visible="false">
+                        <VBox alignment="CENTER" spacing="3.0">
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Step 2: Verify OTP" />
+                            <Label fx:id="otpEmailLabel" style="-fx-font-size: 11; -fx-text-fill: #64748b; -fx-text-alignment: center;" text="Enter the 6-digit code sent to your email" textAlignment="CENTER" wrapText="true" />
+                        </VBox>
+                        
+                        <VBox spacing="6.0" style="-fx-max-width: 340;">
+                            <Label style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #374151;" text="OTP Code" />
+                            <TextField fx:id="otpField" promptText="Enter 6-digit OTP" style="-fx-background-color: #f9fafb; -fx-background-radius: 8; -fx-padding: 10; -fx-font-size: 13; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                        </VBox>
+                        
+                        <Button fx:id="verifyOtpBtn" onAction="#onVerifyOTP" prefHeight="38.0" prefWidth="340.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.3), 8, 0, 0, 2);" text="Verify OTP">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        
+                        <Button fx:id="resendOtpBtn" onAction="#onResendOTP" prefHeight="32.0" prefWidth="340.0" style="-fx-background-color: transparent; -fx-text-fill: #667eea; -fx-font-size: 12; -fx-font-weight: 600; -fx-cursor: hand; -fx-underline: true;" text="Resend OTP">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        
+                        <Label fx:id="otpVerifyStatus" style="-fx-font-size: 12; -fx-text-fill: #64748b; -fx-text-alignment: center;" textAlignment="CENTER" wrapText="true" />
+                    </VBox>
+                    
+                    <!-- Step 3: New Password -->
+                    <VBox fx:id="newPasswordPane" alignment="CENTER" spacing="10.0" visible="false">
+                        <VBox alignment="CENTER" spacing="3.0">
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Step 3: Set New Password" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: #64748b; -fx-text-alignment: center;" text="Create a strong password for your account" textAlignment="CENTER" wrapText="true" />
+                        </VBox>
+                        
+                        <VBox spacing="8.0" style="-fx-max-width: 340;">
+                            <VBox spacing="6.0">
+                                <Label style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #374151;" text="New Password" />
+                                <PasswordField fx:id="newPasswordField" promptText="Enter new password" style="-fx-background-color: #f9fafb; -fx-background-radius: 8; -fx-padding: 10; -fx-font-size: 13; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                            </VBox>
+                            
+                            <VBox spacing="6.0">
+                                <Label style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #374151;" text="Confirm Password" />
+                                <PasswordField fx:id="confirmPasswordField" promptText="Confirm new password" style="-fx-background-color: #f9fafb; -fx-background-radius: 8; -fx-padding: 10; -fx-font-size: 13; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                            </VBox>
+                        </VBox>
+                        
+                        <Button fx:id="changePasswordBtn" onAction="#onSubmitPasswordChange" prefHeight="38.0" prefWidth="340.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.3), 8, 0, 0, 2);" text="✓ Change Password">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        
+                        <Label fx:id="changePasswordStatus" style="-fx-font-size: 12; -fx-text-fill: #64748b; -fx-text-alignment: center;" textAlignment="CENTER" wrapText="true" />
+                    </VBox>
+                    
+                    <!-- Loading Indicator -->
+                    <StackPane fx:id="passwordLoadingPane" style="-fx-background-color: rgba(255,255,255,0.95);" visible="false">
+                        <VBox alignment="CENTER" spacing="10.0">
+                            <ProgressIndicator prefHeight="40.0" prefWidth="40.0" style="-fx-progress-color: #667eea;" />
+                            <Label style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: #667eea;" text="Processing..." />
+                        </VBox>
+                    </StackPane>
+                </StackPane>
+                
+                <!-- Message Bar (Login notification style) -->
+                <StackPane fx:id="passwordMessagePane" opacity="0" prefHeight="40.0" style="-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(255, 60, 41); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(255, 102, 40);" translateY="40">
+                    <Label fx:id="passwordMessageLabel" style="-fx-text-fill: white;" styleClass="selected_dash_font" stylesheets="@../CSS/DashBoard_general.css" text="Success!">
+                        <padding>
+                            <Insets bottom="3.0" />
+                        </padding>
+                    </Label>
+                </StackPane>
             </children>
-        </AnchorPane>
+        </VBox>
+        
+        <!-- Security Lockout Overlay -->
+        <StackPane fx:id="lockoutOverlay" style="-fx-background-color: rgba(0, 0, 0, 0.85);">
+            <VBox alignment="CENTER" spacing="30" style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 20; -fx-padding: 60 80; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 30, 0, 0, 10);">
+                <!-- Lock Icon -->
+                <StackPane prefHeight="120.0" prefWidth="120.0" style="-fx-background-color: #ef4444; -fx-background-radius: 60;">
+                    <Label style="-fx-font-size: 60; -fx-text-fill: white;" text="🔒" />
+                </StackPane>
+                
+                <!-- Title -->
+                <Label style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Dashboard Locked" />
+                
+                <!-- Message -->
+                <VBox alignment="CENTER" maxWidth="500" spacing="10">
+                    <Label style="-fx-font-size: 16; -fx-text-fill: #6b7280; -fx-text-alignment: center; -fx-wrap-text: true;" text="Too many failed verification attempts detected." />
+                    <Label style="-fx-font-size: 16; -fx-text-fill: #6b7280; -fx-text-alignment: center; -fx-wrap-text: true;" text="A security notification has been sent to your email." />
+                    <Label style="-fx-font-size: 16; -fx-font-weight: 600; -fx-text-fill: #ef4444; -fx-text-alignment: center; -fx-wrap-text: true;" text="Contact the Admin to Unlock the Dashboard." />
+                </VBox>
+                
+                <!-- Status -->
+                <HBox alignment="CENTER" spacing="10" style="-fx-background-color: #fef2f2; -fx-background-radius: 10; -fx-padding: 15 25;">
+                    <Label style="-fx-font-size: 14; -fx-text-fill: #991b1b;" text="⚠" />
+                    <Label fx:id="lockoutStatusLabel" style="-fx-font-size: 14; -fx-text-fill: #991b1b; -fx-font-weight: 600;" text="Waiting for email verification..." />
+                </HBox>
+                
+                <!-- Logout Button -->
+                <Button onAction="#onLockoutLogout" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #6b7280; -fx-background-radius: 10; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: 600; -fx-cursor: hand;" text="Logout">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+            </VBox>
+        </StackPane>
     </children>
 </StackPane>
