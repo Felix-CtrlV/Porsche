@@ -1,0 +1,117 @@
+// ========== ADD THESE METHODS TO THE END OF managerDashboardController.java (before the closing brace) ==========
+
+        });
+    }).start();
+}
+
+@FXML
+void onResendOTP() {
+    showPasswordLoading(true);
+    resendOtpBtn.setDisable(true);
+
+    new Thread(() -> {
+        boolean success = otpService.sendOTP(Session.getInstance().getEmail());
+        javafx.application.Platform.runLater(() -> {
+            showPasswordLoading(false);
+            if (success) {
+                showPasswordMessage("OTP resent successfully!", true);
+            } else {
+                showPasswordMessage("Failed to resend OTP", false);
+            }
+            resendOtpBtn.setDisable(false);
+        });
+    }).start();
+}
+
+@FXML
+void onSubmitPasswordChange() {
+    String newPassword = newPasswordField.getText().trim();
+    String confirmPassword = confirmPasswordField.getText().trim();
+
+    if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
+        showPasswordMessage("Please fill in all fields", false);
+        return;
+    }
+
+    if (newPassword.length() < 6) {
+        showPasswordMessage("Password must be at least 6 characters", false);
+        return;
+    }
+
+    if (!newPassword.equals(confirmPassword)) {
+        showPasswordMessage("Passwords do not match!", false);
+        return;
+    }
+
+    showPasswordLoading(true);
+    changePasswordBtn.setDisable(true);
+
+    new Thread(() -> {
+        boolean success = updatePasswordInDatabase(Session.getInstance().getUserid(), newPassword);
+        javafx.application.Platform.runLater(() -> {
+            showPasswordLoading(false);
+            if (success) {
+                showPasswordMessage("Password changed successfully!", true);
+                Session.getInstance().setPassword(newPassword);
+                
+                // Close dialog after 2 seconds
+                PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                pause.setOnFinished(ev -> closePasswordDialog());
+                pause.play();
+            } else {
+                showPasswordMessage("Failed to update password", false);
+                changePasswordBtn.setDisable(false);
+            }
+        });
+    }).start();
+}
+
+private boolean updatePasswordInDatabase(int userId, String newPassword) {
+    String sql = "UPDATE user_info SET password = SHA2(?, 256) WHERE user_id = ?";
+
+    try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, newPassword);
+        ps.setInt(2, userId);
+
+        int rowsAffected = ps.executeUpdate();
+        return rowsAffected > 0;
+
+    } catch (SQLException e) {
+        return false;
+    }
+}
+
+private void showOtpPane() {
+    passwordVerificationPane.setVisible(false);
+    otpVerificationPane.setVisible(true);
+    newPasswordPane.setVisible(false);
+    otpField.requestFocus();
+}
+
+private void showNewPasswordPane() {
+    passwordVerificationPane.setVisible(false);
+    otpVerificationPane.setVisible(false);
+    newPasswordPane.setVisible(true);
+    newPasswordField.requestFocus();
+}
+
+private void showPasswordLoading(boolean show) {
+    passwordLoadingPane.setVisible(show);
+}
+
+private void showPasswordMessage(String message, boolean isSuccess) {
+    if (currentPasswordAnimation != null) {
+        currentPasswordAnimation.stop();
+    }
+
+    passwordMessagePane.setVisible(false);
+
+    String type = isSuccess ? "success" : "error";
+    String title = isSuccess ? "Success" : "Error";
+
+    showToast(title, message, type);
+}
+
+}
