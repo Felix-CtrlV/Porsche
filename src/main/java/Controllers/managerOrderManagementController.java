@@ -363,7 +363,7 @@ public class managerOrderManagementController {
         });
 
         // Force table and text visibility with normal font weight
-        orderTable.setFixedCellSize(-1);
+        orderTable.setFixedCellSize(40);
         orderTable.setStyle("-fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-background-color: white;");
         
         orderTable.setRowFactory(tv -> {
@@ -372,8 +372,6 @@ public class managerOrderManagementController {
             // Update row style based on selection
             row.itemProperty().addListener((obs, oldItem, newItem) -> updateRowStyle(row));
             row.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateRowStyle(row));
-            
-            row.setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
 
             row.setOnMouseEntered(e -> {
                 if (!row.isEmpty() && !row.isSelected()) {
@@ -382,8 +380,7 @@ public class managerOrderManagementController {
                                 "-fx-font-size: 14px !important; " +
                                 "-fx-font-weight: normal; " +
                                 "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0; " +
-                                "-fx-padding: 8 0 8 0;");
+                                "-fx-border-width: 0 0 1 0;");
                 }
             });
 
@@ -1461,23 +1458,21 @@ public class managerOrderManagementController {
         if (row.isEmpty()) {
             row.setStyle("");
         } else if (row.isSelected()) {
-            // Selected row: bold text with highlight background and spacing
+            // Selected row: bold text with highlight background
             row.setStyle("-fx-background-color: #e3f2fd; " +
                         "-fx-text-fill: black !important; " +
                         "-fx-font-size: 14px !important; " +
                         "-fx-font-weight: bold; " +
                         "-fx-border-color: #2196f3; " +
-                        "-fx-border-width: 0 0 2 0; " +
-                        "-fx-padding: 8 0 8 0;");
+                        "-fx-border-width: 0 0 2 0;");
         } else {
-            // Normal row: regular text with spacing
+            // Normal row: regular text
             row.setStyle("-fx-background-color: white; " +
                         "-fx-text-fill: black !important; " +
                         "-fx-font-size: 14px !important; " +
                         "-fx-font-weight: normal; " +
                         "-fx-border-color: #e9ecef; " +
-                        "-fx-border-width: 0 0 1 0; " +
-                        "-fx-padding: 8 0 8 0;");
+                        "-fx-border-width: 0 0 1 0;");
         }
     }
     
