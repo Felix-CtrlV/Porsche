@@ -404,6 +404,7 @@ public class managerDashboardController {
         overlayPane.setVisible(false);
     }
 
+
     private void applyCircularClip(ImageView imageView, double size) {
         if (imageView == null) {
             return;
