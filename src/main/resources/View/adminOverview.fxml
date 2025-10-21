@@ -205,8 +205,8 @@
                                     <Insets left="10.0" />
                                  </HBox.margin></Label>
                                         <Region prefHeight="67.0" prefWidth="78.0" HBox.hgrow="ALWAYS" />
-                                        <Button id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" styleClass="car" text="🚗 CAR" HBox.hgrow="ALWAYS" />
-                                        <Button id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" styleClass="part" text="🔧 PART" HBox.hgrow="ALWAYS">
+                                        <Button id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" styleClass="car" stylesheets="@../CSS/general.css" text="🚗 CAR" HBox.hgrow="ALWAYS" />
+                                        <Button id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" styleClass="part" stylesheets="@../CSS/general.css" text="🔧 PART" HBox.hgrow="ALWAYS">
                                             <HBox.margin>
                                                 <Insets right="40.0" />
                                             </HBox.margin>
@@ -367,6 +367,7 @@
         </VBox>
     </center>
    <stylesheets>
-      <URL value="@../CSS/admin_light_mode.css" />
+      <URL value="@../CSS/porsche_admin_overview.css" />
+      <URL value="@../CSS/admin_accounts.css" />
    </stylesheets>
 </BorderPane>

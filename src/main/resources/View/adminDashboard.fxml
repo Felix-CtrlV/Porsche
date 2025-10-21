@@ -25,7 +25,7 @@
 
 <StackPane minHeight="300.0" minWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminDashboardController">
     <children>
-        <BorderPane fx:id="root" minHeight="768.0" minWidth="1366.0" stylesheets="@../CSS/admin_light_mode.css">
+        <BorderPane fx:id="root" minHeight="768.0" minWidth="1366.0" stylesheets="@../CSS/DashBoard_general.css">
             <center>
                 <AnchorPane fx:id="admin_anc" minHeight="721.0" minWidth="1366.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
             </center>
@@ -76,7 +76,8 @@
         <Pane fx:id="overlayPane" opacity="0.5" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" visible="false" />
         <VBox fx:id="settingPane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 25, 0, -8, 0);" translateX="420" StackPane.alignment="CENTER_RIGHT">
             <stylesheets>
-                <URL value="@../CSS/admin_light_mode.css" />
+                <URL value="@../CSS/DashBoard_general.css" />
+                <URL value="@../CSS/login.css" />
             </stylesheets>
             <children>
                 <!-- Header -->
@@ -667,7 +668,7 @@
                 
                                         <!-- Message Bar (Login notification style) -->
                 <StackPane fx:id="passwordMessagePane" opacity="0" prefHeight="40.0" style="-fx-background-radius: 12 12 0 0; -fx-background-color: rgb(255, 60, 41); -fx-border-width: 2; -fx-border-radius: 12 12 0 0; -fx-border-color: rgb(255, 102, 40);" translateY="40">
-                    <Label fx:id="passwordMessageLabel" style="-fx-text-fill: white;" styleClass="selected_dash_font" stylesheets="@../CSS/admin_light_mode.css" text="Success!">
+                    <Label fx:id="passwordMessageLabel" style="-fx-text-fill: white;" styleClass="selected_dash_font" stylesheets="@../CSS/DashBoard_general.css" text="Success!">
                         <padding>
                             <Insets bottom="3.0" />
                         </padding>
