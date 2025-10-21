@@ -473,3 +473,24 @@
     -fx-padding: 16;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 24, 0.35, 0, 10);
 }
+
+/* Toast Notification Styles */
+.toast-icon-success {
+    -fx-background-color: #10b981;
+    -fx-background-radius: 18;
+}
+
+.toast-icon-error {
+    -fx-background-color: #ef4444;
+    -fx-background-radius: 18;
+}
+
+.toast-icon-warning {
+    -fx-background-color: #f59e0b;
+    -fx-background-radius: 18;
+}
+
+.toast-icon-info {
+    -fx-background-color: #3b82f6;
+    -fx-background-radius: 18;
+}

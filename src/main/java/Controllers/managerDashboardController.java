@@ -5,6 +5,7 @@ import MainUI.login;
 import Utils.LogoutHelper;
 import Utils.OTPService;
 import Utils.Session;
+import Utils.CSSManager;
 import javafx.animation.*;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -652,9 +653,9 @@ public class managerDashboardController {
             editProfileBtn.setText("✓");
             
             // Apply edit mode styling
-            profileEmail.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-border-color: #667eea; -fx-border-width: 2; -fx-border-radius: 8;");
-            profilePhone.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-border-color: #667eea; -fx-border-width: 2; -fx-border-radius: 8;");
-            profileAddress.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-border-color: #667eea; -fx-border-width: 2; -fx-border-radius: 8;");
+            CSSManager.applyAdminTextField(profileEmail);
+            CSSManager.applyAdminTextField(profilePhone);
+            CSSManager.applyAdminTextField(profileAddress);
         } else {
             // Exit edit mode
             profileEmail.setEditable(false);
@@ -669,9 +670,9 @@ public class managerDashboardController {
             editProfileBtn.setText("✏");
             
             // Restore normal styling
-            profileEmail.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent;");
-            profilePhone.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent;");
-            profileAddress.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent;");
+            CSSManager.removeAdminTextField(profileEmail);
+            CSSManager.removeAdminTextField(profilePhone);
+            CSSManager.removeAdminTextField(profileAddress);
         }
     }
 
@@ -757,19 +758,23 @@ public class managerDashboardController {
         switch (normalizedType) {
             case "success":
                 toastIcon.setText("✓");
-                iconContainer.setStyle("-fx-background-color: #10b981; -fx-background-radius: 18;");
+                CSSManager.clearStyles(iconContainer);
+                CSSManager.applyAdminActionButtonSuccess((Button) iconContainer);
                 break;
             case "error":
                 toastIcon.setText("✕");
-                iconContainer.setStyle("-fx-background-color: #ef4444; -fx-background-radius: 18;");
+                CSSManager.clearStyles(iconContainer);
+                CSSManager.applyAdminActionButtonDanger((Button) iconContainer);
                 break;
             case "warning":
                 toastIcon.setText("!");
-                iconContainer.setStyle("-fx-background-color: #f59e0b; -fx-background-radius: 18;");
+                CSSManager.clearStyles(iconContainer);
+                CSSManager.applyAdminActionButtonWarning((Button) iconContainer);
                 break;
             default:
                 toastIcon.setText("ℹ");
-                iconContainer.setStyle("-fx-background-color: #3b82f6; -fx-background-radius: 18;");
+                CSSManager.clearStyles(iconContainer);
+                CSSManager.applyAdminButtonPrimary((Button) iconContainer);
                 break;
         }
         
