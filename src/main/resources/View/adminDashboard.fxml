@@ -234,7 +234,7 @@
         </VBox>
         
         <!-- Password Verification Overlay -->
-        <VBox fx:id="passwordVerifyPane" alignment="CENTER" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20;" translateX="420" visible="false" StackPane.alignment="CENTER_RIGHT">
+        <VBox fx:id="passwordVerifyPane" alignment="CENTER" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20;" translateX="420" StackPane.alignment="CENTER_RIGHT">
             <children>
                 <VBox alignment="CENTER" maxWidth="350.0" spacing="25.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 5);">
                     <children>
@@ -280,6 +280,7 @@
                 </VBox>
             </children>
         </VBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" />
         
         <!-- Profile View Pane -->
         <VBox fx:id="profilePane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20;" translateX="420" visible="false" StackPane.alignment="CENTER_RIGHT">
