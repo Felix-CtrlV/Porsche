@@ -22,6 +22,7 @@ import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import Utils.CSSManager;
 
 import java.net.URL;
 import java.sql.*;
@@ -553,11 +554,12 @@ public class adminOverviewController implements Initializable {
 
             // Apply styling to all bars
             barChart.lookupAll(".chart-bar").forEach(node -> {
-                node.setStyle("-fx-bar-fill: " + color + ";");
+                CSSManager.clearStyles(node);
+                CSSManager.applyChartBar(node);
             });
 
             // Set chart background
-            barChart.setStyle("-fx-background-color: transparent;");
+            CSSManager.applyBarChart(barChart);
         });
     }
 
@@ -657,18 +659,18 @@ public class adminOverviewController implements Initializable {
 
     private void styleAreaChart() {
         Platform.runLater(() -> {
-            areaChart.setStyle("-fx-background-color: transparent;");
+            CSSManager.applyAdminOverviewChart(areaChart);
 
             areaChart.lookupAll(".chart-series-area-fill").forEach(node -> {
-                node.setStyle("-fx-fill: linear-gradient(to bottom, rgba(109, 129, 150, 0.3), rgba(109, 129, 150, 0.1));");
+                CSSManager.applyChartSeriesAreaFill(node);
             });
 
             areaChart.lookupAll(".chart-series-area-line").forEach(node -> {
-                node.setStyle("-fx-stroke: #6d8196; -fx-stroke-width: 3px;");
+                CSSManager.applyChartSeriesAreaLine(node);
             });
 
             areaChart.lookupAll(".chart-area-symbol").forEach(node -> {
-                node.setStyle("-fx-background-color: #6d8196; -fx-background-radius: 4px; -fx-padding: 4px;");
+                CSSManager.applyChartLineSymbol(node);
             });
         });
     }
@@ -1042,7 +1044,7 @@ public class adminOverviewController implements Initializable {
 
         String baseTextValue = String.format("%d/%d • %.1f%%", actual, target, progressPercent);
         Text baseText = new Text(baseTextValue);
-        baseText.setStyle("-fx-fill: #111827; -fx-font-weight: 600;");
+        CSSManager.applyAdminLabelValue(baseText);
 
         TextFlow flow = new TextFlow(baseText);
         flow.setTextAlignment(TextAlignment.CENTER);
@@ -1050,7 +1052,7 @@ public class adminOverviewController implements Initializable {
         if (actual > target) {
             int excess = actual - target;
             Text extraText = new Text(String.format(" (+%d)", excess));
-            extraText.setStyle("-fx-fill: #16a34a; -fx-font-weight: 600;");
+            CSSManager.applyPercentagePositive(extraText);
             flow.getChildren().add(extraText);
         }
 
