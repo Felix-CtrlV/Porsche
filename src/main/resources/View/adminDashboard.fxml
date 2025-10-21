@@ -23,7 +23,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<StackPane minHeight="605.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminDashboardController">
+<StackPane minHeight="605.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminDashboardController">
     <children>
         <BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="580.0" prefWidth="1188.0" stylesheets="@../CSS/DashBoard_general.css">
             <center>
@@ -64,7 +64,10 @@
                         <Region maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="360.0" HBox.hgrow="ALWAYS" />
                         <StackPane minWidth="88.0" HBox.hgrow="NEVER">
                             <children>
-                                <Label fx:id="settingIcon" prefHeight="34.0" prefWidth="33.0" style="-fx-font-size: 30; -fx-alignment: center;" text="⚙" />
+                                <Label fx:id="settingIcon" prefHeight="34.0" prefWidth="33.0" style="-fx-font-size: 30; -fx-alignment: center;" text="⚙">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Label>
                             </children></StackPane>
                     </children>
                 </HBox>
@@ -280,7 +283,6 @@
                 </VBox>
             </children>
         </VBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" />
         
         <!-- Profile View Pane -->
         <VBox fx:id="profilePane" maxWidth="420.0" prefHeight="580.0" prefWidth="420.0" style="-fx-background-color: #f8f9fa; -fx-background-radius: 20 0 0 20;" translateX="420" visible="false" StackPane.alignment="CENTER_RIGHT">
