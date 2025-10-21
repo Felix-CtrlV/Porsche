@@ -21,7 +21,7 @@
             </padding>
 
             <!-- Updated fx:id to match controller -->
-            <Button fx:id="loadAssetButton" styleClass="link-button" text="Back to Asset" />
+            <Button fx:id="loadAssetButton" styleClass="link-button" text="View Accessories" />
 
             <VBox alignment="CENTER" spacing="10">
                 <Label styleClass="section-title" text="Final Configuration" />

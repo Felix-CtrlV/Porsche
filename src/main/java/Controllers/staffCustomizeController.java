@@ -1,6 +1,5 @@
 package Controllers;
 
-import Utils.AppStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -49,12 +49,12 @@ public class staffCustomizeController implements Initializable {
 
     @FXML
     private void clickConfirm(ActionEvent event) {
-        navigate("/View/staffFinalize.fxml");
+        navigate(event, "/View/staffFinalize.fxml");
     }
 
     @FXML
     private void back(ActionEvent event) {
-        navigate("/View/staffModelSelect.fxml");
+        navigate(event, "/View/staffModelSelect.fxml");
     }
 
     @FXML
@@ -77,12 +77,13 @@ public class staffCustomizeController implements Initializable {
         return null;
     }
 
-    private void navigate(String path) {
+    private void navigate(ActionEvent event, String path) {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(path)));
             Scene newScene = new Scene(root, 1300, 850);
-            AppStage.getStage().setScene(newScene);
-            AppStage.getStage().centerOnScreen();
+            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            stage.setScene(newScene);
+            stage.centerOnScreen();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

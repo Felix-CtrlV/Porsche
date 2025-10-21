@@ -1,75 +1,46 @@
-.root {
-    -porsche-red: #D5001C;
-    -porsche-red-hover: #B00016;
-    -porsche-red-glow: rgba(213, 0, 28, 0.3);
-    -porsche-red-light: rgba(213, 0, 28, 0.08);
-    -white: #FFFFFF;
-    -off-white: #F9F9F9;
-    -light-gray: #E8E8E8;
-    -gray: #C0C0C0;
-    -dark-gray: #6B6B6B;
-    -black: #1A1A1A;
-    -metallic-gray: #8C8C8C;
-    -font-primary: 'Helvetica Neue', 'Segoe UI Semibold', 'Arial Rounded MT Bold', sans-serif;
-    -font-secondary: 'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif;
-    -shadow-subtle: 0 2px 12px rgba(0, 0, 0, 0.04);
-    -shadow-normal: 0 4px 20px rgba(0, 0, 0, 0.08);
-    -shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
-    -shadow-red: 0 8px 32px rgba(213, 0, 28, 0.25);
-    -transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    -transition-medium: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    -transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 .root-pane {
-    -fx-background-color: -white;
-}
-
-.main-container {
-    -fx-background-color: -white;
+    -fx-background-color: #FFFFFF;
+    -fx-font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .header-bar {
-    -fx-background-color: -white;
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 20 40 20 40;
 }
 
 .home-button {
     -fx-background-color: transparent;
-    -fx-border-color: -black;
-    -fx-border-width: 1.5px;
-    -fx-border-radius: 4px;
-    -fx-background-radius: 4px;
-    -fx-text-fill: -black;
-    -fx-font-family: -font-primary;
-    -fx-font-size: 11px;
+    -fx-border-color: #1A1A1A;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 4;
+    -fx-text-fill: #1A1A1A;
     -fx-font-weight: 600;
-    -fx-letter-spacing: 1.2px;
-    -fx-padding: 12px 28px;
+    -fx-font-size: 11px;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, transparent, 0, 0, 0, 0);
+    -fx-padding: 12 28;
+    -fx-transition: all 0.3s ease-in-out;
 }
 
 .home-button:hover {
-    -fx-background-color: -porsche-red;
-    -fx-border-color: -porsche-red;
-    -fx-text-fill: -white;
-    -fx-effect: dropshadow(gaussian, -porsche-red-glow, 16, 0.5, 0, 2);
+    -fx-background-color: #D5001C;
+    -fx-border-color: #D5001C;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(213, 0, 28, 0.3), 16, 0.5, 0, 2);
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
 }
 
 .home-button:pressed {
-    -fx-background-color: -porsche-red-hover;
-    -fx-border-color: -porsche-red-hover;
+    -fx-background-color: #B00016;
+    -fx-border-color: #B00016;
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
 .porsche-logo-text {
-    -fx-font-family: -font-primary;
     -fx-font-size: 22px;
     -fx-font-weight: 700;
-    -fx-text-fill: -black;
+    -fx-text-fill: #1A1A1A;
     -fx-letter-spacing: 4px;
 }
 
@@ -78,58 +49,51 @@
 }
 
 .main-title {
-    -fx-font-family: -font-primary;
     -fx-font-size: 42px;
     -fx-font-weight: 700;
-    -fx-text-fill: -black;
+    -fx-text-fill: #1A1A1A;
     -fx-letter-spacing: 3px;
 }
 
 .subtitle {
-    -fx-font-family: -font-secondary;
     -fx-font-size: 14px;
     -fx-font-weight: 400;
-    -fx-text-fill: -dark-gray;
+    -fx-text-fill: #6B6B6B;
     -fx-letter-spacing: 1px;
 }
 
-.divider-line {
-    -fx-stroke: -porsche-red;
-    -fx-stroke-width: 2px;
-    -fx-opacity: 1.0;
-}
-
 .models-grid {
-    -fx-background-color: -off-white;
+    -fx-background-color: #F9F9F9;
+    -fx-padding: 20 40 20 40;
 }
 
 .model-tile-container {
-    -fx-background-color: transparent;
     -fx-cursor: hand;
 }
 
 .model-tile-wrapper {
-    -fx-background-color: -white;
-    -fx-background-radius: 8px;
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 12, 0, 0, 4);
-    -fx-padding: 0;
+    -fx-transition: all 0.35s ease-in-out;
 }
 
 .model-tile-wrapper:hover {
-    -fx-effect: dropshadow(gaussian, -porsche-red-glow, 24, 0.4, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(213, 0, 28, 0.25), 24, 0.4, 0, 8);
     -fx-translate-y: -6;
 }
 
 .image-container {
-    -fx-background-color: -off-white;
-    -fx-background-radius: 8px 8px 0 0;
-    -fx-padding: 16px;
+    -fx-background-color: #F9F9F9;
+    -fx-background-radius: 8 8 0 0;
+    -fx-padding: 16;
 }
 
 .model-image {
     -fx-cursor: hand;
     -fx-opacity: 1.0;
     -fx-effect: dropshadow(gaussian, transparent, 0, 0, 0, 0);
+    -fx-transition: all 0.35s ease-in-out;
 }
 
 .model-image:hover {
@@ -140,102 +104,32 @@
 }
 
 .model-label-container {
-    -fx-background-color: -white;
-    -fx-background-radius: 0 0 8px 8px;
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 0 0 8 8;
+    -fx-padding: 8 0 8 0;
 }
 
 .model-name {
-    -fx-font-family: -font-primary;
     -fx-font-size: 18px;
     -fx-font-weight: 700;
-    -fx-text-fill: -black;
+    -fx-text-fill: #1A1A1A;
     -fx-letter-spacing: 2px;
 }
 
 .model-tagline {
-    -fx-font-family: -font-secondary;
     -fx-font-size: 12px;
     -fx-font-weight: 400;
-    -fx-text-fill: -metallic-gray;
+    -fx-text-fill: #8C8C8C;
     -fx-letter-spacing: 0.8px;
 }
 
-.footer-text {
-    -fx-font-family: -font-secondary;
-    -fx-font-size: 10px;
-    -fx-font-weight: 400;
-    -fx-text-fill: -gray;
-    -fx-letter-spacing: 2px;
-}
-
-.model-tile-wrapper,
-.model-image,
-.home-button {
-    -fx-transition: all -transition-medium;
-}
-
-.fade-in {
-    -fx-opacity: 0;
-}
-
-.fade-in-active {
-    -fx-opacity: 1;
-}
-
-.ripple {
-    -fx-background-color: -porsche-red-light;
-    -fx-background-radius: 50%;
-    -fx-opacity: 0.6;
-}
-
 @media (max-width: 1024px) {
-    .main-title {
-        -fx-font-size: 36px;
-    }
-    .model-image {
-        -fx-fit-height: 200.0;
-        -fx-fit-width: 300.0;
-    }
+    .main-title { -fx-font-size: 36px; }
+    .model-image { -fx-fit-height: 200; -fx-fit-width: 300; }
 }
 
 @media (max-width: 768px) {
-    .main-title {
-        -fx-font-size: 28px;
-    }
-    .model-name {
-        -fx-font-size: 16px;
-    }
-    .model-tagline {
-        -fx-font-size: 11px;
-    }
-}
-
-.model-image-loading {
-    -fx-opacity: 0.3;
-}
-
-.model-image-loaded {
-    -fx-opacity: 1.0;
-}
-
-.model-tile-wrapper:focused,
-.home-button:focused {
-    -fx-border-color: -porsche-red;
-    -fx-border-width: 2px;
-    -fx-border-radius: 8px;
-}
-
-.model-tile-selected {
-    -fx-border-color: -porsche-red;
-    -fx-border-width: 3px;
-    -fx-border-radius: 8px;
-}
-
-.model-tile-wrapper::before {
-    -fx-background-color: linear-gradient(to bottom, transparent, -porsche-red-light);
-    -fx-opacity: 0;
-}
-
-.model-tile-wrapper:hover::before {
-    -fx-opacity: 1;
+    .main-title { -fx-font-size: 28px; }
+    .model-name { -fx-font-size: 16px; }
+    .model-tagline { -fx-font-size: 11px; }
 }

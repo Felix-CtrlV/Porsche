@@ -1,6 +1,5 @@
 package Controllers;
 
-import Utils.AppStage;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -13,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class staffShopingCartController {
     @FXML private Label modelLabel, colorLabel, engineLabel;
     @FXML private Button backButton;
     @FXML private Button confirmButton;
-    @FXML private Button loadAssetButton; // matches FXML fx:id
+    @FXML private Button loadAssetButton;
     @FXML private Label confirmationMessageLabel;
 
     @FXML private ToggleGroup paymentMethodGroup;
@@ -95,7 +95,6 @@ public class staffShopingCartController {
         initializeInstallmentPlans();
         setupPaymentMethodListeners();
 
-        // Navigation buttons
         backButton.setOnAction(e -> goBack());
         confirmButton.setOnAction(e -> confirmPurchase());
         loadAssetButton.setOnAction(e -> loadStaffAsset());
@@ -128,13 +127,9 @@ public class staffShopingCartController {
 
     private void setupPaymentMethodListeners() {
         paymentMethodGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == installmentRadio) {
-                installmentOptionsContainer.setVisible(true);
-                installmentOptionsContainer.setManaged(true);
-            } else {
-                installmentOptionsContainer.setVisible(false);
-                installmentOptionsContainer.setManaged(false);
-            }
+            boolean isInstallment = newVal == installmentRadio;
+            installmentOptionsContainer.setVisible(isInstallment);
+            installmentOptionsContainer.setManaged(isInstallment);
         });
     }
 
@@ -159,26 +154,20 @@ public class staffShopingCartController {
     }
 
     private void goBack() {
-        try {
-            if (cameFromAsset) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffAsset.fxml"));
-                Scene scene = new Scene(loader.load());
-                AppStage.getStage().setScene(scene);
-            } else {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffFinalize.fxml"));
-                Scene scene = new Scene(loader.load());
-                AppStage.getStage().setScene(scene);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        navigate(cameFromAsset ? "/View/staffAsset.fxml" : "/View/staffFinalize.fxml");
     }
 
     private void loadStaffAsset() {
+        navigate("/View/staffAsset.fxml");
+    }
+
+    private void navigate(String path) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffAsset.fxml"));
-            Scene scene = new Scene(loader.load());
-            AppStage.getStage().setScene(scene);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            Scene scene = new Scene(loader.load(), 1300, 850);
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.setScene(scene);
+            stage.centerOnScreen();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -225,17 +214,9 @@ public class staffShopingCartController {
         updatePriceLabels();
     }
 
-    private double calculateSubtotal() {
-        return basePrice + accessoriesPrice;
-    }
-
-    private double calculateTax() {
-        return calculateSubtotal() * taxRate;
-    }
-
-    private double calculateGrandTotal() {
-        return calculateSubtotal() + calculateTax();
-    }
+    private double calculateSubtotal() { return basePrice + accessoriesPrice; }
+    private double calculateTax() { return calculateSubtotal() * taxRate; }
+    private double calculateGrandTotal() { return calculateSubtotal() + calculateTax(); }
 
     private void updatePriceLabels() {
         basePriceLabel.setText(currencyFormat.format(basePrice));
@@ -253,13 +234,8 @@ public class staffShopingCartController {
         }
     }
 
-    public double getTotalPrice() {
-        return calculateGrandTotal();
-    }
-
-    public List<String> getCartItems() {
-        return cartItems;
-    }
+    public double getTotalPrice() { return calculateGrandTotal(); }
+    public List<String> getCartItems() { return cartItems; }
 
     public void clearCart() {
         cartItems.clear();

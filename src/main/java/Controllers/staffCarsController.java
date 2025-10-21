@@ -1,9 +1,7 @@
 package Controllers;
 
-import Utils.AppStage;
 import javafx.animation.ScaleTransition;
 import javafx.animation.ParallelTransition;
-import javafx.beans.binding.DoubleBinding;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -125,8 +124,9 @@ public class staffCarsController implements Initializable {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
             Scene newScene = new Scene(root, 1300, 850);
-            AppStage.getStage().setScene(newScene);
-            AppStage.getStage().centerOnScreen();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(newScene);
+            stage.centerOnScreen();
         } catch (IOException | NullPointerException ex) {
             ex.printStackTrace();
         }

@@ -1,6 +1,5 @@
 package Controllers;
 
-import Utils.AppStage;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -15,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -128,18 +128,13 @@ public class staffassetController {
             });
             sliderIndicators.getChildren().add(indicator);
         }
-        StackPane.setMargin(sliderIndicators, new Insets(0, 0, 30, 0));
     }
 
     private void updateSlide() {
         if (sliderItems.isEmpty()) return;
         SliderItem item = sliderItems.get(currentSlide);
-        try {
-            Image image = new Image(getClass().getResourceAsStream(item.imagePath));
-            sliderImage.setImage(image);
-        } catch (Exception e) {
-            sliderImage.setImage(null);
-        }
+        try { sliderImage.setImage(new Image(getClass().getResourceAsStream(item.imagePath))); }
+        catch (Exception e) { sliderImage.setImage(null); }
         sliderTitle.setText(item.title);
         sliderDescription.setText(item.description);
         createSliderIndicators();
@@ -184,9 +179,7 @@ public class staffassetController {
 
         try {
             ImageView imgView = new ImageView(new Image(getClass().getResourceAsStream(product.imagePath)));
-            imgView.setFitWidth(120);
-            imgView.setFitHeight(120);
-            imgView.setPreserveRatio(true);
+            imgView.setFitWidth(120); imgView.setFitHeight(120); imgView.setPreserveRatio(true);
             imageContainer.getChildren().add(imgView);
         } catch (Exception e) {
             Label imagePlaceholder = new Label("📦");
@@ -198,56 +191,33 @@ public class staffassetController {
         detailsBox.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(detailsBox, javafx.scene.layout.Priority.ALWAYS);
 
-        Label nameLabel = new Label(product.name);
-        nameLabel.getStyleClass().add("product-name");
-
-        Label descLabel = new Label(product.description);
-        descLabel.getStyleClass().add("product-description");
-        descLabel.setWrapText(true);
-        descLabel.setMaxWidth(400);
-
-        Label categoryLabel = new Label(product.category.toUpperCase());
-        categoryLabel.getStyleClass().add("product-category");
+        Label nameLabel = new Label(product.name); nameLabel.getStyleClass().add("product-name");
+        Label descLabel = new Label(product.description); descLabel.getStyleClass().add("product-description");
+        descLabel.setWrapText(true); descLabel.setMaxWidth(400);
+        Label categoryLabel = new Label(product.category.toUpperCase()); categoryLabel.getStyleClass().add("product-category");
 
         detailsBox.getChildren().addAll(nameLabel, descLabel, categoryLabel);
 
-        VBox controlsBox = new VBox(10);
-        controlsBox.setAlignment(Pos.CENTER_RIGHT);
-        controlsBox.setMinWidth(200);
+        VBox controlsBox = new VBox(10); controlsBox.setAlignment(Pos.CENTER_RIGHT); controlsBox.setMinWidth(200);
+        Label priceLabel = new Label(currencyFormat.format(product.price)); priceLabel.getStyleClass().add("product-price");
 
-        Label priceLabel = new Label(currencyFormat.format(product.price));
-        priceLabel.getStyleClass().add("product-price");
-
-        HBox quantityBox = new HBox(8);
-        quantityBox.setAlignment(Pos.CENTER_RIGHT);
-
-        Label qtyLabel = new Label("Qty:");
-        qtyLabel.getStyleClass().add("quantity-label");
-
+        HBox quantityBox = new HBox(8); quantityBox.setAlignment(Pos.CENTER_RIGHT);
+        Label qtyLabel = new Label("Qty:"); qtyLabel.getStyleClass().add("quantity-label");
         Spinner<Integer> quantitySpinner = new Spinner<>(1, 99, 1);
-        quantitySpinner.getStyleClass().add("quantity-spinner");
-        quantitySpinner.setPrefWidth(60);
-        quantitySpinner.setEditable(true);
-
+        quantitySpinner.getStyleClass().add("quantity-spinner"); quantitySpinner.setPrefWidth(60); quantitySpinner.setEditable(true);
         quantityBox.getChildren().addAll(qtyLabel, quantitySpinner);
 
-        Button addButton = new Button("ADD TO CART");
-        addButton.getStyleClass().add("add-to-cart-button");
-        addButton.setPrefWidth(150);
+        Button addButton = new Button("ADD TO CART"); addButton.getStyleClass().add("add-to-cart-button"); addButton.setPrefWidth(150);
         addButton.setOnAction(e -> addToCart(product, quantitySpinner.getValue()));
-
         controlsBox.getChildren().addAll(priceLabel, quantityBox, addButton);
+
         contentBox.getChildren().addAll(imageContainer, detailsBox, controlsBox);
         card.getChildren().add(contentBox);
-
         return card;
     }
 
     private void addToCart(Product product, int quantity) {
-        shoppingCart.merge(product.id, new CartItem(product, quantity), (existing, newItem) -> {
-            existing.quantity += newItem.quantity;
-            return existing;
-        });
+        shoppingCart.merge(product.id, new CartItem(product, quantity), (existing, newItem) -> { existing.quantity += newItem.quantity; return existing; });
         updateCartDisplay();
     }
 
@@ -259,119 +229,76 @@ public class staffassetController {
     }
 
     private void setupBackButton() {
-        backButton.setOnAction(e -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffWelcome.fxml"));
-                Scene scene = new Scene(loader.load());
-                AppStage.getStage().setScene(scene);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
+        backButton.setOnAction(e -> navigate(backButton, "/View/staffWelcome.fxml"));
     }
 
     private void openCartModal() {
         if (shoppingCart.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Empty Cart");
-            alert.setHeaderText("Your cart is empty");
-            alert.setContentText("Add some items to your cart first!");
-            alert.showAndWait();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION); alert.setTitle("Empty Cart");
+            alert.setHeaderText("Your cart is empty"); alert.setContentText("Add some items to your cart first!"); alert.showAndWait();
             return;
         }
-        cartModalOverlay.setVisible(true);
-        cartModalOverlay.setManaged(true);
+        cartModalOverlay.setVisible(true); cartModalOverlay.setManaged(true);
     }
 
     @FXML
     private void closeCartModal() {
-        cartModalOverlay.setVisible(false);
-        cartModalOverlay.setManaged(false);
+        cartModalOverlay.setVisible(false); cartModalOverlay.setManaged(false);
     }
 
     private void updateCartDisplay() {
-        int totalItems = 0;
-        double subtotal = 0;
+        int totalItems = 0; double subtotal = 0;
         cartItemsContainer.getChildren().clear();
 
         for (CartItem item : shoppingCart.values()) {
-            totalItems += item.quantity;
-            subtotal += item.getTotal();
+            totalItems += item.quantity; subtotal += item.getTotal();
+            HBox row = new HBox(15); row.setAlignment(Pos.CENTER_LEFT); row.getStyleClass().add("cart-item-row"); row.setPadding(new Insets(10));
 
-            HBox row = new HBox(15);
-            row.setAlignment(Pos.CENTER_LEFT);
-            row.getStyleClass().add("cart-item-row");
-            row.setPadding(new Insets(10));
+            Label name = new Label(item.product.name); name.getStyleClass().add("cart-item-name"); name.setPrefWidth(400);
+            Label qty = new Label("x" + item.quantity); qty.getStyleClass().add("cart-item-quantity"); qty.setPrefWidth(60);
+            Label price = new Label(currencyFormat.format(item.getTotal())); price.getStyleClass().add("cart-item-price");
+            Button remove = new Button("✕"); remove.getStyleClass().add("remove-item-button"); remove.setOnAction(e -> { shoppingCart.remove(item.product.id); updateCartDisplay(); });
 
-            Label name = new Label(item.product.name);
-            name.getStyleClass().add("cart-item-name");
-            name.setPrefWidth(400);
-
-            Label qty = new Label("x" + item.quantity);
-            qty.getStyleClass().add("cart-item-quantity");
-            qty.setPrefWidth(60);
-
-            Label price = new Label(currencyFormat.format(item.getTotal()));
-            price.getStyleClass().add("cart-item-price");
-
-            Button remove = new Button("✕");
-            remove.getStyleClass().add("remove-item-button");
-            remove.setOnAction(e -> {
-                shoppingCart.remove(item.product.id);
-                updateCartDisplay();
-            });
-
-            HBox spacer = new HBox();
-            HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
-
+            HBox spacer = new HBox(); HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
             row.getChildren().addAll(name, qty, spacer, price, remove);
             cartItemsContainer.getChildren().add(row);
         }
 
-        double tax = subtotal * 0.08;
-        double total = subtotal + tax;
-        cartCountLabel.setText(String.valueOf(totalItems));
-        cartItemCountLabel.setText(totalItems + " items");
-        subtotalLabel.setText(currencyFormat.format(subtotal));
-        taxLabelCart.setText(currencyFormat.format(tax));
-        totalLabel.setText(currencyFormat.format(total));
+        double tax = subtotal * 0.08; double total = subtotal + tax;
+        cartCountLabel.setText(String.valueOf(totalItems)); cartItemCountLabel.setText(totalItems + " items");
+        subtotalLabel.setText(currencyFormat.format(subtotal)); taxLabelCart.setText(currencyFormat.format(tax)); totalLabel.setText(currencyFormat.format(total));
     }
 
     private void clearCart() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Clear Cart");
-        alert.setHeaderText("Clear Shopping Cart?");
-        alert.setContentText("Are you sure you want to remove all items?");
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                shoppingCart.clear();
-                updateCartDisplay();
-                closeCartModal();
-            }
-        });
+        alert.setTitle("Clear Cart"); alert.setHeaderText("Clear Shopping Cart?"); alert.setContentText("Are you sure you want to remove all items?");
+        alert.showAndWait().ifPresent(response -> { if (response == ButtonType.OK) { shoppingCart.clear(); updateCartDisplay(); closeCartModal(); } });
     }
 
     private void proceedToCheckout() {
         if (shoppingCart.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Empty Cart");
-            alert.setHeaderText("Your cart is empty");
-            alert.setContentText("Add items before checking out.");
-            alert.showAndWait();
-            return;
+            Alert alert = new Alert(Alert.AlertType.WARNING); alert.setTitle("Empty Cart"); alert.setHeaderText("Your cart is empty"); alert.setContentText("Add items before checking out."); alert.showAndWait(); return;
         }
         closeCartModal();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffShopingCart.fxml"));
-            Scene scene = new Scene(loader.load());
+            Scene scene = new Scene(loader.load(), 1300, 850);
             staffShopingCartController controller = loader.getController();
             controller.setCameFromAsset(true);
-            for (CartItem item : shoppingCart.values()) {
-                controller.addAccessory(item.product.name, item.getTotal());
-            }
-            AppStage.getStage().setScene(scene);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+            for (CartItem item : shoppingCart.values()) controller.addAccessory(item.product.name, item.getTotal());
+            Stage stage = (Stage) checkoutButton.getScene().getWindow();
+            stage.setScene(scene);
+            stage.centerOnScreen();
+        } catch (IOException ex) { ex.printStackTrace(); }
+    }
+
+    private void navigate(Button source, String path) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            Scene scene = new Scene(loader.load(), 1300, 850);
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.setScene(scene);
+            stage.centerOnScreen();
+        } catch (IOException ex) { ex.printStackTrace(); }
     }
 }
