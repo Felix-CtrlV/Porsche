@@ -430,7 +430,8 @@ public class managerOrderManagementController {
             return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
         });
         
-        // Set up installment table row factory for spacing
+        // Set up installment table with fixed row size
+        installmentTable.setFixedCellSize(35);
         installmentTable.setRowFactory(tv -> {
             TableRow<String> row = new TableRow<>();
             
@@ -438,11 +439,10 @@ public class managerOrderManagementController {
                 if (row.isEmpty()) {
                     row.setStyle("");
                 } else {
-                    // Add spacing and border to installment rows
+                    // Add border to installment rows
                     row.setStyle("-fx-background-color: white; " +
                                 "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0; " +
-                                "-fx-padding: 6 0 6 0;");
+                                "-fx-border-width: 0 0 1 0;");
                 }
             });
             
@@ -451,8 +451,7 @@ public class managerOrderManagementController {
                 if (!row.isEmpty()) {
                     row.setStyle("-fx-background-color: #f8f9fa; " +
                                 "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0; " +
-                                "-fx-padding: 6 0 6 0;");
+                                "-fx-border-width: 0 0 1 0;");
                 }
             });
             
@@ -460,8 +459,7 @@ public class managerOrderManagementController {
                 if (!row.isEmpty()) {
                     row.setStyle("-fx-background-color: white; " +
                                 "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0; " +
-                                "-fx-padding: 6 0 6 0;");
+                                "-fx-border-width: 0 0 1 0;");
                 }
             });
             
