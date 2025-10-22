@@ -14,12 +14,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
+import javafx.scene.Scene;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.animation.TranslateTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.ParallelTransition;
+import javafx.geometry.Pos;
+import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
@@ -38,13 +39,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.List;
+import java.util.ArrayList;
 
 public class managerAttendanceManagementController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(managerAttendanceManagementController.class);
 
     @FXML private ComboBox<String> staffCombo;
-    @FXML private DatePicker fromDatePicker;
-    @FXML private DatePicker toDatePicker;
+    @FXML private Button dateRangeBtn;
     @FXML private ComboBox<String> statusCombo;
     @FXML private Button addAbsentBtn;
 
@@ -54,7 +56,6 @@ public class managerAttendanceManagementController implements Initializable {
     @FXML private TableColumn<AttendanceRecord, String> checkInCol;
     @FXML private TableColumn<AttendanceRecord, String> checkOutCol;
     @FXML private TableColumn<AttendanceRecord, String> hoursWorkedCol;
-    @FXML private TableColumn<AttendanceRecord, String> statusCol;
     @FXML private TableColumn<AttendanceRecord, String> remarksCol;
 
     @FXML private Label recordCountLabel;
@@ -63,34 +64,26 @@ public class managerAttendanceManagementController implements Initializable {
     @FXML private Label lateTodayLabel;
     @FXML private Label totalStaffLabel;
 
-    // Add Absent Panel elements
-    @FXML private VBox addAbsentPanel;
-    @FXML private ComboBox<String> staffComboDialog;
-    @FXML private TextField reasonField;
-    @FXML private Button saveAbsentBtn;
-    @FXML private Button cancelAbsentBtn;
-    @FXML private Label closeAbsentPanelBtn;
-
     // Date Range Picker elements
-    @FXML private HBox dateRangeContainer;
-    @FXML private Label dateRangeLabel;
+    @FXML private Pane dateRangeBackdrop;
+    @FXML private VBox dateRangePanel;
     @FXML private VBox dateRangePickerPanel;
     @FXML private VBox calendarGrid;
     @FXML private Label monthYearLabel;
     @FXML private Button prevMonthBtn;
     @FXML private Button nextMonthBtn;
+    @FXML private Label selectedDateLabel;
     @FXML private Button applyDateRangeBtn;
     @FXML private Button cancelDateRangeBtn;
-    @FXML private VBox dateRangeFieldContainer;
-    @FXML private Pane absentDialogBackdrop;
-    @FXML private Label selectedDateLabel;
+    @FXML private Label closeDateRangeBtn;
 
     // Store selected date range and calendar state
     private LocalDate selectedStartDate;
     private LocalDate selectedEndDate;
-    private LocalDate currentMonth;
+    private YearMonth currentMonth;
     private LocalDate tempStartDate;
     private LocalDate tempEndDate;
+
 
     private ObservableList<AttendanceRecord> attendanceData = FXCollections.observableArrayList();
 
@@ -109,16 +102,31 @@ public class managerAttendanceManagementController implements Initializable {
         checkInCol.setCellValueFactory(new PropertyValueFactory<>("checkIn"));
         checkOutCol.setCellValueFactory(new PropertyValueFactory<>("checkOut"));
         hoursWorkedCol.setCellValueFactory(new PropertyValueFactory<>("hoursWorked"));
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         remarksCol.setCellValueFactory(new PropertyValueFactory<>("remarks"));
 
         attendanceTable.setItems(attendanceData);
+        
+        // Apply styling to make headers visible and professional
+        attendanceTable.setStyle(attendanceTable.getStyle() + 
+            "; -fx-table-header-border-color: #dee2e6" +
+            "; -fx-table-header-border-width: 0 0 2 0" +
+            "; -fx-control-inner-background: white" +
+            "; -fx-table-column-border-insets: 0" +
+            "; -fx-table-header-border-insets: 0");
+            
+        // Set header styling for each column
+        staffNameCol.setStyle("-fx-alignment: CENTER-LEFT; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
+        dateCol.setStyle("-fx-alignment: CENTER; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
+        checkInCol.setStyle("-fx-alignment: CENTER; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
+        checkOutCol.setStyle("-fx-alignment: CENTER; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
+        hoursWorkedCol.setStyle("-fx-alignment: CENTER; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
+        remarksCol.setStyle("-fx-alignment: CENTER-LEFT; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
     }
 
     private void setupComboBoxes() {
         // Setup status combo
         statusCombo.setItems(FXCollections.observableArrayList(
-                "All", "Present", "Absent", "Late", "On Leave"
+                "All", "Present", "On Time", "Late", "Early Leave", "Absent"
         ));
         statusCombo.setValue("All");
 
@@ -172,20 +180,25 @@ public class managerAttendanceManagementController implements Initializable {
     }
 
     private void loadInitialData() {
-        // Set default date range (current month)
-        LocalDate now = LocalDate.now();
-        fromDatePicker.setValue(now.withDayOfMonth(1));
-        toDatePicker.setValue(now);
-
+        // Initialize date range to current day
+        LocalDate today = LocalDate.now();
+        selectedStartDate = today; // Current day
+        selectedEndDate = today;   // Current day (single day selection)
+        currentMonth = YearMonth.now();
+        
+        // Initialize temp dates for calendar
+        tempStartDate = selectedStartDate;
+        tempEndDate = selectedEndDate;
+        
+        updateDateRangeButton();
         loadAttendanceData();
+        updateSummaryStats();
     }
 
     private void setupRealTimeListeners() {
         // Add listeners for real-time updates
         staffCombo.setOnAction(e -> loadAttendanceData());
         statusCombo.setOnAction(e -> loadAttendanceData());
-        fromDatePicker.setOnAction(e -> loadAttendanceData());
-        toDatePicker.setOnAction(e -> loadAttendanceData());
     }
 
     @FXML
@@ -194,60 +207,165 @@ public class managerAttendanceManagementController implements Initializable {
     }
 
     @FXML
-    private void closeAbsentPanel() {
-        hideAddAbsentPanel();
+    private void showDateRangePicker() {
+        // Initialize calendar with current selection
+        tempStartDate = selectedStartDate;
+        tempEndDate = selectedEndDate;
+        buildCalendar();
+        updateSelectedDateDisplay();
+        
+        // Show backdrop and dialog
+        dateRangeBackdrop.setVisible(true);
+        dateRangePanel.setVisible(true);
+        
+        // Auto-scroll to make date picker fully visible (with small delay for rendering)
+        javafx.application.Platform.runLater(() -> {
+            javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
+            pause.setOnFinished(e -> scrollToDatePicker());
+            pause.play();
+        });
+    }
+    
+    private void scrollToDatePicker() {
+        // Find ScrollPane within the modal dialog and scroll to center
+        javafx.application.Platform.runLater(() -> {
+            try {
+                // First, look for ScrollPane within the current scene (modal dialog)
+                javafx.scene.Scene scene = dateRangeBtn.getScene();
+                if (scene != null) {
+                    javafx.scene.control.ScrollPane scrollPane = findScrollPane(scene.getRoot());
+                    if (scrollPane != null) {
+                        scrollPane.setVvalue(0.5);
+                        logger.debug("Successfully scrolled modal dialog ScrollPane");
+                        return;
+                    }
+                }
+                
+                // If no ScrollPane in modal, try to find the parent window's ScrollPane
+                javafx.stage.Window currentWindow = dateRangeBtn.getScene().getWindow();
+                if (currentWindow instanceof javafx.stage.Stage) {
+                    javafx.stage.Stage currentStage = (javafx.stage.Stage) currentWindow;
+                    javafx.stage.Stage ownerStage = (javafx.stage.Stage) currentStage.getOwner();
+                    
+                    if (ownerStage != null && ownerStage.getScene() != null) {
+                        javafx.scene.control.ScrollPane parentScrollPane = findScrollPane(ownerStage.getScene().getRoot());
+                        if (parentScrollPane != null) {
+                            parentScrollPane.setVvalue(0.5);
+                            logger.debug("Successfully scrolled parent window ScrollPane");
+                            return;
+                        }
+                    }
+                }
+                
+                logger.debug("No ScrollPane found - modal dialog may not need scrolling");
+                
+            } catch (Exception e) {
+                logger.debug("Could not auto-scroll in modal dialog", e);
+            }
+        });
+    }
+    
+    private void findAndScrollAlternative() {
+        try {
+            // Alternative approach: traverse up the scene graph to find ScrollPane
+            javafx.scene.Node current = dateRangeBtn;
+            while (current != null) {
+                if (current instanceof javafx.scene.control.ScrollPane) {
+                    javafx.scene.control.ScrollPane scrollPane = (javafx.scene.control.ScrollPane) current;
+                    scrollPane.setVvalue(0.5);
+                    logger.debug("Found ScrollPane via traversal");
+                    return;
+                }
+                current = current.getParent();
+            }
+            
+            // Last resort: find all ScrollPanes in the scene
+            javafx.scene.Scene scene = dateRangeBtn.getScene();
+            if (scene != null) {
+                findAllScrollPanes(scene.getRoot()).forEach(sp -> {
+                    sp.setVvalue(0.5);
+                    logger.debug("Applied scroll to found ScrollPane");
+                });
+            }
+        } catch (Exception e) {
+            logger.debug("Alternative scroll approach failed", e);
+        }
+    }
+    
+    private java.util.List<javafx.scene.control.ScrollPane> findAllScrollPanes(javafx.scene.Node node) {
+        java.util.List<javafx.scene.control.ScrollPane> scrollPanes = new java.util.ArrayList<>();
+        
+        if (node instanceof javafx.scene.control.ScrollPane) {
+            scrollPanes.add((javafx.scene.control.ScrollPane) node);
+        }
+        
+        if (node instanceof javafx.scene.Parent) {
+            javafx.scene.Parent parent = (javafx.scene.Parent) node;
+            for (javafx.scene.Node child : parent.getChildrenUnmodifiable()) {
+                scrollPanes.addAll(findAllScrollPanes(child));
+            }
+        }
+        
+        return scrollPanes;
+    }
+    
+    private javafx.scene.control.ScrollPane findScrollPane(javafx.scene.Node node) {
+        if (node instanceof javafx.scene.control.ScrollPane) {
+            return (javafx.scene.control.ScrollPane) node;
+        }
+        
+        if (node instanceof javafx.scene.Parent) {
+            javafx.scene.Parent parent = (javafx.scene.Parent) node;
+            for (javafx.scene.Node child : parent.getChildrenUnmodifiable()) {
+                javafx.scene.control.ScrollPane result = findScrollPane(child);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+        
+        return null;
     }
 
     @FXML
-    private void saveAbsentRecord() {
-        handleSaveAbsentRecord();
+    private void closeDateRangePicker() {
+        dateRangeBackdrop.setVisible(false);
+        dateRangePanel.setVisible(false);
     }
 
+    @FXML
+    private void applyDateRange() {
+        if (tempStartDate != null) {
+            selectedStartDate = tempStartDate;
+            selectedEndDate = tempEndDate != null ? tempEndDate : tempStartDate;
+            updateDateRangeButton();
+            loadAttendanceData();
+        }
+        closeDateRangePicker();
+    }
 
     @FXML
-    public void previousMonth() {
+    private void previousMonth() {
         currentMonth = currentMonth.minusMonths(1);
         buildCalendar();
     }
 
     @FXML
-    public void nextMonth() {
+    private void nextMonth() {
         currentMonth = currentMonth.plusMonths(1);
         buildCalendar();
     }
 
-    // Temporary methods to prevent FXML loading errors (calendar is now always visible)
-    @FXML
-    public void showDateRangePicker() {
-        // Do nothing - calendar is now always visible in the dialog
-    }
-
-    @FXML
-    public void cancelDateRange() {
-        // Do nothing - no separate date picker to cancel
-    }
-
-    @FXML
-    public void applyDateRange() {
-        // Do nothing - dates are selected directly on the always-visible calendar
-    }
-
-    @FXML
-    public void closeCalendarOnBackdrop() {
-        // Do nothing - no separate calendar popup to close
-    }
-
-
-    private void updateDateRangeLabel() {
+    private void updateDateRangeButton() {
         if (selectedStartDate != null && selectedEndDate != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
             if (selectedStartDate.equals(selectedEndDate)) {
-                dateRangeLabel.setText(selectedStartDate.format(formatter));
+                dateRangeBtn.setText(selectedStartDate.format(formatter));
             } else {
-                dateRangeLabel.setText(selectedStartDate.format(formatter) + " - " + selectedEndDate.format(formatter));
+                dateRangeBtn.setText(selectedStartDate.format(formatter) + " - " + selectedEndDate.format(formatter));
             }
         } else {
-            dateRangeLabel.setText("Select date range...");
+            dateRangeBtn.setText("Select date range...");
         }
     }
 
@@ -268,13 +386,13 @@ public class managerAttendanceManagementController implements Initializable {
         for (int week = 0; week < 6; week++) {
             HBox weekRow = new HBox();
             weekRow.setSpacing(0);
-            weekRow.setAlignment(javafx.geometry.Pos.CENTER);
+            weekRow.setAlignment(Pos.CENTER);
 
             for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
                 Label dayLabel = new Label();
                 dayLabel.setPrefWidth(35);
                 dayLabel.setPrefHeight(35);
-                dayLabel.setAlignment(javafx.geometry.Pos.CENTER);
+                dayLabel.setAlignment(Pos.CENTER);
                 dayLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #374151; -fx-cursor: hand;");
 
                 if (week == 0 && dayOfWeek < startDayOfWeek) {
@@ -283,7 +401,7 @@ public class managerAttendanceManagementController implements Initializable {
                     dayLabel.setStyle("-fx-cursor: default;");
                 } else if (day <= daysInMonth) {
                     dayLabel.setText(String.valueOf(day));
-                    LocalDate cellDate = currentMonth.withDayOfMonth(day);
+                    LocalDate cellDate = currentMonth.atDay(day);
 
                     // Style the day based on selection state
                     styleDayCell(dayLabel, cellDate);
@@ -308,32 +426,32 @@ public class managerAttendanceManagementController implements Initializable {
     }
 
     private void styleDayCell(Label dayLabel, LocalDate date) {
-        String baseStyle = "-fx-font-size: 12; -fx-cursor: hand; -fx-background-radius: 18; -fx-alignment: center;";
+        String baseStyle = "-fx-font-size: 12; -fx-cursor: hand; -fx-background-radius: 6; -fx-alignment: center; -fx-padding: 4;";
 
         if (tempStartDate != null && tempEndDate != null) {
             // Range selection
             if (date.equals(tempStartDate) || date.equals(tempEndDate)) {
-                // Start or end date - red circle
-                dayLabel.setStyle(baseStyle + "-fx-background-color: #ef4444; -fx-text-fill: white;");
+                // Start or end date - minimal blue background
+                dayLabel.setStyle(baseStyle + "-fx-background-color: #e0e7ff; -fx-text-fill: #3730a3; -fx-font-weight: bold; -fx-border-color: #667eea; -fx-border-width: 1.5; -fx-border-radius: 6;");
             } else if (date.isAfter(tempStartDate) && date.isBefore(tempEndDate)) {
-                // In between dates - gradient background like your image
-                dayLabel.setStyle(baseStyle + "-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-background-radius: 20;");
+                // In between dates - subtle background
+                dayLabel.setStyle(baseStyle + "-fx-background-color: #f0f4ff; -fx-text-fill: #4f46e5; -fx-background-radius: 6;");
             } else {
                 // Normal day
-                dayLabel.setStyle(baseStyle + "-fx-text-fill: #374151;");
+                dayLabel.setStyle(baseStyle + "-fx-text-fill: #374151; -fx-background-color: transparent;");
             }
         } else if (tempStartDate != null && date.equals(tempStartDate)) {
-            // Single date selected - red circle
-            dayLabel.setStyle(baseStyle + "-fx-background-color: #ef4444; -fx-text-fill: white;");
+            // Single date selected - minimal blue background
+            dayLabel.setStyle(baseStyle + "-fx-background-color: #e0e7ff; -fx-text-fill: #3730a3; -fx-font-weight: bold; -fx-border-color: #667eea; -fx-border-width: 1.5; -fx-border-radius: 6;");
         } else {
             // Normal day
-            dayLabel.setStyle(baseStyle + "-fx-text-fill: #374151;");
+            dayLabel.setStyle(baseStyle + "-fx-text-fill: #374151; -fx-background-color: transparent;");
         }
 
-        // Add hover effect
+        // Add minimal hover effect
         dayLabel.setOnMouseEntered(e -> {
-            if (!dayLabel.getStyle().contains("#ef4444") && !dayLabel.getStyle().contains("linear-gradient")) {
-                dayLabel.setStyle(dayLabel.getStyle() + "-fx-background-color: #f3f4f6;");
+            if (!dayLabel.getStyle().contains("#e0e7ff") && !dayLabel.getStyle().contains("#f0f4ff")) {
+                dayLabel.setStyle(baseStyle + "-fx-background-color: #f8fafc; -fx-text-fill: #374151; -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-border-radius: 6;");
             }
         });
 
@@ -383,6 +501,9 @@ public class managerAttendanceManagementController implements Initializable {
         }
     }
 
+
+
+
     private void loadAttendanceData() {
         attendanceData.clear();
 
@@ -397,8 +518,11 @@ public class managerAttendanceManagementController implements Initializable {
                             "  ELSE '-' " +
                             "END as hours_worked, " +
                             "CASE " +
+                            "  WHEN ua.reason LIKE 'Absent%' THEN 'Absent' " +
                             "  WHEN ua.check_in IS NULL THEN 'Absent' " +
-                            "  WHEN TIME(ua.check_in) > '09:30:00' THEN 'Late' " +
+                            "  WHEN TIME(ua.check_in) > '08:00:00' THEN 'Late' " +
+                            "  WHEN ua.check_out IS NOT NULL AND TIME(ua.check_out) < '17:00:00' THEN 'Early Leave' " +
+                            "  WHEN ua.check_in IS NOT NULL THEN 'On Time' " +
                             "  ELSE 'Present' " +
                             "END as status, " +
                             "ua.reason as reason " +
@@ -425,10 +549,10 @@ public class managerAttendanceManagementController implements Initializable {
             }
 
             // Add date filters
-            if (fromDatePicker.getValue() != null) {
+            if (selectedStartDate != null) {
                 query.append(" AND DATE(ua.check_in) >= ?");
             }
-            if (toDatePicker.getValue() != null) {
+            if (selectedEndDate != null) {
                 query.append(" AND DATE(ua.check_in) <= ?");
             }
 
@@ -444,11 +568,11 @@ public class managerAttendanceManagementController implements Initializable {
             PreparedStatement stmt = conn.prepareStatement(query.toString());
             int paramIndex = 1;
 
-            if (fromDatePicker.getValue() != null) {
-                stmt.setDate(paramIndex++, java.sql.Date.valueOf(fromDatePicker.getValue()));
+            if (selectedStartDate != null) {
+                stmt.setDate(paramIndex++, java.sql.Date.valueOf(selectedStartDate));
             }
-            if (toDatePicker.getValue() != null) {
-                stmt.setDate(paramIndex++, java.sql.Date.valueOf(toDatePicker.getValue()));
+            if (selectedEndDate != null) {
+                stmt.setDate(paramIndex++, java.sql.Date.valueOf(selectedEndDate));
             }
             if (staffCombo.getValue() != null && !staffCombo.getValue().equals("All Staff")) {
                 stmt.setString(paramIndex++, staffCombo.getValue());
@@ -460,9 +584,16 @@ public class managerAttendanceManagementController implements Initializable {
                 String status = rs.getString("status");
 
                 // Apply status filter
-                if (statusCombo.getValue() != null && !statusCombo.getValue().equals("All") &&
-                        !status.equals(statusCombo.getValue())) {
-                    continue;
+                String selectedStatus = statusCombo.getValue();
+                if (selectedStatus != null && !selectedStatus.equals("All")) {
+                    if (selectedStatus.equals("Present")) {
+                        // Present includes On Time, Late, and Early Leave (anyone who showed up)
+                        if (!status.equals("On Time") && !status.equals("Late") && !status.equals("Early Leave")) {
+                            continue;
+                        }
+                    } else if (!status.equals(selectedStatus)) {
+                        continue;
+                    }
                 }
 
                 AttendanceRecord record = new AttendanceRecord(
@@ -472,7 +603,6 @@ public class managerAttendanceManagementController implements Initializable {
                         rs.getTime("check_in_time") != null ? rs.getTime("check_in_time").toString() : "-",
                         rs.getTime("check_out_time") != null ? rs.getTime("check_out_time").toString() : "-",
                         rs.getString("hours_worked"),
-                        status,
                         rs.getString("reason") != null ? rs.getString("reason") : ""
                 );
                 attendanceData.add(record);
@@ -570,193 +700,48 @@ public class managerAttendanceManagementController implements Initializable {
             return;
         }
 
-        // Load staff members and set default values
-        loadStaffForDialog(staffComboDialog);
-        tempStartDate = null;
-        tempEndDate = null;
-        reasonField.clear();
+        try {
+            // Load the new dialog FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/addAbsentDialog.fxml"));
+            VBox dialogRoot = loader.load();
+            
+            // Get the controller and set up callback
+            AddAbsentDialogController dialogController = loader.getController();
+            dialogController.setOnSaveCallback((Void) -> {
+                // Refresh data when record is saved
+                loadAttendanceData();
+                updateSummaryStats();
+            });
 
-        // Initialize calendar
-        currentMonth = LocalDate.now().withDayOfMonth(1);
-        buildCalendar();
-        updateSelectedDateDisplay();
-
-        // Show backdrop and center popup
-        if (absentDialogBackdrop != null) {
-            absentDialogBackdrop.setVisible(true);
-        }
-        addAbsentPanel.setVisible(true);
-
-        // Ensure center positioning
-        addAbsentPanel.setTranslateX(0);
-        addAbsentPanel.setTranslateY(0);
-
-        // Set initial animation state
-        addAbsentPanel.setOpacity(0);
-        addAbsentPanel.setScaleX(0.8);
-        addAbsentPanel.setScaleY(0.8);
-
-        // Animate popup appearance
-        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(Duration.millis(200), addAbsentPanel);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-
-        javafx.animation.ScaleTransition scaleIn = new javafx.animation.ScaleTransition(Duration.millis(200), addAbsentPanel);
-        scaleIn.setFromX(0.8);
-        scaleIn.setFromY(0.8);
-        scaleIn.setToX(1.0);
-        scaleIn.setToY(1.0);
-
-        javafx.animation.ParallelTransition showPopup = new javafx.animation.ParallelTransition(fadeIn, scaleIn);
-        showPopup.setInterpolator(Interpolator.EASE_OUT);
-        showPopup.play();
-    }
-
-    private void hideAddAbsentPanel() {
-        // Animate popup disappearance
-        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(Duration.millis(150), addAbsentPanel);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-
-        javafx.animation.ScaleTransition scaleOut = new javafx.animation.ScaleTransition(Duration.millis(150), addAbsentPanel);
-        scaleOut.setFromX(1.0);
-        scaleOut.setFromY(1.0);
-        scaleOut.setToX(0.8);
-        scaleOut.setToY(0.8);
-
-        javafx.animation.ParallelTransition hidePopup = new javafx.animation.ParallelTransition(fadeOut, scaleOut);
-        hidePopup.setInterpolator(Interpolator.EASE_IN);
-        hidePopup.setOnFinished(e -> {
-            addAbsentPanel.setVisible(false);
-            if (absentDialogBackdrop != null) {
-                absentDialogBackdrop.setVisible(false);
-            }
-            // Clear form
-            staffComboDialog.setValue(null);
-            tempStartDate = null;
-            tempEndDate = null;
-            reasonField.clear();
-            // Reset popup transform
-            addAbsentPanel.setOpacity(1);
-            addAbsentPanel.setScaleX(1);
-            addAbsentPanel.setScaleY(1);
-        });
-        hidePopup.play();
-    }
-
-    private void handleSaveAbsentRecord() {
-        String selectedStaff = staffComboDialog.getValue();
-        String reason = reasonField.getText().trim();
-
-        if (selectedStaff == null || tempStartDate == null || reason.isEmpty()) {
-            showAlert("Invalid Input", "Please fill all fields and select a date range.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        LocalDate endDate = tempEndDate != null ? tempEndDate : tempStartDate;
-
-        if (tempStartDate.isAfter(endDate)) {
-            showAlert("Invalid Date Range", "Start date cannot be after end date.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        addAbsentRecord(selectedStaff, tempStartDate, endDate, reason);
-        hideAddAbsentPanel();
-    }
-
-    private void loadStaffForDialog(ComboBox<String> staffComboDialog) {
-        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection()) {
-            Session session = Session.getInstance();
-            int currentUserId = session.getUserid();
-            String userRole = session.getRole();
-
-            String query;
-            PreparedStatement stmt;
-
-            if ("admin".equals(userRole)) {
-                query = "SELECT DISTINCT user_name FROM user_info WHERE user_role = 'staff' AND user_status = TRUE ORDER BY user_name";
-                stmt = conn.prepareStatement(query);
-            } else {
-                query = "SELECT DISTINCT u.user_name FROM user_info u " +
-                        "JOIN user_workinfo uw ON u.user_id = uw.user_id " +
-                        "WHERE u.user_status = TRUE AND uw.manager = ? AND u.user_role = 'staff' " +
-                        "ORDER BY u.user_name";
-                stmt = conn.prepareStatement(query);
-                stmt.setInt(1, currentUserId);
-            }
-
-            ResultSet rs = stmt.executeQuery();
-            ObservableList<String> staffList = FXCollections.observableArrayList();
-
-            while (rs.next()) {
-                staffList.add(rs.getString("user_name"));
-            }
-
-            staffComboDialog.setItems(staffList);
-
-        } catch (SQLException e) {
-            logger.error("Error loading staff for dialog", e);
+            // Create new stage for the dialog
+            Stage dialogStage = new Stage();
+            dialogStage.initStyle(StageStyle.UNDECORATED);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            
+            // Get the current stage to set as owner
+            Stage currentStage = (Stage) addAbsentBtn.getScene().getWindow();
+            dialogStage.initOwner(currentStage);
+            
+            // Create scene and set it to the stage
+            Scene scene = new Scene(dialogRoot);
+            dialogStage.setScene(scene);
+            
+            // Make the dialog non-resizable and center it
+            dialogStage.setResizable(false);
+            dialogStage.centerOnScreen();
+            
+            // Show the dialog
+            dialogStage.showAndWait();
+            
+        } catch (Exception e) {
+            logger.error("Error opening add absent dialog", e);
+            showAlert("Error", "Failed to open add absent dialog: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
-    private void addAbsentRecord(String staffName, LocalDate fromDate, LocalDate toDate, String reason) {
-        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection()) {
-            // Get staff user_id
-            String getUserIdQuery = "SELECT user_id FROM user_info WHERE user_name = ?";
-            PreparedStatement getUserIdStmt = conn.prepareStatement(getUserIdQuery);
-            getUserIdStmt.setString(1, staffName);
-            ResultSet rs = getUserIdStmt.executeQuery();
 
-            if (!rs.next()) {
-                showAlert("Error", "Staff member not found.", Alert.AlertType.ERROR);
-                return;
-            }
 
-            int staffUserId = rs.getInt("user_id");
 
-            // Insert absent records for each day in the range
-            String insertQuery = "INSERT INTO user_attendance (user_id, check_in, check_out, reason) VALUES (?, ?, ?, ?)";
-            PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
-
-            LocalDate currentDate = fromDate;
-            int recordsAdded = 0;
-
-            while (!currentDate.isAfter(toDate)) {
-                // Check if record already exists for this date
-                String checkQuery = "SELECT COUNT(*) FROM user_attendance WHERE user_id = ? AND DATE(check_in) = ?";
-                PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
-                checkStmt.setInt(1, staffUserId);
-                checkStmt.setDate(2, java.sql.Date.valueOf(currentDate));
-                ResultSet checkRs = checkStmt.executeQuery();
-
-                if (checkRs.next() && checkRs.getInt(1) == 0) {
-                    // No record exists, add absent record
-                    java.sql.Timestamp absentTimestamp = java.sql.Timestamp.valueOf(currentDate.atStartOfDay());
-
-                    insertStmt.setInt(1, staffUserId);
-                    insertStmt.setTimestamp(2, absentTimestamp);
-                    insertStmt.setTimestamp(3, absentTimestamp);
-                    insertStmt.setString(4, "Absent - " + reason);
-                    insertStmt.executeUpdate();
-                    recordsAdded++;
-                }
-
-                currentDate = currentDate.plusDays(1);
-            }
-
-            if (recordsAdded > 0) {
-                showAlert("Success", recordsAdded + " absent record(s) added successfully.", Alert.AlertType.INFORMATION);
-                loadAttendanceData(); // Refresh the table
-                updateSummaryStats(); // Update summary
-            } else {
-                showAlert("No Records Added", "Records already exist for the selected date range.", Alert.AlertType.WARNING);
-            }
-
-        } catch (SQLException e) {
-            logger.error("Error adding absent record", e);
-            showAlert("Database Error", "Failed to add absent record: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
 
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
@@ -769,7 +754,7 @@ public class managerAttendanceManagementController implements Initializable {
     private void exportToCSV(File file) {
         try (FileWriter writer = new FileWriter(file)) {
             // Write header
-            writer.append("Staff Name,Date,Check In,Check Out,Hours Worked,Status,Remarks\n");
+            writer.append("Staff Name,Date,Check In,Check Out,Hours Worked,Remarks\n");
 
             // Write data
             for (AttendanceRecord record : attendanceData) {
@@ -778,7 +763,6 @@ public class managerAttendanceManagementController implements Initializable {
                 writer.append(record.getCheckIn()).append(",");
                 writer.append(record.getCheckOut()).append(",");
                 writer.append(record.getHoursWorked()).append(",");
-                writer.append(record.getStatus()).append(",");
                 writer.append(record.getRemarks()).append("\n");
             }
 
@@ -796,17 +780,15 @@ public class managerAttendanceManagementController implements Initializable {
         private final SimpleStringProperty checkIn;
         private final SimpleStringProperty checkOut;
         private final SimpleStringProperty hoursWorked;
-        private final SimpleStringProperty status;
         private final SimpleStringProperty remarks;
 
         public AttendanceRecord(String staffName, String date, String checkIn, String checkOut,
-                                String hoursWorked, String status, String remarks) {
+                                String hoursWorked, String remarks) {
             this.staffName = new SimpleStringProperty(staffName);
             this.date = new SimpleStringProperty(date);
             this.checkIn = new SimpleStringProperty(checkIn);
             this.checkOut = new SimpleStringProperty(checkOut);
             this.hoursWorked = new SimpleStringProperty(hoursWorked);
-            this.status = new SimpleStringProperty(status);
             this.remarks = new SimpleStringProperty(remarks);
         }
 
@@ -815,7 +797,6 @@ public class managerAttendanceManagementController implements Initializable {
         public String getCheckIn() { return checkIn.get(); }
         public String getCheckOut() { return checkOut.get(); }
         public String getHoursWorked() { return hoursWorked.get(); }
-        public String getStatus() { return status.get(); }
         public String getRemarks() { return remarks.get(); }
     }
 }
