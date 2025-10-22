@@ -18,7 +18,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1250.0" styleClass="dashboard-root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOverviewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1250.0" styleClass="dashboard-root" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOverviewController">
 
     <center>
         <VBox minHeight="750.0" minWidth="1250.0" spacing="20.0" style="-fx-border-radius: 2;" BorderPane.alignment="CENTER">
@@ -258,7 +258,7 @@
                 <HBox prefHeight="270.0" prefWidth="1250.0" spacing="20.0">
                     <children>
                         <!-- Progress Chart - Revenue Distribution -->
-                        <VBox prefHeight="250.0" prefWidth="480.0" styleClass="panel" HBox.hgrow="ALWAYS">
+                        <VBox minWidth="360.0" prefHeight="250.0" prefWidth="480.0" styleClass="panel" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="200.0" spacing="10.0">
                                     <children>
