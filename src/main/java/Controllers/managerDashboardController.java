@@ -89,7 +89,7 @@ public class managerDashboardController {
 
     @FXML
     private VBox settingPane, passwordVerifyPane, profilePane, attendancePane;
-    
+
     @FXML
     private StackPane attendanceContentPane;
 
@@ -105,58 +105,60 @@ public class managerDashboardController {
     // Toast Notification Components
     @FXML
     private HBox toastNotification;
-    
+
     @FXML
     private Label toastIcon, toastTitle, toastMessage;
-    
+
     // Confirmation Dialog Components
     @FXML
     private VBox confirmDialog, confirmContent;
-    
+
     @FXML
     private Pane confirmOverlay;
-    
+
     @FXML
     private Label confirmIcon, confirmTitle, confirmMessage;
-    
+
     @FXML
     private Button confirmOkBtn, confirmCancelBtn;
-    
+
     private Runnable confirmCallback;
-    
+
     // Change Password Dialog Components
     @FXML
     private VBox changePasswordDialog, passwordVerificationPane, otpVerificationPane, newPasswordPane;
-    
+
     @FXML
     private PasswordField currentPasswordField, newPasswordField, confirmPasswordField, verifyPasswordField;
-    
+
     @FXML
     private TextField otpField;
-    
+
     @FXML
     private Button verifyCurrentPasswordBtn, verifyOtpBtn, resendOtpBtn, changePasswordBtn;
     @FXML
     private Button verifyPasswordBtn, cancelVerifyBtn, saveProfileBtn, editProfilePhotoBtn;
-    
+
+    // Profile management variables
+    private File selectedProfilePhoto;
+    private String cachedPhotoPath;
+
     @FXML
     private Label passwordVerifyStatus, otpVerifyStatus, changePasswordStatus, otpEmailLabel;
     @FXML
     private Label passwordErrorLabel, backToSettingsBtn, backToSettingsFromProfile, backToSettingsFromAttendance, editProfileBtn;
-    
+
     @FXML
     private StackPane passwordMessagePane, passwordLoadingPane;
-    
+
     @FXML
     private Label passwordMessageLabel, closePasswordDialogBtn;
-    
+
     private final OTPService otpService = OTPService.getInstance();
     private SequentialTransition currentPasswordAnimation;
 
     private Button activeButton;
     private int adminid;
-    private File selectedProfilePhoto;
-    private String cachedPhotoPath;
     Session current = Session.getInstance();
     private SequentialTransition animation;
 
@@ -186,10 +188,6 @@ public class managerDashboardController {
 
     private void clickSetting(){
         openSetting();
-        overlayPane.setOnMouseClicked(e->{
-            closeSetting();
-        });
-
     }
 
 
@@ -201,7 +199,7 @@ public class managerDashboardController {
         profileEmail.setText(current.getEmail());
         profileDOB.setText(current.getDob().toString());
         profilePhone.setText(current.getPhone());
-        
+
         // Add clipping to change password dialog to hide notification overflow
         javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle();
         clip.widthProperty().bind(changePasswordDialog.widthProperty());
@@ -214,45 +212,50 @@ public class managerDashboardController {
         optionProfile.setOnMouseClicked(e -> {
             showPasswordVerification();
         });
-        
+
         // Change password click in settings
         optionChange.setOnMouseClicked(e -> {
             showChangePasswordDialog();
         });
-        
+
         // Attendance click in settings
         optionAttendance.setOnMouseClicked(e -> {
-            showAttendancePane();
+            showAttendanceDialog();
         });
-        
-        // Back to settings from profile
+
+        // Back to settings from password verification
         if (backToSettingsBtn != null) {
             backToSettingsBtn.setOnMouseClicked(e -> {
-                hidePasswordVerification();
+                // Check which pane is currently visible and handle accordingly
+                if (profilePane.isVisible()) {
+                    hideProfilePane();
+                } else if (passwordVerifyPane.isVisible()) {
+                    hidePasswordVerification();
+                }
             });
         }
-        
-        // Back to settings from profile
+
+        // Back to settings from profile (if separate button exists)
         if (backToSettingsFromProfile != null) {
             backToSettingsFromProfile.setOnMouseClicked(e -> {
                 hideProfilePane();
             });
         }
-        
-        // Back to settings from attendance
+
+        // Back to settings from attendance (now just closes the dialog)
         if (backToSettingsFromAttendance != null) {
             backToSettingsFromAttendance.setOnMouseClicked(e -> {
-                hideAttendancePane();
+                closeAttendanceDialog();
             });
         }
-        
+
         // Edit profile button
         if (editProfileBtn != null) {
             editProfileBtn.setOnMouseClicked(e -> {
                 toggleEditMode();
             });
         }
-        
+
         // Add Enter key listener to password verification field
         if (verifyPasswordField != null) {
             verifyPasswordField.setOnKeyPressed(event -> {
@@ -278,7 +281,17 @@ public class managerDashboardController {
         img.setImage(porsche_logo);
         loadView("/View/managerOverview.fxml");
         setActiveButton(overviewbtn);
-        
+
+        // Initialize profile image with circular clipping
+        applyCircularClip(pfImage, 120);
+        applyCircularClip(profileImage, 48);
+
+        if (editProfilePhotoBtn != null) {
+            editProfilePhotoBtn.setVisible(false);
+        }
+
+        loadCurrentProfilePhoto();
+
         admin_anc.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().addListener((obsWin, oldWin, newWin) -> {
@@ -360,7 +373,7 @@ public class managerDashboardController {
         passwordVerifyPane.setVisible(false);
         profilePane.setVisible(false);
         attendancePane.setVisible(false);
-        
+
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), settingPane);
         slideIn.setFromX(420);
         slideIn.setToX(0);
@@ -396,12 +409,28 @@ public class managerDashboardController {
         dimOut.setToValue(0);
 
         ParallelTransition hide = new ParallelTransition(slideOut, fadeOut, dimOut);
+        hide.setOnFinished(e -> {
+            // Reset all pane states
+            settingPane.setVisible(false);
+            passwordVerifyPane.setVisible(false);
+            profilePane.setVisible(false);
+            attendancePane.setVisible(false);
+            overlayPane.setVisible(false);
+
+            // Clear any form data
+            if (verifyPasswordField != null) {
+                verifyPasswordField.clear();
+            }
+            if (passwordErrorLabel != null) {
+                passwordErrorLabel.setVisible(false);
+            }
+
+            root.setEffect(null);
+            root.setDisable(false);
+        });
 
         animation = new SequentialTransition(hide);
         animation.play();
-        root.setEffect(null);
-        root.setDisable(false);
-        overlayPane.setVisible(false);
     }
 
 
@@ -417,10 +446,6 @@ public class managerDashboardController {
         imageView.setClip(clip);
     }
 
-    private void loadCurrentProfilePhoto() {
-        // Load profile photo logic here
-    }
-
     private void showPasswordVerification() {
         // Slide out settings pane first
         TranslateTransition slideOutSettings = new TranslateTransition(Duration.millis(300), settingPane);
@@ -428,13 +453,13 @@ public class managerDashboardController {
         slideOutSettings.setToX(420);
         slideOutSettings.setOnFinished(e -> {
             settingPane.setVisible(false);
-            
+
             // Then slide in verification pane
             passwordVerifyPane.setVisible(true);
             passwordVerifyPane.setTranslateX(420);
             verifyPasswordField.clear();
             passwordErrorLabel.setVisible(false);
-            
+
             TranslateTransition slideInVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
             slideInVerify.setFromX(420);
             slideInVerify.setToX(0);
@@ -449,79 +474,119 @@ public class managerDashboardController {
         passwordVerificationPane.setVisible(true);
         otpVerificationPane.setVisible(false);
         newPasswordPane.setVisible(false);
-        
+
         // Clear fields
         currentPasswordField.clear();
         otpField.clear();
         newPasswordField.clear();
         confirmPasswordField.clear();
-        
+
         // Clear status labels
         passwordVerifyStatus.setText("");
         otpVerifyStatus.setText("");
         changePasswordStatus.setText("");
-        
+
         // Show overlay
         confirmOverlay.setVisible(true);
         confirmOverlay.setOpacity(0);
-        
+
         FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
         overlayFade.setFromValue(0);
         overlayFade.setToValue(1);
         overlayFade.play();
-        
+
         // Show dialog
         changePasswordDialog.setVisible(true);
         changePasswordDialog.setTranslateY(-700);
-        
+
         // Slide in animation from top
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), changePasswordDialog);
         slideIn.setFromY(-700);
         slideIn.setToY(0);
         slideIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-        
+
         FadeTransition fadeIn = new FadeTransition(Duration.millis(400), changePasswordDialog);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
-        
+
         ParallelTransition showDialog = new ParallelTransition(slideIn, fadeIn);
         showDialog.play();
-        
+
         // Set up enter key handlers
         currentPasswordField.setOnAction(e -> onVerifyCurrentPassword());
         otpField.setOnAction(e -> onVerifyOTP());
         confirmPasswordField.setOnAction(e -> onSubmitPasswordChange());
     }
 
-    private void showAttendancePane() {
-        // Slide out settings pane first
-        TranslateTransition slideOutSettings = new TranslateTransition(Duration.millis(300), settingPane);
-        slideOutSettings.setFromX(0);
-        slideOutSettings.setToX(420);
-        slideOutSettings.setOnFinished(e -> {
+    private void showAttendanceDialog() {
+        // Hide settings pane directly without full close animation
+        if (settingPane != null) {
             settingPane.setVisible(false);
-            
-            // Load attendance management content
-            try {
-                Parent attendanceContent = FXMLLoader.load(getClass().getResource("/View/managerAttendanceManagement.fxml"));
-                attendanceContentPane.getChildren().clear();
-                attendanceContentPane.getChildren().add(attendanceContent);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                showToast("Error", "Failed to load attendance management", "error");
-                return;
-            }
-            
-            // Then slide in attendance pane
-            attendancePane.setVisible(true);
-            attendancePane.setTranslateX(420);
-            
-            TranslateTransition slideInAttendance = new TranslateTransition(Duration.millis(300), attendancePane);
-            slideInAttendance.setFromX(420);
-            slideInAttendance.setToX(0);
-            slideInAttendance.play();
+        }
+
+        // Load attendance management content
+        try {
+            Parent attendanceContent = FXMLLoader.load(getClass().getResource("/View/managerAttendanceManagement.fxml"));
+            attendanceContentPane.getChildren().clear();
+            attendanceContentPane.getChildren().add(attendanceContent);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showToast("Error", "Failed to load attendance management", "error");
+            return;
+        }
+
+        // Show overlay and blur background
+        overlayPane.setVisible(true);
+        overlayPane.setOpacity(0);
+        root.setEffect(new GaussianBlur(10));
+        root.setDisable(true);
+
+        // Show attendance dialog
+        attendancePane.setVisible(true);
+        attendancePane.setTranslateY(-700);
+
+        // Animate overlay fade in
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), overlayPane);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(0.5);
+
+        // Animate dialog slide down
+        TranslateTransition slideDown = new TranslateTransition(Duration.millis(400), attendancePane);
+        slideDown.setFromY(-700);
+        slideDown.setToY(0);
+        slideDown.setInterpolator(Interpolator.EASE_OUT);
+
+        ParallelTransition showDialog = new ParallelTransition(fadeIn, slideDown);
+        showDialog.play();
+
+        // Disable overlay click for a short time to prevent immediate closing
+        overlayPane.setDisable(true);
+        PauseTransition enableOverlay = new PauseTransition(Duration.millis(500));
+        enableOverlay.setOnFinished(e -> overlayPane.setDisable(false));
+        enableOverlay.play();
+    }
+
+    @FXML
+    private void closeAttendanceDialog() {
+        // Animate dialog slide up
+        TranslateTransition slideUp = new TranslateTransition(Duration.millis(400), attendancePane);
+        slideUp.setFromY(0);
+        slideUp.setToY(-700);
+        slideUp.setInterpolator(Interpolator.EASE_IN);
+
+        // Animate overlay fade out
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
+        fadeOut.setFromValue(0.5);
+        fadeOut.setToValue(0);
+
+        ParallelTransition hideDialog = new ParallelTransition(slideUp, fadeOut);
+        hideDialog.setOnFinished(e -> {
+            attendancePane.setVisible(false);
+            overlayPane.setVisible(false);
+            root.setEffect(null);
+            root.setDisable(false);
         });
-        slideOutSettings.play();
+        hideDialog.play();
     }
 
     private void hidePasswordVerification() {
@@ -533,11 +598,11 @@ public class managerDashboardController {
             passwordVerifyPane.setVisible(false);
             verifyPasswordField.clear();
             passwordErrorLabel.setVisible(false);
-            
+
             // Prepare settings pane off-screen before making it visible
             settingPane.setTranslateX(420);
             settingPane.setVisible(true);
-            
+
             // Then slide in settings pane
             TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
             slideInSettings.setFromX(420);
@@ -550,20 +615,37 @@ public class managerDashboardController {
     private void hideProfilePane() {
         closeProfilePane(true);
     }
-    
+
     private void closeProfilePane(boolean returnToSettings) {
+        if (!profilePane.isVisible()) {
+            return;
+        }
+
         // Slide out profile pane first
         TranslateTransition slideOutProfile = new TranslateTransition(Duration.millis(300), profilePane);
         slideOutProfile.setFromX(0);
         slideOutProfile.setToX(420);
         slideOutProfile.setOnFinished(e -> {
             profilePane.setVisible(false);
-            
+            profilePane.setTranslateX(0); // Reset position to prevent overlap
+
             if (returnToSettings) {
+                // Reset any edit mode states
+                if (profileEmail != null) {
+                    profileEmail.setEditable(false);
+                    profilePhone.setEditable(false);
+                    profileAddress.setEditable(false);
+                    saveProfileBtn.setVisible(false);
+                    if (editProfilePhotoBtn != null) {
+                        editProfilePhotoBtn.setVisible(false);
+                    }
+                    editProfileBtn.setText("✏");
+                }
+
                 // Prepare settings pane off-screen before making it visible
                 settingPane.setTranslateX(420);
                 settingPane.setVisible(true);
-                
+
                 // Then slide in settings pane
                 TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
                 slideInSettings.setFromX(420);
@@ -576,118 +658,133 @@ public class managerDashboardController {
         });
         slideOutProfile.play();
     }
-    
+
     private void showProfilePane() {
-        // Settings pane is already hidden from verification step, no need to touch it
-        
-        if (settingPane != null) {
-            settingPane.setVisible(false);
-        }
+        // First slide out the password verification pane
+        TranslateTransition slideOutVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
+        slideOutVerify.setFromX(0);
+        slideOutVerify.setToX(420);
+        slideOutVerify.setOnFinished(e -> {
+            passwordVerifyPane.setVisible(false);
+            verifyPasswordField.clear();
+            passwordErrorLabel.setVisible(false);
 
-        // Refresh profile data from session first
-        if (current != null) {
-            profileName.setText(current.getUsername() != null ? current.getUsername() : "");
-            profileEmail.setText(current.getEmail() != null ? current.getEmail() : "");
-            profilePhone.setText(current.getPhone() != null ? current.getPhone() : "");
-            profileAddress.setText(current.getAddress() != null ? current.getAddress() : "");
-            
-            // Format DOB nicely
-            if (current.getDob() != null) {
-                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MMMM dd, yyyy");
-                profileDOB.setText(current.getDob().format(formatter));
-            } else {
-                profileDOB.setText("");
+            // Ensure settings pane is completely hidden
+            if (settingPane != null) {
+                settingPane.setVisible(false);
             }
-        }
-        
-        // Hide verification pane and show profile pane
-        passwordVerifyPane.setVisible(false);
-        profilePane.setVisible(true);
-        profilePane.setTranslateX(420);
-        
-        TranslateTransition slideInProfile = new TranslateTransition(Duration.millis(300), profilePane);
-        slideInProfile.setFromX(420);
-        slideInProfile.setToX(0);
-        slideInProfile.play();
-        
-        // Load current profile photo
-        loadCurrentProfilePhoto();
-    }
 
-    private void hideAttendancePane() {
-        // Slide out attendance pane first
-        TranslateTransition slideOutAttendance = new TranslateTransition(Duration.millis(300), attendancePane);
-        slideOutAttendance.setFromX(0);
-        slideOutAttendance.setToX(420);
-        slideOutAttendance.setOnFinished(e -> {
-            attendancePane.setVisible(false);
-            
-            // Prepare settings pane off-screen before making it visible
-            settingPane.setTranslateX(420);
-            settingPane.setVisible(true);
-            
-            // Then slide in settings pane
-            TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
-            slideInSettings.setFromX(420);
-            slideInSettings.setToX(0);
-            slideInSettings.play();
-        });
-        slideOutAttendance.play();
-    }
+            // Refresh profile data from session first
+            if (current != null) {
+                profileName.setText(current.getUsername() != null ? current.getUsername() : "");
+                profileEmail.setText(current.getEmail() != null ? current.getEmail() : "");
+                profilePhone.setText(current.getPhone() != null ? current.getPhone() : "");
+                profileAddress.setText(current.getAddress() != null ? current.getAddress() : "");
 
-    private void toggleEditMode() {
-        boolean isEditMode = profileEmail.isEditable();
-        
-        if (!isEditMode) {
-            // Enter edit mode
-            profileEmail.setEditable(true);
-            profilePhone.setEditable(true);
-            profileAddress.setEditable(true);
-            
-            // Show save button and edit photo button
-            saveProfileBtn.setVisible(true);
-            editProfilePhotoBtn.setVisible(true);
-            
-            // Change edit button icon to indicate edit mode
-            editProfileBtn.setText("✓");
-            
-            // Apply edit mode styling
-            profileEmail.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-border-color: #667eea; -fx-border-width: 2; -fx-border-radius: 8;");
-            profilePhone.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-border-color: #667eea; -fx-border-width: 2; -fx-border-radius: 8;");
-            profileAddress.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-border-color: #667eea; -fx-border-width: 2; -fx-border-radius: 8;");
-        } else {
-            // Exit edit mode
+                // Format DOB nicely
+                if (current.getDob() != null) {
+                    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+                    profileDOB.setText(current.getDob().format(formatter));
+                } else {
+                    profileDOB.setText("");
+                }
+            }
+
+            // Ensure fields are not editable and deselect any text
             profileEmail.setEditable(false);
             profilePhone.setEditable(false);
             profileAddress.setEditable(false);
-            
-            // Hide save button and edit photo button
+            profileEmail.setFocusTraversable(false);
+            profilePhone.setFocusTraversable(false);
+            profileAddress.setFocusTraversable(false);
+
+            // Apply non-editable styling
+            profileEmail.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
+            profilePhone.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
+            profileAddress.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
+
+            // Hide buttons initially
             saveProfileBtn.setVisible(false);
-            editProfilePhotoBtn.setVisible(false);
-            
-            // Change edit button icon back
+            if (editProfilePhotoBtn != null) {
+                editProfilePhotoBtn.setVisible(false);
+            }
             editProfileBtn.setText("✏");
-            
-            // Restore normal styling
-            profileEmail.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent;");
-            profilePhone.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent;");
-            profileAddress.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent;");
+
+            // Show profile pane
+            profilePane.setVisible(true);
+            profilePane.setTranslateX(420);
+
+            TranslateTransition slideInProfile = new TranslateTransition(Duration.millis(300), profilePane);
+            slideInProfile.setFromX(420);
+            slideInProfile.setToX(0);
+            slideInProfile.play();
+
+            // Load current profile photo
+            loadCurrentProfilePhoto();
+        });
+        slideOutVerify.play();
+    }
+
+
+    private void toggleEditMode() {
+        boolean isEditable = profileEmail.isEditable();
+
+        if (!isEditable) {
+            // Enable editing
+            profileEmail.setEditable(true);
+            profilePhone.setEditable(true);
+            profileAddress.setEditable(true);
+            profileEmail.setFocusTraversable(true);
+            profilePhone.setFocusTraversable(true);
+            profileAddress.setFocusTraversable(true);
+            profileEmail.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: #3b82f6; -fx-border-width: 2; -fx-border-radius: 8;");
+            profilePhone.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: #3b82f6; -fx-border-width: 2; -fx-border-radius: 8;");
+            profileAddress.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: #3b82f6; -fx-border-width: 2; -fx-border-radius: 8;");
+            saveProfileBtn.setVisible(true);
+            if (editProfilePhotoBtn != null) {
+                editProfilePhotoBtn.setVisible(true);
+            }
+            editProfileBtn.setText("✖");
+        } else {
+            // Disable editing
+            profileEmail.setEditable(false);
+            profilePhone.setEditable(false);
+            profileAddress.setEditable(false);
+            profileEmail.setFocusTraversable(false);
+            profilePhone.setFocusTraversable(false);
+            profileAddress.setFocusTraversable(false);
+            profileEmail.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
+            profilePhone.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
+            profileAddress.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
+            saveProfileBtn.setVisible(false);
+            editProfileBtn.setText("✏");
+
+            // Deselect any text and revert changes
+            profileEmail.deselect();
+            profilePhone.deselect();
+            profileAddress.deselect();
+            profileAddress.setText(current.getAddress());
+            profileEmail.setText(current.getEmail());
+            profilePhone.setText(current.getPhone());
+
+            selectedProfilePhoto = null;
+            applyPhotoToImages(cachedPhotoPath);
         }
     }
 
     @FXML
     private void onVerifyPassword() {
         String enteredPassword = verifyPasswordField.getText();
-        
+
         if (enteredPassword.isEmpty()) {
             passwordErrorLabel.setText("Please enter your password");
             passwordErrorLabel.setVisible(true);
             return;
         }
-        
+
         // Verify password against session
         String sessionPassword = current.getPassword();
-        
+
         if (sessionPassword != null && sessionPassword.equals(enteredPassword)) {
             // Password correct - transition directly to profile pane
             showProfilePane();
@@ -698,51 +795,59 @@ public class managerDashboardController {
     }
 
     private void closeAllPanesAndResetToSettings() {
-        // Determine which pane is currently visible and close it
+        // Determine which pane is currently visible and close it completely
         if (profilePane.isVisible()) {
             closeProfilePane(false);
         } else if (attendancePane.isVisible()) {
-            // Close attendance pane directly
-            TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), attendancePane);
-            slideOut.setFromX(0);
-            slideOut.setToX(420);
-            
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
-            fadeOut.setFromValue(0.5);
-            fadeOut.setToValue(0);
-            
-            ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
-            hide.setOnFinished(e -> {
-                attendancePane.setVisible(false);
-                overlayPane.setVisible(false);
-                root.setEffect(null);
-                root.setDisable(false);
-            });
-            hide.play();
+            closeAttendanceDialog();
         } else if (passwordVerifyPane.isVisible()) {
-            // Close password verification pane
-            TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
-            slideOut.setFromX(0);
-            slideOut.setToX(420);
-            
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
-            fadeOut.setFromValue(0.5);
-            fadeOut.setToValue(0);
-            
-            ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
-            hide.setOnFinished(e -> {
-                passwordVerifyPane.setVisible(false);
-                overlayPane.setVisible(false);
-                root.setEffect(null);
-                root.setDisable(false);
-                verifyPasswordField.clear();
-                passwordErrorLabel.setVisible(false);
-            });
-            hide.play();
-        } else {
-            // Close settings pane
+            closePasswordVerificationCompletely();
+        } else if (settingPane.isVisible()) {
+            // Close settings pane completely
             closeSetting();
         }
+    }
+
+    private void closePasswordVerificationCompletely() {
+        // Close password verification pane completely (not back to settings)
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
+        slideOut.setFromX(0);
+        slideOut.setToX(420);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
+        fadeOut.setFromValue(0.5);
+        fadeOut.setToValue(0);
+
+        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+        hide.setOnFinished(e -> {
+            passwordVerifyPane.setVisible(false);
+            overlayPane.setVisible(false);
+            root.setEffect(null);
+            root.setDisable(false);
+            verifyPasswordField.clear();
+            passwordErrorLabel.setVisible(false);
+        });
+        hide.play();
+    }
+
+    private void closeAttendancePaneCompletely() {
+        // Close attendance pane completely (not back to settings)
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), attendancePane);
+        slideOut.setFromX(0);
+        slideOut.setToX(420);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
+        fadeOut.setFromValue(0.5);
+        fadeOut.setToValue(0);
+
+        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+        hide.setOnFinished(e -> {
+            attendancePane.setVisible(false);
+            overlayPane.setVisible(false);
+            root.setEffect(null);
+            root.setDisable(false);
+        });
+        hide.play();
     }
 
     // Toast notification methods
@@ -772,38 +877,38 @@ public class managerDashboardController {
                 iconContainer.setStyle("-fx-background-color: #3b82f6; -fx-background-radius: 18;");
                 break;
         }
-        
+
         toastNotification.setVisible(true);
         toastNotification.setTranslateY(-100);
-        
+
         // Slide in animation from top
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), toastNotification);
         slideIn.setFromY(-100);
         slideIn.setToY(0);
-        
+
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), toastNotification);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
-        
+
         ParallelTransition showToast = new ParallelTransition(slideIn, fadeIn);
-        
+
         // Auto hide after 3 seconds
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
         pause.setOnFinished(e -> hideToast());
-        
+
         SequentialTransition sequence = new SequentialTransition(showToast, pause);
         sequence.play();
     }
-    
+
     private void hideToast() {
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), toastNotification);
         slideOut.setFromY(0);
         slideOut.setToY(-100);
-        
+
         FadeTransition fadeOut = new FadeTransition(Duration.millis(300), toastNotification);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
-        
+
         ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
         hide.setOnFinished(e -> toastNotification.setVisible(false));
         hide.play();
@@ -829,17 +934,17 @@ public class managerDashboardController {
         overlayFadeOut.setToValue(0);
         overlayFadeOut.setOnFinished(e -> confirmOverlay.setVisible(false));
         overlayFadeOut.play();
-        
+
         // Slide out dialog
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), changePasswordDialog);
         slideOut.setFromY(0);
         slideOut.setToY(-700);
         slideOut.setInterpolator(javafx.animation.Interpolator.EASE_IN);
-        
+
         FadeTransition fadeOut = new FadeTransition(Duration.millis(300), changePasswordDialog);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
-        
+
         ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
         hide.setOnFinished(e -> changePasswordDialog.setVisible(false));
         hide.play();
@@ -873,9 +978,11 @@ public class managerDashboardController {
                 showPasswordLoading(false);
                 if (success) {
                     showPasswordMessage("OTP sent to " + maskEmail(session.getEmail()), true);
+                    showToast("Success", "OTP sent to your email", "success");
                     showOtpPane();
                 } else {
                     showPasswordMessage("Failed to send OTP", false);
+                    showToast("Error", "Failed to send OTP", "error");
                     verifyCurrentPasswordBtn.setDisable(false);
                 }
             });
@@ -898,9 +1005,11 @@ public class managerDashboardController {
 
         if (otpService.verifyOTP(Session.getInstance().getEmail(), otp)) {
             showPasswordMessage("OTP verified successfully!", true);
+            showToast("Success", "OTP verified successfully!", "success");
             showNewPasswordPane();
         } else {
             showPasswordMessage("Invalid OTP. Please try again.", false);
+            showToast("Error", "Invalid OTP. Please try again.", "error");
             otpField.clear();
             otpField.requestFocus();
         }
@@ -916,8 +1025,10 @@ public class managerDashboardController {
             javafx.application.Platform.runLater(() -> {
                 if (success) {
                     showPasswordMessage("OTP resent successfully!", true);
+                    showToast("Success", "OTP resent successfully!", "success");
                 } else {
                     showPasswordMessage("Failed to resend OTP", false);
+                    showToast("Error", "Failed to resend OTP", "error");
                 }
                 resendOtpBtn.setDisable(false);
             });
@@ -952,32 +1063,38 @@ public class managerDashboardController {
             try {
                 // Update password in database
                 Connection con = DatabaseConnectionManager.getInstance().getConnection();
-                PreparedStatement stmt = con.prepareStatement("UPDATE users SET password = ? WHERE userid = ?");
+                PreparedStatement stmt = con.prepareStatement("UPDATE user_info SET password = SHA2(?, 256) WHERE user_id = ?");
                 stmt.setString(1, newPassword);
                 stmt.setInt(2, current.getUserid());
-                
+
                 int result = stmt.executeUpdate();
                 con.close();
 
                 javafx.application.Platform.runLater(() -> {
+                    changePasswordBtn.setDisable(false);
+                    changePasswordStatus.setText("");
+
                     if (result > 0) {
                         // Update session password
                         current.setPassword(newPassword);
                         showPasswordMessage("Password changed successfully!", true);
-                        
+                        showToast("Success", "Password changed successfully!", "success");
+
                         // Close dialog after 2 seconds
                         PauseTransition pause = new PauseTransition(Duration.seconds(2));
                         pause.setOnFinished(e -> closePasswordDialog());
                         pause.play();
                     } else {
                         showPasswordMessage("Failed to update password", false);
-                        changePasswordBtn.setDisable(false);
+                        showToast("Error", "Failed to update password", "error");
                     }
                 });
             } catch (Exception ex) {
                 javafx.application.Platform.runLater(() -> {
                     showPasswordMessage("Error updating password", false);
+                    showToast("Error", "Error updating password", "error");
                     changePasswordBtn.setDisable(false);
+                    changePasswordStatus.setText("");
                 });
                 ex.printStackTrace();
             }
@@ -991,40 +1108,62 @@ public class managerDashboardController {
             String email = profileEmail.getText().trim();
             String phone = profilePhone.getText().trim();
             String address = profileAddress.getText().trim();
-            
+
             // Validate inputs
             if (email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
                 showToast("Error", "Please fill in all fields", "error");
                 return;
             }
-            
-            // Update in database
-            Connection con = DatabaseConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = con.prepareStatement(
-                "UPDATE users SET email = ?, phone = ?, address = ? WHERE userid = ?"
-            );
-            stmt.setString(1, email);
-            stmt.setString(2, phone);
-            stmt.setString(3, address);
-            stmt.setInt(4, current.getUserid());
-            
-            int result = stmt.executeUpdate();
-            con.close();
-            
-            if (result > 0) {
-                // Update session
-                current.setEmail(email);
-                current.setPhone(phone);
-                current.setAddress(address);
-                
-                // Exit edit mode
-                toggleEditMode();
-                
-                // Show success message
-                showToast("Success", "Profile updated successfully!", "success");
-            } else {
-                showToast("Error", "Failed to update profile", "error");
+
+            // Validate email format
+            if (!email.contains("@") || !email.contains(".")) {
+                showToast("Error", "Please enter a valid email address", "error");
+                return;
             }
+
+            // Validate phone number (basic validation)
+            if (phone.length() < 10) {
+                showToast("Error", "Please enter a valid phone number", "error");
+                return;
+            }
+
+            // Handle profile photo if changed
+            String photoPath = cachedPhotoPath;
+            if (selectedProfilePhoto != null) {
+                photoPath = saveProfileImage(selectedProfilePhoto, current.getUsername(), current.getUserid());
+            }
+
+            try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
+                 PreparedStatement ps = con.prepareStatement("UPDATE user_info SET user_email = ?, user_phone = ?, user_address = ?, user_photo = ? WHERE user_id = ?")) {
+                ps.setString(1, email);
+                ps.setString(2, phone);
+                ps.setString(3, address);
+                ps.setString(4, photoPath);
+                ps.setInt(5, current.getUserid());
+                ps.executeUpdate();
+            }
+
+            cachedPhotoPath = photoPath;
+            selectedProfilePhoto = null;
+
+            // Update session copy
+            current.setEmail(email);
+            current.setAddress(address);
+            current.setPhone(phone);
+            Session.setInstance(current);
+
+            applyPhotoToImages(cachedPhotoPath);
+
+            // Disable editing
+            toggleEditMode();
+
+            if (editProfilePhotoBtn != null) {
+                editProfilePhotoBtn.setVisible(false);
+            }
+            saveProfileBtn.setVisible(false);
+
+            // Show success toast
+            showToast("Success", "Profile updated successfully!", "success");
         } catch (Exception ex) {
             showToast("Error", "Failed to update profile", "error");
             ex.printStackTrace();
@@ -1036,53 +1175,27 @@ public class managerDashboardController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Profile Photo");
         fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
-        
+
         Stage stage = (Stage) pfImage.getScene().getWindow();
         File selectedFile = fileChooser.showOpenDialog(stage);
-        
-        if (selectedFile != null) {
-            try {
-                // Load and display the new image
-                Image newImage = new Image(selectedFile.toURI().toString());
-                pfImage.setImage(newImage);
-                profileImage.setImage(newImage);
-                
-                // Save the image path or copy to a specific location
-                selectedProfilePhoto = selectedFile;
-                
-                // Optionally copy to a permanent location
-                String userPhotoDir = "src/main/resources/Image/profiles/";
-                File photoDir = new File(userPhotoDir);
-                if (!photoDir.exists()) {
-                    photoDir.mkdirs();
-                }
-                
-                String fileName = "manager_" + current.getUserid() + getFileExtension(selectedFile.getName());
-                Path targetPath = Paths.get(userPhotoDir + fileName);
-                Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-                
-                // Update database with photo path
-                Connection con = DatabaseConnectionManager.getInstance().getConnection();
-                PreparedStatement stmt = con.prepareStatement(
-                    "UPDATE users SET photo_path = ? WHERE userid = ?"
-                );
-                stmt.setString(1, "profiles/" + fileName);
-                stmt.setInt(2, current.getUserid());
-                stmt.executeUpdate();
-                con.close();
-                
-                cachedPhotoPath = "profiles/" + fileName;
-                
-                showToast("Success", "Profile photo updated!", "success");
-            } catch (Exception ex) {
-                showToast("Error", "Failed to update profile photo", "error");
-                ex.printStackTrace();
-            }
+
+        if (selectedFile == null) {
+            return;
         }
+
+        selectedProfilePhoto = selectedFile;
+        if (pfImage != null) {
+            pfImage.setImage(new Image(selectedFile.toURI().toString()));
+        }
+        if (profileImage != null) {
+            profileImage.setImage(new Image(selectedFile.toURI().toString()));
+        }
+
+        saveProfileBtn.setVisible(true);
     }
-    
+
     private String getFileExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
         if (dotIndex >= 0 && dotIndex < fileName.length() - 1) {
@@ -1095,34 +1208,108 @@ public class managerDashboardController {
     private void onCancelVerify() {
         hidePasswordVerification();
     }
-    
+
+    // Helper methods for profile management
+    private void loadCurrentProfilePhoto() {
+        cachedPhotoPath = fetchPhotoFromDatabase();
+        applyPhotoToImages(cachedPhotoPath);
+    }
+
+    private String fetchPhotoFromDatabase() {
+        String sql = "SELECT user_photo FROM user_info WHERE user_id = ?";
+        try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, current.getUserid());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("user_photo");
+            }
+        } catch (SQLException e) {
+            logger.error("Error fetching photo from database", e);
+        }
+        return null;
+    }
+
+    private void applyPhotoToImages(String photoPath) {
+        if (photoPath != null && !photoPath.isEmpty()) {
+            try {
+                File photoFile = new File(photoPath);
+                if (photoFile.exists()) {
+                    Image image = new Image(photoFile.toURI().toString());
+                    if (pfImage != null) {
+                        pfImage.setImage(image);
+                        applyCircularClip(pfImage, 120);
+                    }
+                    if (profileImage != null) {
+                        profileImage.setImage(image);
+                        applyCircularClip(profileImage, 48);
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Error applying photo to images", e);
+            }
+        }
+    }
+
+    private String saveProfileImage(File file, String username, int userId) {
+        try {
+            String extension = extractExtension(file.getName());
+            String sanitizedName = sanitizeForFileName(username);
+            String fileName = sanitizedName + "_" + userId + extension;
+
+            Path userPhotosDir = Paths.get("src/main/resources/Image/profiles");
+            Files.createDirectories(userPhotosDir);
+
+            Path targetPath = userPhotosDir.resolve(fileName);
+            Files.copy(file.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            return targetPath.toString();
+        } catch (IOException e) {
+            logger.error("Error saving profile image", e);
+            return null;
+        }
+    }
+
+    private String extractExtension(String fileName) {
+        int lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex > 0 && lastDotIndex < fileName.length() - 1) {
+            return fileName.substring(lastDotIndex);
+        }
+        return ".png";
+    }
+
+    private String sanitizeForFileName(String value) {
+        if (value == null) return "user";
+        return value.trim().toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9]+", "_");
+    }
+
     // Helper methods for change password dialog
     private void showPasswordMessage(String message, boolean isSuccess) {
         passwordMessageLabel.setText(message);
         passwordMessagePane.setVisible(true);
-        
+
         StackPane iconContainer = (StackPane) passwordMessagePane.lookup(".icon-container");
         if (iconContainer == null) {
             iconContainer = new StackPane();
             iconContainer.getStyleClass().add("icon-container");
         }
-        
+
         if (isSuccess) {
             iconContainer.setStyle("-fx-background-color: #10b981; -fx-background-radius: 12;");
         } else {
             iconContainer.setStyle("-fx-background-color: #ef4444; -fx-background-radius: 12;");
         }
-        
+
         // Auto hide after 3 seconds
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
         pause.setOnFinished(e -> passwordMessagePane.setVisible(false));
         pause.play();
     }
-    
+
     private void showPasswordLoading(boolean show) {
         passwordLoadingPane.setVisible(show);
     }
-    
+
     private String maskEmail(String email) {
         if (email == null || !email.contains("@")) {
             return email;
@@ -1137,17 +1324,17 @@ public class managerDashboardController {
 
         return username.charAt(0) + "***" + username.charAt(username.length() - 1) + "@" + domain;
     }
-    
+
     private void showOtpPane() {
         passwordVerificationPane.setVisible(false);
         otpVerificationPane.setVisible(true);
         otpField.requestFocus();
     }
-    
+
     private void showNewPasswordPane() {
         otpVerificationPane.setVisible(false);
         newPasswordPane.setVisible(true);
         newPasswordField.requestFocus();
-    }
+    } 
 
 }
