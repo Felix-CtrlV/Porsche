@@ -309,7 +309,6 @@ public class adminOverviewController implements Initializable {
                             }
                         }
                     }
-
                     // Get part sales (quantity and paid value)
                     String partQuery = """
                             SELECT COALESCE(SUM(d.qty), 0) as qty,
