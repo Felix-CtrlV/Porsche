@@ -552,10 +552,12 @@ public class adminOverviewController implements Initializable {
         Platform.runLater(() -> {
             String color = "car".equals(currentBarChartType) ? "#6d8196" : "#ffa500";
 
-            // Apply styling to all bars
+            // Apply styling to all bars with the correct color
             barChart.lookupAll(".chart-bar").forEach(node -> {
                 CSSManager.clearStyles(node);
                 CSSManager.applyChartBar(node);
+                // Apply the specific color based on current chart type
+                node.setStyle("-fx-bar-fill: " + color + ";");
             });
 
             // Set chart background
