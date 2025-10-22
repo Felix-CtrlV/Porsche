@@ -837,21 +837,15 @@
 /* Bar Chart Colors - Light mode professional colors */
 .chart-bar { -fx-bar-fill: #6d8196; }
 .default-color0.chart-bar { -fx-bar-fill: #6d8196; }
-.default-color1.chart-bar { -fx-bar-fill: #f57c00; }
+.default-color1.chart-bar { -fx-bar-fill: #ffa500; }
 .data0.chart-bar { -fx-bar-fill: #6d8196; }
-.data1.chart-bar { -fx-bar-fill: #f57c00; }
-
-.chart-bar {
-    -fx-bar-fill: #3498db;
-}
+.data1.chart-bar { -fx-bar-fill: #ffa500; }
 
 .chart-bar:hover {
-    -fx-bar-fill: #2980b9;
+    -fx-opacity: 0.8;
 }
 
-/* Force override any conflicting styles */
-.chart-content .chart-bar { -fx-bar-fill: #6d8196; }
-.chart-plot-background .chart-bar { -fx-bar-fill: #6d8196; }
+/* Force override any conflicting styles - removed to allow proper car/part color switching */
 
 /* Pie Chart Colors - Professional light mode palette */
 .default-color0.chart-pie { -fx-pie-color: #1976d2; }
