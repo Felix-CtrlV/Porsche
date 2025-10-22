@@ -422,7 +422,7 @@
             </StackPane.margin>
             <children>
                 <!-- Header -->
-                <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="57.0" prefWidth="870.0" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #4facfe, #00f2fe); -fx-background-radius: 12 12 0 0; -fx-padding: 15 20;">
+                <HBox alignment="CENTER_LEFT" minHeight="40.0" minWidth="57.0" prefHeight="57.0" prefWidth="870.0" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 12 12 0 0; -fx-padding: 15 20;">
                     <children>
                         <StackPane minHeight="40.0" minWidth="40.0" style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 20;">
                             <Label style="-fx-font-size: 20; -fx-text-fill: white;" text="📅" />
@@ -638,4 +638,5 @@
             </children>
         </VBox>
     </children>
+
 </StackPane>
