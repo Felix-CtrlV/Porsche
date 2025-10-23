@@ -13,6 +13,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -24,7 +26,9 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,9 +119,9 @@ public class staffShopingCartController {
         initializeInstallmentPlans();
         setupPaymentMethodListeners();
 
-        backButton.setOnAction(e -> goBack());
-        confirmButton.setOnAction(e -> confirmPurchase());
-        loadAssetButton.setOnAction(e -> loadStaffAsset());
+        if (backButton != null) backButton.setOnAction(e -> goBack());
+        if (confirmButton != null) confirmButton.setOnAction(e -> confirmPurchase());
+        if (loadAssetButton != null) loadAssetButton.setOnAction(e -> loadStaffAsset());
 
         loadFromSession();
     }
@@ -158,7 +162,8 @@ public class staffShopingCartController {
 
             addRemoveCarButton();
         } else {
-            if (modelLabel != null) modelLabel.setText("Accessories Only");
+            // CHANGED: Show "No car model has been selected" instead of "Accessories Only"
+            if (modelLabel != null) modelLabel.setText("No car model has been selected");
             if (colorLabel != null) colorLabel.setText("N/A");
             if (engineLabel != null) engineLabel.setText("N/A");
             removeRemoveCarButton();
@@ -323,122 +328,189 @@ public class staffShopingCartController {
         double monthlyPayment = amountToFinance *
                 (monthlyRate * Math.pow(1 + monthlyRate, selectedPlan.months)) /
                 (Math.pow(1 + monthlyRate, selectedPlan.months) - 1);
+
         double totalPayments = monthlyPayment * selectedPlan.months;
         double totalInterest = totalPayments - amountToFinance;
-        double totalWithInterest = total + totalInterest;
+        double grandTotal = selectedPlan.downPayment + totalPayments;
 
         downPaymentLabel.setText(currencyFormat.format(selectedPlan.downPayment));
         monthlyPaymentLabel.setText(currencyFormat.format(monthlyPayment));
-        monthsLabel.setText(selectedPlan.months + " months");
+        monthsLabel.setText(String.valueOf(selectedPlan.months));
         aprLabel.setText(selectedPlan.apr + "%");
         totalInterestLabel.setText(currencyFormat.format(totalInterest));
-        totalWithInterestLabel.setText(currencyFormat.format(totalWithInterest));
+        totalWithInterestLabel.setText(currencyFormat.format(grandTotal));
+    }
+
+    private void updatePriceLabels() {
+        double subtotal = basePrice + accessoriesPrice;
+        double tax = subtotal * taxRate;
+        double total = subtotal + tax;
+
+        if (basePriceLabel != null) basePriceLabel.setText(currencyFormat.format(basePrice));
+        if (summaryBasePriceLabel != null) summaryBasePriceLabel.setText(currencyFormat.format(basePrice));
+        if (accessoriesTotalLabel != null) accessoriesTotalLabel.setText(currencyFormat.format(accessoriesPrice));
+        if (taxLabel != null) taxLabel.setText(currencyFormat.format(tax));
+        if (totalPriceLabel != null) totalPriceLabel.setText(currencyFormat.format(total));
+
+        updateInstallmentDetails();
+    }
+
+    private double calculateGrandTotal() {
+        double subtotal = basePrice + accessoriesPrice;
+        return subtotal + (subtotal * taxRate);
     }
 
     private void goBack() {
-        CarConfiguration carConfig = SessionStaff.getInstance().getCarConfiguration();
-        if (carConfig != null) navigate("/View/staffFinalize.fxml");
-        else navigate("/View/staffAsset.fxml");
+        navigateTo("/View/staffFinalize.fxml");
     }
 
     private void loadStaffAsset() {
-        navigate("/View/staffAsset.fxml");
+        navigateTo("/View/staffAsset.fxml");
     }
 
-    private void navigate(String path) {
+    private void confirmPurchase() {
+        // Create custom dialog
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Order Confirmed");
+        dialog.setHeaderText("Thank you for your purchase!");
+
+        // Create content
+        VBox content = new VBox(15);
+        content.setAlignment(Pos.CENTER);
+        content.setPadding(new Insets(20));
+
+        Label successMessage = new Label("✓ Your order has been successfully placed!");
+        successMessage.setStyle("-fx-font-size: 16px; -fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+
+        Label orderDetails = new Label("Order Total: " + totalPriceLabel.getText());
+        orderDetails.setStyle("-fx-font-size: 14px;");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Label orderDate = new Label("Order Date: " + dateFormat.format(new Date()));
+        orderDate.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+
+        content.getChildren().addAll(successMessage, orderDetails, orderDate);
+        dialog.getDialogPane().setContent(content);
+
+        // Create custom buttons
+        ButtonType returnHomeButton = new ButtonType("Return to Home", ButtonBar.ButtonData.OK_DONE);
+        ButtonType printReceiptButton = new ButtonType("Print Receipt", ButtonBar.ButtonData.OTHER);
+
+        dialog.getDialogPane().getButtonTypes().addAll(returnHomeButton, printReceiptButton);
+
+        // Style the dialog
+        dialog.getDialogPane().setStyle("-fx-background-color: white; -fx-border-color: #D5001C; -fx-border-width: 2px;");
+
+        // Show dialog and handle button clicks
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            if (result.get() == returnHomeButton) {
+                // Clear cart and go to home
+                SessionStaff.getInstance().clearCart();
+                navigateTo("/View/staffWelcome.fxml");
+            } else if (result.get() == printReceiptButton) {
+                // Print receipt then clear cart and go home
+                printReceipt();
+                SessionStaff.getInstance().clearCart();
+                navigateTo("/View/staffWelcome.fxml");
+            }
+        }
+    }
+
+    private void printReceipt() {
+        StringBuilder receipt = new StringBuilder();
+        receipt.append("═══════════════════════════════════════════════════\n");
+        receipt.append("                 PORSCHE RECEIPT\n");
+        receipt.append("═══════════════════════════════════════════════════\n\n");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        receipt.append("Date: ").append(dateFormat.format(new Date())).append("\n");
+        receipt.append("Staff: ").append(SessionStaff.getInstance().getUsername()).append("\n\n");
+
+        receipt.append("───────────────────────────────────────────────────\n");
+        receipt.append("ORDER DETAILS\n");
+        receipt.append("───────────────────────────────────────────────────\n\n");
+
+        CarConfiguration carConfig = SessionStaff.getInstance().getCarConfiguration();
+        if (carConfig != null) {
+            receipt.append("Vehicle:\n");
+            receipt.append("  Model: ").append(carConfig.getModelName()).append("\n");
+            receipt.append("  Base Price: ").append(currencyFormat.format(carConfig.getBasePrice())).append("\n\n");
+
+            if (!displayedAccessories.isEmpty()) {
+                receipt.append("Customizations:\n");
+                for (AccessoryItemDisplay item : displayedAccessories) {
+                    if (item.isCarOption) {
+                        receipt.append("  - ").append(item.name)
+                                .append(": ").append(currencyFormat.format(item.price)).append("\n");
+                    }
+                }
+                receipt.append("\n");
+            }
+        } else {
+            receipt.append("Vehicle: No car model selected\n\n");
+        }
+
+        if (SessionStaff.getInstance().getAccessories().size() > 0) {
+            receipt.append("Accessories:\n");
+            for (SessionStaff.AccessoryItem item : SessionStaff.getInstance().getAccessories().values()) {
+                receipt.append("  - ").append(item.name).append(" (x").append(item.quantity).append(")")
+                        .append(": ").append(currencyFormat.format(item.price * item.quantity)).append("\n");
+            }
+            receipt.append("\n");
+        }
+
+        receipt.append("───────────────────────────────────────────────────\n");
+        receipt.append("PAYMENT SUMMARY\n");
+        receipt.append("───────────────────────────────────────────────────\n");
+        receipt.append(String.format("%-30s %19s\n", "Base Price:", basePriceLabel.getText()));
+        receipt.append(String.format("%-30s %19s\n", "Accessories:", accessoriesTotalLabel.getText()));
+        receipt.append(String.format("%-30s %19s\n", "Tax (8%):", taxLabel.getText()));
+        receipt.append("───────────────────────────────────────────────────\n");
+        receipt.append(String.format("%-30s %19s\n", "GRAND TOTAL:", totalPriceLabel.getText()));
+        receipt.append("═══════════════════════════════════════════════════\n\n");
+
+        if (installmentRadio.isSelected() && selectedPlan != null) {
+            receipt.append("Payment Method: Installment Plan\n");
+            receipt.append("  Plan: ").append(selectedPlan.months).append(" months @ ").append(selectedPlan.apr).append("% APR\n");
+            receipt.append("  Down Payment: ").append(downPaymentLabel.getText()).append("\n");
+            receipt.append("  Monthly Payment: ").append(monthlyPaymentLabel.getText()).append("\n");
+            receipt.append("  Total with Interest: ").append(totalWithInterestLabel.getText()).append("\n\n");
+        } else {
+            receipt.append("Payment Method: Full Payment\n\n");
+        }
+
+        receipt.append("        Thank you for choosing Porsche!\n");
+        receipt.append("═══════════════════════════════════════════════════\n");
+
+        // Print to console (in a real app, this would go to a printer)
+        System.out.println(receipt.toString());
+
+        // Show confirmation
+        Alert printConfirmation = new Alert(Alert.AlertType.INFORMATION);
+        printConfirmation.setTitle("Receipt Printed");
+        printConfirmation.setHeaderText("Receipt sent to printer");
+        printConfirmation.setContentText("Please check your printer for the receipt.");
+        printConfirmation.showAndWait();
+    }
+
+    private void navigateTo(String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-            Scene scene = new Scene(loader.load(), 1300, 850);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root, 1300, 850);
             Stage stage = (Stage) backButton.getScene().getWindow();
             stage.setScene(scene);
             stage.centerOnScreen();
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-    }
-
-    private void confirmPurchase() {
-        double total = calculateGrandTotal();
-
-        if (total <= 0) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Empty Cart");
-            alert.setHeaderText("Cannot confirm purchase");
-            alert.setContentText("Your cart is empty. Add some items first!");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Navigation Error");
+            alert.setHeaderText("Failed to navigate");
+            alert.setContentText("Could not load: " + fxmlPath);
             alert.showAndWait();
-            return;
         }
-
-        String paymentMethod = installmentRadio.isSelected() ? "Installment" : "Full Payment";
-        String message = "Purchase Confirmed!\n\nPayment Method: " + paymentMethod;
-
-        CarConfiguration carConfig = SessionStaff.getInstance().getCarConfiguration();
-        if (carConfig != null) message += "\nCar: " + carConfig.getModelName();
-        else message += "\nAccessories Only Purchase";
-
-        if (installmentRadio.isSelected() && selectedPlan != null && total >= selectedPlan.downPayment) {
-            double amountToFinance = total - selectedPlan.downPayment;
-            double monthlyRate = (selectedPlan.apr / 100) / 12;
-            double monthlyPayment = amountToFinance *
-                    (monthlyRate * Math.pow(1 + monthlyRate, selectedPlan.months)) /
-                    (Math.pow(1 + monthlyRate, selectedPlan.months) - 1);
-
-            message += "\nPlan: " + selectedPlan.months + " months at " + selectedPlan.apr + "% APR";
-            message += "\nMonthly Payment: " + currencyFormat.format(monthlyPayment);
-        }
-
-        message += "\n\nTotal: " + currencyFormat.format(total);
-
-        confirmationMessageLabel.setText(message);
-        confirmationMessageLabel.setVisible(true);
-        confirmationMessageLabel.setManaged(true);
-        confirmButton.setDisable(true);
-    }
-
-    private double calculateSubtotal() {
-        return basePrice + accessoriesPrice;
-    }
-
-    private double calculateTax() {
-        return calculateSubtotal() * taxRate;
-    }
-
-    private double calculateGrandTotal() {
-        return calculateSubtotal() + calculateTax();
-    }
-
-    private void updatePriceLabels() {
-        basePriceLabel.setText(currencyFormat.format(basePrice));
-        summaryBasePriceLabel.setText(currencyFormat.format(basePrice));
-        accessoriesTotalLabel.setText(currencyFormat.format(accessoriesPrice));
-
-        double tax = calculateTax();
-        double total = calculateGrandTotal();
-
-        taxLabel.setText(currencyFormat.format(tax));
-        totalPriceLabel.setText(currencyFormat.format(total));
-
-        if (installmentRadio != null && installmentRadio.isSelected()) {
-            updateInstallmentDetails();
-        }
-    }
-
-    public double getTotalPrice() {
-        return calculateGrandTotal();
-    }
-
-    public List<String> getCartItems() {
-        return cartItems;
-    }
-
-    public void clearCart() {
-        cartItems.clear();
-        accessoriesContainer.getChildren().clear();
-        displayedAccessories.clear();
-        basePrice = 0;
-        accessoriesPrice = 0;
-        SessionStaff.getInstance().clearAccessories();
-        SessionStaff.getInstance().setCarConfiguration(null);
-        updatePriceLabels();
     }
 }

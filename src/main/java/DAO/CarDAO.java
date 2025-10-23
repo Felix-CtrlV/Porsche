@@ -15,7 +15,7 @@ public class CarDAO {
     public List<car> getAllCars() {
         List<car> cars = new ArrayList<>();
         String sql = "SELECT car_id, model_name, trim_name, car_color, interior_color, fuel_type, " +
-                "car_status, car_speed, production_year, car_city, price, car_description, car_photo " +
+                "car_status, car_speed, production_year, car_qty, price, car_description, car_photo " +
                 "FROM cars ORDER BY model_name";
 
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
@@ -33,7 +33,7 @@ public class CarDAO {
                         rs.getString("car_status"),
                         rs.getLong("car_speed"),
                         rs.getInt("production_year"),
-                        rs.getString("car_city"),
+                        rs.getString("car_qty"),
                         rs.getDouble("price"),
                         rs.getString("car_description"),
                         rs.getString("car_photo")
@@ -49,7 +49,7 @@ public class CarDAO {
 
     public car getCarById(int id) {
         String sql = "SELECT car_id, model_name, trim_name, car_color, interior_color, fuel_type, " +
-                "car_status, car_speed, production_year, car_city, price, car_description, car_photo " +
+                "car_status, car_speed, production_year, car_qty, price, car_description, car_photo " +
                 "FROM cars WHERE car_id = ?";
 
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
@@ -69,7 +69,7 @@ public class CarDAO {
                         rs.getString("car_status"),
                         rs.getLong("car_speed"),
                         rs.getInt("production_year"),
-                        rs.getString("car_city"),
+                        rs.getString("car_qty"),
                         rs.getDouble("price"),
                         rs.getString("car_description"),
                         rs.getString("car_photo")
@@ -85,7 +85,7 @@ public class CarDAO {
     public List<car> getCarsByStatus(String status) {
         List<car> cars = new ArrayList<>();
         String sql = "SELECT car_id, model_name, trim_name, car_color, interior_color, fuel_type, " +
-                "car_status, car_speed, production_year, car_city, price, car_description, car_photo " +
+                "car_status, car_speed, production_year, car_qty, price, car_description, car_photo " +
                 "FROM cars WHERE car_status = ? ORDER BY model_name";
 
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
@@ -105,7 +105,7 @@ public class CarDAO {
                         rs.getString("car_status"),
                         rs.getLong("car_speed"),
                         rs.getInt("production_year"),
-                        rs.getString("car_city"),
+                        rs.getString("car_qty"),
                         rs.getDouble("price"),
                         rs.getString("car_description"),
                         rs.getString("car_photo")
@@ -132,7 +132,7 @@ public class CarDAO {
 
         // Search in BOTH model_name and trim_name for maximum flexibility
         String sql = "SELECT car_id, model_name, trim_name, car_color, interior_color, fuel_type, " +
-                "car_status, car_speed, production_year, car_city, price, car_description, car_photo " +
+                "car_status, car_speed, production_year, car_qty, price, car_description, car_photo " +
                 "FROM cars WHERE model_name LIKE ? OR trim_name LIKE ? " +
                 "ORDER BY model_name, trim_name";
 
@@ -158,7 +158,7 @@ public class CarDAO {
                         rs.getString("car_status"),
                         rs.getLong("car_speed"),
                         rs.getInt("production_year"),
-                        rs.getString("car_city"),
+                        rs.getString("car_qty"),
                         rs.getDouble("price"),
                         rs.getString("car_description"),
                         rs.getString("car_photo")
@@ -222,7 +222,7 @@ public class CarDAO {
 
     public int insertCar(car newCar) {
         String sql = "INSERT INTO cars (model_name, trim_name, car_color, interior_color, fuel_type, " +
-                "car_status, car_speed, production_year, car_city, price, car_description, car_photo) " +
+                "car_status, car_speed, production_year, car_qty, price, car_description, car_photo) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
@@ -236,7 +236,7 @@ public class CarDAO {
             ps.setString(6, newCar.getCarStatus());
             ps.setLong(7, newCar.getCarSpeed());
             ps.setInt(8, newCar.getProductionYear());
-            ps.setString(9, newCar.getCarCity());
+            ps.setString(9, newCar.getCarQty());
             ps.setDouble(10, newCar.getPrice());
             ps.setString(11, newCar.getCarDescription());
             ps.setString(12, newCar.getCarPhoto());
@@ -259,7 +259,7 @@ public class CarDAO {
 
     public boolean updateCar(car updatedCar) {
         String sql = "UPDATE cars SET model_name = ?, trim_name = ?, car_color = ?, interior_color = ?, " +
-                "fuel_type = ?, car_status = ?, car_speed = ?, production_year = ?, car_city = ?, " +
+                "fuel_type = ?, car_status = ?, car_speed = ?, production_year = ?, car_qty = ?, " +
                 "price = ?, car_description = ?, car_photo = ? WHERE car_id = ?";
 
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
@@ -273,7 +273,7 @@ public class CarDAO {
             ps.setString(6, updatedCar.getCarStatus());
             ps.setLong(7, updatedCar.getCarSpeed());
             ps.setInt(8, updatedCar.getProductionYear());
-            ps.setString(9, updatedCar.getCarCity());
+            ps.setString(9, updatedCar.getCarQty());
             ps.setDouble(10, updatedCar.getPrice());
             ps.setString(11, updatedCar.getCarDescription());
             ps.setString(12, updatedCar.getCarPhoto());

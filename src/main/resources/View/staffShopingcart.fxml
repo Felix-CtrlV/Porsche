@@ -32,24 +32,24 @@
                     <Insets bottom="30" left="30" right="30" top="30" />
                 </padding>
 
-                <VBox spacing="15">
+                <VBox fx:id="configDetailsContainer" spacing="15">
                     <Label styleClass="section-title" text="Configuration Details" />
                     <VBox spacing="12" styleClass="details-container">
                         <HBox alignment="CENTER_LEFT" spacing="15">
                             <Label minWidth="120" styleClass="detail-label" text="Model:" />
-                            <Label fx:id="modelLabel" styleClass="detail-value" text="911 Carrera S" />
+                            <Label fx:id="modelLabel" styleClass="detail-value" text="Model Name" />
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="15">
                             <Label minWidth="120" styleClass="detail-label" text="Color:" />
-                            <Label fx:id="colorLabel" styleClass="detail-value" text="Guards Red" />
+                            <Label fx:id="colorLabel" styleClass="detail-value" text="Color" />
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="15">
                             <Label minWidth="120" styleClass="detail-label" text="Engine Type:" />
-                            <Label fx:id="engineLabel" styleClass="detail-value" text="3.0L Twin-Turbo" />
+                            <Label fx:id="engineLabel" styleClass="detail-value" text="Engine" />
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="15">
                             <Label minWidth="120" styleClass="detail-label" text="Base Price:" />
-                            <Label fx:id="basePriceLabel" styleClass="detail-value price-highlight" text="115,000" />
+                            <Label fx:id="basePriceLabel" styleClass="detail-value price-highlight" text="Price" />
                         </HBox>
                     </VBox>
                 </VBox>
@@ -70,7 +70,10 @@
                             <ToggleGroup fx:id="paymentMethodGroup" />
                         </fx:define>
 
-                        <RadioButton fx:id="fullPaymentRadio" selected="true" styleClass="payment-radio" text="Full Payment" toggleGroup="$paymentMethodGroup" />
+                        <RadioButton fx:id="fullPaymentRadio" selected="true" styleClass="payment-radio" text="Full Payment">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="paymentMethodGroup" />
+                     </toggleGroup></RadioButton>
                         <RadioButton fx:id="installmentRadio" styleClass="payment-radio" text="Installment Plan" toggleGroup="$paymentMethodGroup" />
                     </VBox>
                 </VBox>

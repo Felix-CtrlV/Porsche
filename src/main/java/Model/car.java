@@ -10,15 +10,18 @@ public class car {
     private String carStatus;
     private long carSpeed;
     private int productionYear;
-    private String carCity;
+    private String carQty;
     private double price;
     private String carDescription;
     private String carPhoto;
 
+    // Default constructor
     public car() {}
 
-    public car(int carId, String modelName, String trimName, String carColor, String interiorColor,
-               String fuelType, String carStatus, long carSpeed, int productionYear, String carCity,
+    // Full constructor
+    public car(int carId, String modelName, String trimName, String carColor,
+               String interiorColor, String fuelType, String carStatus,
+               long carSpeed, int productionYear, String carQty,
                double price, String carDescription, String carPhoto) {
         this.carId = carId;
         this.modelName = modelName;
@@ -29,12 +32,13 @@ public class car {
         this.carStatus = carStatus;
         this.carSpeed = carSpeed;
         this.productionYear = productionYear;
-        this.carCity = carCity;
+        this.carQty = carQty;
         this.price = price;
         this.carDescription = carDescription;
         this.carPhoto = carPhoto;
     }
 
+    // Getters and Setters
     public int getCarId() {
         return carId;
     }
@@ -107,12 +111,12 @@ public class car {
         this.productionYear = productionYear;
     }
 
-    public String getCarCity() {
-        return carCity;
+    public String getCarQty() {
+        return carQty;
     }
 
-    public void setCarCity(String carCity) {
-        this.carCity = carCity;
+    public void setCarQty(String carQty) {
+        this.carQty = carQty;
     }
 
     public double getPrice() {
@@ -139,31 +143,30 @@ public class car {
         this.carPhoto = carPhoto;
     }
 
+    // Helper method to get full display name
     public String getFullName() {
-        return modelName + (trimName != null && !trimName.isEmpty() ? " " + trimName : "");
-    }
-
-    public int getId() {
-        return carId;
-    }
-
-    public void setId(int carId) {
-        this.carId = carId;
-    }
-
-    public String getModel() {
+        if (trimName != null && !trimName.isEmpty()) {
+            return modelName + " " + trimName;
+        }
         return modelName;
     }
 
-    public void setModel(String modelName) {
-        this.modelName = modelName;
-    }
-
-    public String getImagePath() {
-        return carPhoto;
-    }
-
-    public void setImagePath(String carPhoto) {
-        this.carPhoto = carPhoto;
+    @Override
+    public String toString() {
+        return "car{" +
+                "carId=" + carId +
+                ", modelName='" + modelName + '\'' +
+                ", trimName='" + trimName + '\'' +
+                ", carColor='" + carColor + '\'' +
+                ", interiorColor='" + interiorColor + '\'' +
+                ", fuelType='" + fuelType + '\'' +
+                ", carStatus='" + carStatus + '\'' +
+                ", carSpeed=" + carSpeed +
+                ", productionYear=" + productionYear +
+                ", carQty='" + carQty + '\'' +
+                ", price=" + price +
+                ", carDescription='" + carDescription + '\'' +
+                ", carPhoto='" + carPhoto + '\'' +
+                '}';
     }
 }
