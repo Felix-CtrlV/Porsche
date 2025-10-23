@@ -133,8 +133,8 @@ public class CarConfiguration {
         return carData != null ? carData.getCarSpeed() : 0;
     }
 
-    public String getCarCity() {
-        return carData != null ? carData.getCarCity() : "";
+    public String getCarQty() {
+        return carData != null ? carData.getCarQty() : "0";
     }
 
     public String getCarPhoto() {

@@ -12,11 +12,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -26,115 +25,65 @@ import java.util.ResourceBundle;
 public class staffWelcomeController implements Initializable {
 
     @FXML
-    private StackPane rootPane;
+    private AnchorPane rootPane;
 
     @FXML
-    private Button setbtn;
+    private Button logoutbtn;
 
     @FXML
-    private Button square_button;
+    private Button discoverbtn;
 
     @FXML
-    private Label heading;
+    private Button accessorybtn;
 
+    @FXML
+    private Label topicLabel;
+
+    @FXML
+    private Label headingLabel;
+
+    @FXML
     private VBox settingsPopup;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 DarkModeManager.getInstance().registerScene(newScene);
             }
         });
 
-        if (setbtn != null) {
-            setbtn.setOnAction(event -> showSettingsPopup());
-        }
-
-        if (square_button != null) {
-            square_button.setOnAction(event -> loadCarsPage());
-        }
-    }
-
-    private void showSettingsPopup() {
-        if (settingsPopup == null) {
-            settingsPopup = new VBox(15);
-            settingsPopup.getStyleClass().add("settings-popup");
-            settingsPopup.setAlignment(Pos.CENTER);
-            settingsPopup.setPadding(new Insets(20));
-            settingsPopup.setMaxWidth(250);
-            settingsPopup.setMaxHeight(200);
-
-            // Dark Mode Toggle Button
-            Button darkModeToggle = new Button(
-                    DarkModeManager.getInstance().isDarkMode() ? "☀ Light Mode" : "🌙 Dark Mode"
-            );
-            darkModeToggle.getStyleClass().add("dark-mode-toggle");
-            darkModeToggle.setPrefWidth(200);
-            darkModeToggle.setPrefHeight(45);
-
-            darkModeToggle.setOnAction(e -> {
-                DarkModeManager.getInstance().toggleDarkMode();
-                darkModeToggle.setText(
-                        DarkModeManager.getInstance().isDarkMode() ? "☀ Light Mode" : "🌙 Dark Mode"
-                );
-            });
-
-            Button logoutButton = new Button("Logout");
-            logoutButton.setPrefWidth(200);
-            logoutButton.setPrefHeight(45);
-            logoutButton.setOnAction(e -> {
-                hideSettingsPopup();
-                logout();
-            });
-
-            Button closeButton = new Button("Close");
-            closeButton.setPrefWidth(200);
-            closeButton.setPrefHeight(45);
-            closeButton.setOnAction(e -> hideSettingsPopup());
-
-            settingsPopup.getChildren().addAll(darkModeToggle, logoutButton, closeButton);
-
-            StackPane.setAlignment(settingsPopup, Pos.TOP_RIGHT);
-            StackPane.setMargin(settingsPopup, new Insets(80, 20, 0, 0));
-
-            settingsPopup.setOpacity(0);
-            rootPane.getChildren().add(settingsPopup);
-
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), settingsPopup);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-            fadeIn.play();
-        } else {
-            hideSettingsPopup();
-        }
-    }
-
-    private void hideSettingsPopup() {
         if (settingsPopup != null) {
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(200), settingsPopup);
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
-            fadeOut.setOnFinished(e -> {
-                rootPane.getChildren().remove(settingsPopup);
-                settingsPopup = null;
-            });
-            fadeOut.play();
+            settingsPopup.setVisible(false);
+            settingsPopup.setManaged(false);
         }
     }
 
-    private void loadCarsPage() {
+    @FXML
+    private void togglePopup() {
+        if (settingsPopup != null) {
+            boolean isVisible = settingsPopup.isVisible();
+            settingsPopup.setVisible(!isVisible);
+            settingsPopup.setManaged(!isVisible);
+
+            if (!isVisible) {
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(200), settingsPopup);
+                fadeIn.setFromValue(0);
+                fadeIn.setToValue(1);
+                fadeIn.play();
+            }
+        }
+    }
+
+    @FXML
+    private void discover() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/cars.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffCars.fxml"));
             Parent root = loader.load();
 
-            Stage stage = (Stage) square_button.getScene().getWindow();
-
+            Stage stage = (Stage) discoverbtn.getScene().getWindow();
             Scene scene = new Scene(root);
-
             DarkModeManager.getInstance().registerScene(scene);
-
             stage.setScene(scene);
             stage.show();
 
@@ -144,11 +93,35 @@ public class staffWelcomeController implements Initializable {
         }
     }
 
+    @FXML
+    private void clickaccessorybtn() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffAsset.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) accessorybtn.getScene().getWindow();
+            Scene scene = new Scene(root);
+            DarkModeManager.getInstance().registerScene(scene);
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error loading accessories page: " + e.getMessage());
+        }
+    }
+
+    @FXML
     private void logout() {
         try {
+            if (settingsPopup != null) {
+                settingsPopup.setVisible(false);
+                settingsPopup.setManaged(false);
+            }
+
             SessionStaff.getInstance().clearSession();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/staffLogin.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffLogin.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) rootPane.getScene().getWindow();
