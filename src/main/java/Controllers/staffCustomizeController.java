@@ -310,44 +310,65 @@ public class staffCustomizeController implements Initializable {
         FadeTransition fadeInNext = new FadeTransition(ANIMATION_DURATION, nextImageView);
         fadeInNext.setToValue(1);
 
-        ParallelTransition outTransition = new ParallelTransition(slideOutCurrent, fadeOutCurrent);
-        ParallelTransition inTransition = new ParallelTransition(slideInNext, fadeInNext);
+        ParallelTransition parallel = new ParallelTransition(
+                slideOutCurrent, fadeOutCurrent, slideInNext, fadeInNext
+        );
 
-        SequentialTransition sequence = new SequentialTransition(outTransition, inTransition);
-        sequence.setOnFinished(e -> {
+        parallel.setOnFinished(event -> {
             container.getChildren().remove(currentImageView);
-            if (onComplete != null) onComplete.run();
+            if (onComplete != null) {
+                onComplete.run();
+            }
         });
 
-        sequence.play();
+        parallel.play();
+    }
+
+    @FXML
+    private void handleConfirmOrder() {
+        try {
+            carConfig.updateCarPrice();
+            SessionStaff.getInstance().setCarConfiguration(carConfig);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffFinalize.fxml"));
+            Parent root = loader.load();
+
+            staffFinalizeController controller = loader.getController();
+            if (controller != null) {
+                controller.setCarConfiguration(carConfig);
+            }
+
+            Stage stage = (Stage) confirmBtn.getScene().getWindow();
+            Scene scene = new Scene(root);
+            DarkModeManager.getInstance().registerScene(scene);
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to load finalize order page", e);
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleBack(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffModelSelect.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            DarkModeManager.getInstance().registerScene(scene);
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to navigate back", e);
+        }
     }
 
     @FunctionalInterface
     private interface IndexUpdater {
         void update(int index);
-    }
-
-    @FXML
-    private void confirmConfiguration(ActionEvent event) {
-        SessionStaff.getInstance().setCarConfiguration(carConfig);
-        navigate(event, "/View/staffFinalize.fxml");
-    }
-
-    @FXML
-    private void goback(ActionEvent event) {
-        navigate(event, "/View/staffModelSelect.fxml");
-    }
-
-    private void navigate(ActionEvent event, String path) {
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(path)));
-            Scene newScene = new Scene(root, 1300, 850);
-            DarkModeManager.getInstance().registerScene(newScene);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(newScene);
-            stage.centerOnScreen();
-        } catch (IOException | NullPointerException ex) {
-            LOGGER.log(Level.SEVERE, "Failed to navigate to: " + path, ex);
-        }
     }
 }
