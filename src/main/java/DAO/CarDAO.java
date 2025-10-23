@@ -119,17 +119,32 @@ public class CarDAO {
         return cars;
     }
 
+    /**
+     * Retrieves all cars that contain the specified model name anywhere in their model_name OR trim_name field.
+     * For example, searching for "911" will return:
+     * - "911 Carrera"
+     * - "911 Turbo S"
+     * - "Porsche 911 GT3"
+     * etc.
+     */
     public List<car> getCarsByModelName(String modelName) {
         List<car> cars = new ArrayList<>();
-        // FIXED: Changed from ILIKE (PostgreSQL) to LIKE (MySQL)
+
+        // Search in BOTH model_name and trim_name for maximum flexibility
         String sql = "SELECT car_id, model_name, trim_name, car_color, interior_color, fuel_type, " +
                 "car_status, car_speed, production_year, car_city, price, car_description, car_photo " +
-                "FROM cars WHERE model_name LIKE ? ORDER BY trim_name";
+                "FROM cars WHERE model_name LIKE ? OR trim_name LIKE ? " +
+                "ORDER BY model_name, trim_name";
 
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, "%" + modelName + "%");
+            String searchPattern = "%" + modelName + "%";
+            ps.setString(1, searchPattern);
+            ps.setString(2, searchPattern);
+
+            logger.info("Searching for cars with pattern: {}", searchPattern);
+
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -149,7 +164,10 @@ public class CarDAO {
                         rs.getString("car_photo")
                 );
                 cars.add(c);
+                logger.debug("Found car: {} {}", c.getModelName(), c.getTrimName());
             }
+
+            logger.info("Found {} cars matching '{}'", cars.size(), modelName);
 
         } catch (SQLException e) {
             logger.error("Failed to retrieve cars with model name: " + modelName, e);
@@ -203,7 +221,6 @@ public class CarDAO {
     }
 
     public int insertCar(car newCar) {
-        // FIXED: Changed RETURNING (PostgreSQL) to use LAST_INSERT_ID() (MySQL)
         String sql = "INSERT INTO cars (model_name, trim_name, car_color, interior_color, fuel_type, " +
                 "car_status, car_speed, production_year, car_city, price, car_description, car_photo) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
