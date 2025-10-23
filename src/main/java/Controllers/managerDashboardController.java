@@ -5,6 +5,8 @@ import MainUI.login;
 import Utils.LogoutHelper;
 import Utils.OTPService;
 import Utils.Session;
+import Utils.SecurityManager;
+import Utils.SecurityEmailService;
 import javafx.animation.*;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -154,8 +156,17 @@ public class managerDashboardController {
     @FXML
     private Label passwordMessageLabel, closePasswordDialogBtn;
 
+    // Security Lock Overlay Components
+    @FXML
+    private StackPane securityLockOverlay;
+    
+    @FXML
+    private Label lockIcon, lockMessage;
+
     private final OTPService otpService = OTPService.getInstance();
     private SequentialTransition currentPasswordAnimation;
+    private final SecurityManager securityManager = SecurityManager.getInstance();
+    private final SecurityEmailService emailService = SecurityEmailService.getInstance();
 
     private Button activeButton;
     private int adminid;
@@ -199,6 +210,9 @@ public class managerDashboardController {
         profileEmail.setText(current.getEmail());
         profileDOB.setText(current.getDob().toString());
         profilePhone.setText(current.getPhone());
+
+        // Check if account is locked on initialization
+        checkAccountLockStatus();
 
         // Add clipping to change password dialog to hide notification overflow
         javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle();
@@ -782,15 +796,138 @@ public class managerDashboardController {
             return;
         }
 
+        // Check if account is already locked
+        if (securityManager.isAccountLocked(current.getUserid(), "manager")) {
+            showSecurityLockOverlay();
+            return;
+        }
+
         // Verify password against session
         String sessionPassword = current.getPassword();
 
         if (sessionPassword != null && sessionPassword.equals(enteredPassword)) {
-            // Password correct - transition directly to profile pane
+            // Password correct - reset attempts and transition to profile pane
+            securityManager.resetAttempts(current.getUserid(), "manager");
             showProfilePane();
         } else {
-            passwordErrorLabel.setText("Incorrect password");
-            passwordErrorLabel.setVisible(true);
+            // Password incorrect - record failed attempt
+            boolean shouldLock = securityManager.recordFailedAttempt(current.getUserid(), "manager");
+            
+            if (shouldLock) {
+                // Account locked - send notifications and show lock overlay
+                emailService.sendBruteForceAlert(current.getUserid(), "manager");
+                showSecurityLockOverlay();
+            } else {
+                // Show remaining attempts
+                int remaining = securityManager.getRemainingAttempts(current.getUserid(), "manager");
+                passwordErrorLabel.setText("Incorrect password. " + remaining + " attempts remaining.");
+                passwordErrorLabel.setVisible(true);
+            }
+        }
+    }
+
+    /**
+     * Checks if the account is locked on initialization
+     */
+    private void checkAccountLockStatus() {
+        if (securityManager.isAccountLocked(current.getUserid(), "manager")) {
+            showSecurityLockOverlay();
+        }
+    }
+
+    /**
+     * Shows the security lock overlay when account is locked
+     */
+    private void showSecurityLockOverlay() {
+        if (securityLockOverlay != null) {
+            // Hide all other panes first
+            if (settingPane != null) settingPane.setVisible(false);
+            if (passwordVerifyPane != null) passwordVerifyPane.setVisible(false);
+            if (profilePane != null) profilePane.setVisible(false);
+            if (attendancePane != null) attendancePane.setVisible(false);
+            if (overlayPane != null) overlayPane.setVisible(false);
+            
+            // Clear any form data
+            if (verifyPasswordField != null) verifyPasswordField.clear();
+            if (passwordErrorLabel != null) passwordErrorLabel.setVisible(false);
+            
+            // Remove any existing effects
+            if (root != null) {
+                root.setEffect(null);
+                root.setDisable(true); // Disable the entire dashboard
+            }
+            
+            // Show the security lock overlay
+            securityLockOverlay.setVisible(true);
+            securityLockOverlay.setOpacity(0);
+            
+            // Animate the overlay appearance
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(500), securityLockOverlay);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+            
+            // Start lock icon pulse animation
+            startLockIconAnimation();
+            
+            // Update lock message with user-specific information
+            updateLockMessage();
+            
+            // Start monitoring for unlock events
+            Utils.UnlockMonitorService.getInstance().startMonitoring(
+                current.getUserid(), 
+                "manager", 
+                this::hideSecurityLockOverlay
+            );
+        }
+    }
+
+    /**
+     * Starts the pulsing animation for the lock icon
+     */
+    private void startLockIconAnimation() {
+        if (lockIcon != null) {
+            ScaleTransition pulse = new ScaleTransition(Duration.seconds(1.5), lockIcon);
+            pulse.setFromX(1.0);
+            pulse.setFromY(1.0);
+            pulse.setToX(1.1);
+            pulse.setToY(1.1);
+            pulse.setCycleCount(Timeline.INDEFINITE);
+            pulse.setAutoReverse(true);
+            pulse.play();
+        }
+    }
+
+    /**
+     * Updates the lock message with user-specific information
+     */
+    private void updateLockMessage() {
+        if (lockMessage != null && current != null) {
+            String message = String.format(
+                "Hello %s, your account has been temporarily locked due to multiple failed login attempts. " +
+                "Please check your email (%s) for an unlock link to regain access immediately.",
+                current.getUsername(),
+                current.getEmail()
+            );
+            lockMessage.setText(message);
+        }
+    }
+
+    /**
+     * Hides the security lock overlay (called when account is unlocked)
+     */
+    public void hideSecurityLockOverlay() {
+        if (securityLockOverlay != null && securityLockOverlay.isVisible()) {
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(500), securityLockOverlay);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(e -> {
+                securityLockOverlay.setVisible(false);
+                if (root != null) {
+                    root.setDisable(false);
+                }
+            });
+            fadeOut.play();
         }
     }
 
