@@ -1,22 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* ===== ROOT & GLOBAL STYLES ===== */
 .root-pane {
     -fx-background-color: #ffffff;
     -fx-font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+    -fx-font-smoothing-type: lcd;
 }
 
+/* ===== CENTER SHOWCASE ===== */
 .center-showcase {
-    -fx-background-color: #fafafa;
+    -fx-background-color: linear-gradient(to bottom, #fafafa 0%, #f5f5f5 100%);
 }
 
 .car-image-view {
-    -fx-opacity: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 20, 0, 0, 5);
 }
 
-.car-image-view:hover {
-    -fx-opacity: 1;
-}
-
+/* ===== RIGHT INFO PANEL ===== */
 .info-panel {
     -fx-background-color: #ffffff;
     -fx-border-color: #f0f0f0;
@@ -29,11 +29,12 @@
     -fx-border-color: #e8e8e8;
     -fx-border-width: 1px;
     -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.03), 8, 0, 0, 2);
 }
 
 .porsche-accent-line {
     -fx-background-color: #d32f2f;
-    -fx-background-radius: 0;
+    -fx-background-radius: 2px 2px 0 0;
 }
 
 .car-description-label {
@@ -41,8 +42,10 @@
     -fx-font-size: 13px;
     -fx-font-weight: 400;
     -fx-line-spacing: 4px;
+    -fx-wrap-text: true;
 }
 
+/* ===== CONFIRM BUTTON ===== */
 .confirm-button {
     -fx-background-color: #d32f2f;
     -fx-text-fill: #ffffff;
@@ -50,19 +53,23 @@
     -fx-font-weight: 600;
     -fx-letter-spacing: 0.8px;
     -fx-background-radius: 4px;
-    -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(211, 47, 47, 0.3), 12, 0, 0, 4);
 }
 
 .confirm-button:hover {
     -fx-background-color: #b71c1c;
+    -fx-effect: dropshadow(gaussian, rgba(183, 28, 28, 0.4), 16, 0, 0, 6);
 }
 
 .confirm-button:pressed {
     -fx-background-color: #8b0000;
+    -fx-effect: dropshadow(gaussian, rgba(139, 0, 0, 0.3), 8, 0, 0, 2);
+    -fx-translate-y: 1px;
 }
 
+/* ===== BOTTOM CUSTOMIZATION PANEL ===== */
 .customization-panel {
     -fx-background-color: #ffffff;
     -fx-border-color: #e8e8e8;
@@ -75,11 +82,14 @@
     -fx-border-color: #e0e0e0;
     -fx-border-width: 1px;
     -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 10, 0, 0, 3);
+    -fx-transition: all 0.3s ease;
 }
 
 .glass-panel:hover {
     -fx-background-color: #f5f5f5;
     -fx-border-color: #d32f2f;
+    -fx-effect: dropshadow(gaussian, rgba(211, 47, 47, 0.15), 12, 0, 0, 4);
 }
 
 .panel-header {
@@ -95,10 +105,17 @@
     -fx-letter-spacing: 1.5px;
 }
 
+.option-price-label {
+    -fx-text-fill: #757575;
+    -fx-font-size: 10px;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 0.5px;
+    -fx-transition: all 0.3s ease;
+}
+
+/* ===== SCROLL PANE STYLING ===== */
 .custom-scroll-pane {
     -fx-background-color: transparent;
-    -fx-background: transparent;
-    -fx-border-color: transparent;
     -fx-border-width: 0;
 }
 
@@ -131,12 +148,33 @@
     -fx-padding: 0;
 }
 
+.custom-scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 6px;
+}
+
+.custom-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #d32f2f;
+    -fx-background-radius: 3px;
+}
+
+.custom-scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #b71c1c;
+}
+
+.custom-scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: #e8e8e8;
+    -fx-background-radius: 3px;
+}
+
 .item-flow {
     -fx-padding: 5px;
 }
 
+/* ===== ARROW BUTTONS ===== */
 .arrow-button {
     -fx-background-color: #ffffff;
+    -fx-text-fill: #424242;
     -fx-font-size: 18px;
     -fx-font-weight: 300;
     -fx-min-width: 36px;
@@ -148,21 +186,30 @@
     -fx-border-width: 1px;
     -fx-border-radius: 50%;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 6, 0, 0, 2);
+    -fx-transition: all 0.3s ease;
 }
 
 .arrow-button:hover {
     -fx-background-color: #d32f2f;
+    -fx-text-fill: #ffffff;
     -fx-border-color: #d32f2f;
+    -fx-effect: dropshadow(gaussian, rgba(211, 47, 47, 0.3), 10, 0, 0, 3);
 }
 
 .arrow-button:pressed {
     -fx-background-color: #b71c1c;
+    -fx-border-color: #b71c1c;
+    -fx-effect: dropshadow(gaussian, rgba(183, 28, 28, 0.3), 4, 0, 0, 1);
+    -fx-translate-y: 1px;
 }
 
+/* ===== LEFT PANEL STYLES ===== */
 .model-number {
     -fx-text-fill: #212121;
     -fx-font-size: 52px;
     -fx-font-weight: 700;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 4, 0, 0, 2);
 }
 
 .fuel-badge {
@@ -187,8 +234,34 @@
 
 .accent-line {
     -fx-background-color: #d32f2f;
+    -fx-background-radius: 1px;
 }
 
+.price-section {
+    -fx-padding: 10px 0;
+}
+
+.price-label {
+    -fx-text-fill: #757575;
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 0.5px;
+    -fx-background-color: #f5f5f5;
+    -fx-background-radius: 3px;
+    -fx-padding: 4px 10px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+}
+
+.price-value {
+    -fx-text-fill: #212121;
+    -fx-font-size: 22px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 0.5px;
+}
+
+/* ===== BACK BUTTON ===== */
 .back-button {
     -fx-background-color: transparent;
     -fx-text-fill: #757575;
@@ -199,8 +272,9 @@
     -fx-border-width: 1px;
     -fx-border-radius: 4px;
     -fx-background-radius: 4px;
-    -fx-padding: 10px 18px 10px 18px;
+    -fx-padding: 10px 18px;
     -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
 }
 
 .back-button:hover {
@@ -211,16 +285,13 @@
 
 .back-button:pressed {
     -fx-background-color: #f5f5f5;
-}
-
-.separator {
-    -fx-background-color: #e8e8e8;
+    -fx-translate-y: 1px;
 }
 
 .glass-panel,
 .arrow-button,
 .confirm-button,
 .back-button,
-.car-image-view {
-    -fx-transition: all 0.2s ease;
+.option-price-label {
+    -fx-transition: all 0.3s ease;
 }

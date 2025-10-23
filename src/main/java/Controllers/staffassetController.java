@@ -1,6 +1,7 @@
 package Controllers;
 
-import Utils.AppStage;
+import Utils.SessionStaff;
+import Utils.SessionStaff;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -41,7 +43,6 @@ public class staffassetController {
     private final List<SliderItem> sliderItems = new ArrayList<>();
     private final List<Product> allProducts = new ArrayList<>();
     private final List<Product> currentProducts = new ArrayList<>();
-    private final Map<String, CartItem> shoppingCart = new HashMap<>();
 
     private static class SliderItem {
         String imagePath, title, description;
@@ -63,16 +64,6 @@ public class staffassetController {
             this.description = description;
             this.imagePath = imagePath;
         }
-    }
-
-    private static class CartItem {
-        Product product;
-        int quantity;
-        CartItem(Product product, int quantity) {
-            this.product = product;
-            this.quantity = quantity;
-        }
-        double getTotal() { return product.price * quantity; }
     }
 
     @FXML
@@ -128,15 +119,13 @@ public class staffassetController {
             });
             sliderIndicators.getChildren().add(indicator);
         }
-        StackPane.setMargin(sliderIndicators, new Insets(0, 0, 30, 0));
     }
 
     private void updateSlide() {
         if (sliderItems.isEmpty()) return;
         SliderItem item = sliderItems.get(currentSlide);
         try {
-            Image image = new Image(getClass().getResourceAsStream(item.imagePath));
-            sliderImage.setImage(image);
+            sliderImage.setImage(new Image(getClass().getResourceAsStream(item.imagePath)));
         } catch (Exception e) {
             sliderImage.setImage(null);
         }
@@ -200,12 +189,10 @@ public class staffassetController {
 
         Label nameLabel = new Label(product.name);
         nameLabel.getStyleClass().add("product-name");
-
         Label descLabel = new Label(product.description);
         descLabel.getStyleClass().add("product-description");
         descLabel.setWrapText(true);
         descLabel.setMaxWidth(400);
-
         Label categoryLabel = new Label(product.category.toUpperCase());
         categoryLabel.getStyleClass().add("product-category");
 
@@ -214,40 +201,32 @@ public class staffassetController {
         VBox controlsBox = new VBox(10);
         controlsBox.setAlignment(Pos.CENTER_RIGHT);
         controlsBox.setMinWidth(200);
-
         Label priceLabel = new Label(currencyFormat.format(product.price));
         priceLabel.getStyleClass().add("product-price");
 
         HBox quantityBox = new HBox(8);
         quantityBox.setAlignment(Pos.CENTER_RIGHT);
-
         Label qtyLabel = new Label("Qty:");
         qtyLabel.getStyleClass().add("quantity-label");
-
         Spinner<Integer> quantitySpinner = new Spinner<>(1, 99, 1);
         quantitySpinner.getStyleClass().add("quantity-spinner");
         quantitySpinner.setPrefWidth(60);
         quantitySpinner.setEditable(true);
-
         quantityBox.getChildren().addAll(qtyLabel, quantitySpinner);
 
         Button addButton = new Button("ADD TO CART");
         addButton.getStyleClass().add("add-to-cart-button");
         addButton.setPrefWidth(150);
         addButton.setOnAction(e -> addToCart(product, quantitySpinner.getValue()));
-
         controlsBox.getChildren().addAll(priceLabel, quantityBox, addButton);
+
         contentBox.getChildren().addAll(imageContainer, detailsBox, controlsBox);
         card.getChildren().add(contentBox);
-
         return card;
     }
 
     private void addToCart(Product product, int quantity) {
-        shoppingCart.merge(product.id, new CartItem(product, quantity), (existing, newItem) -> {
-            existing.quantity += newItem.quantity;
-            return existing;
-        });
+        SessionStaff.getInstance().addAccessory(product.id, product.name, product.price, quantity);
         updateCartDisplay();
     }
 
@@ -259,19 +238,11 @@ public class staffassetController {
     }
 
     private void setupBackButton() {
-        backButton.setOnAction(e -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffWelcome.fxml"));
-                Scene scene = new Scene(loader.load());
-                AppStage.getStage().setScene(scene);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
+        backButton.setOnAction(e -> navigate("/View/staffShopingcart.fxml"));
     }
 
     private void openCartModal() {
-        if (shoppingCart.isEmpty()) {
+        if (SessionStaff.getInstance().getAccessories().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Empty Cart");
             alert.setHeaderText("Your cart is empty");
@@ -294,36 +265,31 @@ public class staffassetController {
         double subtotal = 0;
         cartItemsContainer.getChildren().clear();
 
-        for (CartItem item : shoppingCart.values()) {
+        for (SessionStaff.AccessoryItem item : SessionStaff.getInstance().getAccessories().values()) {
             totalItems += item.quantity;
             subtotal += item.getTotal();
-
             HBox row = new HBox(15);
             row.setAlignment(Pos.CENTER_LEFT);
             row.getStyleClass().add("cart-item-row");
             row.setPadding(new Insets(10));
 
-            Label name = new Label(item.product.name);
+            Label name = new Label(item.name);
             name.getStyleClass().add("cart-item-name");
             name.setPrefWidth(400);
-
             Label qty = new Label("x" + item.quantity);
             qty.getStyleClass().add("cart-item-quantity");
             qty.setPrefWidth(60);
-
             Label price = new Label(currencyFormat.format(item.getTotal()));
             price.getStyleClass().add("cart-item-price");
-
             Button remove = new Button("✕");
             remove.getStyleClass().add("remove-item-button");
             remove.setOnAction(e -> {
-                shoppingCart.remove(item.product.id);
+                SessionStaff.getInstance().removeAccessory(findProductIdByName(item.name));
                 updateCartDisplay();
             });
 
             HBox spacer = new HBox();
             HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
-
             row.getChildren().addAll(name, qty, spacer, price, remove);
             cartItemsContainer.getChildren().add(row);
         }
@@ -337,39 +303,48 @@ public class staffassetController {
         totalLabel.setText(currencyFormat.format(total));
     }
 
+    private String findProductIdByName(String name) {
+        for (Product product : allProducts) {
+            if (product.name.equals(name)) {
+                return product.id;
+            }
+        }
+        return "";
+    }
+
     private void clearCart() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Clear Cart");
-        alert.setHeaderText("Clear Shopping Cart?");
-        alert.setContentText("Are you sure you want to remove all items?");
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                shoppingCart.clear();
-                updateCartDisplay();
-                closeCartModal();
-            }
-        });
+        alert.setHeaderText("Are you sure you want to clear the cart?");
+        alert.setContentText("This will remove all items from your cart.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            SessionStaff.getInstance().clearAccessories();
+            updateCartDisplay();
+        }
     }
 
     private void proceedToCheckout() {
-        if (shoppingCart.isEmpty()) {
+        if (SessionStaff.getInstance().getAccessories().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Empty Cart");
-            alert.setHeaderText("Your cart is empty");
-            alert.setContentText("Add items before checking out.");
+            alert.setHeaderText("Cannot proceed to checkout");
+            alert.setContentText("Your cart is empty. Add some items first!");
             alert.showAndWait();
             return;
         }
         closeCartModal();
+        navigate("/View/staffShopingcart.fxml");
+    }
+
+    private void navigate(String path) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffShopingCart.fxml"));
-            Scene scene = new Scene(loader.load());
-            staffShopingCartController controller = loader.getController();
-            controller.setCameFromAsset(true);
-            for (CartItem item : shoppingCart.values()) {
-                controller.addAccessory(item.product.name, item.getTotal());
-            }
-            AppStage.getStage().setScene(scene);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            Scene scene = new Scene(loader.load(), 1300, 850);
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.setScene(scene);
+            stage.centerOnScreen();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

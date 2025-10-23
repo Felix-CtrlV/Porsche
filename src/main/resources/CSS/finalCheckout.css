@@ -193,3 +193,37 @@
     -fx-text-fill: red;
 }
 
+/* Remove car button - transparent with black X */
+.remove-car-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8px 16px;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.remove-car-button:hover {
+    -fx-background-color: #f5f5f5;
+    -fx-text-fill: #000000;
+    -fx-border-color: #999999;
+}
+
+.remove-car-button:pressed {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #000000;
+}
+
+.remove-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #d32f2f;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
