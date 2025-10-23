@@ -1,6 +1,5 @@
 package Model;
 
-import Model.car;
 public class CarConfiguration {
     private car carData;
     private String modelName;
@@ -19,7 +18,7 @@ public class CarConfiguration {
 
     public CarConfiguration(car existingCar) {
         this.carData = existingCar;
-        this.basePrice = existingCar.getCurrent_price();
+        this.basePrice = existingCar.getPrice();
     }
 
     public car getCarData() {
@@ -29,7 +28,7 @@ public class CarConfiguration {
     public void setCarData(car carData) {
         this.carData = carData;
         if (carData != null) {
-            this.basePrice = carData.getCurrent_price();
+            this.basePrice = carData.getPrice();
         }
     }
 
@@ -40,7 +39,7 @@ public class CarConfiguration {
     public void setBasePrice(double basePrice) {
         this.basePrice = basePrice;
         if (carData != null) {
-            carData.setCurrent_price(basePrice);
+            carData.setPrice(basePrice);
         }
     }
 
@@ -69,13 +68,17 @@ public class CarConfiguration {
         this.selectedColor = selectedColor;
 
         if (carData != null && selectedColor != null) {
-            carData.setColor(selectedColor.getName());
+            carData.setCarColor(selectedColor.getName());
         }
     }
 
     public CustomizationOption getSelectedInterior() { return selectedInterior; }
     public void setSelectedInterior(CustomizationOption selectedInterior) {
         this.selectedInterior = selectedInterior;
+
+        if (carData != null && selectedInterior != null) {
+            carData.setInteriorColor(selectedInterior.getName());
+        }
     }
 
     public double getTotalPrice() {
@@ -98,27 +101,47 @@ public class CarConfiguration {
 
     public void updateCarPrice() {
         if (carData != null) {
-            carData.setCurrent_price(getTotalPrice());
+            carData.setPrice(getTotalPrice());
         }
     }
 
     public int getCarId() {
-        return carData != null ? carData.getCarid() : 0;
+        return carData != null ? carData.getCarId() : 0;
     }
 
-    public int getModelId() {
-        return carData != null ? carData.getModelid() : 0;
+    public String getCarColor() {
+        return carData != null ? carData.getCarColor() : "";
+    }
+
+    public String getInteriorColor() {
+        return carData != null ? carData.getInteriorColor() : "";
     }
 
     public int getProductionYear() {
-        return carData != null ? carData.getProduction_year() : 0;
+        return carData != null ? carData.getProductionYear() : 0;
     }
 
     public String getStatus() {
-        return carData != null ? carData.getStatus() : "";
+        return carData != null ? carData.getCarStatus() : "";
     }
 
-    public int getQuantity() {
-        return carData != null ? carData.getQuantity() : 0;
+    public String getTrimName() {
+        return carData != null ? carData.getTrimName() : "";
+    }
+
+    public long getCarSpeed() {
+        return carData != null ? carData.getCarSpeed() : 0;
+    }
+
+    public String getCarCity() {
+        return carData != null ? carData.getCarCity() : "";
+    }
+
+    public String getCarPhoto() {
+        return carData != null ? carData.getCarPhoto() : "";
+    }
+
+    public String getCarDescription() {
+        return carData != null ? carData.getCarDescription() : "";
     }
 }

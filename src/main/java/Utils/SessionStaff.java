@@ -69,53 +69,40 @@ public class SessionStaff {
         instance.address = address;
         instance.dob = dob;
         instance.loginTime = LocalDateTime.now();
-        closePreviousSessionIfAny(id);
-        if (role == Role.STAFF) {
-            logStaffLogin(id, name, instance.loginTime);
-        }
+
         logger.info("Session started: userId={}, username={}, role={}, time={}", id, name, role, instance.loginTime);
-    }
-
-    private static void closePreviousSessionIfAny(int userId) {
-        String sql = "UPDATE staff_attendance SET logout_time = ? WHERE staff_id = ? AND logout_time IS NULL";
-        try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setTimestamp(1, java.sql.Timestamp.valueOf(LocalDateTime.now()));
-            ps.setInt(2, userId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            logger.error("Failed to close previous session for staff ID: {}", userId, e);
-        }
-    }
-
-    private static void logStaffLogin(int staffId, String staffName, LocalDateTime loginTime) {
-        String sql = "INSERT INTO staff_attendance (staff_id, staff_name, login_time, attendance_date) VALUES (?, ?, ?, CURDATE())";
-        try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, staffId);
-            ps.setString(2, staffName);
-            ps.setTimestamp(3, java.sql.Timestamp.valueOf(loginTime));
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            logger.error("Failed to log attendance for staff: {}", staffName, e);
-        }
     }
 
     public static void handleLogout() {
         SessionStaff instance = getInstance();
+
+        if (instance.userId == 0) {
+            logger.warn("No active session found. Logout aborted.");
+            return;
+        }
+
         if (instance.role == Role.STAFF) {
             logStaffLogout(instance.userId, LocalDateTime.now());
         }
+
+        logger.info("User {} (ID: {}) logged out at {}", instance.username, instance.userId, LocalDateTime.now());
         clearSession();
     }
 
     private static void logStaffLogout(int staffId, LocalDateTime logoutTime) {
-        String sql = "UPDATE staff_attendance SET logout_time = ? WHERE staff_id = ? AND attendance_date = CURDATE() AND logout_time IS NULL ORDER BY login_time DESC LIMIT 1";
+        String sql = "INSERT INTO staff_attendance (staff_id, logout_time, attendance_date) VALUES (?, ?, CURRENT_DATE)";
+
         try (Connection con = DatabaseConnectionManager.getInstance().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setTimestamp(1, java.sql.Timestamp.valueOf(logoutTime));
-            ps.setInt(2, staffId);
-            ps.executeUpdate();
+
+            ps.setInt(1, staffId);
+            ps.setTimestamp(2, java.sql.Timestamp.valueOf(logoutTime));
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                logger.info("Logout logged for staff ID: {} at {}", staffId, logoutTime);
+            }
+
         } catch (SQLException e) {
             logger.error("Failed to log logout for staff ID: {}", staffId, e);
         }
@@ -134,6 +121,7 @@ public class SessionStaff {
         instance.address = null;
         instance.dob = null;
         instance.loginTime = null;
+        logger.info("Session cleared");
     }
 
     public void setCarConfiguration(CarConfiguration config) {
@@ -168,6 +156,15 @@ public class SessionStaff {
 
     public void clearAccessories() {
         accessories.clear();
+    }
+
+    /**
+     * Clears the entire shopping cart including car configuration and all accessories
+     */
+    public void clearCart() {
+        this.currentCarConfig = null;
+        this.accessories.clear();
+        logger.info("Shopping cart cleared (car configuration and accessories)");
     }
 
     public int getTotalAccessoryCount() {

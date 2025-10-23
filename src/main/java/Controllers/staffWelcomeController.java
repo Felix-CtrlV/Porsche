@@ -1,6 +1,6 @@
 package Controllers;
 
-import Utils.AppStage;
+import Utils.SessionStaff;
 import javafx.animation.ScaleTransition;
 import javafx.animation.ParallelTransition;
 import javafx.beans.binding.DoubleBinding;
@@ -19,11 +19,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class staffWelcomeController {
+    private static final Logger logger = LoggerFactory.getLogger(staffWelcomeController.class);
 
     @FXML private VBox vbox;
     @FXML private Label topicLabel;
@@ -80,9 +83,12 @@ public class staffWelcomeController {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
             Scene newScene = new Scene(root, 1300, 850);
-            AppStage.getStage().setScene(newScene);
-            AppStage.getStage().centerOnScreen();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(newScene);
+            stage.centerOnScreen();
+            logger.info("Navigated to: {}", fxmlPath);
         } catch (IOException | NullPointerException ex) {
+            logger.error("Failed to navigate: " + fxmlPath, ex);
             System.err.println("Failed to navigate: " + fxmlPath);
             ex.printStackTrace();
         }
@@ -95,15 +101,48 @@ public class staffWelcomeController {
     }
 
     @FXML
+    private void clickaccessorybtn(ActionEvent event) {
+        createClickFeedback(accessorybtn);
+        navigate(event, "/View/staffAsset.fxml");
+    }
+
+    @FXML
     private void logout(ActionEvent event) {
         createClickFeedback(logoutbtn);
+        SessionStaff.handleLogout();
         navigateToLogin(event);
     }
 
     @FXML
-    private void clickaccessorybtn(ActionEvent event) {
-        createClickFeedback(accessorybtn);
-        navigate(event, "/View/staffasset.fxml");
+    private void settingsLogout(ActionEvent event) {
+        createClickFeedback((Node) event.getSource());
+        SessionStaff.handleLogout();
+        navigateToLogin(event);
+    }
+
+    private void navigateToLogin(Event event) {
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/login.fxml")));
+
+            // Let the login.fxml use its own preferred size
+            Scene loginScene = new Scene(root);
+
+            // Close current stage
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentStage.close();
+
+            // Create new stage for login with its natural size
+            Stage loginStage = new Stage();
+            loginStage.setScene(loginScene);
+            loginStage.centerOnScreen();
+            loginStage.show();
+
+            logger.info("Navigated to login screen");
+        } catch (IOException ex) {
+            logger.error("Failed to navigate to login.fxml", ex);
+            System.err.println("Failed to navigate to login.fxml");
+            ex.printStackTrace();
+        }
     }
 
     @FXML
@@ -118,24 +157,5 @@ public class staffWelcomeController {
         settingsPopup.setVisible(!isVisible);
         settingsPopup.setManaged(!isVisible);
         settingsPopup.setOpacity(1);
-    }
-
-    @FXML
-    private void settingsLogout(ActionEvent event) {
-        createClickFeedback((Node) event.getSource());
-        navigateToLogin(event);
-    }
-
-    private void navigateToLogin(Event event) {
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/login.fxml")));
-            Scene newScene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(newScene);
-            stage.centerOnScreen();
-        } catch (IOException ex) {
-            System.err.println("Failed to navigate to login.fxml");
-            ex.printStackTrace();
-        }
     }
 }

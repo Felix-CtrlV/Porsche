@@ -1,4 +1,3 @@
-
 .root {
     /* Porsche Color Palette */
     -porsche-red: #D5001C;
@@ -25,17 +24,6 @@
     -spacing-md: 24px;
     -spacing-lg: 40px;
     -spacing-xl: 60px;
-
-    /* Shadows */
-    -shadow-sm: 0 2px 8px -2px rgba(0, 0, 0, 0.06);
-    -shadow-md: 0 4px 16px -4px rgba(0, 0, 0, 0.08);
-    -shadow-lg: 0 8px 32px -8px rgba(0, 0, 0, 0.12);
-    -shadow-red: 0 8px 32px -8px rgba(213, 0, 28, 0.2);
-
-    /* Transitions */
-    -transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    -transition-medium: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    -transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* DARK MODE THEME */
@@ -184,10 +172,92 @@
     -fx-background-color: transparent;
 }
 
+/* ========================================
+   CAR CARD STYLES (PROGRAMMATIC)
+   ======================================== */
+
+.car-card {
+    -fx-background-color: -card-bg;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 12, 0, 0, 4);
+    -fx-cursor: hand;
+}
+
+.car-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(213, 0, 28, 0.15), 20, 0.4, 0, 8);
+    -fx-translate-y: -8;
+}
+
+.image-container {
+    -fx-background-color: -bg-secondary;
+    -fx-background-radius: 12px 12px 0 0;
+}
+
+.car-image {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0, 0, 1);
+}
+
+.details-container {
+    -fx-background-color: -card-bg;
+    -fx-background-radius: 0 0 12px 12px;
+}
+
+.model-name {
+    -fx-font-family: -font-primary;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -text-primary;
+    -fx-text-alignment: center;
+}
+
+.model-price {
+    -fx-font-family: -font-primary;
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -porsche-red;
+}
+
+.model-info {
+    -fx-font-family: -font-secondary;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -text-secondary;
+    -fx-text-alignment: center;
+}
+
+.customize-button {
+    -fx-background-color: -porsche-red;
+    -fx-text-fill: white;
+    -fx-font-family: -font-primary;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1px;
+    -fx-padding: 12px 30px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.customize-button:hover {
+    -fx-background-color: -porsche-red-hover;
+    -fx-effect: dropshadow(gaussian, -porsche-red-glow, 12, 0.6, 0, 0);
+    -fx-scale-y: 1.05;
+}
+
+.customize-button:pressed {
+    -fx-background-color: -porsche-red-hover;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ========================================
+   LEGACY MODEL CARD STYLES (FXML-BASED)
+   Keep for backward compatibility
+   ======================================== */
+
 .model-card {
     -fx-background-color: -card-bg;
     -fx-background-radius: 8px;
-    -fx-effect: dropshadow(gaussian, -card-shadow, 12, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 12, 0, 0, 4);
     -fx-cursor: hand;
     -fx-padding: 0;
     -fx-pref-width: 340px;
@@ -195,7 +265,7 @@
 }
 
 .model-card:hover {
-    -fx-effect: dropshadow(gaussian, -card-shadow-hover, 20, 0.4, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(213, 0, 28, 0.15), 20, 0.4, 0, 8);
     -fx-translate-y: -8;
 }
 
@@ -303,13 +373,6 @@
     -fx-padding: 8px 0;
 }
 
-.model-card,
-.back-button,
-.theme-toggle-button,
-.model-card-button {
-    -fx-transition: all -transition-medium;
-}
-
 .loading-container {
     -fx-background-color: -bg-secondary;
     -fx-alignment: center;
@@ -332,7 +395,8 @@
         -fx-font-size: 28px;
     }
 
-    .model-card {
+    .model-card,
+    .car-card {
         -fx-pref-width: 300px;
         -fx-pref-height: 380px;
     }
@@ -343,7 +407,8 @@
         -fx-font-size: 24px;
     }
 
-    .model-card {
+    .model-card,
+    .car-card {
         -fx-pref-width: 280px;
         -fx-pref-height: 360px;
     }

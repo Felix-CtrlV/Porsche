@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -82,27 +83,44 @@ public class staffCustomizeController implements Initializable {
         displayInitialSelections();
     }
 
+    public void setSelectedCar(car selectedCar) {
+        if (selectedCar != null) {
+            carConfig = new CarConfiguration(selectedCar);
+            carConfig.setModelName(selectedCar.getModelName());
+            carConfig.setModelImagePath(selectedCar.getCarPhoto());
+            carConfig.setFrameNumber(String.valueOf(selectedCar.getCarId()));
+            carConfig.setFuelType(selectedCar.getFuelType() != null ? selectedCar.getFuelType() : "GASOLINE");
+            carConfig.setDescription(selectedCar.getCarDescription() != null ? selectedCar.getCarDescription() : "");
+
+            updateCarDisplay();
+            loadCustomizationOptions();
+            displayInitialSelections();
+        }
+    }
+
     private void initializeCarConfiguration() {
         car newCar = new car();
-        newCar.setCarid(1);
-        newCar.setModelid(911);
-        newCar.setQuantity(1);
-        newCar.setColor("Carrara White");
-        newCar.setProduction_year(2024);
-        newCar.setCurrent_price(140000.0);
-        newCar.setStatus("available");
-
-        carConfig = new CarConfiguration(newCar);
-        carConfig.setModelName("Carrera GTS");
-        carConfig.setModelImagePath("/Image/911_select_model.png");
-        carConfig.setFrameNumber("911");
-        carConfig.setFuelType("GASOLINE");
-        carConfig.setDescription(
+        newCar.setCarId(1);
+        newCar.setModelName("911 Carrera GTS");
+        newCar.setCarColor("Carrara White");
+        newCar.setProductionYear(2024);
+        newCar.setPrice(140000.0);
+        newCar.setCarStatus("available");
+        newCar.setCarPhoto("/Image/911_select_model.png");
+        newCar.setFuelType("GASOLINE");
+        newCar.setCarDescription(
                 "The 911 Carrera GTS epitomizes precision and driving passion. " +
                         "Its naturally aspirated flat-six, razor-sharp handling, and track-focused " +
                         "aerodynamics deliver uncompromising performance—every roar and shift a " +
                         "statement of speed, control, and automotive excellence."
         );
+
+        carConfig = new CarConfiguration(newCar);
+        carConfig.setModelName(newCar.getModelName());
+        carConfig.setModelImagePath(newCar.getCarPhoto());
+        carConfig.setFrameNumber(String.valueOf(newCar.getCarId()));
+        carConfig.setFuelType(newCar.getFuelType());
+        carConfig.setDescription(newCar.getCarDescription());
 
         updateCarDisplay();
     }
@@ -116,6 +134,10 @@ public class staffCustomizeController implements Initializable {
     }
 
     private void loadCustomizationOptions() {
+        wheelOptions.clear();
+        colorOptions.clear();
+        interiorOptions.clear();
+
         wheelOptions.add(new CustomizationOption("18-inch Standard Wheels", 0, loadImage("/Image/rim 1.png"), true));
         wheelOptions.add(new CustomizationOption("20-inch Carrera S Wheels", 2500, loadImage("/Image/rim 2.png"), false));
         wheelOptions.add(new CustomizationOption("21-inch RS Spyder Design", 4200, loadImage("/Image/rim 3.png"), false));
@@ -277,82 +299,58 @@ public class staffCustomizeController implements Initializable {
         FadeTransition fadeInNext = new FadeTransition(ANIMATION_DURATION, nextImageView);
         fadeInNext.setToValue(1);
 
-        ParallelTransition transition = new ParallelTransition(slideOutCurrent, fadeOutCurrent, slideInNext, fadeInNext);
+        ParallelTransition outTransition = new ParallelTransition(slideOutCurrent, fadeOutCurrent);
+        ParallelTransition inTransition = new ParallelTransition(slideInNext, fadeInNext);
 
-        transition.setOnFinished(e -> {
-            container.getChildren().clear();
-            container.getChildren().add(nextImageView);
-            if (onComplete != null) {
-                onComplete.run();
-            }
+        SequentialTransition fullTransition = new SequentialTransition(outTransition, inTransition);
+        fullTransition.setOnFinished(e -> {
+            container.getChildren().remove(currentImageView);
+            onComplete.run();
         });
 
-        transition.play();
-    }
-
-    @FXML
-    private void handleConfirmOrder(ActionEvent event) {
-        carConfig.updateCarPrice();
-        SessionStaff.getInstance().setCarConfiguration(carConfig);
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffFinalize.fxml"));
-            Parent root = loader.load();
-
-            staffFinalizeController finalizeController = loader.getController();
-            finalizeController.setCarConfiguration(carConfig);
-
-            Scene newScene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            stage.setScene(newScene);
-            stage.centerOnScreen();
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Failed to navigate to finalize page", ex);
-        }
-    }
-
-    @FXML
-    private void handleBack(ActionEvent event) {
-        navigateToScene(event, "/View/staffModelSelect.fxml");
-    }
-
-    private void navigateToScene(ActionEvent event, String fxmlPath) {
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
-            Scene newScene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            stage.setScene(newScene);
-            stage.centerOnScreen();
-        } catch (IOException | NullPointerException ex) {
-            LOGGER.log(Level.SEVERE, "Failed to navigate to: " + fxmlPath, ex);
-        }
-    }
-
-    public void setCarData(car existingCar, String name, String imagePath) {
-        if (existingCar != null) {
-            carConfig.setCarData(existingCar);
-            carConfig.setModelName(name);
-            carConfig.setModelImagePath(imagePath);
-            updateCarDisplay();
-
-            if (modelImage != null && imagePath != null) {
-                try {
-                    Image img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
-                    modelImage.setImage(img);
-                } catch (Exception e) {
-                    LOGGER.log(Level.WARNING, "Failed to set car image: " + imagePath, e);
-                }
-            }
-        }
-    }
-
-    public car getConfiguredCar() {
-        carConfig.updateCarPrice();
-        return carConfig.getCarData();
+        fullTransition.play();
     }
 
     @FunctionalInterface
     private interface IndexUpdater {
         void update(int newIndex);
+    }
+
+    @FXML
+    private void handleConfirm(ActionEvent event) {
+        SessionStaff.getInstance().setCarConfiguration(carConfig);
+        navigateToFinalize(event);
+    }
+
+    private void navigateToFinalize(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffFinalize.fxml"));
+            Parent root = loader.load();
+
+            staffFinalizeController finalizeController = loader.getController();
+            if (finalizeController != null) {
+                finalizeController.setCarConfiguration(carConfig);
+            }
+
+            Scene newScene = new Scene(root, 1300, 850);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(newScene);
+            stage.centerOnScreen();
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Failed to navigate to finalize screen", ex);
+        }
+    }
+
+    @FXML
+    private void handleBack(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/staffModelSelect.fxml")));
+            Scene newScene = new Scene(root, 1300, 850);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(newScene);
+            stage.centerOnScreen();
+        } catch (IOException | NullPointerException ex) {
+            LOGGER.log(Level.SEVERE, "Failed to navigate back", ex);
+        }
     }
 }

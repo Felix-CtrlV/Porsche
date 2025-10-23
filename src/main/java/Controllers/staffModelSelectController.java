@@ -1,20 +1,35 @@
 package Controllers;
 
-import Utils.AppStage;
+import DAO.CarDAO;
+import Model.car;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
 public class staffModelSelectController implements Initializable {
+    private static final Logger logger = LoggerFactory.getLogger(staffModelSelectController.class);
 
     @FXML
     private FlowPane flow_Pane;
@@ -22,28 +37,200 @@ public class staffModelSelectController implements Initializable {
     @FXML
     private Button backbtn;
 
-    private final List<ModelData> modelsData = Arrays.asList(
-            new ModelData("911 Carrera", "/Image/911_model.png", "$110,000"),
-            new ModelData("Taycan", "/Image/taycan_model.png", "$120,000"),
-            new ModelData("Cayenne", "/Image/cayenne_model.png", "$105,000")
-    );
+    @FXML
+    private Label modelTitle;
+
+    private CarDAO carDAO;
+    private String selectedModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loadCarCards();
+        logger.info("Initializing staffModelSelectController");
+        carDAO = new CarDAO();
+    }
+
+    public void setSelectedModel(String modelName) {
+        this.selectedModel = modelName;
+        logger.info("Selected model set to: {}", modelName);
+
+        if (modelTitle != null) {
+            modelTitle.setText(modelName + " Models");
+        }
+
+        Platform.runLater(() -> {
+            if (flow_Pane != null) {
+                logger.info("FlowPane is available, loading car cards for model: {}", modelName);
+                loadCarCards();
+            } else {
+                logger.error("FlowPane is null!");
+            }
+        });
     }
 
     private void loadCarCards() {
-        for (ModelData data : modelsData) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffCarCards.fxml"));
-                Parent card = loader.load();
-                staffCarcardController cardController = loader.getController();
-                cardController.setCarData(data.getModelName(), data.getImagePath(), data.getPrice());
-                flow_Pane.getChildren().add(card);
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            logger.info("Fetching cars from database for model: {}", selectedModel);
+            List<car> cars;
+
+            if (selectedModel != null && !selectedModel.isEmpty()) {
+                cars = carDAO.getCarsByModelName(selectedModel);
+            } else {
+                cars = carDAO.getAllCars();
             }
+
+            if (cars == null) {
+                logger.error("getCarsByModelName() returned null!");
+                return;
+            }
+
+            if (cars.isEmpty()) {
+                logger.warn("No cars found in database for model: {}", selectedModel);
+                return;
+            }
+
+            logger.info("Found {} cars for model: {}", cars.size(), selectedModel);
+
+            flow_Pane.getChildren().clear();
+
+            for (car carData : cars) {
+                try {
+                    logger.info("Creating card for car: {} (ID: {})", carData.getModelName(), carData.getCarId());
+
+                    VBox card = createCarCard(carData);
+                    flow_Pane.getChildren().add(card);
+
+                    logger.info("Successfully added car card: {}", carData.getModelName());
+
+                } catch (Exception e) {
+                    logger.error("Unexpected error creating card for: " + carData.getModelName(), e);
+                }
+            }
+
+            logger.info("Finished loading {} car cards", flow_Pane.getChildren().size());
+
+        } catch (Exception e) {
+            logger.error("Failed to load cars from database", e);
+            e.printStackTrace();
+        }
+    }
+
+    private VBox createCarCard(car carData) {
+        // Main card container
+        VBox card = new VBox();
+        card.getStyleClass().add("car-card");
+        card.setPrefSize(320, 380);
+        card.setAlignment(Pos.TOP_CENTER);
+        card.setSpacing(0);
+
+        // Image container
+        StackPane imageContainer = new StackPane();
+        imageContainer.getStyleClass().add("image-container");
+        imageContainer.setPrefSize(320, 220);
+        imageContainer.setAlignment(Pos.CENTER);
+
+        // Car image
+        ImageView carImage = new ImageView();
+        carImage.setFitWidth(300);
+        carImage.setFitHeight(200);
+        carImage.setPreserveRatio(true);
+        carImage.setSmooth(true);
+        carImage.getStyleClass().add("car-image");
+
+        // Load image
+        String imagePath = carData.getCarPhoto();
+        if (imagePath != null && !imagePath.isEmpty()) {
+            try (InputStream stream = getClass().getResourceAsStream(imagePath)) {
+                if (stream != null) {
+                    carImage.setImage(new Image(stream));
+                    logger.debug("Loaded car image: {}", imagePath);
+                } else {
+                    logger.warn("Image not found: {}", imagePath);
+                    loadPlaceholderImage(carImage);
+                }
+            } catch (Exception e) {
+                logger.error("Failed to load car image: " + imagePath, e);
+                loadPlaceholderImage(carImage);
+            }
+        } else {
+            loadPlaceholderImage(carImage);
+        }
+
+        imageContainer.getChildren().add(carImage);
+
+        // Details container
+        VBox detailsContainer = new VBox(12);
+        detailsContainer.getStyleClass().add("details-container");
+        detailsContainer.setAlignment(Pos.CENTER);
+        detailsContainer.setPadding(new Insets(20, 20, 20, 20));
+
+        // Model name
+        Label modelNameLabel = new Label(carData.getFullName());
+        modelNameLabel.getStyleClass().add("model-name");
+        modelNameLabel.setWrapText(true);
+        modelNameLabel.setMaxWidth(280);
+        modelNameLabel.setAlignment(Pos.CENTER);
+
+        // Price
+        Label priceLabel = new Label("$" + String.format("%,.0f", carData.getPrice()));
+        priceLabel.getStyleClass().add("model-price");
+
+        // Year and status
+        Label infoLabel = new Label(carData.getProductionYear() + " • " + carData.getCarStatus().toUpperCase());
+        infoLabel.getStyleClass().add("model-info");
+
+        // Customize button
+        Button customizeButton = new Button("CUSTOMIZE");
+        customizeButton.getStyleClass().add("customize-button");
+        customizeButton.setPrefWidth(200);
+        customizeButton.setOnAction(e -> navigateToCustomize(carData));
+
+        // Add hover effect
+        card.setOnMouseEntered(e -> card.setStyle("-fx-cursor: hand;"));
+        card.setOnMouseExited(e -> card.setStyle("-fx-cursor: default;"));
+
+        // Assemble details
+        detailsContainer.getChildren().addAll(modelNameLabel, priceLabel, infoLabel, customizeButton);
+
+        // Assemble card
+        card.getChildren().addAll(imageContainer, detailsContainer);
+
+        return card;
+    }
+
+    private void loadPlaceholderImage(ImageView imageView) {
+        String placeholderPath = "/Image/placeholder_car.png";
+        try (InputStream stream = getClass().getResourceAsStream(placeholderPath)) {
+            if (stream != null) {
+                imageView.setImage(new Image(stream));
+                logger.debug("Loaded placeholder image");
+            } else {
+                logger.error("Placeholder image not found at: {}", placeholderPath);
+            }
+        } catch (Exception e) {
+            logger.error("Failed to load placeholder image", e);
+        }
+    }
+
+    private void navigateToCustomize(car selectedCar) {
+        try {
+            logger.info("Navigating to customize page with car: {}", selectedCar.getModelName());
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffCustomize.fxml"));
+            Parent root = loader.load();
+
+            staffCustomizeController controller = loader.getController();
+            if (controller != null) {
+                controller.setSelectedCar(selectedCar);
+            }
+
+            Stage stage = (Stage) flow_Pane.getScene().getWindow();
+            Scene scene = new Scene(root, 1300, 850);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            logger.error("Unable to load staffCustomize.fxml", e);
+            e.printStackTrace();
         }
     }
 
@@ -52,26 +239,12 @@ public class staffModelSelectController implements Initializable {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/View/staffCars.fxml"));
             Scene scene = new Scene(root, 1300, 850);
-            AppStage.getStage().setScene(scene);
-            AppStage.getStage().centerOnScreen();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            logger.info("Navigated back to staffCars");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to navigate to staffCars", e);
         }
-    }
-
-    public static class ModelData {
-        private final String modelName;
-        private final String imagePath;
-        private final String price;
-
-        public ModelData(String modelName, String imagePath, String price) {
-            this.modelName = modelName;
-            this.imagePath = imagePath;
-            this.price = price;
-        }
-
-        public String getModelName() { return modelName; }
-        public String getImagePath() { return imagePath; }
-        public String getPrice() { return price; }
     }
 }

@@ -3,11 +3,11 @@ package Controllers;
 import Model.CarConfiguration;
 import Model.CustomizationOption;
 import Utils.SessionStaff;
-import Utils.SessionStaff;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -157,7 +157,7 @@ public class staffFinalizeController implements Initializable {
             cartController.loadFromSession();
 
             Scene newScene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(newScene);
             stage.centerOnScreen();
         } catch (IOException ex) {
@@ -174,7 +174,7 @@ public class staffFinalizeController implements Initializable {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(path)));
             Scene newScene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(newScene);
             stage.centerOnScreen();
         } catch (IOException | NullPointerException ex) {

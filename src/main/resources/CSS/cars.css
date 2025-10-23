@@ -12,13 +12,6 @@
     -metallic-gray: #8C8C8C;
     -font-primary: 'Helvetica Neue', 'Segoe UI Semibold', 'Arial Rounded MT Bold', sans-serif;
     -font-secondary: 'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif;
-    -shadow-subtle: 0 2px 12px rgba(0, 0, 0, 0.04);
-    -shadow-normal: 0 4px 20px rgba(0, 0, 0, 0.08);
-    -shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
-    -shadow-red: 0 8px 32px rgba(213, 0, 28, 0.25);
-    -transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    -transition-medium: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    -transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .root-pane {
@@ -168,12 +161,6 @@
     -fx-letter-spacing: 2px;
 }
 
-.model-tile-wrapper,
-.model-image,
-.home-button {
-    -fx-transition: all -transition-medium;
-}
-
 .fade-in {
     -fx-opacity: 0;
 }
@@ -229,13 +216,4 @@
     -fx-border-color: -porsche-red;
     -fx-border-width: 3px;
     -fx-border-radius: 8px;
-}
-
-.model-tile-wrapper::before {
-    -fx-background-color: linear-gradient(to bottom, transparent, -porsche-red-light);
-    -fx-opacity: 0;
-}
-
-.model-tile-wrapper:hover::before {
-    -fx-opacity: 1;
 }
