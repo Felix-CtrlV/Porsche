@@ -1,5 +1,6 @@
 package Controllers;
 
+import Utils.AppStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,18 +8,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 public class staffModelSelectController implements Initializable {
-
-    @FXML
-    private Label speeddescription;
 
     @FXML
     private FlowPane flow_Pane;
@@ -56,9 +52,8 @@ public class staffModelSelectController implements Initializable {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/View/staffCars.fxml"));
             Scene scene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.centerOnScreen();
+            AppStage.getStage().setScene(scene);
+            AppStage.getStage().centerOnScreen();
         } catch (IOException e) {
             e.printStackTrace();
         }

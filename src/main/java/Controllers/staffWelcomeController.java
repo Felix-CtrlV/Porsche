@@ -1,5 +1,6 @@
 package Controllers;
 
+import Utils.AppStage;
 import javafx.animation.ScaleTransition;
 import javafx.animation.ParallelTransition;
 import javafx.beans.binding.DoubleBinding;
@@ -79,9 +80,8 @@ public class staffWelcomeController {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
             Scene newScene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(newScene);
-            stage.centerOnScreen();
+            AppStage.getStage().setScene(newScene);
+            AppStage.getStage().centerOnScreen();
         } catch (IOException | NullPointerException ex) {
             System.err.println("Failed to navigate: " + fxmlPath);
             ex.printStackTrace();

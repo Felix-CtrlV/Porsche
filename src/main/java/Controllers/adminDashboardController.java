@@ -4,6 +4,7 @@ import Database.DatabaseConnectionManager;
 import MainUI.login;
 import Utils.OTPService;
 import Utils.Session;
+import Utils.CSSManager;
 import javafx.stage.FileChooser;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -842,9 +843,9 @@ public class adminDashboardController {
             profileEmail.setFocusTraversable(true);
             profilePhone.setFocusTraversable(true);
             profileAddress.setFocusTraversable(true);
-            profileEmail.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: #3b82f6; -fx-border-width: 2; -fx-border-radius: 8;");
-            profilePhone.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: #3b82f6; -fx-border-width: 2; -fx-border-radius: 8;");
-            profileAddress.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: #3b82f6; -fx-border-width: 2; -fx-border-radius: 8;");
+            CSSManager.applyAdminTextField(profileEmail);
+            CSSManager.applyAdminTextField(profilePhone);
+            CSSManager.applyAdminTextField(profileAddress);
             saveProfileBtn.setVisible(true);
             if (editProfilePhotoBtn != null) {
                 editProfilePhotoBtn.setVisible(true);
@@ -858,9 +859,9 @@ public class adminDashboardController {
             profileEmail.setFocusTraversable(false);
             profilePhone.setFocusTraversable(false);
             profileAddress.setFocusTraversable(false);
-            profileEmail.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
-            profilePhone.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
-            profileAddress.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
+            CSSManager.removeAdminTextField(profileEmail);
+            CSSManager.removeAdminTextField(profilePhone);
+            CSSManager.removeAdminTextField(profileAddress);
             saveProfileBtn.setVisible(false);
             editProfileBtn.setText("✏");
             
@@ -1018,22 +1019,26 @@ public class adminDashboardController {
 
         // Set icon and color based on type
         StackPane iconContainer = (StackPane) toastIcon.getParent();
+        
+        // Clear existing toast styles
+        iconContainer.getStyleClass().removeAll("toast-icon-success", "toast-icon-error", "toast-icon-warning", "toast-icon-info");
+        
         switch (normalizedType) {
             case "success":
                 toastIcon.setText("✓");
-                iconContainer.setStyle("-fx-background-color: #10b981; -fx-background-radius: 18;");
+                iconContainer.getStyleClass().add("toast-icon-success");
                 break;
             case "error":
                 toastIcon.setText("✕");
-                iconContainer.setStyle("-fx-background-color: #ef4444; -fx-background-radius: 18;");
+                iconContainer.getStyleClass().add("toast-icon-error");
                 break;
             case "warning":
                 toastIcon.setText("!");
-                iconContainer.setStyle("-fx-background-color: #f59e0b; -fx-background-radius: 18;");
+                iconContainer.getStyleClass().add("toast-icon-warning");
                 break;
             default:
                 toastIcon.setText("ℹ");
-                iconContainer.setStyle("-fx-background-color: #3b82f6; -fx-background-radius: 18;");
+                iconContainer.getStyleClass().add("toast-icon-info");
                 break;
         }
         

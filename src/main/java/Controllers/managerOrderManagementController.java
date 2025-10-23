@@ -363,7 +363,7 @@ public class managerOrderManagementController {
         });
 
         // Force table and text visibility with normal font weight
-        orderTable.setFixedCellSize(40);
+        orderTable.setFixedCellSize(-1);
         orderTable.setStyle("-fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-background-color: white;");
         
         orderTable.setRowFactory(tv -> {
@@ -372,6 +372,8 @@ public class managerOrderManagementController {
             // Update row style based on selection
             row.itemProperty().addListener((obs, oldItem, newItem) -> updateRowStyle(row));
             row.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateRowStyle(row));
+            
+            row.setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
 
             row.setOnMouseEntered(e -> {
                 if (!row.isEmpty() && !row.isSelected()) {
@@ -380,7 +382,8 @@ public class managerOrderManagementController {
                                 "-fx-font-size: 14px !important; " +
                                 "-fx-font-weight: normal; " +
                                 "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0;");
+                                "-fx-border-width: 0 0 1 0; " +
+                                "-fx-padding: 8 0 8 0;");
                 }
             });
 
@@ -430,7 +433,8 @@ public class managerOrderManagementController {
             return new SimpleStringProperty(parts.length > 2 ? parts[2] : "");
         });
         
-        // Set up installment table row factory for spacing
+        // Set up installment table with fixed row size
+        installmentTable.setFixedCellSize(35);
         installmentTable.setRowFactory(tv -> {
             TableRow<String> row = new TableRow<>();
             
@@ -438,11 +442,10 @@ public class managerOrderManagementController {
                 if (row.isEmpty()) {
                     row.setStyle("");
                 } else {
-                    // Add spacing and border to installment rows
+                    // Add border to installment rows
                     row.setStyle("-fx-background-color: white; " +
                                 "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0; " +
-                                "-fx-padding: 6 0 6 0;");
+                                "-fx-border-width: 0 0 1 0;");
                 }
             });
             
@@ -451,8 +454,7 @@ public class managerOrderManagementController {
                 if (!row.isEmpty()) {
                     row.setStyle("-fx-background-color: #f8f9fa; " +
                                 "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0; " +
-                                "-fx-padding: 6 0 6 0;");
+                                "-fx-border-width: 0 0 1 0;");
                 }
             });
             
@@ -460,8 +462,7 @@ public class managerOrderManagementController {
                 if (!row.isEmpty()) {
                     row.setStyle("-fx-background-color: white; " +
                                 "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0; " +
-                                "-fx-padding: 6 0 6 0;");
+                                "-fx-border-width: 0 0 1 0;");
                 }
             });
             
@@ -1458,21 +1459,23 @@ public class managerOrderManagementController {
         if (row.isEmpty()) {
             row.setStyle("");
         } else if (row.isSelected()) {
-            // Selected row: bold text with highlight background
+            // Selected row: bold text with highlight background and spacing
             row.setStyle("-fx-background-color: #e3f2fd; " +
                         "-fx-text-fill: black !important; " +
                         "-fx-font-size: 14px !important; " +
                         "-fx-font-weight: bold; " +
                         "-fx-border-color: #2196f3; " +
-                        "-fx-border-width: 0 0 2 0;");
+                        "-fx-border-width: 0 0 2 0; " +
+                        "-fx-padding: 8 0 8 0;");
         } else {
-            // Normal row: regular text
+            // Normal row: regular text with spacing
             row.setStyle("-fx-background-color: white; " +
                         "-fx-text-fill: black !important; " +
                         "-fx-font-size: 14px !important; " +
                         "-fx-font-weight: normal; " +
                         "-fx-border-color: #e9ecef; " +
-                        "-fx-border-width: 0 0 1 0;");
+                        "-fx-border-width: 0 0 1 0; " +
+                        "-fx-padding: 8 0 8 0;");
         }
     }
     

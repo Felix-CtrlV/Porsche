@@ -23,14 +23,14 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<StackPane minHeight="605.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminDashboardController">
+<StackPane minHeight="300.0" minWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminDashboardController">
     <children>
-        <BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="580.0" prefWidth="1188.0" stylesheets="@../CSS/DashBoard_general.css">
+        <BorderPane fx:id="root" minHeight="768.0" minWidth="1366.0" stylesheets="@../CSS/DashBoard_general.css">
             <center>
-                <AnchorPane fx:id="admin_anc" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                <AnchorPane fx:id="admin_anc" minHeight="721.0" minWidth="1366.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
             </center>
             <top>
-                <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="200.0" styleClass="glass_main" BorderPane.alignment="CENTER">
+                <HBox alignment="CENTER_LEFT" minHeight="47.0" minWidth="1366.0" prefHeight="37.0" prefWidth="200.0" styleClass="glass_main" BorderPane.alignment="CENTER">
                     <children>
                         <ImageView fx:id="img" fitHeight="35.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
                             <image>
