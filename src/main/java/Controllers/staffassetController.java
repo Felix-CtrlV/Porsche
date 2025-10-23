@@ -3,6 +3,7 @@ package Controllers;
 import DAO.AccessoryDAO;
 import Model.Accessory;
 import Utils.SessionStaff;
+import Utils.DarkModeManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -33,6 +34,7 @@ import java.util.*;
 public class staffassetController {
     private static final Logger logger = LoggerFactory.getLogger(staffassetController.class);
 
+    @FXML private StackPane rootPane;
     @FXML private ImageView sliderImage;
     @FXML private HBox sliderIndicators;
     @FXML private Label sliderTitle, sliderDescription;
@@ -65,6 +67,14 @@ public class staffassetController {
     @FXML
     public void initialize() {
         logger.info("=== Initializing staffassetController ===");
+
+        if (rootPane != null) {
+            rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    DarkModeManager.getInstance().registerScene(newScene);
+                }
+            });
+        }
 
         categoryToggleGroup = new ToggleGroup();
         allCategoryButton.setToggleGroup(categoryToggleGroup);
@@ -322,9 +332,9 @@ public class staffassetController {
                 for (Node child : card.getChildren()) {
                     if (child instanceof HBox) {
                         HBox contentBox = (HBox) child;
-                        for (Node innerChild : contentBox.getChildren()) {
-                            if (innerChild instanceof VBox) {
-                                VBox controlsBox = (VBox) innerChild;
+                        for (Node content : contentBox.getChildren()) {
+                            if (content instanceof VBox) {
+                                VBox controlsBox = (VBox) content;
                                 for (Node control : controlsBox.getChildren()) {
                                     if (control instanceof Button && ((Button) control).getText().equals("ADD TO CART")) {
                                         sourceButton = (Button) control;
@@ -337,178 +347,113 @@ public class staffassetController {
                 }
             }
         }
-
-        if (sourceButton != null) {
-            showAddedAnimation(sourceButton);
-        }
-    }
-
-    private void showAddedAnimation(Button button) {
-        String originalText = button.getText();
-        button.setText("✓ ADDED");
-        button.setDisable(true);
-
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.5), e -> {
-            button.setText(originalText);
-            button.setDisable(false);
-        }));
-        timeline.play();
     }
 
     private void setupCartButtons() {
-        if (viewCartButton != null) {
-            viewCartButton.setOnAction(e -> openCartModal());
-        }
-        if (closeCartButton != null) {
-            closeCartButton.setOnAction(e -> closeCartModal());
-        }
-        if (clearCartButton != null) {
-            clearCartButton.setOnAction(e -> clearCart());
-        }
-        if (checkoutButton != null) {
-            checkoutButton.setOnAction(e -> proceedToCheckout());
-        }
+        if (viewCartButton != null) viewCartButton.setOnAction(e -> showCartModal());
+        if (closeCartButton != null) closeCartButton.setOnAction(e -> closeCartModal());
+        if (clearCartButton != null) clearCartButton.setOnAction(e -> clearCart());
+        if (checkoutButton != null) checkoutButton.setOnAction(e -> proceedToCheckout());
     }
 
     private void setupBackButton() {
         if (backButton != null) {
-            backButton.setOnAction(e -> goBack());
+            backButton.setOnAction(e -> goBackToWelcome());
         }
     }
 
-    private void goBack() {
-        navigateTo("/View/staffWelcome.fxml");
-    }
-
-    private void openCartModal() {
-        updateCartItemsDisplay();
-        cartModalOverlay.setVisible(true);
-        cartModalOverlay.setManaged(true);
-    }
-
-    private void closeCartModal() {
-        cartModalOverlay.setVisible(false);
-        cartModalOverlay.setManaged(false);
-    }
-
-    private void clearCart() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Clear Cart");
-        alert.setHeaderText("Are you sure you want to clear all items from the cart?");
-        alert.setContentText("This action cannot be undone.");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            SessionStaff.getInstance().clearAccessories();
-            updateCartDisplay();
-            updateCartItemsDisplay();
-            logger.info("Cart cleared");
+    private void goBackToWelcome() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffWelcome.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            Scene scene = new Scene(root);
+            DarkModeManager.getInstance().registerScene(scene);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            logger.error("Failed to navigate back to welcome page", e);
         }
-    }
-
-    private void proceedToCheckout() {
-        closeCartModal();
-        navigateTo("/View/staffShopingCart.fxml");
     }
 
     private void updateCartDisplay() {
-        int totalItems = SessionStaff.getInstance().getAccessories().values().stream()
-                .mapToInt(item -> item.quantity)
-                .sum();
+        int totalItems = SessionStaff.getInstance().getTotalAccessoryQuantity();
+        if (cartCountLabel != null) cartCountLabel.setText(String.valueOf(totalItems));
+    }
 
-        if (cartCountLabel != null) {
-            cartCountLabel.setText(String.valueOf(totalItems));
-            cartCountLabel.setVisible(totalItems > 0);
+    private void showCartModal() {
+        if (cartModalOverlay != null) {
+            populateCartModal();
+            cartModalOverlay.setVisible(true);
         }
     }
 
-    private void updateCartItemsDisplay() {
+    private void closeCartModal() {
+        if (cartModalOverlay != null) cartModalOverlay.setVisible(false);
+    }
+
+    private void populateCartModal() {
         if (cartItemsContainer == null) return;
 
         cartItemsContainer.getChildren().clear();
-        Map<String, SessionStaff.AccessoryItem> accessories = SessionStaff.getInstance().getAccessories();
-
-        if (accessories.isEmpty()) {
-            Label emptyLabel = new Label("Your cart is empty");
-            emptyLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #666; -fx-padding: 40px;");
-            cartItemsContainer.getChildren().add(emptyLabel);
-            updateCartTotals(0, 0, 0);
-            return;
-        }
-
         double subtotal = 0;
 
-        for (SessionStaff.AccessoryItem item : accessories.values()) {
-            HBox itemRow = createCartItemRow(item);
-            cartItemsContainer.getChildren().add(itemRow);
+        for (SessionStaff.AccessoryItem item : SessionStaff.getInstance().getAccessories().values()) {
+            HBox row = new HBox(15);
+            row.getStyleClass().add("cart-item-row");
+            row.setAlignment(Pos.CENTER_LEFT);
+            row.setPadding(new Insets(10));
+
+            Label nameLabel = new Label(item.name);
+            nameLabel.getStyleClass().add("cart-item-name");
+            nameLabel.setMinWidth(200);
+
+            Label qtyLabel = new Label("x" + item.quantity);
+            qtyLabel.getStyleClass().add("cart-item-quantity");
+
+            Label priceLabel = new Label(currencyFormat.format(item.price * item.quantity));
+            priceLabel.getStyleClass().add("cart-item-price");
+
+            Button removeBtn = new Button("✕");
+            removeBtn.getStyleClass().add("remove-item-button");
+            removeBtn.setOnAction(e -> {
+                SessionStaff.getInstance().removeAccessory(String.valueOf(item.name));
+                updateCartDisplay();
+                populateCartModal();
+            });
+
+            row.getChildren().addAll(nameLabel, qtyLabel, priceLabel, removeBtn);
+            cartItemsContainer.getChildren().add(row);
+
             subtotal += item.price * item.quantity;
         }
 
         double tax = subtotal * 0.08;
         double total = subtotal + tax;
-        updateCartTotals(subtotal, tax, total);
 
-        if (cartItemCountLabel != null) {
-            int totalItems = accessories.values().stream().mapToInt(i -> i.quantity).sum();
-            cartItemCountLabel.setText(totalItems + " item" + (totalItems != 1 ? "s" : ""));
-        }
-    }
-
-    private HBox createCartItemRow(SessionStaff.AccessoryItem item) {
-        HBox row = new HBox(15);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.setPadding(new Insets(10));
-        row.getStyleClass().add("cart-item-row");
-
-        Label nameLabel = new Label(item.name);
-        nameLabel.getStyleClass().add("cart-item-name");
-        nameLabel.setMinWidth(200);
-
-        Label qtyLabel = new Label("x" + item.quantity);
-        qtyLabel.getStyleClass().add("cart-item-quantity");
-        qtyLabel.setMinWidth(50);
-
-        Label priceLabel = new Label(currencyFormat.format(item.price * item.quantity));
-        priceLabel.getStyleClass().add("cart-item-price");
-        priceLabel.setMinWidth(80);
-
-        HBox spacer = new HBox();
-        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
-
-        Button removeButton = new Button("×");
-        removeButton.getStyleClass().add("cart-remove-button");
-        removeButton.setOnAction(e -> {
-            SessionStaff.getInstance().removeAccessory(item.name);
-            updateCartDisplay();
-            updateCartItemsDisplay();
-        });
-
-        row.getChildren().addAll(nameLabel, spacer, qtyLabel, priceLabel, removeButton);
-        return row;
-    }
-
-    private void updateCartTotals(double subtotal, double tax, double total) {
         if (subtotalLabel != null) subtotalLabel.setText(currencyFormat.format(subtotal));
         if (taxLabelCart != null) taxLabelCart.setText(currencyFormat.format(tax));
         if (totalLabel != null) totalLabel.setText(currencyFormat.format(total));
+        if (cartItemCountLabel != null) cartItemCountLabel.setText(SessionStaff.getInstance().getAccessories().size() + " items");
     }
 
-    private void navigateTo(String fxmlPath) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent root = loader.load();
+    private void clearCart() {
+        SessionStaff.getInstance().clearAccessories();
+        updateCartDisplay();
+        populateCartModal();
+    }
 
-            Scene scene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) backButton.getScene().getWindow();
+    private void proceedToCheckout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffShopingcart.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) cartModalOverlay.getScene().getWindow();
+            Scene scene = new Scene(root);
+            DarkModeManager.getInstance().registerScene(scene);
             stage.setScene(scene);
-            stage.centerOnScreen();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Navigation Error");
-            alert.setHeaderText("Failed to navigate");
-            alert.setContentText("Could not load: " + fxmlPath);
-            alert.showAndWait();
+            stage.show();
+        } catch (IOException e) {
+            logger.error("Failed to navigate to checkout", e);
         }
     }
 }

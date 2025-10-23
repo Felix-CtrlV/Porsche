@@ -3,6 +3,7 @@ package Controllers;
 import Model.CarConfiguration;
 import Model.CustomizationOption;
 import Utils.SessionStaff;
+import Utils.DarkModeManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -27,6 +29,7 @@ public class staffFinalizeController implements Initializable {
 
     private static final Logger LOGGER = Logger.getLogger(staffFinalizeController.class.getName());
 
+    @FXML private VBox rootPane;
     @FXML private Label modelNameLabel;
     @FXML private Label basic_price;
     @FXML private Label colorLabel;
@@ -45,6 +48,14 @@ public class staffFinalizeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (rootPane != null) {
+            rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    DarkModeManager.getInstance().registerScene(newScene);
+                }
+            });
+        }
+
         carConfig = SessionStaff.getInstance().getCarConfiguration();
 
         if (carConfig != null) {
@@ -157,6 +168,7 @@ public class staffFinalizeController implements Initializable {
             cartController.loadFromSession();
 
             Scene newScene = new Scene(root, 1300, 850);
+            DarkModeManager.getInstance().registerScene(newScene);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(newScene);
             stage.centerOnScreen();
@@ -174,6 +186,7 @@ public class staffFinalizeController implements Initializable {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(path)));
             Scene newScene = new Scene(root, 1300, 850);
+            DarkModeManager.getInstance().registerScene(newScene);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(newScene);
             stage.centerOnScreen();

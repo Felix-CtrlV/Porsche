@@ -4,6 +4,7 @@ import Model.car;
 import Model.CarConfiguration;
 import Model.CustomizationOption;
 import Utils.SessionStaff;
+import Utils.DarkModeManager;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -38,6 +40,7 @@ public class staffCustomizeController implements Initializable {
     private static final int SLIDE_DISTANCE = 150;
     private static final double IMAGE_FIT_HEIGHT = 100.0;
 
+    @FXML private StackPane rootPane;
     @FXML private ImageView modelImage;
     @FXML private Label carDescription;
     @FXML private Button confirmBtn;
@@ -71,6 +74,14 @@ public class staffCustomizeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (rootPane != null) {
+            rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    DarkModeManager.getInstance().registerScene(newScene);
+                }
+            });
+        }
+
         CarConfiguration savedConfig = SessionStaff.getInstance().getCarConfiguration();
 
         if (savedConfig != null) {
@@ -302,55 +313,41 @@ public class staffCustomizeController implements Initializable {
         ParallelTransition outTransition = new ParallelTransition(slideOutCurrent, fadeOutCurrent);
         ParallelTransition inTransition = new ParallelTransition(slideInNext, fadeInNext);
 
-        SequentialTransition fullTransition = new SequentialTransition(outTransition, inTransition);
-        fullTransition.setOnFinished(e -> {
+        SequentialTransition sequence = new SequentialTransition(outTransition, inTransition);
+        sequence.setOnFinished(e -> {
             container.getChildren().remove(currentImageView);
-            onComplete.run();
+            if (onComplete != null) onComplete.run();
         });
 
-        fullTransition.play();
+        sequence.play();
     }
 
     @FunctionalInterface
     private interface IndexUpdater {
-        void update(int newIndex);
+        void update(int index);
     }
 
     @FXML
-    private void handleConfirm(ActionEvent event) {
+    private void confirmConfiguration(ActionEvent event) {
         SessionStaff.getInstance().setCarConfiguration(carConfig);
-        navigateToFinalize(event);
-    }
-
-    private void navigateToFinalize(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffFinalize.fxml"));
-            Parent root = loader.load();
-
-            staffFinalizeController finalizeController = loader.getController();
-            if (finalizeController != null) {
-                finalizeController.setCarConfiguration(carConfig);
-            }
-
-            Scene newScene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(newScene);
-            stage.centerOnScreen();
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Failed to navigate to finalize screen", ex);
-        }
+        navigate(event, "/View/staffFinalize.fxml");
     }
 
     @FXML
-    private void handleBack(ActionEvent event) {
+    private void goback(ActionEvent event) {
+        navigate(event, "/View/staffModelSelect.fxml");
+    }
+
+    private void navigate(ActionEvent event, String path) {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/staffModelSelect.fxml")));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(path)));
             Scene newScene = new Scene(root, 1300, 850);
+            DarkModeManager.getInstance().registerScene(newScene);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(newScene);
             stage.centerOnScreen();
         } catch (IOException | NullPointerException ex) {
-            LOGGER.log(Level.SEVERE, "Failed to navigate back", ex);
+            LOGGER.log(Level.SEVERE, "Failed to navigate to: " + path, ex);
         }
     }
 }

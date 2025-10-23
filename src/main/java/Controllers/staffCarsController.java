@@ -1,6 +1,7 @@
 package Controllers;
 
 import Utils.SessionStaff;
+import Utils.DarkModeManager;
 import javafx.animation.ScaleTransition;
 import javafx.animation.ParallelTransition;
 import javafx.event.Event;
@@ -16,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -30,6 +32,7 @@ import java.util.*;
 public class staffCarsController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(staffCarsController.class);
 
+    @FXML private BorderPane rootPane;
     @FXML private ImageView nine11_select_image;
     @FXML private ImageView seven18_select_image;
     @FXML private ImageView cayenne_select_image;
@@ -44,6 +47,14 @@ public class staffCarsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if (rootPane != null) {
+            rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    DarkModeManager.getInstance().registerScene(newScene);
+                }
+            });
+        }
+
         allImages = Arrays.asList(
                 nine11_select_image, seven18_select_image, taycan_select_image,
                 panamera_select_image, macan_select_image, cayenne_select_image
@@ -150,6 +161,7 @@ public class staffCarsController implements Initializable {
             }
 
             Scene newScene = new Scene(root, 1300, 850);
+            DarkModeManager.getInstance().registerScene(newScene);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(newScene);
             stage.centerOnScreen();

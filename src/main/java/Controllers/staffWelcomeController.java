@@ -1,161 +1,168 @@
 package Controllers;
 
+import Utils.DarkModeManager;
 import Utils.SessionStaff;
-import javafx.animation.ScaleTransition;
-import javafx.animation.ParallelTransition;
-import javafx.beans.binding.DoubleBinding;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class staffWelcomeController {
-    private static final Logger logger = LoggerFactory.getLogger(staffWelcomeController.class);
+public class staffWelcomeController implements Initializable {
 
-    @FXML private VBox vbox;
-    @FXML private Label topicLabel;
-    @FXML private Label headingLabel;
-    @FXML private Button discoverbtn;
-    @FXML private Button logoutbtn;
-    @FXML private Button accessorybtn;
-    @FXML private ImageView backgroundImage;
-    @FXML private StackPane imageContainer;
-    @FXML private VBox settingsPopup;
+    @FXML
+    private StackPane rootPane;
 
-    public void initialize() {
-        Image image = new Image(Objects.requireNonNull(
-                getClass().getResource("/Image/startUpImage.png")
-        ).toExternalForm());
-        backgroundImage.setImage(image);
+    @FXML
+    private Button setbtn;
 
-        backgroundImage.fitWidthProperty().bind(imageContainer.widthProperty());
-        backgroundImage.fitHeightProperty().bind(imageContainer.heightProperty());
+    @FXML
+    private Button square_button;
 
-        vbox.sceneProperty().addListener((obs, oldScene, newScene) -> {
+    @FXML
+    private Label heading;
+
+    private VBox settingsPopup;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
-                DoubleBinding widthScale = newScene.widthProperty().divide(1133.0);
-                DoubleBinding heightScale = newScene.heightProperty().divide(580.0);
-                widthScale.addListener((o, oldVal, newVal) -> scaleFonts(newVal.doubleValue(), heightScale.get()));
-                heightScale.addListener((o, oldVal, newVal) -> scaleFonts(widthScale.get(), newVal.doubleValue()));
-                scaleFonts(widthScale.get(), heightScale.get());
-
-                settingsPopup.layoutXProperty().bind(newScene.widthProperty().subtract(settingsPopup.prefWidthProperty()).subtract(20));
-                settingsPopup.layoutYProperty().bind(logoutbtn.heightProperty().add(20));
+                DarkModeManager.getInstance().registerScene(newScene);
             }
         });
 
-        vbox.setOpacity(1);
-        vbox.setTranslateY(0);
-    }
+        if (setbtn != null) {
+            setbtn.setOnAction(event -> showSettingsPopup());
+        }
 
-    private void scaleFonts(double widthScale, double heightScale) {
-        double scale = Math.min(widthScale, heightScale);
-        topicLabel.setStyle("-fx-font-size: " + (24 * scale) + "px;");
-        headingLabel.setStyle("-fx-font-size: " + (36 * scale) + "px;");
-    }
-
-    private void createClickFeedback(Node node) {
-        ScaleTransition pulse = new ScaleTransition(Duration.millis(120), node);
-        pulse.setToX(0.95);
-        pulse.setToY(0.95);
-        pulse.setAutoReverse(true);
-        pulse.setCycleCount(2);
-        new ParallelTransition(pulse).play();
-    }
-
-    private void navigate(Event event, String fxmlPath) {
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
-            Scene newScene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(newScene);
-            stage.centerOnScreen();
-            logger.info("Navigated to: {}", fxmlPath);
-        } catch (IOException | NullPointerException ex) {
-            logger.error("Failed to navigate: " + fxmlPath, ex);
-            System.err.println("Failed to navigate: " + fxmlPath);
-            ex.printStackTrace();
+        if (square_button != null) {
+            square_button.setOnAction(event -> loadCarsPage());
         }
     }
 
-    @FXML
-    private void discover(ActionEvent event) {
-        createClickFeedback(discoverbtn);
-        navigate(event, "/View/staffCars.fxml");
-    }
+    private void showSettingsPopup() {
+        if (settingsPopup == null) {
+            settingsPopup = new VBox(15);
+            settingsPopup.getStyleClass().add("settings-popup");
+            settingsPopup.setAlignment(Pos.CENTER);
+            settingsPopup.setPadding(new Insets(20));
+            settingsPopup.setMaxWidth(250);
+            settingsPopup.setMaxHeight(200);
 
-    @FXML
-    private void clickaccessorybtn(ActionEvent event) {
-        createClickFeedback(accessorybtn);
-        navigate(event, "/View/staffAsset.fxml");
-    }
+            // Dark Mode Toggle Button
+            Button darkModeToggle = new Button(
+                    DarkModeManager.getInstance().isDarkMode() ? "☀ Light Mode" : "🌙 Dark Mode"
+            );
+            darkModeToggle.getStyleClass().add("dark-mode-toggle");
+            darkModeToggle.setPrefWidth(200);
+            darkModeToggle.setPrefHeight(45);
 
-    @FXML
-    private void logout(ActionEvent event) {
-        createClickFeedback(logoutbtn);
-        SessionStaff.handleLogout();
-        navigateToLogin(event);
-    }
+            darkModeToggle.setOnAction(e -> {
+                DarkModeManager.getInstance().toggleDarkMode();
+                darkModeToggle.setText(
+                        DarkModeManager.getInstance().isDarkMode() ? "☀ Light Mode" : "🌙 Dark Mode"
+                );
+            });
 
-    @FXML
-    private void settingsLogout(ActionEvent event) {
-        createClickFeedback((Node) event.getSource());
-        SessionStaff.handleLogout();
-        navigateToLogin(event);
-    }
+            Button logoutButton = new Button("Logout");
+            logoutButton.setPrefWidth(200);
+            logoutButton.setPrefHeight(45);
+            logoutButton.setOnAction(e -> {
+                hideSettingsPopup();
+                logout();
+            });
 
-    private void navigateToLogin(Event event) {
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/login.fxml")));
+            Button closeButton = new Button("Close");
+            closeButton.setPrefWidth(200);
+            closeButton.setPrefHeight(45);
+            closeButton.setOnAction(e -> hideSettingsPopup());
 
-            // Let the login.fxml use its own preferred size
-            Scene loginScene = new Scene(root);
+            settingsPopup.getChildren().addAll(darkModeToggle, logoutButton, closeButton);
 
-            // Close current stage
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            currentStage.close();
+            StackPane.setAlignment(settingsPopup, Pos.TOP_RIGHT);
+            StackPane.setMargin(settingsPopup, new Insets(80, 20, 0, 0));
 
-            // Create new stage for login with its natural size
-            Stage loginStage = new Stage();
-            loginStage.setScene(loginScene);
-            loginStage.centerOnScreen();
-            loginStage.show();
+            settingsPopup.setOpacity(0);
+            rootPane.getChildren().add(settingsPopup);
 
-            logger.info("Navigated to login screen");
-        } catch (IOException ex) {
-            logger.error("Failed to navigate to login.fxml", ex);
-            System.err.println("Failed to navigate to login.fxml");
-            ex.printStackTrace();
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), settingsPopup);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+        } else {
+            hideSettingsPopup();
         }
     }
 
-    @FXML
-    private void viewProfile(ActionEvent event) {}
+    private void hideSettingsPopup() {
+        if (settingsPopup != null) {
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(200), settingsPopup);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(e -> {
+                rootPane.getChildren().remove(settingsPopup);
+                settingsPopup = null;
+            });
+            fadeOut.play();
+        }
+    }
 
-    @FXML
-    private void changePassword(ActionEvent event) {}
+    private void loadCarsPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/cars.fxml"));
+            Parent root = loader.load();
 
-    @FXML
-    private void togglePopup(ActionEvent event) {
-        boolean isVisible = settingsPopup.isVisible();
-        settingsPopup.setVisible(!isVisible);
-        settingsPopup.setManaged(!isVisible);
-        settingsPopup.setOpacity(1);
+            Stage stage = (Stage) square_button.getScene().getWindow();
+
+            Scene scene = new Scene(root);
+
+            DarkModeManager.getInstance().registerScene(scene);
+
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error loading cars page: " + e.getMessage());
+        }
+    }
+
+    private void logout() {
+        try {
+            SessionStaff.getInstance().clearSession();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/staffLogin.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            Scene scene = new Scene(root);
+
+            DarkModeManager.getInstance().unregisterScene(rootPane.getScene());
+            DarkModeManager.getInstance().setDarkMode(false);
+
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error during logout: " + e.getMessage());
+        }
     }
 }

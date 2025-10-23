@@ -158,9 +158,6 @@ public class SessionStaff {
         accessories.clear();
     }
 
-    /**
-     * Clears the entire shopping cart including car configuration and all accessories
-     */
     public void clearCart() {
         this.currentCarConfig = null;
         this.accessories.clear();
@@ -168,6 +165,10 @@ public class SessionStaff {
     }
 
     public int getTotalAccessoryCount() {
+        return accessories.values().stream().mapToInt(item -> item.quantity).sum();
+    }
+
+    public int getTotalAccessoryQuantity() {
         return accessories.values().stream().mapToInt(item -> item.quantity).sum();
     }
 

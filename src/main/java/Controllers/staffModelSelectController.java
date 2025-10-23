@@ -2,6 +2,7 @@ package Controllers;
 
 import DAO.CarDAO;
 import Model.car;
+import Utils.DarkModeManager;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,14 +32,10 @@ import java.util.*;
 public class staffModelSelectController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(staffModelSelectController.class);
 
-    @FXML
-    private FlowPane flow_Pane;
-
-    @FXML
-    private Button backbtn;
-
-    @FXML
-    private Label modelTitle;
+    @FXML private VBox rootPane;
+    @FXML private FlowPane flow_Pane;
+    @FXML private Button backbtn;
+    @FXML private Label modelTitle;
 
     private CarDAO carDAO;
     private String selectedModel;
@@ -46,6 +43,15 @@ public class staffModelSelectController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         logger.info("Initializing staffModelSelectController");
+
+        if (rootPane != null) {
+            rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    DarkModeManager.getInstance().registerScene(newScene);
+                }
+            });
+        }
+
         carDAO = new CarDAO();
     }
 
@@ -115,20 +121,17 @@ public class staffModelSelectController implements Initializable {
     }
 
     private VBox createCarCard(car carData) {
-        // Main card container
         VBox card = new VBox();
         card.getStyleClass().add("car-card");
         card.setPrefSize(320, 380);
         card.setAlignment(Pos.TOP_CENTER);
         card.setSpacing(0);
 
-        // Image container
         StackPane imageContainer = new StackPane();
         imageContainer.getStyleClass().add("image-container");
         imageContainer.setPrefSize(320, 220);
         imageContainer.setAlignment(Pos.CENTER);
 
-        // Car image
         ImageView carImage = new ImageView();
         carImage.setFitWidth(300);
         carImage.setFitHeight(200);
@@ -136,7 +139,6 @@ public class staffModelSelectController implements Initializable {
         carImage.setSmooth(true);
         carImage.getStyleClass().add("car-image");
 
-        // Load image
         String imagePath = carData.getCarPhoto();
         if (imagePath != null && !imagePath.isEmpty()) {
             try (InputStream stream = getClass().getResourceAsStream(imagePath)) {
@@ -157,41 +159,33 @@ public class staffModelSelectController implements Initializable {
 
         imageContainer.getChildren().add(carImage);
 
-        // Details container
         VBox detailsContainer = new VBox(12);
         detailsContainer.getStyleClass().add("details-container");
         detailsContainer.setAlignment(Pos.CENTER);
         detailsContainer.setPadding(new Insets(20, 20, 20, 20));
 
-        // Model name
         Label modelNameLabel = new Label(carData.getFullName());
         modelNameLabel.getStyleClass().add("model-name");
         modelNameLabel.setWrapText(true);
         modelNameLabel.setMaxWidth(280);
         modelNameLabel.setAlignment(Pos.CENTER);
 
-        // Price
         Label priceLabel = new Label("$" + String.format("%,.0f", carData.getPrice()));
         priceLabel.getStyleClass().add("model-price");
 
-        // Year and status
         Label infoLabel = new Label(carData.getProductionYear() + " • " + carData.getCarStatus().toUpperCase());
         infoLabel.getStyleClass().add("model-info");
 
-        // Customize button
         Button customizeButton = new Button("CUSTOMIZE");
         customizeButton.getStyleClass().add("customize-button");
         customizeButton.setPrefWidth(200);
         customizeButton.setOnAction(e -> navigateToCustomize(carData));
 
-        // Add hover effect
         card.setOnMouseEntered(e -> card.setStyle("-fx-cursor: hand;"));
         card.setOnMouseExited(e -> card.setStyle("-fx-cursor: default;"));
 
-        // Assemble details
         detailsContainer.getChildren().addAll(modelNameLabel, priceLabel, infoLabel, customizeButton);
 
-        // Assemble card
         card.getChildren().addAll(imageContainer, detailsContainer);
 
         return card;
@@ -225,6 +219,7 @@ public class staffModelSelectController implements Initializable {
 
             Stage stage = (Stage) flow_Pane.getScene().getWindow();
             Scene scene = new Scene(root, 1300, 850);
+            DarkModeManager.getInstance().registerScene(scene);
             stage.setScene(scene);
             stage.centerOnScreen();
 
@@ -239,6 +234,7 @@ public class staffModelSelectController implements Initializable {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/View/staffCars.fxml"));
             Scene scene = new Scene(root, 1300, 850);
+            DarkModeManager.getInstance().registerScene(scene);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
             stage.centerOnScreen();
