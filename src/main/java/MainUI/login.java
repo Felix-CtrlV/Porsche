@@ -1,6 +1,7 @@
 package MainUI;
 
 import Controllers.SplashController;
+import Utils.SecuritySystemInitializer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,9 @@ public class login extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        // Initialize security system and unlock server
+        initializeSecurity();
+        
         try {
             FXMLLoader splashLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/View/splash.fxml")));
             Parent splashRoot = splashLoader.load();
@@ -34,6 +38,30 @@ public class login extends Application {
         } catch (Exception e) {
             logger.error("Failed to load splash screen", e);
             loadLoginScreen(primaryStage);
+        }
+    }
+    
+    /**
+     * Initialize the security system including the unlock server
+     */
+    private void initializeSecurity() {
+        try {
+            SecuritySystemInitializer securityInit = SecuritySystemInitializer.getInstance();
+            securityInit.initialize();
+            logger.info("✅ Security system initialized successfully");
+            
+            // Add shutdown hook to properly close security system
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    securityInit.shutdown();
+                    logger.info("Security system shutdown completed");
+                } catch (Exception e) {
+                    logger.error("Error during security system shutdown", e);
+                }
+            }));
+            
+        } catch (Exception e) {
+            logger.error("❌ Failed to initialize security system", e);
         }
     }
 

@@ -1,141 +1,141 @@
 package Controllers;
 
-import Utils.AppStage;
-import javafx.animation.ScaleTransition;
-import javafx.animation.ParallelTransition;
-import javafx.beans.binding.DoubleBinding;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
+import Utils.DarkModeManager;
+import Utils.SessionStaff;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class staffWelcomeController {
+public class staffWelcomeController implements Initializable {
 
-    @FXML private VBox vbox;
-    @FXML private Label topicLabel;
-    @FXML private Label headingLabel;
-    @FXML private Button discoverbtn;
-    @FXML private Button logoutbtn;
-    @FXML private Button accessorybtn;
-    @FXML private ImageView backgroundImage;
-    @FXML private StackPane imageContainer;
-    @FXML private VBox settingsPopup;
+    @FXML
+    private AnchorPane rootPane;
 
-    public void initialize() {
-        Image image = new Image(Objects.requireNonNull(
-                getClass().getResource("/Image/startUpImage.png")
-        ).toExternalForm());
-        backgroundImage.setImage(image);
+    @FXML
+    private Button logoutbtn;
 
-        backgroundImage.fitWidthProperty().bind(imageContainer.widthProperty());
-        backgroundImage.fitHeightProperty().bind(imageContainer.heightProperty());
+    @FXML
+    private Button discoverbtn;
 
-        vbox.sceneProperty().addListener((obs, oldScene, newScene) -> {
+    @FXML
+    private Button accessorybtn;
+
+    @FXML
+    private Label topicLabel;
+
+    @FXML
+    private Label headingLabel;
+
+    @FXML
+    private VBox settingsPopup;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
-                DoubleBinding widthScale = newScene.widthProperty().divide(1133.0);
-                DoubleBinding heightScale = newScene.heightProperty().divide(580.0);
-                widthScale.addListener((o, oldVal, newVal) -> scaleFonts(newVal.doubleValue(), heightScale.get()));
-                heightScale.addListener((o, oldVal, newVal) -> scaleFonts(widthScale.get(), newVal.doubleValue()));
-                scaleFonts(widthScale.get(), heightScale.get());
-
-                settingsPopup.layoutXProperty().bind(newScene.widthProperty().subtract(settingsPopup.prefWidthProperty()).subtract(20));
-                settingsPopup.layoutYProperty().bind(logoutbtn.heightProperty().add(20));
+                DarkModeManager.getInstance().registerScene(newScene);
             }
         });
 
-        vbox.setOpacity(1);
-        vbox.setTranslateY(0);
-    }
-
-    private void scaleFonts(double widthScale, double heightScale) {
-        double scale = Math.min(widthScale, heightScale);
-        topicLabel.setStyle("-fx-font-size: " + (24 * scale) + "px;");
-        headingLabel.setStyle("-fx-font-size: " + (36 * scale) + "px;");
-    }
-
-    private void createClickFeedback(Node node) {
-        ScaleTransition pulse = new ScaleTransition(Duration.millis(120), node);
-        pulse.setToX(0.95);
-        pulse.setToY(0.95);
-        pulse.setAutoReverse(true);
-        pulse.setCycleCount(2);
-        new ParallelTransition(pulse).play();
-    }
-
-    private void navigate(Event event, String fxmlPath) {
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
-            Scene newScene = new Scene(root, 1300, 850);
-            AppStage.getStage().setScene(newScene);
-            AppStage.getStage().centerOnScreen();
-        } catch (IOException | NullPointerException ex) {
-            System.err.println("Failed to navigate: " + fxmlPath);
-            ex.printStackTrace();
+        if (settingsPopup != null) {
+            settingsPopup.setVisible(false);
+            settingsPopup.setManaged(false);
         }
     }
 
     @FXML
-    private void discover(ActionEvent event) {
-        createClickFeedback(discoverbtn);
-        navigate(event, "/View/staffCars.fxml");
+    private void togglePopup() {
+        if (settingsPopup != null) {
+            boolean isVisible = settingsPopup.isVisible();
+            settingsPopup.setVisible(!isVisible);
+            settingsPopup.setManaged(!isVisible);
+
+            if (!isVisible) {
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(200), settingsPopup);
+                fadeIn.setFromValue(0);
+                fadeIn.setToValue(1);
+                fadeIn.play();
+            }
+        }
     }
 
     @FXML
-    private void logout(ActionEvent event) {
-        createClickFeedback(logoutbtn);
-        navigateToLogin(event);
-    }
-
-    @FXML
-    private void clickaccessorybtn(ActionEvent event) {
-        createClickFeedback(accessorybtn);
-        navigate(event, "/View/staffasset.fxml");
-    }
-
-    @FXML
-    private void viewProfile(ActionEvent event) {}
-
-    @FXML
-    private void changePassword(ActionEvent event) {}
-
-    @FXML
-    private void togglePopup(ActionEvent event) {
-        boolean isVisible = settingsPopup.isVisible();
-        settingsPopup.setVisible(!isVisible);
-        settingsPopup.setManaged(!isVisible);
-        settingsPopup.setOpacity(1);
-    }
-
-    @FXML
-    private void settingsLogout(ActionEvent event) {
-        createClickFeedback((Node) event.getSource());
-        navigateToLogin(event);
-    }
-
-    private void navigateToLogin(Event event) {
+    private void discover() {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/login.fxml")));
-            Scene newScene = new Scene(root, 1300, 850);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(newScene);
-            stage.centerOnScreen();
-        } catch (IOException ex) {
-            System.err.println("Failed to navigate to login.fxml");
-            ex.printStackTrace();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffCars.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) discoverbtn.getScene().getWindow();
+            Scene scene = new Scene(root);
+            DarkModeManager.getInstance().registerScene(scene);
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error loading cars page: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void clickaccessorybtn() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffAsset.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) accessorybtn.getScene().getWindow();
+            Scene scene = new Scene(root);
+            DarkModeManager.getInstance().registerScene(scene);
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error loading accessories page: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void logout() {
+        try {
+            if (settingsPopup != null) {
+                settingsPopup.setVisible(false);
+                settingsPopup.setManaged(false);
+            }
+
+            SessionStaff.getInstance().clearSession();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffLogin.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            Scene scene = new Scene(root);
+
+            DarkModeManager.getInstance().unregisterScene(rootPane.getScene());
+            DarkModeManager.getInstance().setDarkMode(false);
+
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error during logout: " + e.getMessage());
         }
     }
 }

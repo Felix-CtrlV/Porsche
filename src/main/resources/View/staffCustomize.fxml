@@ -18,11 +18,7 @@
     <center>
         <StackPane minWidth="511.0" prefHeight="265.0" prefWidth="640.0" BorderPane.alignment="CENTER">
             <children>
-                <!-- Spotlight gradient background -->
-                <StackPane />
-
-                <!-- Car Image with fade-in effect -->
-                <ImageView fx:id="model_image" fitHeight="320.0" fitWidth="640.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+                <ImageView fx:id="modelImage" fitHeight="320.0" fitWidth="640.0" pickOnBounds="true" preserveRatio="true" styleClass="car-image-view" StackPane.alignment="CENTER">
                     <image>
                         <Image url="@../Image/911_select_model.png" />
                     </image>
@@ -40,23 +36,19 @@
                 <Insets bottom="20.0" left="25.0" right="30.0" top="30.0" />
             </padding>
             <children>
-                <!-- Description Card with glass effect -->
                 <VBox spacing="12.0" styleClass="description-card">
                     <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
                     <children>
-                        <!-- Porsche Red Accent Line -->
                         <HBox prefHeight="3.0" styleClass="porsche-accent-line" />
-
-                        <Label fx:id="car_description" prefHeight="239.0" prefWidth="262.0" styleClass="car-description-label" text="The 911 Carrera GTS epitomizes precision and driving passion. Its naturally aspirated flat-six, razor-sharp handling, and track-focused aerodynamics deliver uncompromising performance—every roar and shift a statement of speed, control, and automotive excellence." wrapText="true" />
+                        <Label fx:id="carDescription" prefHeight="239.0" prefWidth="262.0" styleClass="car-description-label" text="The 911 Carrera GTS epitomizes precision and driving passion. Its naturally aspirated flat-six, razor-sharp handling, and track-focused aerodynamics deliver uncompromising performance—every roar and shift a statement of speed, control, and automotive excellence." wrapText="true" />
                     </children>
                 </VBox>
 
                 <Region VBox.vgrow="ALWAYS" />
 
-                <!-- Confirm Button -->
-                <Button fx:id="confirm_btn" mnemonicParsing="false" onAction="#clickConfirm" prefHeight="48.0" prefWidth="180.0" styleClass="confirm-button" text="CONFIRM ORDER">
+                <Button fx:id="confirmBtn" mnemonicParsing="false" onAction="#handleConfirmOrder" prefHeight="48.0" prefWidth="180.0" styleClass="confirm-button" text="CONFIRM ORDER">
                     <VBox.margin>
                         <Insets top="10.0" />
                     </VBox.margin>
@@ -83,6 +75,7 @@
                                     <children>
                                         <Label styleClass="customize-title" text="WHEELS" />
                                         <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="wheelPriceLabel" styleClass="option-price-label" text="STANDARD" />
                                     </children>
                                 </HBox>
 
@@ -91,15 +84,15 @@
                                         <Insets bottom="15.0" left="10.0" right="10.0" />
                                     </padding>
                                     <children>
-                                        <Button fx:id="leftbtn" mnemonicParsing="false" onAction="#left" styleClass="arrow-button" text="‹" />
+                                        <Button fx:id="wheelsLeftBtn" mnemonicParsing="false" onAction="#handleWheelsLeft" styleClass="arrow-button" text="‹" />
 
-                                        <ScrollPane fx:id="wheels_scroll" prefHeight="110.0" styleClass="custom-scroll-pane" HBox.hgrow="ALWAYS">
+                                        <ScrollPane fx:id="wheelsScroll" prefHeight="110.0" styleClass="custom-scroll-pane" HBox.hgrow="ALWAYS">
                                             <content>
-                                                <FlowPane hgap="10.0" prefHeight="100.0" styleClass="item-flow" />
+                                                <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" prefHeight="98.0" prefWidth="229.0" styleClass="item-flow" />
                                             </content>
                                         </ScrollPane>
 
-                                        <Button fx:id="rightbtn" mnemonicParsing="false" onAction="#right" styleClass="arrow-button" text="›" />
+                                        <Button fx:id="wheelsRightBtn" mnemonicParsing="false" onAction="#handleWheelsRight" styleClass="arrow-button" text="›" />
                                     </children>
                                 </HBox>
                             </children>
@@ -115,6 +108,7 @@
                                     <children>
                                         <Label styleClass="customize-title" text="COLOR" />
                                         <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="colorPriceLabel" styleClass="option-price-label" text="STANDARD" />
                                     </children>
                                 </HBox>
 
@@ -123,15 +117,15 @@
                                         <Insets bottom="15.0" left="10.0" right="10.0" />
                                     </padding>
                                     <children>
-                                        <Button fx:id="leftbtn1" mnemonicParsing="false" onAction="#left" styleClass="arrow-button" text="‹" />
+                                        <Button fx:id="colorLeftBtn" mnemonicParsing="false" onAction="#handleColorLeft" styleClass="arrow-button" text="‹" />
 
-                                        <ScrollPane fx:id="color_scroll" prefHeight="110.0" styleClass="custom-scroll-pane" HBox.hgrow="ALWAYS">
+                                        <ScrollPane fx:id="colorScroll" prefHeight="110.0" styleClass="custom-scroll-pane" HBox.hgrow="ALWAYS">
                                             <content>
-                                                <FlowPane hgap="10.0" prefHeight="100.0" styleClass="item-flow" />
+                                                <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" prefHeight="115.0" prefWidth="323.0" styleClass="item-flow" />
                                             </content>
                                         </ScrollPane>
 
-                                        <Button fx:id="rightbtn1" mnemonicParsing="false" onAction="#right" styleClass="arrow-button" text="›" />
+                                        <Button fx:id="colorRightBtn" mnemonicParsing="false" onAction="#handleColorRight" styleClass="arrow-button" text="›" />
                                     </children>
                                 </HBox>
                             </children>
@@ -147,6 +141,7 @@
                                     <children>
                                         <Label styleClass="customize-title" text="INTERIOR" />
                                         <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="interiorPriceLabel" styleClass="option-price-label" text="STANDARD" />
                                     </children>
                                 </HBox>
 
@@ -155,15 +150,15 @@
                                         <Insets bottom="15.0" left="10.0" right="10.0" />
                                     </padding>
                                     <children>
-                                        <Button fx:id="leftbtn2" mnemonicParsing="false" onAction="#left" styleClass="arrow-button" text="‹" />
+                                        <Button fx:id="interiorLeftBtn" mnemonicParsing="false" onAction="#handleInteriorLeft" styleClass="arrow-button" text="‹" />
 
-                                        <ScrollPane fx:id="interior_scroll" prefHeight="110.0" styleClass="custom-scroll-pane" HBox.hgrow="ALWAYS">
+                                        <ScrollPane fx:id="interiorScroll" prefHeight="110.0" styleClass="custom-scroll-pane" HBox.hgrow="ALWAYS">
                                             <content>
-                                                <FlowPane hgap="10.0" prefHeight="100.0" styleClass="item-flow" />
+                                                <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" prefHeight="100.0" styleClass="item-flow" />
                                             </content>
                                         </ScrollPane>
 
-                                        <Button fx:id="rightbtn2" mnemonicParsing="false" onAction="#right" styleClass="arrow-button" text="›" />
+                                        <Button fx:id="interiorRightBtn" mnemonicParsing="false" onAction="#handleInteriorRight" styleClass="arrow-button" text="›" />
                                     </children>
                                 </HBox>
                             </children>
@@ -183,11 +178,10 @@
                         <Insets left="20.0" top="30.0" />
                     </padding>
                     <children>
-                        <!-- Model Number and Fuel Badge -->
                         <HBox alignment="BOTTOM_LEFT" spacing="12.0">
                             <children>
-                                <Label fx:id="car_frame_num" styleClass="model-number" text="911" />
-                                <Label fx:id="fuel_type" styleClass="fuel-badge" text="GASOLINE">
+                                <Label fx:id="carFrameNum" styleClass="model-number" text="911" />
+                                <Label fx:id="fuelType" styleClass="fuel-badge" text="GASOLINE">
                                     <HBox.margin>
                                         <Insets bottom="8.0" />
                                     </HBox.margin>
@@ -198,7 +192,7 @@
                             </VBox.margin>
                         </HBox>
 
-                        <Label fx:id="model_name" styleClass="model-name" text="Carrera GTS">
+                        <Label fx:id="modelName" styleClass="model-name" text="Carrera GTS">
                             <VBox.margin>
                                 <Insets bottom="15.0" />
                             </VBox.margin>
@@ -210,19 +204,19 @@
                             </VBox.margin>
                         </HBox>
 
-                        <!-- Price Section -->
                         <VBox spacing="5.0" styleClass="price-section">
                             <VBox.margin>
                                 <Insets bottom="10.0" top="5.0" />
                             </VBox.margin>
                             <children>
-                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="99.0" styleClass="glass-panel" text="Starting From" />
-                                <Label fx:id="model_price" styleClass="model-name" text="\$140000" />
+                                <Label alignment="CENTER" prefHeight="17.0" prefWidth="99.0" styleClass="option-price-label" text="Starting From" />
+                                <Label fx:id="modelPrice" styleClass="price-value" text="140,000" />
                             </children>
                         </VBox>
 
                         <Region VBox.vgrow="ALWAYS" />
-                        <Button fx:id="back_btn" mnemonicParsing="false" onAction="#back" styleClass="back-button" text="‹ BACK TO SELECTION">
+
+                        <Button fx:id="backBtn" mnemonicParsing="false" onAction="#handleBack" styleClass="back-button" text="‹ BACK TO SELECTION">
                             <VBox.margin>
                                 <Insets bottom="30.0" />
                             </VBox.margin>
@@ -232,4 +226,5 @@
             </children>
         </HBox>
     </left>
+
 </BorderPane>

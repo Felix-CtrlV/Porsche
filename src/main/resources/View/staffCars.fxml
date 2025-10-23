@@ -19,7 +19,6 @@
     <children>
         <VBox alignment="TOP_CENTER" spacing="0" styleClass="main-container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
-            <!-- HEADER -->
             <HBox alignment="CENTER_LEFT" styleClass="header-bar" VBox.vgrow="NEVER">
                 <children>
                     <Button fx:id="homebtn" mnemonicParsing="false" onAction="#home" styleClass="home-button" text="← HOME">
@@ -39,7 +38,6 @@
                 </padding>
             </HBox>
 
-            <!-- TITLE -->
             <VBox alignment="CENTER" spacing="8" styleClass="title-section" VBox.vgrow="NEVER">
                 <children>
                     <Label styleClass="main-title" text="SELECT YOUR MODEL" />
@@ -50,14 +48,12 @@
                 </padding>
             </VBox>
 
-            <!-- TOP DIVIDER -->
             <Line endX="1000" startX="0" styleClass="divider-line" VBox.vgrow="NEVER">
                 <VBox.margin>
                     <Insets bottom="20.0" left="40.0" right="40.0" />
                 </VBox.margin>
             </Line>
 
-            <!-- MODELS GRID -->
             <GridPane alignment="CENTER" hgap="24" styleClass="models-grid" vgap="24" VBox.vgrow="ALWAYS">
                 <padding>
                     <Insets bottom="20" left="40" right="40" top="20" />
@@ -75,11 +71,10 @@
                 </rowConstraints>
 
                 <children>
-                    <!-- Model 1: 911 -->
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="0" GridPane.rowIndex="0">
                         <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
                             <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="nine11_select_image" fitWidth="300" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="model-image" />
+                                <ImageView fx:id="nine11_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
                             </StackPane>
                             <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
                                 <Label styleClass="model-name" text="911" />
@@ -88,11 +83,10 @@
                         </VBox>
                     </StackPane>
 
-                    <!-- Model 2: 718 -->
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="1" GridPane.rowIndex="0">
                         <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
                             <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="seven18_select_image" fitWidth="300" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="model-image" />
+                                <ImageView fx:id="seven18_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
                             </StackPane>
                             <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
                                 <Label styleClass="model-name" text="718" />
@@ -101,11 +95,10 @@
                         </VBox>
                     </StackPane>
 
-                    <!-- Model 3: Taycan -->
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="2" GridPane.rowIndex="0">
                         <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
                             <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="taycan_select_image" fitWidth="300" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="model-image" />
+                                <ImageView fx:id="taycan_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
                             </StackPane>
                             <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
                                 <Label styleClass="model-name" text="TAYCAN" />
@@ -114,11 +107,10 @@
                         </VBox>
                     </StackPane>
 
-                    <!-- Model 4: Panamera -->
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="0" GridPane.rowIndex="1">
                         <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
                             <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="panamera_select_image" fitWidth="300" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="model-image" />
+                                <ImageView fx:id="panamera_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
                             </StackPane>
                             <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
                                 <Label styleClass="model-name" text="PANAMERA" />
@@ -127,11 +119,10 @@
                         </VBox>
                     </StackPane>
 
-                    <!-- Model 5: Macan -->
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="1" GridPane.rowIndex="1">
                         <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
                             <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="macan_select_image" fitWidth="300" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="model-image" />
+                                <ImageView fx:id="macan_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
                             </StackPane>
                             <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
                                 <Label styleClass="model-name" text="MACAN" />
@@ -140,11 +131,10 @@
                         </VBox>
                     </StackPane>
 
-                    <!-- Model 6: Cayenne -->
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="2" GridPane.rowIndex="1">
                         <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
                             <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="cayenne_select_image" fitWidth="300" onMouseClicked="#redirect" preserveRatio="true" smooth="true" styleClass="model-image" />
+                                <ImageView fx:id="cayenne_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
                             </StackPane>
                             <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
                                 <Label styleClass="model-name" text="CAYENNE" />
@@ -155,7 +145,6 @@
                 </children>
             </GridPane>
 
-            <!-- BOTTOM DIVIDER -->
             <Line endX="1000" startX="0" styleClass="divider-line" VBox.vgrow="NEVER">
                 <VBox.margin>
                     <Insets bottom="20.0" left="40.0" right="40.0" top="30.0" />
