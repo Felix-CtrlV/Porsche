@@ -20,7 +20,6 @@
                 <Insets bottom="30" left="30" right="30" top="30" />
             </padding>
 
-            <!-- Updated fx:id to match controller -->
             <Button fx:id="loadAssetButton" styleClass="link-button" text="View Accessories" />
 
             <VBox alignment="CENTER" spacing="10">
@@ -71,10 +70,7 @@
                             <ToggleGroup fx:id="paymentMethodGroup" />
                         </fx:define>
 
-                        <RadioButton fx:id="fullPaymentRadio" selected="true" styleClass="payment-radio" text="Full Payment">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="paymentMethodGroup" />
-                     </toggleGroup></RadioButton>
+                        <RadioButton fx:id="fullPaymentRadio" selected="true" styleClass="payment-radio" text="Full Payment" toggleGroup="$paymentMethodGroup" />
                         <RadioButton fx:id="installmentRadio" styleClass="payment-radio" text="Installment Plan" toggleGroup="$paymentMethodGroup" />
                     </VBox>
                 </VBox>

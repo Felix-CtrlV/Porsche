@@ -1,5 +1,8 @@
 package Controllers;
 
+import Model.CarConfiguration;
+import Model.CustomizationOption;
+import Utils.SessionStaff;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -8,9 +11,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -19,6 +26,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class staffShopingCartController {
 
@@ -34,6 +42,7 @@ public class staffShopingCartController {
     @FXML private Button confirmButton;
     @FXML private Button loadAssetButton;
     @FXML private Label confirmationMessageLabel;
+    @FXML private VBox configDetailsContainer;
 
     @FXML private ToggleGroup paymentMethodGroup;
     @FXML private RadioButton fullPaymentRadio;
@@ -49,10 +58,26 @@ public class staffShopingCartController {
     @FXML private Label totalWithInterestLabel;
 
     private ObservableList<String> cartItems = FXCollections.observableArrayList();
-    private double basePrice = 115000;
+    private double basePrice = 0;
     private double accessoriesPrice = 0;
     private double taxRate = 0.08;
     private DecimalFormat currencyFormat = new DecimalFormat("$#,##0");
+
+    private List<AccessoryItemDisplay> displayedAccessories = new ArrayList<>();
+
+    private static class AccessoryItemDisplay {
+        String id;
+        String name;
+        double price;
+        boolean isCarOption;
+
+        AccessoryItemDisplay(String id, String name, double price, boolean isCarOption) {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.isCarOption = isCarOption;
+        }
+    }
 
     private static class InstallmentPlan {
         int months;
@@ -71,11 +96,6 @@ public class staffShopingCartController {
 
     private List<InstallmentPlan> installmentPlans = new ArrayList<>();
     private InstallmentPlan selectedPlan;
-    private boolean cameFromAsset = false;
-
-    public void setCameFromAsset(boolean value) {
-        this.cameFromAsset = value;
-    }
 
     @FXML
     public void initialize() {
@@ -99,7 +119,158 @@ public class staffShopingCartController {
         confirmButton.setOnAction(e -> confirmPurchase());
         loadAssetButton.setOnAction(e -> loadStaffAsset());
 
+        loadFromSession();
+    }
+
+    public void loadFromSession() {
+        SessionStaff session = SessionStaff.getInstance();
+        CarConfiguration carConfig = session.getCarConfiguration();
+
+        accessoriesContainer.getChildren().clear();
+        displayedAccessories.clear();
+        accessoriesPrice = 0;
+        basePrice = 0;
+
+        if (carConfig != null) {
+            basePrice = carConfig.getBasePrice();
+
+            CustomizationOption wheel = carConfig.getSelectedWheel();
+            if (wheel != null && !wheel.isStandard()) {
+                displayedAccessories.add(new AccessoryItemDisplay("wheel", wheel.getName(), wheel.getPrice(), true));
+                accessoriesPrice += wheel.getPrice();
+            }
+
+            CustomizationOption color = carConfig.getSelectedColor();
+            if (color != null && !color.isStandard()) {
+                displayedAccessories.add(new AccessoryItemDisplay("color", color.getName(), color.getPrice(), true));
+                accessoriesPrice += color.getPrice();
+            }
+
+            CustomizationOption interior = carConfig.getSelectedInterior();
+            if (interior != null && !interior.isStandard()) {
+                displayedAccessories.add(new AccessoryItemDisplay("interior", interior.getName(), interior.getPrice(), true));
+                accessoriesPrice += interior.getPrice();
+            }
+
+            if (modelLabel != null) modelLabel.setText(carConfig.getModelName());
+            if (colorLabel != null && color != null) colorLabel.setText(color.getName());
+            if (engineLabel != null) engineLabel.setText(carConfig.getFuelType());
+
+            addRemoveCarButton();
+        } else {
+            if (modelLabel != null) modelLabel.setText("Accessories Only");
+            if (colorLabel != null) colorLabel.setText("N/A");
+            if (engineLabel != null) engineLabel.setText("N/A");
+            removeRemoveCarButton();
+        }
+
+        for (SessionStaff.AccessoryItem item : session.getAccessories().values()) {
+            String accessoryId = findAccessoryIdByName(item.name);
+            displayedAccessories.add(new AccessoryItemDisplay(accessoryId, item.name, item.price * item.quantity, false));
+            accessoriesPrice += item.price * item.quantity;
+        }
+
+        displayAllAccessories();
         updatePriceLabels();
+    }
+
+    private void addRemoveCarButton() {
+        if (configDetailsContainer == null) return;
+
+        boolean hasRemoveButton = configDetailsContainer.getChildren().stream()
+                .anyMatch(node -> node instanceof HBox &&
+                        ((HBox) node).getChildren().stream()
+                                .anyMatch(child -> child instanceof Button &&
+                                        ((Button) child).getStyleClass().contains("remove-car-button")));
+
+        if (!hasRemoveButton) {
+            HBox removeCarRow = new HBox(15);
+            removeCarRow.setAlignment(Pos.CENTER_RIGHT);
+            removeCarRow.setPadding(new Insets(10, 0, 0, 0));
+            removeCarRow.getStyleClass().add("remove-car-row");
+
+            Button removeCarButton = new Button("✕ Remove Car");
+            removeCarButton.getStyleClass().add("remove-car-button");
+            removeCarButton.setOnAction(e -> removeCar());
+
+            removeCarRow.getChildren().add(removeCarButton);
+            configDetailsContainer.getChildren().add(removeCarRow);
+        }
+    }
+
+    private void removeRemoveCarButton() {
+        if (configDetailsContainer == null) return;
+
+        configDetailsContainer.getChildren().removeIf(node ->
+                node instanceof HBox && ((HBox) node).getStyleClass().contains("remove-car-row")
+        );
+    }
+
+    private void removeCar() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Remove Car");
+        alert.setHeaderText("Are you sure you want to remove the car?");
+        alert.setContentText("This will remove the car and all its customizations from your cart.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            SessionStaff.getInstance().setCarConfiguration(null);
+            loadFromSession();
+        }
+    }
+
+    private String findAccessoryIdByName(String name) {
+        for (SessionStaff.AccessoryItem item : SessionStaff.getInstance().getAccessories().values()) {
+            if (item.name.equals(name)) return name;
+        }
+        return name;
+    }
+
+    private void displayAllAccessories() {
+        accessoriesContainer.getChildren().clear();
+
+        for (AccessoryItemDisplay item : displayedAccessories) {
+            HBox row = new HBox(15);
+            row.setAlignment(Pos.CENTER_LEFT);
+            row.setPadding(new Insets(8, 0, 8, 0));
+
+            Label nameLabel = new Label(item.name);
+            nameLabel.getStyleClass().add("detail-value");
+            nameLabel.setMinWidth(400);
+
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+            Label priceLabel = new Label(currencyFormat.format(item.price));
+            priceLabel.getStyleClass().add("detail-value");
+            priceLabel.getStyleClass().add("price-highlight");
+            priceLabel.setMinWidth(100);
+
+            Button removeButton = new Button("✕");
+            removeButton.getStyleClass().add("remove-button");
+            removeButton.setOnAction(e -> removeAccessory(item));
+
+            row.getChildren().addAll(nameLabel, spacer, priceLabel, removeButton);
+            accessoriesContainer.getChildren().add(row);
+        }
+    }
+
+    private void removeAccessory(AccessoryItemDisplay item) {
+        if (item.isCarOption) {
+            CarConfiguration carConfig = SessionStaff.getInstance().getCarConfiguration();
+            if (carConfig != null) {
+                switch (item.id) {
+                    case "wheel" -> carConfig.setSelectedWheel(null);
+                    case "color" -> carConfig.setSelectedColor(null);
+                    case "interior" -> carConfig.setSelectedInterior(null);
+                }
+                SessionStaff.getInstance().setCarConfiguration(carConfig);
+            }
+        } else {
+            SessionStaff.getInstance().removeAccessory(item.id);
+        }
+
+        loadFromSession();
     }
 
     private void initializeInstallmentPlans() {
@@ -136,6 +307,17 @@ public class staffShopingCartController {
     private void updateInstallmentDetails() {
         if (selectedPlan == null) return;
         double total = calculateGrandTotal();
+
+        if (total < selectedPlan.downPayment) {
+            downPaymentLabel.setText(currencyFormat.format(total));
+            monthlyPaymentLabel.setText("$0");
+            monthsLabel.setText("N/A");
+            aprLabel.setText("N/A");
+            totalInterestLabel.setText("$0");
+            totalWithInterestLabel.setText(currencyFormat.format(total));
+            return;
+        }
+
         double amountToFinance = total - selectedPlan.downPayment;
         double monthlyRate = (selectedPlan.apr / 100) / 12;
         double monthlyPayment = amountToFinance *
@@ -154,7 +336,9 @@ public class staffShopingCartController {
     }
 
     private void goBack() {
-        navigate(cameFromAsset ? "/View/staffAsset.fxml" : "/View/staffFinalize.fxml");
+        CarConfiguration carConfig = SessionStaff.getInstance().getCarConfiguration();
+        if (carConfig != null) navigate("/View/staffFinalize.fxml");
+        else navigate("/View/staffAsset.fxml");
     }
 
     private void loadStaffAsset() {
@@ -174,11 +358,25 @@ public class staffShopingCartController {
     }
 
     private void confirmPurchase() {
+        double total = calculateGrandTotal();
+
+        if (total <= 0) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Empty Cart");
+            alert.setHeaderText("Cannot confirm purchase");
+            alert.setContentText("Your cart is empty. Add some items first!");
+            alert.showAndWait();
+            return;
+        }
+
         String paymentMethod = installmentRadio.isSelected() ? "Installment" : "Full Payment";
         String message = "Purchase Confirmed!\n\nPayment Method: " + paymentMethod;
 
-        if (installmentRadio.isSelected() && selectedPlan != null) {
-            double total = calculateGrandTotal();
+        CarConfiguration carConfig = SessionStaff.getInstance().getCarConfiguration();
+        if (carConfig != null) message += "\nCar: " + carConfig.getModelName();
+        else message += "\nAccessories Only Purchase";
+
+        if (installmentRadio.isSelected() && selectedPlan != null && total >= selectedPlan.downPayment) {
             double amountToFinance = total - selectedPlan.downPayment;
             double monthlyRate = (selectedPlan.apr / 100) / 12;
             double monthlyPayment = amountToFinance *
@@ -189,34 +387,25 @@ public class staffShopingCartController {
             message += "\nMonthly Payment: " + currencyFormat.format(monthlyPayment);
         }
 
+        message += "\n\nTotal: " + currencyFormat.format(total);
+
         confirmationMessageLabel.setText(message);
         confirmationMessageLabel.setVisible(true);
         confirmationMessageLabel.setManaged(true);
         confirmButton.setDisable(true);
     }
 
-    public void addAccessory(String name, double price) {
-        accessoriesPrice += price;
-
-        HBox accessoryRow = new HBox(15);
-        accessoryRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-
-        Label nameLabel = new Label(name);
-        nameLabel.getStyleClass().add("accessory-name");
-        nameLabel.setPrefWidth(400);
-
-        Label priceLabel = new Label(currencyFormat.format(price));
-        priceLabel.getStyleClass().add("accessory-price");
-
-        accessoryRow.getChildren().addAll(nameLabel, priceLabel);
-        accessoriesContainer.getChildren().add(accessoryRow);
-
-        updatePriceLabels();
+    private double calculateSubtotal() {
+        return basePrice + accessoriesPrice;
     }
 
-    private double calculateSubtotal() { return basePrice + accessoriesPrice; }
-    private double calculateTax() { return calculateSubtotal() * taxRate; }
-    private double calculateGrandTotal() { return calculateSubtotal() + calculateTax(); }
+    private double calculateTax() {
+        return calculateSubtotal() * taxRate;
+    }
+
+    private double calculateGrandTotal() {
+        return calculateSubtotal() + calculateTax();
+    }
 
     private void updatePriceLabels() {
         basePriceLabel.setText(currencyFormat.format(basePrice));
@@ -234,14 +423,22 @@ public class staffShopingCartController {
         }
     }
 
-    public double getTotalPrice() { return calculateGrandTotal(); }
-    public List<String> getCartItems() { return cartItems; }
+    public double getTotalPrice() {
+        return calculateGrandTotal();
+    }
+
+    public List<String> getCartItems() {
+        return cartItems;
+    }
 
     public void clearCart() {
         cartItems.clear();
         accessoriesContainer.getChildren().clear();
-        basePrice = 115000;
+        displayedAccessories.clear();
+        basePrice = 0;
         accessoriesPrice = 0;
+        SessionStaff.getInstance().clearAccessories();
+        SessionStaff.getInstance().setCarConfiguration(null);
         updatePriceLabels();
     }
 }
