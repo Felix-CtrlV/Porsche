@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -79,13 +80,8 @@ public class staffFinalizeController implements Initializable {
     }
 
     private void loadDefaultImage() {
-        try {
-            Image img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Image/911_select_model.png")));
-            if (selected_model_image != null) selected_model_image.setImage(img);
-            if (previewImage != null) previewImage.setImage(img);
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Failed to load default image", e);
-        }
+        loadImage("/Image/911_select_model.png", selected_model_image);
+        loadImage("/Image/911_select_model.png", previewImage);
     }
 
     public void setCarConfiguration(CarConfiguration config) {
@@ -147,14 +143,41 @@ public class staffFinalizeController implements Initializable {
         }
 
         String imagePath = carConfig.getModelImagePath();
-        if (imagePath != null) {
-            try {
-                Image img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
-                if (selected_model_image != null) selected_model_image.setImage(img);
-                if (previewImage != null) previewImage.setImage(img);
-            } catch (Exception e) {
-                LOGGER.log(Level.WARNING, "Failed to load car image: " + imagePath, e);
+        if (imagePath != null && !imagePath.isEmpty()) {
+            loadImage(imagePath, selected_model_image);
+            loadImage(imagePath, previewImage);
+        }
+    }
+
+    private void loadImage(String imagePath, ImageView imageView) {
+        if (imageView == null || imagePath == null) return;
+
+        try {
+            InputStream stream = getClass().getResourceAsStream(imagePath);
+            if (stream != null) {
+                Image img = new Image(stream);
+                imageView.setImage(img);
+            } else {
+                LOGGER.log(Level.WARNING, "Image not found: " + imagePath);
+                loadPlaceholderImage(imageView);
             }
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Failed to load image: " + imagePath, e);
+            loadPlaceholderImage(imageView);
+        }
+    }
+
+    private void loadPlaceholderImage(ImageView imageView) {
+        if (imageView == null) return;
+
+        try {
+            InputStream stream = getClass().getResourceAsStream("/Image/911_select_model.png");
+            if (stream != null) {
+                Image img = new Image(stream);
+                imageView.setImage(img);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Failed to load placeholder image", e);
         }
     }
 

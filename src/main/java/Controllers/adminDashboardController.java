@@ -718,15 +718,18 @@ public class adminDashboardController {
             securityManager.resetAttempts(current.getUserid(), "admin");
             showProfilePane();
         } else {
-            // Password incorrect - record failed attempt
+            // Password incorrect - clear field immediately for instant feedback
+            verifyPasswordField.clear();
+            
+            // Record failed attempt (now optimized with caching and async operations)
             boolean shouldLock = securityManager.recordFailedAttempt(current.getUserid(), "admin");
             
             if (shouldLock) {
-                // Account locked - send notifications and show lock overlay
+                // Account locked - send notifications asynchronously and show lock overlay immediately
                 emailService.sendBruteForceAlert(current.getUserid(), "admin");
                 showSecurityLockOverlay();
             } else {
-                // Show remaining attempts
+                // Show remaining attempts immediately (from cache)
                 int remaining = securityManager.getRemainingAttempts(current.getUserid(), "admin");
                 passwordErrorLabel.setText("Incorrect password. " + remaining + " attempts remaining.");
                 passwordErrorLabel.setVisible(true);

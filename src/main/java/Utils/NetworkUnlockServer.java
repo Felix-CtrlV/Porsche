@@ -284,13 +284,6 @@ public class NetworkUnlockServer {
                         You can safely close this window and return to the login page.
                     </p>
                 </div>
-                
-                <script>
-                    // Auto-close after 8 seconds
-                    setTimeout(() => {
-                        window.close();
-                    }, 8000);
-                </script>
             </body>
             </html>
             """;

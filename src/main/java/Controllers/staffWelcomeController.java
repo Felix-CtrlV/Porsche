@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -45,6 +44,9 @@ public class staffWelcomeController implements Initializable {
     @FXML
     private VBox settingsPopup;
 
+    @FXML
+    private Button darkModeBtn;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
@@ -56,6 +58,10 @@ public class staffWelcomeController implements Initializable {
         if (settingsPopup != null) {
             settingsPopup.setVisible(false);
             settingsPopup.setManaged(false);
+        }
+
+        if (darkModeBtn != null) {
+            updateDarkModeButtonText();
         }
     }
 
@@ -71,6 +77,22 @@ public class staffWelcomeController implements Initializable {
                 fadeIn.setFromValue(0);
                 fadeIn.setToValue(1);
                 fadeIn.play();
+            }
+        }
+    }
+
+    @FXML
+    private void toggleDarkMode() {
+        DarkModeManager.getInstance().toggleDarkMode();
+        updateDarkModeButtonText();
+    }
+
+    private void updateDarkModeButtonText() {
+        if (darkModeBtn != null) {
+            if (DarkModeManager.getInstance().isDarkMode()) {
+                darkModeBtn.setText("Light");
+            } else {
+                darkModeBtn.setText("Dark");
             }
         }
     }

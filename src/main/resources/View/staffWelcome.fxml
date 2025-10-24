@@ -13,9 +13,8 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="root-pane" stylesheets="@../CSS/DashBoard_general.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffWelcomeController">
+<AnchorPane fx:id="rootPane" maxHeight="580.0" maxWidth="1188.0" minHeight="580.0" minWidth="1188.0" prefHeight="580.0" prefWidth="1188.0" styleClass="root-pane" stylesheets="@../CSS/DashBoard_general.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffWelcomeController">
 
-    <!-- HEADER -->
     <HBox alignment="CENTER_LEFT" prefHeight="60.0" style="-fx-background-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
             <ImageView fitHeight="40" fitWidth="36" preserveRatio="true">
@@ -27,7 +26,6 @@
         <padding><Insets bottom="10" left="15" right="15" top="10" /></padding>
     </HBox>
 
-    <!-- LEFT INFO PANEL -->
     <VBox fx:id="vbox" prefWidth="350" spacing="15" style="-fx-background-color: black;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="60.0">
         <children>
             <Region prefHeight="20" />
@@ -61,16 +59,14 @@
         </children>
     </VBox>
 
-    <!-- RIGHT IMAGE PANEL -->
     <StackPane fx:id="imageContainer" styleClass="bg-img-pane" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
         <children>
-            <ImageView fx:id="backgroundImage" preserveRatio="false">
-                <image><Image url="@../Image/splash.png" /></image>
+            <ImageView fx:id="backgroundImage" fitHeight="470.0" fitWidth="838.0" preserveRatio="true" smooth="true">
+                <image><Image url="@../Image/startUpImage.png" /></image>
             </ImageView>
         </children>
     </StackPane>
 
-    <!-- FOOTER -->
     <HBox alignment="CENTER" prefHeight="50" spacing="50" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <children>
             <Line endX="400" stroke="WHITE" HBox.hgrow="ALWAYS">
@@ -92,10 +88,10 @@
         </children>
     </HBox>
 
-    <VBox fx:id="settingsPopup" alignment="CENTER_LEFT" layoutX="200" layoutY="70" managed="false" prefWidth="180" style="-fx-background-color: #222; -fx-background-radius: 10; -fx-border-color: #555; -fx-border-radius: 10;" visible="false">
+    <VBox fx:id="settingsPopup" alignment="CENTER_LEFT" layoutX="1000.0" layoutY="65.0" managed="false" prefWidth="170" style="-fx-background-color: #222; -fx-background-radius: 10; -fx-border-color: #555; -fx-border-radius: 10;" visible="false" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="65.0">
         <children>
             <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-alignment: CENTER_LEFT;" text="Profile View" />
-            <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-alignment: CENTER_LEFT;" text="Change Password" />
+            <Button fx:id="darkModeBtn" onAction="#toggleDarkMode" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-alignment: CENTER_LEFT;" text="🌙 Dark Mode" />
             <Button onAction="#logout" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-alignment: CENTER_LEFT;" text="Logout" />
         </children>
         <padding><Insets bottom="10" left="15" right="15" top="10" /></padding>

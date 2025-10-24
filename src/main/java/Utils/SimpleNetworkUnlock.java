@@ -162,9 +162,6 @@ public class SimpleNetworkUnlock {
                     <p>Your account has been successfully unlocked. You can now log in to the system.</p>
                     <button class="button" onclick="window.close()">Close</button>
                 </div>
-                <script>
-                    setTimeout(() => window.close(), 5000);
-                </script>
             </body>
             </html>
             """;

@@ -20,7 +20,7 @@
                 <Insets bottom="15" left="35" right="35" top="15" />
             </padding>
 
-            <Button fx:id="backButton" prefHeight="38.0" prefWidth="38.0" styleClass="back-button" text="←" />
+            <Button fx:id="backButton" prefHeight="46.0" prefWidth="55.0" styleClass="back-button" text="←" />
 
             <VBox spacing="3" HBox.hgrow="ALWAYS">
                 <Label styleClass="page-title" text="Premium Accessories" />

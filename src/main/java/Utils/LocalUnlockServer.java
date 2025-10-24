@@ -178,15 +178,9 @@ public class LocalUnlockServer {
                     <button class="button" onclick="window.close()">Close Window</button>
                     
                     <p style="margin-top: 20px; font-size: 14px; color: #999;">
-                        This window will automatically close in 5 seconds.
+                        You can safely close this window and return to the login page.
                     </p>
                 </div>
-                
-                <script>
-                    setTimeout(() => {
-                        window.close();
-                    }, 5000);
-                </script>
             </body>
             </html>
             """;

@@ -323,30 +323,7 @@ public class staffassetController {
                 quantity
         );
         updateCartDisplay();
-        logger.info("Added to cart: {} x{}", accessory.getPartName(), quantity);
-
-        Button sourceButton = null;
-        for (Node node : productsContainer.getChildren()) {
-            if (node instanceof VBox) {
-                VBox card = (VBox) node;
-                for (Node child : card.getChildren()) {
-                    if (child instanceof HBox) {
-                        HBox contentBox = (HBox) child;
-                        for (Node content : contentBox.getChildren()) {
-                            if (content instanceof VBox) {
-                                VBox controlsBox = (VBox) content;
-                                for (Node control : controlsBox.getChildren()) {
-                                    if (control instanceof Button && ((Button) control).getText().equals("ADD TO CART")) {
-                                        sourceButton = (Button) control;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        logger.info("Added {} x{} to cart", accessory.getPartName(), quantity);
     }
 
     private void setupCartButtons() {
@@ -381,15 +358,21 @@ public class staffassetController {
         if (cartCountLabel != null) cartCountLabel.setText(String.valueOf(totalItems));
     }
 
+    @FXML
     private void showCartModal() {
         if (cartModalOverlay != null) {
             populateCartModal();
             cartModalOverlay.setVisible(true);
+            cartModalOverlay.setManaged(true);
         }
     }
 
+    @FXML
     private void closeCartModal() {
-        if (cartModalOverlay != null) cartModalOverlay.setVisible(false);
+        if (cartModalOverlay != null) {
+            cartModalOverlay.setVisible(false);
+            cartModalOverlay.setManaged(false);
+        }
     }
 
     private void populateCartModal() {
