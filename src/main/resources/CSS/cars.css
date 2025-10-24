@@ -154,3 +154,30 @@
 .dark-mode .model-tagline {
     -fx-text-fill: #B8B8B8;
 }
+
+.model-image {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 4);
+    -fx-transition: all 0.3s ease-in-out;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+    -fx-cursor: hand;
+}
+
+.model-image:hover {
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+    -fx-effect: dropshadow(gaussian, rgba(213, 0, 28, 0.4), 25, 0.2, 0, 6);
+    -fx-translate-y: -5px;
+}
+
+.dark-mode .model-image:hover {
+    -fx-effect: dropshadow(gaussian, rgba(213, 0, 28, 0.6), 25, 0.3, 0, 6);
+}
+
+.model-tile-container {
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.model-tile-container:hover {
+    -fx-translate-y: -6px;
+}

@@ -2,8 +2,8 @@ package Controllers;
 
 import Utils.SessionStaff;
 import Utils.DarkModeManager;
-import javafx.animation.ScaleTransition;
 import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,13 +12,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.slf4j.Logger;
@@ -42,7 +40,6 @@ public class staffCarsController implements Initializable {
     @FXML private Button homebtn;
 
     private List<ImageView> allImages;
-    private static final Color PORSCHE_RED = Color.web("#D5001C");
     private Map<ImageView, String> imageToModelMap;
 
     @Override
@@ -94,20 +91,13 @@ public class staffCarsController implements Initializable {
     }
 
     private void setupImageInteractions() {
-        DropShadow glowEffect = new DropShadow(20, PORSCHE_RED);
-        glowEffect.setSpread(0.4);
-
         for (ImageView imageView : allImages) {
             imageView.setOnMouseEntered(e -> {
-                applyScale(imageView, 1.08);
-                imageView.setEffect(glowEffect);
                 if (imageView.getScene() != null)
                     imageView.getScene().setCursor(javafx.scene.Cursor.HAND);
             });
 
             imageView.setOnMouseExited(e -> {
-                applyScale(imageView, 1.0);
-                imageView.setEffect(null);
                 if (imageView.getScene() != null)
                     imageView.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
             });
@@ -116,16 +106,9 @@ public class staffCarsController implements Initializable {
         }
     }
 
-    private void applyScale(ImageView imageView, double scale) {
-        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(300), imageView);
-        scaleTransition.setToX(scale);
-        scaleTransition.setToY(scale);
-        scaleTransition.play();
-    }
-
     @FXML
     private void home(ActionEvent event) {
-        createClickFeedback((Button) event.getSource());
+        createClickFeedback((Node) event.getSource());
         navigate(event, "/View/staffWelcome.fxml", null);
     }
 
@@ -133,7 +116,6 @@ public class staffCarsController implements Initializable {
     private void redirectWithModel(MouseEvent event) {
         ImageView clicked = (ImageView) event.getSource();
         String modelName = imageToModelMap.get(clicked);
-
         logger.info("Selected model: {}", modelName);
         createClickFeedback(clicked);
         navigate(event, "/View/staffModelSelect.fxml", modelName);
@@ -141,8 +123,8 @@ public class staffCarsController implements Initializable {
 
     private void createClickFeedback(Node node) {
         ScaleTransition pulse = new ScaleTransition(Duration.millis(120), node);
-        pulse.setToX(0.95);
-        pulse.setToY(0.95);
+        pulse.setToX(0.96);
+        pulse.setToY(0.96);
         pulse.setAutoReverse(true);
         pulse.setCycleCount(2);
         new ParallelTransition(pulse).play();

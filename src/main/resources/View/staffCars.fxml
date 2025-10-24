@@ -71,76 +71,42 @@
                 </rowConstraints>
 
                 <children>
+                    <!-- Row 1 -->
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                        <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
-                            <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="nine11_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
-                            </StackPane>
-                            <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
-                                <Label styleClass="model-name" text="911" />
-                                <Label styleClass="model-tagline" text="The Icon" />
-                            </VBox>
-                        </VBox>
+                        <StackPane styleClass="image-container">
+                            <ImageView fx:id="nine11_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
+                        </StackPane>
                     </StackPane>
 
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                        <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
-                            <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="seven18_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
-                            </StackPane>
-                            <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
-                                <Label styleClass="model-name" text="718" />
-                                <Label styleClass="model-tagline" text="Mid-Engine Precision" />
-                            </VBox>
-                        </VBox>
+                        <StackPane styleClass="image-container">
+                            <ImageView fx:id="seven18_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
+                        </StackPane>
                     </StackPane>
 
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                        <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
-                            <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="taycan_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
-                            </StackPane>
-                            <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
-                                <Label styleClass="model-name" text="TAYCAN" />
-                                <Label styleClass="model-tagline" text="Soul, Electrified" />
-                            </VBox>
-                        </VBox>
+                        <StackPane styleClass="image-container">
+                            <ImageView fx:id="taycan_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
+                        </StackPane>
                     </StackPane>
 
+                    <!-- Row 2 -->
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                        <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
-                            <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="panamera_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
-                            </StackPane>
-                            <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
-                                <Label styleClass="model-name" text="PANAMERA" />
-                                <Label styleClass="model-tagline" text="Gran Turismo Perfected" />
-                            </VBox>
-                        </VBox>
+                        <StackPane styleClass="image-container">
+                            <ImageView fx:id="panamera_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
+                        </StackPane>
                     </StackPane>
 
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                        <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
-                            <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="macan_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
-                            </StackPane>
-                            <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
-                                <Label styleClass="model-name" text="MACAN" />
-                                <Label styleClass="model-tagline" text="Compact Dynamics" />
-                            </VBox>
-                        </VBox>
+                        <StackPane styleClass="image-container">
+                            <ImageView fx:id="macan_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
+                        </StackPane>
                     </StackPane>
 
                     <StackPane styleClass="model-tile-container" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                        <VBox alignment="CENTER" spacing="0" styleClass="model-tile-wrapper">
-                            <StackPane styleClass="image-container" VBox.vgrow="ALWAYS">
-                                <ImageView fx:id="cayenne_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
-                            </StackPane>
-                            <VBox alignment="CENTER" spacing="4" styleClass="model-label-container">
-                                <Label styleClass="model-name" text="CAYENNE" />
-                                <Label styleClass="model-tagline" text="Unmistakable Presence" />
-                            </VBox>
-                        </VBox>
+                        <StackPane styleClass="image-container">
+                            <ImageView fx:id="cayenne_select_image" fitWidth="300" onMouseClicked="#redirectWithModel" preserveRatio="true" smooth="true" styleClass="model-image" />
+                        </StackPane>
                     </StackPane>
                 </children>
             </GridPane>
