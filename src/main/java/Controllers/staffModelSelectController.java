@@ -27,7 +27,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class staffModelSelectController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(staffModelSelectController.class);
@@ -43,7 +44,6 @@ public class staffModelSelectController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         logger.info("Initializing staffModelSelectController");
-
         if (rootPane != null) {
             rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
                 if (newScene != null) {
@@ -51,18 +51,15 @@ public class staffModelSelectController implements Initializable {
                 }
             });
         }
-
         carDAO = new CarDAO();
     }
 
     public void setSelectedModel(String modelName) {
         this.selectedModel = modelName;
         logger.info("Selected model set to: {}", modelName);
-
         if (modelTitle != null) {
             modelTitle.setText(modelName + " Models");
         }
-
         Platform.runLater(() -> {
             if (flow_Pane != null) {
                 logger.info("FlowPane is available, loading car cards for model: {}", modelName);
@@ -77,43 +74,32 @@ public class staffModelSelectController implements Initializable {
         try {
             logger.info("Fetching cars from database for model: {}", selectedModel);
             List<car> cars;
-
             if (selectedModel != null && !selectedModel.isEmpty()) {
                 cars = carDAO.getCarsByModelName(selectedModel);
             } else {
                 cars = carDAO.getAllCars();
             }
-
             if (cars == null) {
                 logger.error("getCarsByModelName() returned null!");
                 return;
             }
-
             if (cars.isEmpty()) {
                 logger.warn("No cars found in database for model: {}", selectedModel);
                 return;
             }
-
             logger.info("Found {} cars for model: {}", cars.size(), selectedModel);
-
             flow_Pane.getChildren().clear();
-
             for (car carData : cars) {
                 try {
                     logger.info("Creating card for car: {} (ID: {})", carData.getModelName(), carData.getCarId());
-
                     VBox card = createCarCard(carData);
                     flow_Pane.getChildren().add(card);
-
                     logger.info("Successfully added car card: {}", carData.getModelName());
-
                 } catch (Exception e) {
                     logger.error("Unexpected error creating card for: " + carData.getModelName(), e);
                 }
             }
-
             logger.info("Finished loading {} car cards", flow_Pane.getChildren().size());
-
         } catch (Exception e) {
             logger.error("Failed to load cars from database", e);
             e.printStackTrace();
@@ -185,7 +171,6 @@ public class staffModelSelectController implements Initializable {
         card.setOnMouseExited(e -> card.setStyle("-fx-cursor: default;"));
 
         detailsContainer.getChildren().addAll(modelNameLabel, priceLabel, infoLabel, customizeButton);
-
         card.getChildren().addAll(imageContainer, detailsContainer);
 
         return card;
@@ -208,21 +193,17 @@ public class staffModelSelectController implements Initializable {
     private void navigateToCustomize(car selectedCar) {
         try {
             logger.info("Navigating to customize page with car: {}", selectedCar.getModelName());
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffCustomize.fxml"));
             Parent root = loader.load();
-
             staffCustomizeController controller = loader.getController();
             if (controller != null) {
                 controller.setSelectedCar(selectedCar);
             }
-
             Stage stage = (Stage) flow_Pane.getScene().getWindow();
             Scene scene = new Scene(root, 1300, 850);
             DarkModeManager.getInstance().registerScene(scene);
             stage.setScene(scene);
             stage.centerOnScreen();
-
         } catch (IOException e) {
             logger.error("Unable to load staffCustomize.fxml", e);
             e.printStackTrace();

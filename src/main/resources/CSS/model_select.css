@@ -2,24 +2,32 @@
 
 .root {
     -porsche-red: #D5001C;
-    -porsche-red-hover: #B00016;
+    -porsche-red-strong: #B00016;
+    -glass-tint: rgba(255,255,255,0.85);
+    -glass-border: rgba(0,0,0,0.06);
+    -muted-gray: #6B6B6B;
+    -muted-gray-2: #9B9B9B;
 }
 
 .main-background {
-    -fx-background-color: #F8F8F8;
+    -fx-background-color: linear-gradient(to bottom, #FBFBFB 0%, #F3F3F3 100%);
 }
 
 .main-background.dark-mode {
-    -fx-background-color: #0A0A0A;
+    -fx-background-color: linear-gradient(to bottom, #060606 0%, #0D0D0D 100%);
 }
 
 .header-container {
-    -fx-background-color: rgba(255, 255, 255, 0.95);
-    -fx-backdrop-filter: blur(20px);
+    -fx-background-color: rgba(255,255,255,0.92);
+    -fx-background-radius: 0 0 12 12;
+    -fx-padding: 8 0 12 0;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.06), 10, 0.0, 0, 4);
+    -fx-backdrop-filter: blur(18px);
+    -fx-transition: 250ms ease;
 }
 
 .dark-mode .header-container {
-    -fx-background-color: rgba(26, 26, 26, 0.95);
+    -fx-background-color: rgba(18,18,18,0.9);
 }
 
 .nav-bar {
@@ -28,10 +36,10 @@
 
 .main-title {
     -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 32px;
-    -fx-text-fill: #1A1A1A;
+    -fx-font-size: 28px;
+    -fx-text-fill: #161616;
     -fx-font-weight: 700;
-    -fx-letter-spacing: -0.5px;
+    -fx-letter-spacing: -0.4px;
 }
 
 .dark-mode .main-title {
@@ -40,8 +48,8 @@
 
 .subtitle {
     -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 14px;
-    -fx-text-fill: #6B6B6B;
+    -fx-font-size: 13px;
+    -fx-text-fill: var(-muted-gray);
     -fx-font-weight: 400;
 }
 
@@ -50,50 +58,49 @@
 }
 
 .back-button {
-    -fx-background-color: rgba(255, 255, 255, 0.8);
-    -fx-backdrop-filter: blur(10px);
-    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-background-color: rgba(255,255,255,0.9);
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: rgba(0,0,0,0.06);
     -fx-border-width: 1px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-text-fill: #1A1A1A;
+    -fx-padding: 10 20 10 20;
     -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 12px;
     -fx-font-weight: 600;
-    -fx-letter-spacing: 0.5px;
-    -fx-padding: 12px 24px;
+    -fx-font-size: 12px;
+    -fx-text-fill: #161616;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.04), 6, 0, 0, 2);
+    -fx-transition: 180ms ease;
 }
 
 .back-button:hover {
-    -fx-background-color: #D5001C;
-    -fx-border-color: #D5001C;
-    -fx-text-fill: #FFFFFF;
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-background-color: -porsche-red;
+    -fx-border-color: -porsche-red;
+    -fx-text-fill: white;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
 .dark-mode .back-button {
-    -fx-background-color: rgba(26, 26, 26, 0.8);
+    -fx-background-color: rgba(22,22,22,0.86);
     -fx-text-fill: #FFFFFF;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: rgba(255,255,255,0.06);
 }
 
 .accent-divider {
-    -fx-stroke: #D5001C;
+    -fx-stroke: -porsche-red;
     -fx-stroke-width: 2px;
+    -fx-opacity: 0.95;
 }
 
 .content-container {
-    -fx-background-color: #F8F8F8;
-}
-
-.dark-mode .content-container {
-    -fx-background-color: #0A0A0A;
+    -fx-background-color: transparent;
+    -fx-padding: 24 0 40 0;
 }
 
 .models-scroll-pane {
     -fx-background-color: transparent;
+    -fx-padding: 6 0 20 0;
 }
 
 .models-scroll-pane > .viewport {
@@ -103,56 +110,66 @@
 .models-scroll-pane > .scroll-bar:vertical {
     -fx-background-color: transparent;
     -fx-pref-width: 8px;
+    -fx-padding: 8 0 8 0;
 }
 
 .models-scroll-pane > .scroll-bar > .thumb {
-    -fx-background-color: rgba(213, 0, 28, 0.3);
-    -fx-background-radius: 4px;
+    -fx-background-color: rgba(213,0,28,0.18);
+    -fx-background-radius: 6px;
+    -fx-min-height: 40px;
 }
 
 .models-scroll-pane > .scroll-bar > .thumb:hover {
-    -fx-background-color: #D5001C;
+    -fx-background-color: -porsche-red;
 }
 
 .car-card {
-    -fx-background-color: rgba(255, 255, 255, 0.95);
-    -fx-backdrop-filter: blur(20px);
+    -fx-background-color: rgba(255,255,255,0.88);
     -fx-background-radius: 16px;
-    -fx-border-color: rgba(0, 0, 0, 0.06);
+    -fx-border-color: -glass-border;
     -fx-border-width: 1px;
     -fx-border-radius: 16px;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.04), 12, 0, 0, 6);
+    -fx-pref-width: 320px;
+    -fx-pref-height: 380px;
+    -fx-alignment: top-center;
     -fx-cursor: hand;
+    -fx-transition: 240ms cubic-bezier(.2,.8,.2,1);
 }
 
 .car-card:hover {
-    -fx-border-color: rgba(213, 0, 28, 0.3);
-    -fx-translate-y: -8;
+    -fx-border-color: rgba(213,0,28,0.24);
+    -fx-translate-y: -6;
 }
 
 .dark-mode .car-card {
-    -fx-background-color: rgba(26, 26, 26, 0.95);
-    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-background-color: rgba(22,22,22,0.92);
+    -fx-border-color: rgba(255,255,255,0.04);
 }
 
 .image-container {
-    -fx-background-color: rgba(248, 248, 248, 0.6);
+    -fx-background-color: rgba(250,250,250,0.6);
+    -fx-background-radius: 14px 14px 0 0;
+    -fx-alignment: center;
+    -fx-padding: 12 0 12 0;
     -fx-backdrop-filter: blur(10px);
-    -fx-background-radius: 16px 16px 0 0;
 }
 
 .dark-mode .image-container {
-    -fx-background-color: rgba(18, 18, 18, 0.6);
+    -fx-background-color: rgba(20,20,20,0.54);
 }
 
 .details-container {
     -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-padding: 18 20 24 20;
 }
 
 .model-name {
     -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 18px;
+    -fx-font-size: 17px;
     -fx-font-weight: 700;
-    -fx-text-fill: #1A1A1A;
+    -fx-text-fill: #161616;
     -fx-text-alignment: center;
 }
 
@@ -162,16 +179,18 @@
 
 .model-price {
     -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 24px;
+    -fx-font-size: 22px;
     -fx-font-weight: 800;
-    -fx-text-fill: #D5001C;
+    -fx-text-fill: -porsche-red;
+    -fx-padding: 6 0 6 0;
 }
 
 .model-info {
     -fx-font-family: 'Inter', sans-serif;
     -fx-font-size: 12px;
     -fx-font-weight: 500;
-    -fx-text-fill: #6B6B6B;
+    -fx-text-fill: var(-muted-gray);
+    -fx-padding: 2 0 8 0;
 }
 
 .dark-mode .model-info {
@@ -179,44 +198,49 @@
 }
 
 .customize-button {
-    -fx-background-color: #D5001C;
-    -fx-text-fill: #FFFFFF;
+    -fx-background-color: -porsche-red;
+    -fx-text-fill: white;
     -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 12px;
     -fx-font-weight: 700;
-    -fx-letter-spacing: 0.5px;
-    -fx-padding: 12px 30px;
+    -fx-font-size: 12px;
+    -fx-letter-spacing: 0.6px;
+    -fx-padding: 10 28 10 28;
     -fx-background-radius: 8px;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, rgba(213,0,28,0.12), 6, 0, 0, 4);
+    -fx-transition: 180ms ease;
 }
 
 .customize-button:hover {
-    -fx-background-color: #B00016;
-    -fx-scale-y: 1.05;
+    -fx-background-color: -porsche-red-strong;
+    -fx-scale-y: 1.03;
 }
 
 .footer-container {
-    -fx-background-color: rgba(255, 255, 255, 0.95);
-    -fx-backdrop-filter: blur(20px);
+    -fx-background-color: rgba(255,255,255,0.9);
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 10 0 12 0;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.03), 8, 0, 0, 4);
+    -fx-backdrop-filter: blur(14px);
 }
 
 .dark-mode .footer-container {
-    -fx-background-color: rgba(26, 26, 26, 0.95);
+    -fx-background-color: rgba(18,18,18,0.9);
 }
 
 .footer-divider {
-    -fx-stroke: rgba(0, 0, 0, 0.08);
+    -fx-stroke: rgba(0,0,0,0.06);
     -fx-stroke-width: 1px;
 }
 
 .dark-mode .footer-divider {
-    -fx-stroke: rgba(255, 255, 255, 0.08);
+    -fx-stroke: rgba(255,255,255,0.06);
 }
 
 .footer-text {
     -fx-font-family: 'Inter', sans-serif;
     -fx-font-size: 10px;
-    -fx-text-fill: #9B9B9B;
+    -fx-text-fill: var(-muted-gray-2);
     -fx-letter-spacing: 1.5px;
 }
 
