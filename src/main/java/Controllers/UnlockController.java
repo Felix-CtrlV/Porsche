@@ -202,13 +202,6 @@ public class UnlockController {
                             You can safely close this window and return to the login page.
                         </p>
                     </div>
-                    
-                    <script>
-                        // Auto-close after 10 seconds
-                        setTimeout(() => {
-                            window.close();
-                        }, 10000);
-                    </script>
                 </body>
                 </html>
                 """;

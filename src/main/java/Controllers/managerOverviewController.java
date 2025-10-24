@@ -924,7 +924,7 @@ public class managerOverviewController {
         qtyBarChart.setCategoryGap(20);
 
         // Style area chart
-        revenueAreaChart.setLegendVisible(true);
+        revenueAreaChart.setLegendVisible(false);
         revenueAreaChart.setAnimated(false);
         revenueAreaChart.setCreateSymbols(true); // Enable symbols for smooth curve styling
 

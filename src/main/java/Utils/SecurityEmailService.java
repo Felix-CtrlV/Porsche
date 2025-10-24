@@ -28,44 +28,47 @@ public class SecurityEmailService {
     }
     
     /**
-     * Sends brute force alert emails to the affected user and admin
+     * Sends brute force alert emails to the affected user and admin (ASYNC)
      */
     public void sendBruteForceAlert(int userId, String userType) {
-        try {
-            System.out.println("SECURITY ALERT TRIGGERED for userId=" + userId + ", userType=" + userType);
-            
-            UserInfo userInfo = getUserInfo(userId, userType);
-            if (userInfo == null) {
-                System.err.println("FAILED: Could not get user info for userId=" + userId + ", userType=" + userType);
-                return;
+        // Run email sending asynchronously to avoid blocking UI
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            try {
+                System.out.println("SECURITY ALERT TRIGGERED for userId=" + userId + ", userType=" + userType);
+                
+                UserInfo userInfo = getUserInfo(userId, userType);
+                if (userInfo == null) {
+                    System.err.println("FAILED: Could not get user info for userId=" + userId + ", userType=" + userType);
+                    return;
+                }
+                
+                System.out.println("User info retrieved: " + userInfo.username + " (" + userInfo.email + ")");
+                
+                String unlockToken = SecurityManager.getInstance().getUnlockToken(userId, userType);
+                String unlockUrl = getUnlockUrl(unlockToken);
+                
+                // Send email to the user
+                String userSubject = "Security Alert: Account Temporarily Locked";
+                String userEmailContent = createUserEmailTemplate(userInfo, unlockUrl);
+                System.out.println("Sending user email to: " + userInfo.email);
+                sendEmail(userInfo.email, userSubject, userEmailContent);
+                
+                // Send notification to admin
+                String adminEmail = getAdminEmail();
+                if (adminEmail != null) {
+                    String adminSubject = "Security Alert: Brute Force Attack Detected";
+                    String adminEmailContent = createAdminEmailTemplate(userInfo);
+                    System.out.println("Sending admin email to: " + adminEmail);
+                    sendEmail(adminEmail, adminSubject, adminEmailContent);
+                } else {
+                    System.err.println("WARNING: No admin email found!");
+                }
+                
+            } catch (Exception e) {
+                System.err.println("ERROR in sendBruteForceAlert: " + e.getMessage());
+                e.printStackTrace();
             }
-            
-            System.out.println("User info retrieved: " + userInfo.username + " (" + userInfo.email + ")");
-            
-            String unlockToken = SecurityManager.getInstance().getUnlockToken(userId, userType);
-            String unlockUrl = getUnlockUrl(unlockToken);
-            
-            // Send email to the user
-            String userSubject = "Security Alert: Account Temporarily Locked";
-            String userEmailContent = createUserEmailTemplate(userInfo, unlockUrl);
-            System.out.println("Sending user email to: " + userInfo.email);
-            sendEmail(userInfo.email, userSubject, userEmailContent);
-            
-            // Send notification to admin
-            String adminEmail = getAdminEmail();
-            if (adminEmail != null) {
-                String adminSubject = "Security Alert: Brute Force Attack Detected";
-                String adminEmailContent = createAdminEmailTemplate(userInfo);
-                System.out.println("Sending admin email to: " + adminEmail);
-                sendEmail(adminEmail, adminSubject, adminEmailContent);
-            } else {
-                System.err.println("WARNING: No admin email found!");
-            }
-            
-        } catch (Exception e) {
-            System.err.println("ERROR in sendBruteForceAlert: " + e.getMessage());
-            e.printStackTrace();
-        }
+        });
     }
     
     private String createUserEmailTemplate(UserInfo userInfo, String unlockUrl) {

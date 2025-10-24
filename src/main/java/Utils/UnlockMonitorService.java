@@ -48,8 +48,8 @@ public class UnlockMonitorService {
         
         System.out.println("🔍 Starting unlock monitoring for user " + userId + " (" + userType + ")");
         
-        // Check every 2 seconds for unlock status
-        scheduler.scheduleWithFixedDelay(this::checkUnlockStatus, 2, 2, TimeUnit.SECONDS);
+        // Check every 500ms for unlock status (faster detection)
+        scheduler.scheduleWithFixedDelay(this::checkUnlockStatus, 0, 500, TimeUnit.MILLISECONDS);
     }
     
     /**
@@ -63,7 +63,7 @@ public class UnlockMonitorService {
     }
     
     /**
-     * Check if the account has been unlocked
+     * Check if the account has been unlocked (OPTIMIZED)
      */
     private void checkUnlockStatus() {
         if (!isMonitoring) {
@@ -72,16 +72,17 @@ public class UnlockMonitorService {
         
         try {
             SecurityManager securityManager = SecurityManager.getInstance();
+            // This now uses cache for instant response
             boolean isLocked = securityManager.isAccountLocked(userId, userType);
             
             if (!isLocked) {
                 // Account has been unlocked!
                 System.out.println("✅ Account unlocked detected for user " + userId + " - hiding overlay");
                 
-                // Stop monitoring
+                // Stop monitoring immediately
                 stopMonitoring();
                 
-                // Execute unlock callback on JavaFX thread
+                // Execute unlock callback on JavaFX thread immediately
                 if (unlockCallback != null) {
                     Platform.runLater(() -> {
                         try {
