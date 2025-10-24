@@ -9,7 +9,7 @@
 
 <ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminSalaryManagementController">
     <content>
-        <VBox spacing="20.0" style="-fx-background-color: #f5f7fa;">
+        <VBox spacing="20.0" styleClass="glass_main">
             <padding>
                 <Insets bottom="30.0" left="30.0" right="30.0" top="10.0" />
             </padding>
@@ -18,70 +18,70 @@
             <VBox spacing="10.0" />
             
             <!-- Scheduler Status -->
-            <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25;">
-                <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Automatic Scheduler Status" />
+            <VBox spacing="15.0" styleClass="section" style=" -fx-background-radius: 12; -fx-padding: 25;">
+                <Label style="-fx-font-size: 18; -fx-font-weight: bold;" styleClass="textHeader" text="Automatic Scheduler Status" />
                 
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
-                    <Label style="-fx-font-size: 14; -fx-text-fill: #64748b;" text="Status:" />
-                    <Label fx:id="schedulerStatusLabel" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #10b981;" text="Running" />
+                    <Label style="-fx-font-size: 14;" text="Status:" styleClass="textDetail"/>
+                    <Label fx:id="schedulerStatusLabel"  style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #10b981;" text="Running" />
                 </HBox>
                 
-                <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="The scheduler automatically processes salaries on the last day of each month." wrapText="true" />
+                <Label styleClass="textDetail" style="-fx-font-size: 13;" text="The scheduler automatically processes salaries on the last day of each month." wrapText="true" />
                 
                 <HBox spacing="10.0">
-                    <Button fx:id="startSchedulerBtn" onAction="#onStartScheduler" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" text="Start" />
-                    <Button fx:id="stopSchedulerBtn" onAction="#onStopScheduler" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" text="Stop" />
+                    <Button fx:id="startSchedulerBtn" styleClass="textColor" onAction="#onStartScheduler" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #10b981; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" text="Start" />
+                    <Button fx:id="stopSchedulerBtn" onAction="#onStopScheduler" styleClass="textColor" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #ef4444; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;" text="Stop" />
                 </HBox>
             </VBox>
             
             <!-- Manual Processing -->
-            <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25;">
-                <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Manual Processing" />
+            <VBox spacing="15.0" styleClass="section" style=" -fx-background-radius: 12; -fx-padding: 25;">
+                <Label style="-fx-font-size: 18; -fx-font-weight: bold;" styleClass="textHeader" text="Manual Processing" />
                 
-                <Label style="-fx-font-size: 13; -fx-text-fill: #64748b;" text="Manually trigger salary processing and email notifications to all employees." wrapText="true" />
+                <Label style="-fx-font-size: 13;" styleClass="textDetail" text="Manually trigger salary processing and email notifications to all employees." wrapText="true" />
                 
                 <VBox spacing="10.0" style="-fx-background-color: #fef3c7; -fx-background-radius: 8; -fx-padding: 15;">
                     <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #92400e;" text="⚠ Warning" />
                     <Label style="-fx-font-size: 12; -fx-text-fill: #92400e;" text="This will send emails to ALL employees. [FOR TESTING PURPOSE}" wrapText="true" />
                 </VBox>
                 
-                <Button fx:id="manualProcessBtn" onAction="#onManualProcess" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="Process Now" />
+                <Button fx:id="manualProcessBtn" onAction="#onManualProcess" prefHeight="45.0" prefWidth="200.0" styleClass="textColor" style="-fx-background-color: #f59e0b; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="Process Now" />
             </VBox>
             
             <!-- Information -->
-            <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 25;">
-                <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="How It Works" />
+            <VBox spacing="15.0" styleClass="section" style=" -fx-background-radius: 12; -fx-padding: 25;">
+                <Label styleClass="textHeader" style="-fx-font-size: 18; -fx-font-weight: bold;" text="How It Works" />
                 
                 <VBox spacing="10.0">
                     <HBox spacing="10.0">
                         <Label style="-fx-font-size: 24; -fx-text-fill: #667eea;" text="1" />
                         <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Bonus Accumulation" />
-                            <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="Throughout the month, employee bonuses are accumulated based on performance." wrapText="true" />
+                            <Label styleClass="textHeader" style="-fx-font-size: 14; -fx-font-weight: bold;" text="Bonus Accumulation" />
+                            <Label style="-fx-font-size: 12; " styleClass="textDetail" text="Throughout the month, employee bonuses are accumulated based on performance." wrapText="true" />
                         </VBox>
                     </HBox>
                     
                     <HBox spacing="10.0">
                         <Label style="-fx-font-size: 24; -fx-text-fill: #667eea;" text="2" />
                         <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Month-End Processing" />
-                            <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="On the last day of the month, the system automatically calculates total payment (salary + bonus)." wrapText="true" />
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; " styleClass="textHeader" text="Month-End Processing" />
+                            <Label style="-fx-font-size: 12; ;" styleClass="textDetail" text="On the last day of the month, the system automatically calculates total payment (salary + bonus)." wrapText="true" />
                         </VBox>
                     </HBox>
                     
                     <HBox spacing="10.0">
                         <Label style="-fx-font-size: 24; -fx-text-fill: #667eea;" text="3" />
                         <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Email Notification" />
-                            <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="Each employee receives a detailed email with their salary breakdown and total payment." wrapText="true" />
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; " styleClass="textHeader" text="Email Notification" />
+                            <Label style="-fx-font-size: 12;" styleClass="textDetail" text="Each employee receives a detailed email with their salary breakdown and total payment." wrapText="true" />
                         </VBox>
                     </HBox>
                     
                     <HBox spacing="10.0">
                         <Label style="-fx-font-size: 24; -fx-text-fill: #667eea;" text="4" />
                         <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Bonus Reset" />
-                            <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="After notification, all bonuses are reset to $0 to start fresh for the next month." wrapText="true" />
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; " styleClass="textHeader" text="Bonus Reset" />
+                            <Label style="-fx-font-size: 12; " styleClass="textDetail" text="After notification, all bonuses are reset to $0 to start fresh for the next month." wrapText="true" />
                         </VBox>
                     </HBox>
                 </VBox>

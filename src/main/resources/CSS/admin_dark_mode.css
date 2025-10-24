@@ -1,9 +1,15 @@
 .background_pane{
-        -fx-background-color : #293031 ;
+        -fx-background-color : white ;
 }
+
+/* head path of the admin dashboard */
 .glass_main{
-    -fx-background-color : #495557 ;
+    -fx-background-color : #293031 ; /* background color */
 }
+.selected_dash_font {
+    -fx-text-fill : white ;
+}
+
 .navbtn {
     -fx-background-color: transparent;
     -fx-text-fill: white;
@@ -16,19 +22,125 @@
 }
 
 .navbtn:hover {
-    -fx-background-color: #788B8E;
-    -fx-text-fill: black;
+    -fx-background-color: #86979A;
+    -fx-text-fill: #556365;
     -fx-background-radius: 20;
 }
 
 .navbtn:pressed {
-    -fx-background-color: #788B8E;
+    -fx-background-color: #86979A;
     -fx-opacity: 0.8;
 }
 
 .navbtn.active {
-    -fx-background-color: #788B8E;
-    -fx-text-fill:black;
+    -fx-background-color: #86979A;
+    -fx-text-fill:#556365;
     -fx-background-radius: 20;
     -fx-font-weight: bold;
 }
+
+/* setting section */
+.settingIcon{
+    -fx-text-fill : white;
+}
+.overlayPane{
+    -fx-background-color : white;
+}
+.settingPane{
+    -fx-background-color: #86979A;
+    -fx-background-radius: 20 0 0 20;
+    -fx-effect: dropshadow(gaussian, #556365 , 25, 0, -8, 0);  /* shadow for the black and black */
+}
+.header{
+    -fx-background-color: #293031;
+}
+.settingTitle{
+    -fx-font-size: 26;
+    -fx-font-weight: bold;
+     -fx-text-fill: White;
+     -fx-font-family: 'Arial Black';
+}
+.settingContent{
+    -fx-background-color: #293031 ;
+}
+
+.section{
+    -fx-background-color: #293031;
+    -fx-effect: dropshadow(gaussian, #556365, 8, 0, 0, 2); /* shadow for the black and black */
+}
+.title{
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6e6e6;
+    -fx-letter-spacing: 0.5;
+}
+.settings-item-hover{
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-padding: 14;
+    -fx-cursor: hand;
+}
+.settings-item-hover:hover {
+    -fx-background-color: #353e3f ;
+}
+.iconBorder {
+    -fx-background-color : linear-gradient(to right, #f12711, #f5af19);
+}
+.icon{
+    -fx-text-fill: white;
+}
+.textHeader{
+    -fx-text-fill: white;
+}
+.textDetail{
+    -fx-text-fill: #c0c0c0;
+}
+.textPointer{
+    -fx-font-size: 18;
+    -fx-text-fill: #cfcfcf ;
+}
+
+/* performance section */
+.mode{
+    -fx-background-color: #586769;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+}
+.textField{
+    -fx-background-color: #6f8285;
+    -fx-border-color: #4c595b;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #cfcfcf;
+}
+.cancelBtn{
+    -fx-background-color: #4c595b;
+    -fx-text-fill: #c0c0c0;
+}
+.imageCircle{
+    -fx-fill : linear-gradient(to right, #f12711, #f5af19);
+}
+
+.changePasswordBtn{
+    -fx-background-color: #293031;
+    -fx-border-color: #4c595b;
+    -fx-text-fill: white;
+}
+.sectionBox{
+    -fx-background-color: #708486;
+}
+.iconColor{
+    -fx-text-fill: #f5af19;
+}
+.comboBox{
+     -fx-border-color: #5f6f71;
+     -fx-background-color: #f8f9fa;
+
+}
+.resetBtn{
+    -fx-background-color: #353e3f;
+    -fx-text-fill: #586769;
+}
+.textColor{
+    -fx-text-fill: #293031;
+}
+.

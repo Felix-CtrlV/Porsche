@@ -98,7 +98,7 @@ public class adminDashboardController {
     private VBox settingPane, passwordVerifyPane, profilePane, targetPane, salaryPane;
     
     @FXML
-    private StackPane targetContentPane, salaryContentPane;
+    private StackPane targetContentPane, salaryContentPane,rootPane;
     
     @FXML
     private AnchorPane oldProfilePane;
@@ -261,8 +261,13 @@ public class adminDashboardController {
     }
 
     Session current = Session.getInstance();
-
+    boolean isDarkMode = false;
     public void initialize() throws IOException {
+
+            rootPane.getStylesheets().add(
+                    getClass().getResource("/CSS/admin_dark_mode.css").toExternalForm()
+            );
+
 
         String name = current.getUsername();
         nameLbl.setText(name);

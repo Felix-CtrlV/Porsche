@@ -21,95 +21,95 @@
                 </padding>
                 
                 <!-- Header Card -->
-                <VBox spacing="6.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+                <VBox spacing="6.0" styleClass="section" style=" -fx-background-radius: 10; -fx-padding: 18;">
                     <HBox alignment="CENTER_LEFT" spacing="10.0">
-                        <StackPane minHeight="40.0" minWidth="40.0" style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2); -fx-background-radius: 10;">
-                            <Label style="-fx-font-size: 20; -fx-text-fill: white;" text="🎯" />
+                        <StackPane minHeight="40.0" minWidth="40.0" styleClass="iconBorder" style=" -fx-background-radius: 10;">
+                            <Label styleClass="icon" style="-fx-font-size: 20;" text="🎯" />
                         </StackPane>
                         <VBox spacing="2.0">
-                            <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Sales Target Management" />
-                            <Label style="-fx-font-size: 11; -fx-text-fill: #64748b;" text="Set monthly sales goals" />
+                            <Label style="-fx-font-size: 16; -fx-font-weight: bold;" styleClass="textHeader" text="Sales Target Management" />
+                            <Label style="-fx-font-size: 11;" styleClass="textDetail" text="Set monthly sales goals" />
                         </VBox>
                     </HBox>
                 </VBox>
                 
                 <!-- Form Card -->
-                <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+                <VBox spacing="15.0" styleClass="section" style=" -fx-background-radius: 10; -fx-padding: 18;">
                     <children>
         
-        <!-- Manager Selection -->
-        <VBox spacing="12.0" style="-fx-background-color: #f8fafc; -fx-padding: 15; -fx-background-radius: 10;">
-            <HBox alignment="CENTER_LEFT" spacing="8.0">
-                <Label style="-fx-font-size: 14; -fx-text-fill: #667eea;" text="👤" />
-                <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Select Manager" />
-            </HBox>
-            <ComboBox fx:id="managerCombo" maxWidth="Infinity" prefHeight="38.0" promptText="Choose a manager..." style="-fx-font-size: 13; -fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-border-width: 1.5;" />
-        </VBox>
-        
-        <!-- Period Selection -->
-        <VBox spacing="12.0" style="-fx-background-color: #f8fafc; -fx-padding: 15; -fx-background-radius: 10;">
-            <HBox alignment="CENTER_LEFT" spacing="8.0">
-                <Label style="-fx-font-size: 14; -fx-text-fill: #667eea;" text="📅" />
-                <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Target Period" />
-            </HBox>
-            <HBox spacing="10.0">
-                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: #64748b;" text="Month" />
-                    <ComboBox fx:id="monthCombo" maxWidth="Infinity" prefHeight="38.0" promptText="Select month..." style="-fx-font-size: 13; -fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-border-width: 1.5;" />
-                </VBox>
-                
-                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: #64748b;" text="Year" />
-                    <Spinner fx:id="yearSpinner" editable="true" maxWidth="Infinity" prefHeight="38.0" style="-fx-font-size: 13; -fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-border-width: 1.5;" />
-                </VBox>
-            </HBox>
-        </VBox>
-        
-        <!-- Sales Targets -->
-        <VBox spacing="12.0" style="-fx-background-color: #f8fafc; -fx-padding: 15; -fx-background-radius: 10;">
-            <HBox alignment="CENTER_LEFT" spacing="8.0">
-                <Label style="-fx-font-size: 14; -fx-text-fill: #667eea;" text="🎯" />
-                <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Sales Targets" />
-            </HBox>
-            
-            <VBox spacing="12.0">
-                <!-- Car Target -->
-                <VBox spacing="6.0">
-                    <HBox alignment="CENTER_LEFT" spacing="8.0">
-                        <Label style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: #64748b;" text="🚗 Car Sales" />
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Label style="-fx-font-size: 10; -fx-text-fill: #94a3b8; -fx-font-style: italic;" text="units/month" />
-                    </HBox>
-                    <Spinner fx:id="carTargetSpinner" editable="true" maxWidth="Infinity" prefHeight="38.0" style="-fx-font-size: 13; -fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-border-width: 1.5;" />
-                </VBox>
-                
-                <Separator style="-fx-background-color: #e2e8f0;" />
-                
-                <!-- Parts Target -->
-                <VBox spacing="6.0">
-                    <HBox alignment="CENTER_LEFT" spacing="8.0">
-                        <Label style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: #64748b;" text="🔧 Parts Sales" />
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Label style="-fx-font-size: 10; -fx-text-fill: #94a3b8; -fx-font-style: italic;" text="units/month" />
-                    </HBox>
-                    <Spinner fx:id="partTargetSpinner" editable="true" maxWidth="Infinity" prefHeight="38.0" style="-fx-font-size: 13; -fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-border-width: 1.5;" />
-                </VBox>
-            </VBox>
-        </VBox>
-        
-        <!-- Action Buttons -->
-        <HBox spacing="12.0" style="-fx-padding: 10 0 0 0;">
-            <Button onAction="#onSetTarget" prefHeight="48.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-background-radius: 10; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.3), 10, 0, 0, 3);" text="✓ Set Target" HBox.hgrow="ALWAYS">
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
-            </Button>
-            <Button onAction="#onCancel" prefHeight="48.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #64748b; -fx-background-radius: 10; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="✕ Reset" HBox.hgrow="ALWAYS">
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
-            </Button>
-        </HBox>
+                        <!-- Manager Selection -->
+                        <VBox spacing="12.0" styleClass="sectionBox" style=" -fx-padding: 15; -fx-background-radius: 10;">
+                            <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                <Label styleClass="iconColor" style="-fx-font-size: 14; " text="👤" />
+                                <Label styleClass="textHeader" style="-fx-font-size: 14; -fx-font-weight: bold;" text="Select Manager" />
+                            </HBox>
+                            <ComboBox fx:id="managerCombo" maxWidth="Infinity" prefHeight="38.0" promptText="Choose a manager..." styleClass="comboBox" style="-fx-font-size: 13; -fx-background-radius: 8;  -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                        </VBox>
+
+                        <!-- Period Selection -->
+                        <VBox styleClass="sectionBox" spacing="12.0" style=" -fx-padding: 15; -fx-background-radius: 10;">
+                            <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                <Label style="-fx-font-size: 14;" styleClass="iconColor" text="📅" />
+                                <Label style="-fx-font-size: 14; -fx-font-weight: bold;" styleClass="textHeader" text="Target Period" />
+                            </HBox>
+                            <HBox spacing="10.0">
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <Label style="-fx-font-size: 12; -fx-font-weight: 600; " styleClass="textDetail" text="Month" />
+                                    <ComboBox fx:id="monthCombo" maxWidth="Infinity" prefHeight="38.0" promptText="Select month..." styleClass="comboBox" style="-fx-font-size: 13;  -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                                </VBox>
+
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <Label style="-fx-font-size: 12; -fx-font-weight: 600;" styleClass="textDetail" text="Year" />
+                                    <Spinner fx:id="yearSpinner" editable="true" maxWidth="Infinity" prefHeight="38.0" styleClass="comboBox" style="-fx-font-size: 13;-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                                </VBox>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Sales Targets -->
+                        <VBox styleClass="sectionBox" spacing="12.0" style=" -fx-padding: 15; -fx-background-radius: 10;">
+                            <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                <Label styleClass="iconColor" style="-fx-font-size: 14;" text="🎯" />
+                                <Label style="-fx-font-size: 14; -fx-font-weight: bold;" styleClass="textHeader" text="Sales Targets" />
+                            </HBox>
+
+                            <VBox spacing="12.0">
+                                <!-- Car Target -->
+                                <VBox spacing="6.0">
+                                    <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                        <Label style="-fx-font-size: 12; -fx-font-weight: 600;" styleClass="textDetail" text="🚗 Car Sales" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label style="-fx-font-size: 10; -fx-font-style: italic;" text="units/month" styleClass="textDetail" />
+                                    </HBox>
+                                    <Spinner fx:id="carTargetSpinner" editable="true" maxWidth="Infinity" prefHeight="38.0" styleClass="comboBox" style="-fx-font-size: 13;  -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-width: 1.5;" />
+                                </VBox>
+
+                                <Separator  styleClass="comboBox" />
+
+                                <!-- Parts Target -->
+                                <VBox spacing="6.0">
+                                    <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                        <Label style="-fx-font-size: 12; -fx-font-weight: 600;" styleClass="textDetail" text="🔧 Parts Sales" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label style="-fx-font-size: 10; -fx-font-style: italic;" styleClass="textDetail" text="units/month" />
+                                    </HBox>
+                                    <Spinner fx:id="partTargetSpinner" editable="true" maxWidth="Infinity" prefHeight="38.0" styleClass="comboBox" style="-fx-font-size: 13;-fx-background-radius: 8;-fx-border-radius: 8; -fx-border-width: 1.5;" />
+                                </VBox>
+                            </VBox>
+                        </VBox>
+
+                        <!-- Action Buttons -->
+                        <HBox spacing="12.0" style="-fx-padding: 10 0 0 0;">
+                            <Button onAction="#onSetTarget" prefHeight="48.0" styleClass="iconBorder" style=" -fx-text-fill: white; -fx-background-radius: 10; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="✓ Set Target" HBox.hgrow="ALWAYS">
+                                <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                </cursor>
+                            </Button>
+                            <Button onAction="#onCancel" prefHeight="48.0" styleClass="resetBtn" style="  -fx-background-radius: 10; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="✕ Reset" HBox.hgrow="ALWAYS">
+                                <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                </cursor>
+                            </Button>
+                        </HBox>
                     </children>
                 </VBox>
             </VBox>
@@ -121,17 +121,17 @@
         </padding>
         
         <!-- Header Card -->
-        <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+        <VBox spacing="10.0" styleClass="section" style=" -fx-background-radius: 10; -fx-padding: 18; ">
             <HBox alignment="CENTER_LEFT" spacing="10.0">
-                <StackPane minHeight="40.0" minWidth="40.0" style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2); -fx-background-radius: 10;">
+                <StackPane minHeight="40.0" styleClass="iconBorder" minWidth="40.0" style=" -fx-background-radius: 10;">
                     <Label style="-fx-font-size: 20; -fx-text-fill: white;" text="📊" />
                 </StackPane>
                 <VBox spacing="2.0" HBox.hgrow="ALWAYS">
-                    <Label fx:id="managerNameLabel" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Manager Name" />
-                    <Label fx:id="periodLabel" style="-fx-font-size: 11; -fx-text-fill: #64748b;" text="October 2025" />
+                    <Label fx:id="managerNameLabel" style="-fx-font-size: 16; -fx-font-weight: bold;" styleClass="textHeader" text="Manager Name" />
+                    <Label fx:id="periodLabel" style="-fx-font-size: 11; " styleClass="textDetail" text="October 2025" />
                 </VBox>
             </HBox>
-            <Button onAction="#onBack" prefHeight="36.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #64748b; -fx-background-radius: 8; -fx-font-weight: 600; -fx-font-size: 12; -fx-cursor: hand;" text="← Back to Form" maxWidth="Infinity">
+            <Button onAction="#onBack" prefHeight="36.0" styleClass="resetBtn" style=" -fx-background-radius: 8; -fx-font-weight: 600; -fx-font-size: 12; -fx-cursor: hand;" text="← Back to Form" maxWidth="Infinity">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
@@ -139,12 +139,12 @@
         </VBox>
         
         <!-- Car Progress Card -->
-        <VBox alignment="CENTER" spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+        <VBox alignment="CENTER" spacing="15.0" styleClass="section" style=" -fx-padding: 20; -fx-background-radius: 10;">
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                 <StackPane minHeight="32.0" minWidth="32.0" style="-fx-background-color: #eff6ff; -fx-background-radius: 8;">
                     <Label style="-fx-font-size: 16; -fx-text-fill: #3b82f6;" text="🚗" />
                 </StackPane>
-                <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Car Sales" />
+                <Label style="-fx-font-size: 13; -fx-font-weight: bold;" styleClass="textHeader" text="Car Sales" />
             </HBox>
             
             <StackPane>
@@ -152,23 +152,23 @@
                 <Circle fx:id="carProgressCircle" fill="TRANSPARENT" radius="60.0" stroke="#3b82f6" strokeDashArray="376.99" strokeDashOffset="376.99" strokeLineCap="ROUND" strokeWidth="12.0" style="-fx-effect: dropshadow(gaussian, rgba(59,130,246,0.25), 6, 0, 0, 2); -fx-stroke-line-cap: round;" />
                 <VBox alignment="CENTER" spacing="2.0">
                     <Label fx:id="carProgressLabel" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: #3b82f6;" text="0%" />
-                    <Label style="-fx-font-size: 10; -fx-text-fill: #94a3b8; -fx-font-weight: 600; -fx-letter-spacing: 0.5;" text="COMPLETE" />
+                    <Label styleClass="textDetail" style="-fx-font-size: 10; -fx-font-weight: 600; -fx-letter-spacing: 0.5;" text="COMPLETE" />
                 </VBox>
             </StackPane>
             
-            <VBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #f8fafc; -fx-padding: 10; -fx-background-radius: 8;">
-                <Label fx:id="carAchieveLabel" style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="0 / 10" />
-                <Label style="-fx-font-size: 10; -fx-text-fill: #64748b; -fx-font-weight: 600; -fx-letter-spacing: 0.3;" text="ACHIEVED / TARGET" />
+            <VBox alignment="CENTER" spacing="5.0" styleClass="sectionBox" style=" -fx-padding: 10; -fx-background-radius: 8;">
+                <Label fx:id="carAchieveLabel" style="-fx-font-size: 15; -fx-font-weight: bold; " styleClass="textHeader" text="0 / 10" />
+                <Label style="-fx-font-size: 10;  -fx-font-weight: 600; -fx-letter-spacing: 0.3;" styleClass="textDetail" text="ACHIEVED / TARGET" />
             </VBox>
         </VBox>
         
         <!-- Parts Progress Card -->
-        <VBox alignment="CENTER" spacing="15.0" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+        <VBox alignment="CENTER" spacing="15.0" styleClass="section" style=" -fx-padding: 20; -fx-background-radius: 10;">
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                 <StackPane minHeight="32.0" minWidth="32.0" style="-fx-background-color: #f0fdf4; -fx-background-radius: 8;">
                     <Label style="-fx-font-size: 16; -fx-text-fill: #10b981;" text="🔧" />
                 </StackPane>
-                <Label style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Parts Sales" />
+                <Label style="-fx-font-size: 13; -fx-font-weight: bold;" styleClass="textHeader" text="Parts Sales" />
             </HBox>
             
             <StackPane>
@@ -176,24 +176,24 @@
                 <Circle fx:id="partProgressCircle" fill="TRANSPARENT" radius="60.0" stroke="#10b981" strokeDashArray="376.99" strokeDashOffset="376.99" strokeLineCap="ROUND" strokeWidth="12.0" style="-fx-effect: dropshadow(gaussian, rgba(16,185,129,0.25), 6, 0, 0, 2); -fx-stroke-line-cap: round;" />
                 <VBox alignment="CENTER" spacing="2.0">
                     <Label fx:id="partProgressLabel" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: #10b981;" text="0%" />
-                    <Label style="-fx-font-size: 10; -fx-text-fill: #94a3b8; -fx-font-weight: 600; -fx-letter-spacing: 0.5;" text="COMPLETE" />
+                    <Label style="-fx-font-size: 10;  -fx-font-weight: 600; -fx-letter-spacing: 0.5;" styleClass="textDetail" text="COMPLETE" />
                 </VBox>
             </StackPane>
             
-            <VBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #f8fafc; -fx-padding: 10; -fx-background-radius: 8;">
-                <Label fx:id="partAchieveLabel" style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="0 / 50" />
-                <Label style="-fx-font-size: 10; -fx-text-fill: #64748b; -fx-font-weight: 600; -fx-letter-spacing: 0.3;" text="ACHIEVED / TARGET" />
+            <VBox alignment="CENTER" spacing="5.0" styleClass="sectionBox" style=" -fx-padding: 10; -fx-background-radius: 8;">
+                <Label fx:id="partAchieveLabel" style="-fx-font-size: 15; -fx-font-weight: bold; " styleClass="textHeader" text="0 / 50" />
+                <Label style="-fx-font-size: 10;  -fx-font-weight: 600; -fx-letter-spacing: 0.3;" styleClass="textDetail" text="ACHIEVED / TARGET" />
             </VBox>
         </VBox>
         
         <!-- Action Buttons -->
         <HBox spacing="12.0">
-            <Button onAction="#onSetNewTarget" prefHeight="48.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-text-fill: white; -fx-background-radius: 10; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.3), 10, 0, 0, 3);" text="🎯 Set New Target" HBox.hgrow="ALWAYS">
+            <Button onAction="#onSetNewTarget" styleClass="iconBorder" prefHeight="48.0" style=" -fx-text-fill: white; -fx-background-radius: 10; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="🎯 Set New Target" HBox.hgrow="ALWAYS">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <Button onAction="#onRefresh" prefHeight="48.0" style="-fx-background-color: #f1f5f9; -fx-text-fill: #64748b; -fx-background-radius: 10; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="🔄 Refresh" HBox.hgrow="ALWAYS">
+            <Button onAction="#onRefresh" styleClass="resetBtn" prefHeight="48.0" style="  -fx-background-radius: 10; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="🔄 Refresh" HBox.hgrow="ALWAYS">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
