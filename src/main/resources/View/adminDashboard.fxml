@@ -221,7 +221,7 @@
                 </VBox>
                 
                 <!-- Logout Button at Bottom -->
-                <HBox alignment="CENTER" style="-fx-background-color: #f8f9fa; -fx-padding: 20;">
+                <HBox alignment="CENTER" styleClass="section" style=" -fx-padding: 20;">
                     <children>
                         <Button fx:id="logoutbtn" onAction="#clickLogout" prefHeight="50.0" prefWidth="380.0" style="-fx-background-color: linear-gradient(to right, #C21E2B, #af1b27); -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 12; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);" text="🚪  Logout">
                             <cursor>
@@ -400,7 +400,7 @@
                                                         <Label styleClass="textDetail" style="-fx-font-size: 13; -fx-font-weight: bold;" text="Date of Birth" />
                                                     </children>
                                                 </HBox>
-                                                <Label fx:id="profileDOB" styleClass="textHeader"  style="-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14;" text="" />
+                                                <Label fx:id="profileDOB" styleClass="labelStyle"  style=" -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14;" text="" />
                                             </children>
                                         </VBox>
                                     </children>
@@ -513,7 +513,7 @@
         </HBox>
         
         <!-- Confirmation Dialog Overlay -->
-        <Pane fx:id="confirmOverlay" styleClass="overlayPane" opacity="0.5" visible="false" />
+        <Pane fx:id="confirmOverlay"  opacity="0.5" visible="false" />
         
         <!-- Confirmation Dialog (top center) -->
         <VBox fx:id="confirmDialog" alignment="CENTER" maxHeight="-Infinity" maxWidth="400.0" spacing="0.0" styleClass="section" style=" -fx-background-radius: 12; " translateY="-600.0" visible="false" StackPane.alignment="TOP_CENTER">

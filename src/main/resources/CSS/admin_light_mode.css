@@ -58,6 +58,7 @@
 .overlayPane{
     -fx-background-color : black;
 
+
 }
 .settingPane{
     -fx-background-color: #f8f9fa;
@@ -154,6 +155,7 @@
 .comboBox{
     -fx-border-color: #e2e8f0;
     -fx-background-color: #f8f9fa;
+    -fx-control-inner-background: #f8f9fa;
 }
 .resetBtn{
     -fx-background-color: #f1f5f9;
@@ -161,4 +163,8 @@
 }
 .textColor {
     -fx-text-fill: #f8f9fa;
+}
+.labelStyle{
+    -fx-background-color : #f3f4f6;
+    -fx-text-fill: black;
 }

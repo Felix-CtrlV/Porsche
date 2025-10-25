@@ -29,7 +29,7 @@
 
 .navbtn:pressed {
     -fx-background-color: #86979A;
-    -fx-opacity: 0.8;
+
 }
 
 .navbtn.active {
@@ -45,6 +45,7 @@
 }
 .overlayPane{
     -fx-background-color : white;
+    -fx-opacity:0.3;
 }
 .settingPane{
     -fx-background-color: #86979A;
@@ -107,7 +108,7 @@
     -fx-border-radius: 14;
 }
 .textField{
-    -fx-background-color: #6f8285;
+    -fx-background-color: #364040;
     -fx-border-color: #4c595b;
     -fx-text-fill: white;
     -fx-prompt-text-fill: #cfcfcf;
@@ -126,21 +127,24 @@
     -fx-text-fill: white;
 }
 .sectionBox{
-    -fx-background-color: #708486;
+    -fx-background-color: #353e3f;
 }
 .iconColor{
     -fx-text-fill: #f5af19;
 }
 .comboBox{
      -fx-border-color: #5f6f71;
-     -fx-background-color: #f8f9fa;
-
+     -fx-background-color: #e6e6e6;
+     -fx-control-inner-background: #e6e6e6;
 }
 .resetBtn{
-    -fx-background-color: #353e3f;
-    -fx-text-fill: #586769;
+    -fx-background-color: #586769;
+    -fx-text-fill: #a6b3b4;
 }
 .textColor{
     -fx-text-fill: #293031;
 }
-.
+.labelStyle{
+    -fx-background-color: #364040;
+    -fx-text-fill: white;
+}
