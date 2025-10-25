@@ -1066,19 +1066,23 @@ public class adminDashboardController {
         switch (normalizedType) {
             case "success":
                 toastIcon.setText("✓");
-                iconContainer.getStyleClass().add("toast-icon-success");
+//                iconContainer.getStyleClass().add("toast-icon-success");
+                iconContainer.setStyle("-fx-background-color: rgb(57, 156, 8); -fx-background-radius: 50;");
                 break;
             case "error":
                 toastIcon.setText("✕");
-                iconContainer.getStyleClass().add("toast-icon-error");
+//                iconContainer.getStyleClass().add("toast-icon-error");
+                iconContainer.setStyle("-fx-background-color: rgb(203, 28, 56); -fx-background-radius: 50;");
                 break;
             case "warning":
                 toastIcon.setText("!");
-                iconContainer.getStyleClass().add("toast-icon-warning");
+//                iconContainer.getStyleClass().add("toast-icon-warning");
+                iconContainer.setStyle("-fx-background-color: rgb(255, 191, 24); -fx-background-radius: 50;");
                 break;
             default:
                 toastIcon.setText("ℹ");
-                iconContainer.getStyleClass().add("toast-icon-info");
+//                iconContainer.getStyleClass().add("toast-icon-info");
+                iconContainer.setStyle("-fx-background-color: rgb(79, 122, 188); -fx-background-radius: 50;");
                 break;
         }
         
