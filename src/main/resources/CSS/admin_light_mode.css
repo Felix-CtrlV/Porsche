@@ -14,21 +14,10 @@
 .navbtn {
     -fx-background-color: transparent;
     -fx-text-fill: black;
-    -fx-font-size: 16px;
+    -fx-font-size: 12px;
     -fx-background-radius: 8;
     -fx-cursor: hand;
     -fx-font-family: "Arial Black";
-    -fx-font-size: 14px;
-    -fx-opacity: 0.90;
-}
-.navbtn {
-    -fx-background-color: transparent;
-    -fx-text-fill: black;
-    -fx-font-size: 16px;
-    -fx-background-radius: 8;
-    -fx-cursor: hand;
-    -fx-font-family: "Arial";
-    -fx-font-size: 14px;
     -fx-opacity: 0.90;
 }
 
@@ -69,7 +58,7 @@
     -fx-background-color: #f8f9fa;
 }
 .settingTitle{
-    -fx-font-size: 26;
+    -fx-font-size: 20;
     -fx-font-weight: bold;
      -fx-text-fill: black;
      -fx-font-family: 'Arial Black';
@@ -109,6 +98,7 @@
 }
 
 .textHeader{
+    -fx-fill: #1f2937;
     -fx-text-fill: #1f2937;
 }
 
@@ -167,4 +157,20 @@
 .labelStyle{
     -fx-background-color : #f3f4f6;
     -fx-text-fill: black;
+}
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: #f8f9fa;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #f3f4f6;
+    -fx-background-radius: 5;
+}
+.warningBox{
+    -fx-background-color: #fef3c7;
+}
+.loadingStyle{
+    -fx-background-color: rgba(255,255,255,0.95);
 }

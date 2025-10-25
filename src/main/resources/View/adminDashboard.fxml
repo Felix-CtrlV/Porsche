@@ -47,12 +47,12 @@
                         </Line>
                         <VBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="67.0">
                             <children>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome" />
+                                <Text strokeType="OUTSIDE" styleClass="textHeader" style="-fx-opacity:0.7;-fx-font-weight:700; -fx-font-family:'Arial Black'; " strokeWidth="0.0" text="Welcome" />
                                 <Label fx:id="nameLbl" styleClass="selected_dash_font" text="Admin"  style = "-fx-font-family: 'Arial Black'; -fx-font-size: 14px;-fx-opacity: 0.70;-fx-font-weight: 700;"/>
                             </children>
                         </VBox>
                         <Region maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="35.0" prefWidth="323.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="overviewbtn" onAction="#clickOverview" prefHeight="24.0" prefWidth="88.0" styleClass="navbtn" text="Overview" HBox.hgrow="NEVER">
+                        <Button fx:id="overviewbtn" onAction="#clickOverview" prefHeight="24.0" prefWidth="88.0" styleClass="navbtn"  text="Overview" HBox.hgrow="NEVER">
                             <HBox.margin>
                                 <Insets right="15.0" />
                             </HBox.margin></Button>
@@ -314,7 +314,7 @@
                 </HBox>
                 
                 <!-- Profile Content -->
-                <javafx.scene.control.ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                <javafx.scene.control.ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="scrollPane" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
                     <content>
                         <VBox spacing="20.0" styleClass="glass_main" style=" -fx-padding: 20;">
                             <children>
@@ -453,7 +453,7 @@
                 </HBox>
                 
                 <!-- Target Content (will be loaded from adminTargetManagement.fxml) -->
-                <javafx.scene.control.ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                <javafx.scene.control.ScrollPane styleClass="scrollPane" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
                     <content>
                         <StackPane fx:id="targetContentPane" style="-fx-padding: 20;">
                         </StackPane>
@@ -654,7 +654,7 @@
                     </VBox>
                     
                                             <!-- Loading Indicator -->
-                    <StackPane fx:id="passwordLoadingPane" style="-fx-background-color: rgba(255,255,255,0.95);" visible="false">
+                    <StackPane fx:id="passwordLoadingPane"  styleClass="loadingStyle" visible="false">
                         <VBox alignment="CENTER" spacing="10.0">
                             <ProgressIndicator prefHeight="40.0" prefWidth="40.0" style="-fx-progress-color: #667eea;" />
                             <Label style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: #667eea;" text="Processing..." />

@@ -13,11 +13,10 @@
 .navbtn {
     -fx-background-color: transparent;
     -fx-text-fill: white;
-    -fx-font-size: 16px;
+    -fx-font-size: 12px;
     -fx-background-radius: 8;
     -fx-cursor: hand;
     -fx-font-family: "Arial Black";
-    -fx-font-size: 14px;
     -fx-opacity: 0.90;
 }
 
@@ -56,7 +55,7 @@
     -fx-background-color: #293031;
 }
 .settingTitle{
-    -fx-font-size: 26;
+    -fx-font-size: 20;
     -fx-font-weight: bold;
      -fx-text-fill: White;
      -fx-font-family: 'Arial Black';
@@ -91,6 +90,7 @@
     -fx-text-fill: white;
 }
 .textHeader{
+    -fx-fill : white;
     -fx-text-fill: white;
 }
 .textDetail{
@@ -134,8 +134,8 @@
 }
 .comboBox{
      -fx-border-color: #5f6f71;
-     -fx-background-color: #e6e6e6;
-     -fx-control-inner-background: #e6e6e6;
+     -fx-background-color:#cdcdcd;
+     -fx-control-inner-background: #cdcdcd;
 }
 .resetBtn{
     -fx-background-color: #586769;
@@ -148,3 +148,22 @@
     -fx-background-color: #364040;
     -fx-text-fill: white;
 }
+
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: #293031;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #364040;
+    -fx-background-radius: 5;
+}
+.warningBox{
+    -fx-background-color : 	rgba(254,243,199,0.6);
+}
+.loadingStyle{
+    -fx-background-color : rgba(41,48,49,0.95)
+}
+
+
