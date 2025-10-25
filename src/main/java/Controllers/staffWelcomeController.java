@@ -143,7 +143,7 @@ public class staffWelcomeController implements Initializable {
 
             SessionStaff.getInstance().clearSession();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffLogin.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/login.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) rootPane.getScene().getWindow();

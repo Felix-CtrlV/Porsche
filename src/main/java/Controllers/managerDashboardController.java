@@ -8,6 +8,7 @@ import Utils.Session;
 import Utils.SecurityManager;
 import Utils.SecurityEmailService;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -211,6 +212,9 @@ public class managerDashboardController {
         profileDOB.setText(current.getDob().toString());
         profilePhone.setText(current.getPhone());
 
+        // Preload attendance content in background to eliminate delay
+        preloadAttendanceContent();
+        
         // Check if account is locked on initialization
         checkAccountLockStatus();
 
@@ -532,24 +536,30 @@ public class managerDashboardController {
         confirmPasswordField.setOnAction(e -> onSubmitPasswordChange());
     }
 
+    // Preloaded attendance content
+    private Parent attendanceContent = null;
+    
+    // Preload attendance content in background
+    private void preloadAttendanceContent() {
+        new Thread(() -> {
+            try {
+                Parent content = FXMLLoader.load(getClass().getResource("/View/managerAttendanceManagement.fxml"));
+                Platform.runLater(() -> {
+                    this.attendanceContent = content;
+                });
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }).start();
+    }
+    
     private void showAttendanceDialog() {
         // Hide settings pane directly without full close animation
         if (settingPane != null) {
             settingPane.setVisible(false);
         }
 
-        // Load attendance management content
-        try {
-            Parent attendanceContent = FXMLLoader.load(getClass().getResource("/View/managerAttendanceManagement.fxml"));
-            attendanceContentPane.getChildren().clear();
-            attendanceContentPane.getChildren().add(attendanceContent);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            showToast("Error", "Failed to load attendance management", "error");
-            return;
-        }
-
-        // Show overlay and blur background
+        // Show overlay and blur background immediately
         overlayPane.setVisible(true);
         overlayPane.setOpacity(0);
         root.setEffect(new GaussianBlur(10));
@@ -559,19 +569,38 @@ public class managerDashboardController {
         attendancePane.setVisible(true);
         attendancePane.setTranslateY(-700);
 
-        // Animate overlay fade in
+        // Start animations immediately
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), overlayPane);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(0.5);
 
-        // Animate dialog slide down
         TranslateTransition slideDown = new TranslateTransition(Duration.millis(400), attendancePane);
         slideDown.setFromY(-700);
         slideDown.setToY(0);
         slideDown.setInterpolator(Interpolator.EASE_OUT);
 
         ParallelTransition showDialog = new ParallelTransition(fadeIn, slideDown);
-        showDialog.play();
+        
+        // Load attendance management content (use preloaded content if available)
+        if (attendanceContent != null) {
+            // Use preloaded content
+            attendanceContentPane.getChildren().clear();
+            attendanceContentPane.getChildren().add(attendanceContent);
+            showDialog.play();
+        } else {
+            // Load content if not preloaded yet
+            try {
+                Parent content = FXMLLoader.load(getClass().getResource("/View/managerAttendanceManagement.fxml"));
+                attendanceContentPane.getChildren().clear();
+                attendanceContentPane.getChildren().add(content);
+                this.attendanceContent = content;
+                showDialog.play();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                showToast("Error", "Failed to load attendance management", "error");
+                return;
+            }
+        }
 
         // Disable overlay click for a short time to prevent immediate closing
         overlayPane.setDisable(true);

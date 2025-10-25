@@ -9,7 +9,6 @@
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -23,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane stylesheets="@../CSS/general.css, @../CSS/manager_staffview.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
+<BorderPane prefHeight="600.0" prefWidth="1200.0" stylesheets="@../CSS/general.css, @../CSS/manager_staffview.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
     <center>
         <VBox spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10;" BorderPane.alignment="CENTER">
             <children>
@@ -59,7 +58,7 @@
 
                         <VBox style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="admin-card-header">
+                                <HBox alignment="CENTER_RIGHT" maxHeight="40.0" minHeight="40.0" spacing="10.0" styleClass="admin-card-header">
                                     <children>
                                         <Region HBox.hgrow="ALWAYS" />
                                         <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonth" styleClass="admin-button-secondary" text="◀" />
@@ -280,113 +279,78 @@
                     </children>
                 </HBox>
 
-                <!-- Bottom Section: Charts and Best Sellers -->
-                <HBox maxHeight="1.7976931348623157E308" prefHeight="710.0" prefWidth="691.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                <!-- Analytics Dashboard Section -->
+                <HBox maxHeight="1.7976931348623157E308" prefHeight="710.0" prefWidth="691.0" spacing="20.0" VBox.vgrow="ALWAYS">
                     <children>
-                  <VBox prefHeight="562.0" prefWidth="697.0" spacing="10.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2); -fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e1e5e9;" HBox.hgrow="ALWAYS">
-                     <children>
-                         <HBox alignment="CENTER_LEFT" prefHeight="65.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" VBox.vgrow="NEVER">
-                             <children>
-                                 <HBox alignment="CENTER_LEFT" minHeight="40.0" spacing="15">
-                                     <children>
-                                         <Circle fill="#3498db" radius="8" />
-                                         <Label style="-fx-font-family: 'Segoe UI'; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Sales Performance" />
-                                     </children>
-                                 </HBox>
-                                 <Region HBox.hgrow="ALWAYS" />
-                                 <ComboBox fx:id="saleComboBox" onAction="#ClickSaleComboBox" prefHeight="23.0" prefWidth="150.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-padding: 6 12; -fx-font-weight: 500;">
-                                 <HBox.margin>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </HBox.margin></ComboBox>
-                             </children>
-                             <padding>
-                                 <Insets left="20.0" right="20.0" />
-                             </padding>
-                             <VBox.margin>
-                                 <Insets left="20.0" right="20.0" top="15.0" />
-                             </VBox.margin>
-                         </HBox>
-                        <HBox prefHeight="640.0" prefWidth="630.0" spacing="20.0" VBox.vgrow="ALWAYS">
-                           <children>
-                                    <!-- Combined Chart Container -->
-                                    <!-- Replace the chart section in your FXML with this -->
-                                    <VBox maxWidth="700.0" prefHeight="464.0" prefWidth="350.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
-                                        <children>
-                                            <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="66.0" prefWidth="378.0" style="-fx-background-color: #6eaef3; -fx-background-radius: 12 12 0 0;">
-                                                <children>
-                                                    <Label style="-fx-text-fill: black; -fx-font-size: 14; -fx-font-weight: bold;" text="SALES QUANTITY">
-                                                        <font>
-                                                            <Font name="System Bold" size="12.0" />
-                                                        </font>
-                                                        <HBox.margin>
-                                                            <Insets left="15.0" />
-                                                        </HBox.margin>
-                                                    </Label>
-                                          <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                          <HBox alignment="CENTER" minHeight="20.0" prefHeight="35.0" prefWidth="158.0" spacing="5.0">
-                                             <children>
+                        <!-- Sales Quantity Chart -->
+                        <VBox maxWidth="700.0" prefHeight="464.0" prefWidth="350.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="66.0" prefWidth="378.0" style="-fx-background-color: #6eaef3; -fx-background-radius: 12 12 0 0;">
+                                    <children>
+                                        <Label style="-fx-text-fill: black; -fx-font-size: 14; -fx-font-weight: bold;" text="SALES QUANTITY">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                            <HBox.margin>
+                                                <Insets left="15.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                        <HBox alignment="CENTER" minHeight="20.0" prefHeight="35.0" prefWidth="158.0" spacing="5.0">
+                                            <children>
                                                 <Button fx:id="carChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickCarChart" prefHeight="13.0" prefWidth="78.0" style="-fx-background-color: transparent; -fx-font-weight: bold; -fx-text-fill: black;" text="CAR" wrapText="true" HBox.hgrow="ALWAYS" />
                                                 <Button fx:id="partChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickPartChart" prefHeight="19.0" prefWidth="78.0" style="-fx-background-color: transparent; -fx-font-weight: bold; -fx-text-fill: black;" text="PART" wrapText="true" HBox.hgrow="ALWAYS" />
-                                             </children>
-                                          </HBox>
-                                                </children>
-                                            </HBox>
-                                    <HBox spacing="10.0" VBox.vgrow="ALWAYS">
-                                       <children>
-                                          <BarChart fx:id="qtyBarChart" legendVisible="false" prefHeight="400.0" prefWidth="280.0" HBox.hgrow="ALWAYS">
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </HBox>
+                                <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <BarChart fx:id="qtyBarChart" legendVisible="false" prefHeight="150.0" prefWidth="583.0" HBox.hgrow="ALWAYS">
                                             <xAxis>
-                                              <CategoryAxis label="Month" side="BOTTOM" />
+                                                <CategoryAxis label="Month" side="BOTTOM" />
                                             </xAxis>
                                             <yAxis>
-                                              <NumberAxis label="Quantity" side="LEFT" />
+                                                <NumberAxis label="Quantity" side="LEFT" />
                                             </yAxis>
-                                             <padding>
+                                            <padding>
                                                 <Insets top="5.0" />
-                                             </padding>
-                                          </BarChart>
-                                       </children>
-                                    </HBox>
-            
-                                              </children>
-                                        <HBox.margin>
-                                            <Insets bottom="20.0" />
-                                        </HBox.margin>
-                                    </VBox>
-                              <VBox maxWidth="750.0" prefHeight="474.0" prefWidth="154.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="35.0" style="-fx-background-color: #6eaef3; -fx-background-radius: 12 12 0 0;">
-                                       <children>
-                                          <Label style="-fx-text-fill: black; -fx-font-size: 14; -fx-font-weight: bold;" text="REVENUE">
-                                             <font>
+                                            </padding>
+                                        </BarChart>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                        
+                        <!-- Revenue Chart -->
+                        <VBox maxWidth="750.0" prefHeight="474.0" prefWidth="154.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="35.0" style="-fx-background-color: #6eaef3; -fx-background-radius: 12 12 0 0;">
+                                    <children>
+                                        <Label style="-fx-text-fill: black; -fx-font-size: 14; -fx-font-weight: bold;" text="REVENUE">
+                                            <font>
                                                 <Font name="System Bold" size="12.0" />
-                                             </font>
-                                             <HBox.margin>
+                                            </font>
+                                            <HBox.margin>
                                                 <Insets left="15.0" />
-                                             </HBox.margin>
-                                          </Label>
-                                       </children>
-                                    </HBox>
-                                    <AreaChart fx:id="revenueAreaChart" createSymbols="false" legendVisible="false" styleClass="manager-revenue-chart" stylesheets="@../CSS/manager.css">
-                                      <xAxis>
+                                            </HBox.margin>
+                                        </Label>
+                                    </children>
+                                </HBox>
+                                <AreaChart fx:id="revenueAreaChart" createSymbols="false" legendVisible="false" styleClass="manager-revenue-chart" stylesheets="@../CSS/manager.css">
+                                    <xAxis>
                                         <CategoryAxis label="Month" side="BOTTOM" />
-                                      </xAxis>
-                                      <yAxis>
+                                    </xAxis>
+                                    <yAxis>
                                         <NumberAxis label="Revenue $" side="LEFT" />
-                                      </yAxis>
-                                    </AreaChart>
-                                 </children>
-                                 <HBox.margin>
-                                    <Insets bottom="20.0" />
-                                 </HBox.margin>
-                              </VBox>
-                           </children>
-                           <VBox.margin>
-                              <Insets left="30.0" right="30.0" />
-                           </VBox.margin>
-                        </HBox>
-                     </children>
-                  </VBox>
+                                    </yAxis>
+                                </AreaChart>
+                            </children>
+                        </VBox>
                     </children>
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+                    </padding>
                 </HBox>
             </children>
         </VBox>

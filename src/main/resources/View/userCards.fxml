@@ -33,11 +33,11 @@
                   <Insets left="7.0" right="1.0" />
                </HBox.margin>
             </StackPane>
-            <VBox alignment="CENTER" prefHeight="60.0" prefWidth="103.0" spacing="3.0">
+            <VBox alignment="CENTER" prefHeight="60.0" prefWidth="103.0">
                <children>
-                  <HBox prefHeight="25.0" prefWidth="103.0" spacing="10.0">
+                  <HBox prefHeight="25.0" prefWidth="103.0">
                      <children>
-                        <Label prefHeight="25.0" prefWidth="28.0" style="-fx-text-fill: black;" styleClass="selected_dash_font" text="ID :">
+                        <Label prefHeight="25.0" prefWidth="27.0" style="-fx-text-fill: rgb(99, 116, 139); -fx-font-size: 12;" styleClass="selected_dash_font" text="ID :">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -49,7 +49,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <Label fx:id="StaffName" prefHeight="29.0" prefWidth="103.0" style="-fx-text-fill: black;" styleClass="selected_dash_font" text="Name">
+                  <Label fx:id="StaffName" prefHeight="29.0" prefWidth="103.0" style="-fx-text-fill: black; -fx-font-weight: bold; -fx-font-family: aerial; -fx-font-size: 16;" text="Name">
                      <font>
                         <Font size="13.0" />
                      </font>
@@ -58,8 +58,8 @@
             </VBox>
             <StackPane prefHeight="60.0" prefWidth="33.0" HBox.hgrow="NEVER">
                <children>
-                  <Circle fx:id="ActiveColor" fill="LIME" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fill="WHITE" radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fill="WHITE" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle fx:id="ActiveColor" fill="LIME" radius="4.0" stroke="BLACK" strokeType="INSIDE" />
                </children>
             </StackPane>
          </children>
