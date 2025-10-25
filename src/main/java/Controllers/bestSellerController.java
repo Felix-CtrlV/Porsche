@@ -16,10 +16,6 @@ import java.time.YearMonth;
 public class bestSellerController {
 
     @FXML
-    private Label hourRate;
-
-
-    @FXML
     private ImageView image;
 
     @FXML
@@ -34,29 +30,11 @@ public class bestSellerController {
     @FXML
     private Label soldRevenue;
 
-    @FXML
-    private Label workHour;
-
     public void setData(managerOverview overview, int month, int year) {
         name.setText(overview.getStaffName());
         rank.setText(overview.getRank());
 
-        int pwh = overview.getPrevWorkHour();
-        int wh = overview.getWorkHour();
-
-        YearMonth yearMonth = YearMonth.of(year, month);
-        int daysInMonth = yearMonth.lengthOfMonth();
-        int hours = 24 * daysInMonth;
-
-        // Calculate work hours change percentage (current vs previous)
-        double hrate = 0;
-        if (pwh > 0) {
-            hrate = ((double) (wh - pwh) / pwh) * 100;
-        }
-
-        workHour.setText(wh + " Hours");
-        hourRate.setText(String.format("%.2f%% from last month", hrate));
-
+        // Sales performance data
         double sale = overview.getTotalSale();
         double psale = overview.getPrevTotalSale();
 

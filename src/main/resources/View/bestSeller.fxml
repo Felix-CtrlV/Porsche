@@ -49,10 +49,13 @@
                       <!-- Profile Section - 30% Secondary Color Area -->
                       <StackPane prefHeight="120.0" prefWidth="105.0" style="-fx-background-color: #f8fafc;" HBox.hgrow="ALWAYS">
                           <children>
-                        <ImageView fx:id="image" fitHeight="111.0" fitWidth="200.0" onMouseClicked="#clickStaffImage" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="image" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#clickStaffImage" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0); -fx-background-radius: 50%; -fx-border-radius: 50%;">
                            <image>
                               <Image url="@../Image/usericon.png" />
                            </image>
+                           <clip>
+                              <javafx.scene.shape.Circle centerX="40.0" centerY="40.0" radius="40.0" />
+                           </clip>
                         </ImageView>
                           </children>
                           <padding>
@@ -99,26 +102,11 @@
                                           <!-- Work Metrics Block -->
                               <GridPane hgap="16" prefHeight="68.0" prefWidth="325.0" style="-fx-background-color: transparent;" vgap="4" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                   <columnConstraints>
-                                      <ColumnConstraints hgrow="ALWAYS" percentWidth="46.0" />
-                                      <ColumnConstraints hgrow="ALWAYS" percentWidth="54.0" />
+                                      <ColumnConstraints hgrow="ALWAYS" percentWidth="100.0" />
                                   </columnConstraints>
       
-                                              <!-- Work Hours Metric -->
-                                  <VBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="129.0" spacing="1" GridPane.columnIndex="0">
-                                      <Label style="-fx-font-size: 9px; -fx-font-weight: 700; -fx-text-fill: #64748b; -fx-font-family: 'Segoe UI', system; -fx-letter-spacing: 0.8;" text="WORK HOURS" />
-                                      <Label fx:id="workHour" style="-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #2563eb; -fx-font-family: 'Segoe UI', system;" text="40 hrs" />
-                                      <Label fx:id="hourRate" prefHeight="15.0" prefWidth="164.0" style="-fx-font-size: 12px; -fx-text-fill: #10b981; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', system;" text="+5% this month" wrapText="true" />
-                                  </VBox>
-      
-                                              <!-- Vertical Separator -->
-                                  <Rectangle arcHeight="2" arcWidth="2" fill="#e2e8f0" height="32" width="1.5" GridPane.columnIndex="0" GridPane.halignment="RIGHT">
-                                      <effect>
-                                          <InnerShadow color="rgba(0,0,0,0.05)" radius="1" />
-                                      </effect>
-                                  </Rectangle>
-      
                                               <!-- Sales Metric -->
-                                  <VBox alignment="CENTER_LEFT" spacing="1" GridPane.columnIndex="1">
+                                  <VBox alignment="CENTER_LEFT" spacing="1" GridPane.columnIndex="0">
                                       <Label style="-fx-font-size: 9px; -fx-font-weight: 700; -fx-text-fill: #64748b; -fx-font-family: 'Segoe UI', system; -fx-letter-spacing: 0.8;" text="SALES PERFORMANCE" />
                                       <Label fx:id="soldRevenue" style="-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #059669; -fx-font-family: 'Segoe UI', system;" text="\$12,450" />
                                       <Label fx:id="revenueRate" prefHeight="15.0" prefWidth="197.0" style="-fx-font-size: 12px; -fx-text-fill: #10b981; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', system;" text="+12% this month" wrapText="true" />

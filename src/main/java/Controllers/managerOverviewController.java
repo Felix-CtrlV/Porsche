@@ -280,10 +280,8 @@ public class managerOverviewController {
         revenueSeries = new XYChart.Series<>();
         revenueSeries.setName("Revenue");
         
-        // Initially show car data (default mode)
-        updateChartSeries();
+        // Add revenue series to chart first
         revenueAreaChart.getData().add(revenueSeries);
-        styleCharts();
         
         // Initialize chart buttons - set car as default active
         activateChartButton(carChart);
