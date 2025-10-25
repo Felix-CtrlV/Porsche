@@ -233,7 +233,7 @@ public class adminTargetManagementController {
         managerLabel.getStyleClass().add("textDetail");
 
         Label managerValue = new Label(manager);
-        managerValue.setStyle("-fx-font-size: 13; -fx-text-fill: #1e293b; -fx-font-weight: bold;");
+        managerValue.setStyle("-fx-font-size: 13; -fx-font-weight: bold;");
 
         managerValue.getStyleClass().add("textHeader");
 
@@ -248,11 +248,11 @@ public class adminTargetManagementController {
         periodIcon.getStyleClass().add("textHeader");
 
         Label periodLabel = new Label("Period:");
-        periodLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;");
+        periodLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 600;");
         periodLabel.getStyleClass().add("textDetail");
 
         Label periodValue = new Label(month + " " + year);
-        periodValue.setStyle("-fx-font-size: 13; -fx-text-fill: #1e293b; -fx-font-weight: bold;");
+        periodValue.setStyle("-fx-font-size: 13; -fx-font-weight: bold;");
         periodValue.getStyleClass().add("textHeader");
 
         periodRow.getChildren().addAll(periodIcon, periodLabel, periodValue);
@@ -280,13 +280,16 @@ public class adminTargetManagementController {
         
         // Part target
         VBox partBox = new VBox(8);
-        partBox.setStyle("-fx-background-color: #f0fdf4; -fx-padding: 12; -fx-background-radius: 8; -fx-alignment: center;");
+        partBox.setStyle(" -fx-padding: 12; -fx-background-radius: 8; -fx-alignment: center;");
+        partBox.getStyleClass().add("section");
         Label partIcon = new Label("🔧");
         partIcon.setStyle("-fx-font-size: 20;");
+        partIcon.getStyleClass().add("textHeader");
         Label partLabel = new Label("Part Target");
         partLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #10b981; -fx-font-weight: 600;");
         Label partValue = new Label(String.valueOf(partTarget));
-        partValue.setStyle("-fx-font-size: 18; -fx-text-fill: #1e293b; -fx-font-weight: bold;");
+        partValue.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+        partValue.getStyleClass().add("textHeader");
         partBox.getChildren().addAll(partIcon, partLabel, partValue);
         
         targetsCard.getChildren().addAll(carBox, partBox);
