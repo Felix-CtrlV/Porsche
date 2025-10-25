@@ -90,8 +90,7 @@ public class managerOverviewController {
     @FXML
     private Button partbtn;
 
-    @FXML
-    private ComboBox<String> saleComboBox;
+    // Removed saleComboBox field
 
     @FXML
     private VBox scrollPane;
@@ -146,14 +145,7 @@ public class managerOverviewController {
     public managerOverviewController() throws SQLException, ClassNotFoundException {
     }
 
-    @FXML
-    void ClickSaleComboBox(ActionEvent event) {
-        try {
-            setCharts();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    // Removed ClickSaleComboBox method as the combo box has been removed
 
     @FXML
     void clickArrowLeftbtn(ActionEvent event) {
@@ -281,8 +273,6 @@ public class managerOverviewController {
         }
 
         //for bar chart and area chart of the sale performance
-        saleComboBox.getItems().addAll("Daily", "Weekly", "Monthly");
-        saleComboBox.setValue("Monthly");
         carSeries = new XYChart.Series<>();
         carSeries.setName("Cars Sold");
         partSeries = new XYChart.Series<>();
@@ -821,7 +811,8 @@ public class managerOverviewController {
         carSeries.getData().clear();
         partSeries.getData().clear();
 
-        String selectedPeriod = saleComboBox.getValue();
+        // Use "Monthly" as the default period since combo box was removed
+        String selectedPeriod = "Monthly";
         
         try {
             // Call getSalesChartData procedure directly
@@ -862,7 +853,8 @@ public class managerOverviewController {
         partSeries.getData().clear();
         revenueSeries.getData().clear();
 
-        String selectedPeriod = saleComboBox.getValue();
+        // Use "Monthly" as the default period since combo box was removed
+        String selectedPeriod = "Monthly";
         
         try {
             // Call getSalesChartData procedure directly
@@ -926,7 +918,7 @@ public class managerOverviewController {
         // Style area chart
         revenueAreaChart.setLegendVisible(false);
         revenueAreaChart.setAnimated(false);
-        revenueAreaChart.setCreateSymbols(true); // Enable symbols for smooth curve styling
+        revenueAreaChart.setCreateSymbols(false); // Disable symbols for cleaner look
 
         // Apply custom colors to match the selected mode (car or part)
         Platform.runLater(() -> {
@@ -937,16 +929,21 @@ public class managerOverviewController {
                 node.setStyle("-fx-bar-fill: " + color + ";");
             });
             
-            // Apply colors to area chart based on active mode
-            if (revenueSeries.getNode() != null) {
-                if (chartMode.equals("car")) {
-                    // Car mode - use car color
-                    revenueSeries.getNode().setStyle("-fx-fill: rgba(109,129,150,0.3); -fx-stroke: #6D8196; -fx-stroke-width: 2px;");
-                } else if (chartMode.equals("part")) {
-                    // Part mode - use part color
-                    revenueSeries.getNode().setStyle("-fx-fill: rgba(255,165,0,0.3); -fx-stroke: #ffa500; -fx-stroke-width: 2px;");
-                }
-            }
+            // Apply styling to area chart elements using CSS classes
+            revenueAreaChart.lookupAll(".chart-series-area-line").forEach(node -> {
+                String strokeColor = chartMode.equals("car") ? "#6D8196" : "#ffa500";
+                node.setStyle("-fx-stroke: " + strokeColor + "; -fx-stroke-width: 3px; -fx-stroke-line-cap: round; -fx-stroke-line-join: round;");
+            });
+            
+            revenueAreaChart.lookupAll(".chart-series-area-fill").forEach(node -> {
+                String fillColor = chartMode.equals("car") ? "rgba(109,129,150,0.2)" : "rgba(255,165,0,0.2)";
+                node.setStyle("-fx-fill: " + fillColor + "; -fx-fill-rule: even-odd;");
+            });
+            
+            // Remove data point symbols styling since we disabled them
+            
+            // Hide chart temporarily while applying smooth curves
+            revenueAreaChart.setOpacity(0);
             
             // Apply smooth curves after a short delay to ensure paths are created
             javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
@@ -956,88 +953,43 @@ public class managerOverviewController {
     }
     
     // ---------- Smooth Curve Methods ----------
+    /**
+     * Applies smooth curve styling to the area chart
+     */
     private void applySmoothCurves() {
         if (revenueAreaChart == null)
             return;
 
-        // Check if paths are ready, if not, retry after a short delay
-        var linePaths = revenueAreaChart.lookupAll(".chart-series-area-line");
-        var fillPaths = revenueAreaChart.lookupAll(".chart-series-area-fill");
-
-        if (linePaths.isEmpty() || fillPaths.isEmpty()) {
-            // Paths not ready yet, try again after 50ms
-            javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(50));
-            pause.setOnFinished(e -> applySmoothCurves());
-            pause.play();
-            return;
-        }
-
-        // Store the smoothed line elements to copy to fill area
-        java.util.List<javafx.scene.shape.PathElement> smoothedLineElements = new java.util.ArrayList<>();
-
-        // Smooth the line first and store the elements
-        linePaths.forEach(node -> {
-            if (node instanceof javafx.scene.shape.Path) {
-                javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
-                smoothPath(path, false);
-                // Copy the smoothed elements
-                smoothedLineElements.addAll(new java.util.ArrayList<>(path.getElements()));
+        Platform.runLater(() -> {
+            // Find all series paths in the chart
+            java.util.Set<javafx.scene.Node> linePaths = revenueAreaChart.lookupAll(".chart-series-area-line");
+            java.util.Set<javafx.scene.Node> fillPaths = revenueAreaChart.lookupAll(".chart-series-area-fill");
+            
+            // Process each line path to ensure smooth curves
+            for (javafx.scene.Node node : linePaths) {
+                if (node instanceof javafx.scene.shape.Path) {
+                    javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
+                    path.setStrokeLineJoin(javafx.scene.shape.StrokeLineJoin.ROUND);
+                    path.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+                    path.setStrokeWidth(3);
+                    
+                    // Apply smooth curve algorithm
+                    smoothPath(path, false);
+                }
             }
-        });
-
-        // Apply the same smooth curve to the fill area
-        fillPaths.forEach(node -> {
-            if (node instanceof javafx.scene.shape.Path && !smoothedLineElements.isEmpty()) {
-                javafx.scene.shape.Path fillPath = (javafx.scene.shape.Path) node;
-                var originalFillElements = new java.util.ArrayList<>(fillPath.getElements());
-
-                // Find the baseline (bottom of chart) from original fill path
-                double baselineY = 0;
-                double startX = 0;
-                double endX = 0;
-
-                for (var element : originalFillElements) {
-                    if (element instanceof javafx.scene.shape.LineTo) {
-                        javafx.scene.shape.LineTo lt = (javafx.scene.shape.LineTo) element;
-                        baselineY = Math.max(baselineY, lt.getY());
-                    }
+            
+            // Process each fill path to ensure smooth curves
+            for (javafx.scene.Node node : fillPaths) {
+                if (node instanceof javafx.scene.shape.Path) {
+                    javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
+                    
+                    // Apply smooth curve algorithm to fill area
+                    smoothPath(path, true);
                 }
-
-                // Get start and end X coordinates from smoothed line
-                if (smoothedLineElements.get(0) instanceof javafx.scene.shape.MoveTo) {
-                    javafx.scene.shape.MoveTo firstMove = (javafx.scene.shape.MoveTo) smoothedLineElements.get(0);
-                    startX = firstMove.getX();
-                }
-
-                var lastElement = smoothedLineElements.get(smoothedLineElements.size() - 1);
-                if (lastElement instanceof javafx.scene.shape.CubicCurveTo) {
-                    javafx.scene.shape.CubicCurveTo lastCurve = (javafx.scene.shape.CubicCurveTo) lastElement;
-                    endX = lastCurve.getX();
-                }
-
-                // Clear and rebuild: smooth line + close to baseline
-                fillPath.getElements().clear();
-
-                // Add the smoothed line elements
-                for (var element : smoothedLineElements) {
-                    if (element instanceof javafx.scene.shape.MoveTo) {
-                        javafx.scene.shape.MoveTo mt = (javafx.scene.shape.MoveTo) element;
-                        fillPath.getElements().add(new javafx.scene.shape.MoveTo(mt.getX(), mt.getY()));
-                    } else if (element instanceof javafx.scene.shape.CubicCurveTo) {
-                        javafx.scene.shape.CubicCurveTo cc = (javafx.scene.shape.CubicCurveTo) element;
-                        fillPath.getElements().add(new javafx.scene.shape.CubicCurveTo(
-                                cc.getControlX1(), cc.getControlY1(),
-                                cc.getControlX2(), cc.getControlY2(),
-                                cc.getX(), cc.getY()
-                        ));
-                    }
-                }
-
-                // Close the path to baseline
-                fillPath.getElements().add(new javafx.scene.shape.LineTo(endX, baselineY));
-                fillPath.getElements().add(new javafx.scene.shape.LineTo(startX, baselineY));
-                fillPath.getElements().add(new javafx.scene.shape.ClosePath());
             }
+            
+            // Show the chart again after styling
+            revenueAreaChart.setOpacity(1);
         });
     }
 

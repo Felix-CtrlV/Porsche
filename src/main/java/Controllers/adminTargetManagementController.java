@@ -215,17 +215,28 @@ public class adminTargetManagementController {
         
         // Info card
         VBox infoCard = new VBox(10);
-        infoCard.setStyle("-fx-background-color: #f8fafc; -fx-padding: 15; -fx-background-radius: 8;");
+        infoCard.setStyle(" -fx-padding: 15; -fx-background-radius: 8;");
+
+        infoCard.getStyleClass().add("section");
         
         // Manager
         HBox managerRow = new HBox(10);
         managerRow.setStyle("-fx-alignment: center-left;");
         Label managerIcon = new Label("👤");
+
+        managerIcon.getStyleClass().add("texHeader");
+
         managerIcon.setStyle("-fx-font-size: 16;");
         Label managerLabel = new Label("Manager:");
-        managerLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;");
+        managerLabel.setStyle("-fx-font-size: 13; -fx-font-weight: 600;");
+
+        managerLabel.getStyleClass().add("textDetail");
+
         Label managerValue = new Label(manager);
         managerValue.setStyle("-fx-font-size: 13; -fx-text-fill: #1e293b; -fx-font-weight: bold;");
+
+        managerValue.getStyleClass().add("textHeader");
+
         managerRow.getChildren().addAll(managerIcon, managerLabel, managerValue);
         
         // Period
@@ -233,10 +244,17 @@ public class adminTargetManagementController {
         periodRow.setStyle("-fx-alignment: center-left;");
         Label periodIcon = new Label("📅");
         periodIcon.setStyle("-fx-font-size: 16;");
+
+        periodIcon.getStyleClass().add("textHeader");
+
         Label periodLabel = new Label("Period:");
         periodLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;");
+        periodLabel.getStyleClass().add("textDetail");
+
         Label periodValue = new Label(month + " " + year);
         periodValue.setStyle("-fx-font-size: 13; -fx-text-fill: #1e293b; -fx-font-weight: bold;");
+        periodValue.getStyleClass().add("textHeader");
+
         periodRow.getChildren().addAll(periodIcon, periodLabel, periodValue);
         
         infoCard.getChildren().addAll(managerRow, periodRow);
@@ -247,13 +265,17 @@ public class adminTargetManagementController {
         
         // Car target
         VBox carBox = new VBox(8);
-        carBox.setStyle("-fx-background-color: #eff6ff; -fx-padding: 12; -fx-background-radius: 8; -fx-alignment: center;");
+        carBox.setStyle(" -fx-padding: 12; -fx-background-radius: 8; -fx-alignment: center;");
+        carBox.getStyleClass().add("section");
         Label carIcon = new Label("🚗");
         carIcon.setStyle("-fx-font-size: 20;");
+        carIcon.getStyleClass().add("textHeader");
+
         Label carLabel = new Label("Car Target");
         carLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #3b82f6; -fx-font-weight: 600;");
         Label carValue = new Label(String.valueOf(carTarget));
-        carValue.setStyle("-fx-font-size: 18; -fx-text-fill: #1e293b; -fx-font-weight: bold;");
+        carValue.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+        carValue.getStyleClass().add("textHeader");
         carBox.getChildren().addAll(carIcon, carLabel, carValue);
         
         // Part target
