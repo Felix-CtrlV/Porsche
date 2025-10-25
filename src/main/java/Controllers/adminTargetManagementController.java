@@ -223,8 +223,7 @@ public class adminTargetManagementController {
         HBox managerRow = new HBox(10);
         managerRow.setStyle("-fx-alignment: center-left;");
         Label managerIcon = new Label("👤");
-
-        managerIcon.getStyleClass().add("texHeader");
+        managerIcon.getStyleClass().add("textHeader");
 
         managerIcon.setStyle("-fx-font-size: 16;");
         Label managerLabel = new Label("Manager:");
