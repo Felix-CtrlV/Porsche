@@ -23,16 +23,16 @@
     <center>
         <VBox minHeight="750.0" minWidth="1250.0" spacing="20.0" style="-fx-border-radius: 2;" BorderPane.alignment="CENTER">
             <children>
-                <HBox alignment="CENTER_RIGHT" minHeight="37.0" prefHeight="37.0" prefWidth="1250.0" spacing="10.0" styleClass="topbar" VBox.vgrow="ALWAYS">
+                <HBox alignment="CENTER_RIGHT" minHeight="40.0" prefHeight="40.0" prefWidth="1250.0" spacing="10.0" styleClass="topbar" VBox.vgrow="ALWAYS">
                     <children>
                         <Region prefHeight="62.0" prefWidth="889.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="PreviousMonthbtn" maxHeight="20.0" maxWidth="24.0" minHeight="35.0" minWidth="24.0" mnemonicParsing="false" onAction="#clickPreviousMonth" prefHeight="30.0" prefWidth="24.0" style="-fx-border-color: transparent;" styleClass="control-btn" text="◀" />
+                        <Button fx:id="PreviousMonthbtn" maxHeight="35.0" maxWidth="35.0" minHeight="20.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousMonth" prefHeight="30.0" prefWidth="24.0" style="-fx-border-color: transparent;" styleClass="control-btn" text="◀" />
                         <ChoiceBox fx:id="monthBox" minHeight="25.0" minWidth="85.0" style="-fx-padding: 0;" styleClass="admin-choice-box" />
-                        <Button fx:id="NextMonthbtn" maxHeight="20.0" maxWidth="24.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextMonth" prefHeight="30.0" prefWidth="24.0" style="-fx-border-color: transparent;" styleClass="control-btn" text="▶" />
+                        <Button fx:id="NextMonthbtn" maxHeight="35.0" maxWidth="24.0" minHeight="20.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextMonth" prefHeight="30.0" prefWidth="24.0" style="-fx-border-color: transparent;" styleClass="control-btn" text="▶" />
                         <Region prefWidth="5.0" HBox.hgrow="NEVER" />
-                        <Button fx:id="PreviousYearbtn" maxHeight="20.0" maxWidth="24.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousYear" prefHeight="30.0" prefWidth="24.0" style="-fx-border-color: transparent;" styleClass="control-btn" text="◀" />
+                        <Button fx:id="PreviousYearbtn" maxHeight="35.0" maxWidth="24.0" minHeight="20.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickPreviousYear" prefHeight="30.0" prefWidth="24.0" style="-fx-border-color: transparent;" styleClass="control-btn" text="◀" />
                         <ChoiceBox fx:id="yearBox" minHeight="25.0" minWidth="85.0" style="-fx-padding: 0;" styleClass="admin-choice-box" />
-                        <Button fx:id="NextYearbtn" maxHeight="20.0" maxWidth="24.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextYear" prefHeight="30.0" prefWidth="24.0" style="-fx-border-color: transparent;" styleClass="control-btn" text="▶">
+                        <Button fx:id="NextYearbtn" maxHeight="35.0" maxWidth="24.0" minHeight="20.0" minWidth="35.0" mnemonicParsing="false" onAction="#clickNextYear" prefHeight="30.0" prefWidth="24.0" style="-fx-border-color: transparent;" styleClass="control-btn" text="▶">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin></Button>
@@ -42,7 +42,7 @@
                     </padding>
                 </HBox>
                 <!-- Enhanced Top Stats Cards with improved hierarchy -->
-                <HBox minHeight="160.0" minWidth="1150.0" prefHeight="241.0" prefWidth="1201.0" spacing="20.0" styleClass="stat-row">
+                <HBox minHeight="160.0" minWidth="1150.0" prefHeight="241.0" prefWidth="1201.0" spacing="20.0" >
                     <children>
                         <!-- Card 1 - Total Cars (Primary emphasis) -->
                         <VBox minHeight="160.0" minWidth="290.0" styleClass="stat-card primary" HBox.hgrow="ALWAYS">
@@ -57,7 +57,7 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="290.0" spacing="18.0">
                                     <children>
-                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="90.0" prefWidth="102.0" style="-fx-text-fill: #6d8196;" styleClass="emoji" text="🚘" textAlignment="RIGHT" textFill="WHITE">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="90.0" prefWidth="102.0" style="-fx-text-fill: #6d8196;"  text="🚘" textAlignment="RIGHT" textFill="WHITE">
                                             <font>
                                                 <Font size="75.0" />
                                             </font>
@@ -95,7 +95,7 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="20.0">
                                     <children>
-                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="87.0" style="-fx-text-fill: #e67e22;" styleClass="emoji" text="🛠" textAlignment="RIGHT" textFill="WHITE">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="87.0" style="-fx-text-fill: #e67e22;" text="🛠" textAlignment="RIGHT" textFill="WHITE">
                                             <font>
                                                 <Font size="70.0" />
                                             </font>
@@ -130,7 +130,7 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" styleClass="emoji" text="🔧" textAlignment="RIGHT" textFill="WHITE">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0"  text="🔧" textAlignment="RIGHT" textFill="WHITE">
                                             <font>
                                                 <Font size="70.0" />
                                             </font>
@@ -165,7 +165,7 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" style="-fx-text-fill: #FFD300;" styleClass="emoji" text="💰" textAlignment="RIGHT" textFill="WHITE">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0" style="-fx-text-fill: #FFD300;" text="💰" textAlignment="RIGHT" textFill="WHITE">
                                             <font>
                                                 <Font size="70.0" />
                                             </font>
@@ -198,15 +198,15 @@
                         <!-- Left Chart - Monthly Sales -->
                         <VBox styleClass="panel" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_LEFT" maxHeight="44.0" minHeight="33.0" prefHeight="55.0" prefWidth="200.0" spacing="20.0" style="-fx-background-color: #6eaef3;" styleClass="panel-header">
+                                <HBox alignment="CENTER_LEFT" maxHeight="44.0" minHeight="33.0" prefHeight="55.0" prefWidth="200.0" spacing="20.0" styleClass="panel-header">
                                     <children>
                                         <Label styleClass="panel-title" text="📊 Monthly Sales">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin></Label>
                                         <Region prefHeight="67.0" prefWidth="78.0" HBox.hgrow="ALWAYS" />
-                                        <Button id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" styleClass="car" stylesheets="@../CSS/general.css" text="🚗 CAR" HBox.hgrow="ALWAYS" />
-                                        <Button id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" styleClass="part" stylesheets="@../CSS/general.css" text="🔧 PART" HBox.hgrow="ALWAYS">
+                                        <Button id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" styleClass="car"  text="🚗 CAR" HBox.hgrow="ALWAYS" />
+                                        <Button id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" styleClass="part" text="🔧 PART" HBox.hgrow="ALWAYS">
                                             <HBox.margin>
                                                 <Insets right="40.0" />
                                             </HBox.margin>
@@ -230,7 +230,7 @@
                         <!-- Right Chart - Revenue Analysis -->
                         <VBox styleClass="panel" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_LEFT" minHeight="33.0" prefHeight="55.0" prefWidth="200.0" style="-fx-background-color: #6eaef3;" styleClass="panel-header">
+                                <HBox alignment="CENTER_LEFT" minHeight="33.0" prefHeight="55.0" prefWidth="200.0" styleClass="panel-header">
                                     <children>
                                         <Label styleClass="panel-title" text="📈 Revenue Analysis">
                                  <HBox.margin>
@@ -292,7 +292,7 @@
                                                                 <VBox spacing="3">
                                                                     <children>
                                                                         <Label styleClass="panel-title" text="🚘 Cars Target" />
-                                                                        <Label fx:id="carTargetProgressLbl" style="-fx-font-size: 13; -fx-text-fill: #cbd5e1;" text="10/30 • 33.3%" />
+                                                                        <Label fx:id="carTargetProgressLbl" style="-fx-font-size: 13;" styleClass="textDetail" text="10/30 • 33.3%" />
                                                                     </children>
                                                                 </VBox>
                                                             </children>
@@ -303,7 +303,7 @@
                                                                 <VBox spacing="3">
                                                                     <children>
                                                                         <Label styleClass="panel-title" text="🔧 Parts Target" />
-                                                                        <Label fx:id="partTargetProgressLbl" style="-fx-font-size: 13; -fx-text-fill: #cbd5e1;" text="25/90 • 27.8%" />
+                                                                        <Label fx:id="partTargetProgressLbl" style="-fx-font-size: 13;" styleClass="textDetail" text="25/90 • 27.8%" />
                                                                     </children>
                                                                 </VBox>
                                                             </children>
@@ -318,15 +318,15 @@
                                     </children>
                                 </HBox>
                             </children>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
+                             <padding>
+                                <Insets left="10.0" />
+                             </padding>
                         </VBox>
 
                         <!-- Pie Chart - Sales Distribution -->
                         <VBox prefHeight="250.0" prefWidth="620.0" styleClass="panel">
                             <children>
-                                <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: #6eaef3;" styleClass="panel-header">
+                                <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" styleClass="panel-header">
                                     <children>
                                         <Label styleClass="panel-title" text="📈 Car Distribution" />
                                     </children>
@@ -343,7 +343,7 @@
                         </VBox>
                   <VBox layoutX="347.0" layoutY="10.0" prefHeight="250.0" prefWidth="620.0" styleClass="panel">
                      <children>
-                        <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" style="-fx-background-color: #6eaef3;" styleClass="panel-header">
+                        <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" styleClass="panel-header">
                            <children>
                               <Label styleClass="panel-title" text="📈 Part Distribution" />
                            </children>
@@ -366,8 +366,4 @@
             </children>
         </VBox>
     </center>
-   <stylesheets>
-      <URL value="@../CSS/porsche_admin_overview.css" />
-      <URL value="@../CSS/admin_accounts.css" />
-   </stylesheets>
 </BorderPane>
