@@ -234,9 +234,7 @@ public class adminTargetManagementController {
 
         Label managerValue = new Label(manager);
         managerValue.setStyle("-fx-font-size: 13; -fx-font-weight: bold;");
-
         managerValue.getStyleClass().add("textHeader");
-
         managerRow.getChildren().addAll(managerIcon, managerLabel, managerValue);
         
         // Period
