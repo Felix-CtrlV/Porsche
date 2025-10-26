@@ -38,7 +38,9 @@ public class bestSellerController {
         double sale = overview.getTotalSale();
         double psale = overview.getPrevTotalSale();
 
-        soldRevenue.setText(String.format("%.2f", sale));
+        // Display sold units
+        int soldUnits = (int) sale;
+        soldRevenue.setText("$" + soldUnits);
 
         double revenueRateValue = 0;
         if (psale != 0) {

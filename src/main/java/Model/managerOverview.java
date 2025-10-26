@@ -11,7 +11,7 @@ public class managerOverview {
 
     //for best_selling car and parts
     private int soldQty,targetQty,rank;
-    private String inventoryName;
+    private String inventoryName, imageUrl;
 
     //for best_Seller
     private int staffId,workHour,prevWorkHour;
@@ -34,6 +34,15 @@ public class managerOverview {
         this.targetQty = targetQty;
         this.soldQty = soldQty;
         this.inventoryName = inventoryName;
+        this.imageUrl = "";
+    }
+    
+    public managerOverview(int rank, int targetQty, int soldQty, String inventoryName, String imageUrl) {
+        this.rank = rank;
+        this.targetQty = targetQty;
+        this.soldQty = soldQty;
+        this.inventoryName = inventoryName;
+        this.imageUrl = imageUrl != null ? imageUrl : "";
     }
 
     //for best_seller
@@ -110,6 +119,14 @@ public class managerOverview {
 
     public void setInventoryName(String inventoryName) {
         this.inventoryName = inventoryName;
+    }
+    
+    public String getImageUrl() {
+        return imageUrl != null ? imageUrl : "";
+    }
+    
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl != null ? imageUrl : "";
     }
 
     public String getRank() {

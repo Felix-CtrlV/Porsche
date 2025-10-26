@@ -1098,7 +1098,7 @@ public class managerOverviewController {
 
             // FIXED: Use OR condition instead of AND   
             if (besti.equals("car")) {
-                // getBestSellingCars returns: car_rank, target_qty, sold_qty, inventory_name, car_id, car_color, fuel_type, price, achievement_percentage
+                // getBestSellingCars returns: car_rank, target_qty, sold_qty, inventory_name, car_id, car_color, fuel_type, price, achievement_percentage, image_url
                 while (rs.next()) {
                     int rank = rs.getInt(1);           // car_rank
                     int targetQty = rs.getInt(2);      // target_qty
@@ -1110,7 +1110,7 @@ public class managerOverviewController {
                     bestCarPartList.add(item);
                 }
             } else if (besti.equals("part")) {
-                // getBestSellingParts returns: part_rank, target_qty, sold_qty, inventory_name, part_id, achievement_percentage
+                // getBestSellingParts returns: part_rank, target_qty, sold_qty, inventory_name, part_id, achievement_percentage, image_url
                 while (rs.next()) {
                     int rank = rs.getInt(1);           // part_rank
                     int targetQty = rs.getInt(2);      // target_qty
