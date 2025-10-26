@@ -174,3 +174,283 @@
 .loadingStyle{
     -fx-background-color: rgba(255,255,255,0.95);
 }
+/* for the admin OverView */
+.dashboard-root {
+    -fx-background-color: #f8f9fa;
+}
+.topbar {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+.control-btn {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #5f6368;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #dadce0;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);
+}
+.control-btn:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #1a73e8;
+}
+.control-btn:disabled {
+    -fx-opacity: 0.5;
+    -fx-background-color: #f1f3f4;
+}
+.admin-choice-box {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-insets: 0;
+    -fx-padding: 8px;
+    -fx-text-fill: #1f2937;
+}
+
+.admin-choice-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.admin-choice-box .arrow {
+    -fx-background-color: #6b7280;
+}
+
+.admin-choice-box .context-menu {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+}
+
+.admin-choice-box .menu-item {
+    -fx-background-color: white;
+    -fx-text-fill: #1f2937;
+    -fx-padding: 8px 16px;
+}
+
+.admin-choice-box .menu-item:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+.admin-choice-box .menu-item:focused {
+    -fx-background-color: #e5e7eb;
+}
+
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+.stat-card.primary { /* Cars - Professional Blue */
+    -fx-background-color: linear-gradient(to right, #e3f2fd, #f8f9fa);
+    -fx-border-color: #1976d2;
+}
+.stat-card.accent { /* Parts - Professional Orange */
+    -fx-background-color: linear-gradient(to right, #fff3e0, #f8f9fa);
+    -fx-border-color: #f57c00;
+}
+.stat-card.red { /* Customization - Professional Red */
+    -fx-background-color: linear-gradient(to right, #ffebee, #f8f9fa);
+    -fx-border-color: #d32f2f;
+}
+.stat-card.green { /* Revenue - Professional Green */
+    -fx-background-color: linear-gradient(to right, #e8f5e8, #f8f9fa);
+    -fx-border-color: #388e3c;
+}
+.stat-title {
+    -fx-text-fill: #5f6368;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+.stat-main {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+}
+.stat-sub {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 16px;
+}
+.panel {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+.panel-header {
+    -fx-background-color: #6eaef3;
+    -fx-background-radius: 12 12 0 0;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 0 1 0;
+}
+.panel-title {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+.value-primary { -fx-text-fill: #1976d2; -fx-font-weight: bold; }
+.ring-bg { -fx-stroke: #e9ecef; }
+.ring-car { -fx-stroke: #6d8196; }
+.ring-part { -fx-stroke: #f57c00; }
+.car, .part {
+    -fx-background-color: transparent;
+    -fx-text-fill:#2c3e50;
+    -fx-font-weight: bold;
+    -fx-background-radius:6;
+    -fx-border-radius:6;
+    -fx-font-size: 16px;
+}
+.car.active {
+    -fx-text-fill: #1976d2;
+}
+.part.active {
+    -fx-text-fill: #f57c00;
+}
+.car:hover {
+    -fx-text-fill: #1976d2;
+}
+.part:hover {
+    -fx-text-fill: #f57c00;
+}
+/* Charts default colors tuned to light theme */
+.chart-plot-background { -fx-background-color: transparent; }
+.default-color0.chart-series-line { -fx-stroke: #6d8196; }
+.default-color1.chart-series-line { -fx-stroke: #388e3c; }
+
+/* Area Chart styling - matching admin accounts */
+.admin-overview-chart {
+    -fx-background-color: transparent;
+}
+
+.admin-overview-chart .chart-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #374151;
+}
+
+.admin-overview-chart .axis {
+    -fx-tick-label-fill: #6b7280;
+    -fx-tick-label-font-size: 12px;
+}
+
+.admin-overview-chart .axis-label {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 12px;
+}
+
+/* Area chart series styling - Smooth and round like admin accounts */
+.chart-series-area-line {
+    -fx-stroke-width: 3px;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+.chart-series-area-fill {
+    -fx-fill: rgba(226, 232, 240, 0.75);
+    -fx-fill-rule: even-odd;
+}
+.default-color0.chart-series-area-line {
+    -fx-stroke: #6366f1;
+    -fx-stroke-width: 3px;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+.default-color0.chart-series-area-fill {
+    -fx-fill: rgba(226, 232, 240, 0.75);
+    -fx-fill-rule: even-odd;
+}
+.default-color1.chart-series-area-line {
+    -fx-stroke: #818cf8;
+    -fx-stroke-width: 3px;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+.default-color1.chart-series-area-fill {
+    -fx-fill: rgba(226, 232, 240, 0.5);
+    -fx-fill-rule: even-odd;
+}
+.chart-line-symbol {
+    background-color: #6366f1;
+    -fx-background-color: #ffffff, #6366f1;
+    -fx-background-insets: 0, 2;
+    padding: 6px;
+    -fx-padding: 6;
+}
+
+/* Bar Chart Colors - Light mode professional colors */
+.chart-bar { -fx-bar-fill: #6d8196; }
+.default-color0.chart-bar { -fx-bar-fill: #6d8196; }
+.default-color1.chart-bar { -fx-bar-fill: #f57c00; }
+.data0.chart-bar { -fx-bar-fill: #6d8196; }
+.data1.chart-bar { -fx-bar-fill: #f57c00; }
+
+/* Force override any conflicting styles */
+.chart-content .chart-bar { -fx-bar-fill: #6d8196; }
+.chart-plot-background .chart-bar { -fx-bar-fill: #6d8196; }
+
+/* Pie Chart Colors - Professional light mode palette */
+.default-color0.chart-pie { -fx-pie-color: #1976d2; }
+.default-color1.chart-pie { -fx-pie-color: #f57c00; }
+.default-color2.chart-pie { -fx-pie-color: #d32f2f; }
+.default-color3.chart-pie { -fx-pie-color: #388e3c; }
+.default-color4.chart-pie { -fx-pie-color: #7b1fa2; }
+.default-color5.chart-pie { -fx-pie-color: #00796b; }
+.default-color6.chart-pie { -fx-pie-color: #5d4037; }
+.default-color7.chart-pie { -fx-pie-color: #455a64; }
+
+/* Chart Legend Styles - Light mode */
+.chart-legend {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+.chart-legend .chart-legend-item {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+.chart-legend .chart-legend-item .chart-legend-item-symbol {
+    -fx-background-radius: 4;
+    -fx-padding: 6;
+}
+
+/* Pie Chart Specific Styles - Light mode */
+.chart-pie-label {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-color: rgba(255,255,255,0.9);
+    -fx-background-radius: 4;
+    -fx-padding: 2 6 2 6;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+}
+.chart-pie-label-line {
+    -fx-stroke: #7f8c8d;
+    -fx-stroke-width: 1;
+}
+
+/* Axis Styles - Light mode */
+.axis .tick-label { -fx-text-fill: #7f8c8d; }
+.axis .axis-label { -fx-text-fill: #2c3e50; }
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines { -fx-stroke: #e9ecef; }
+
+.chart-bar {
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 3;
+}

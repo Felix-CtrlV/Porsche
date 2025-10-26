@@ -165,5 +165,238 @@
 .loadingStyle{
     -fx-background-color : rgba(41,48,49,0.95)
 }
+/* admin overveiw */
+.dashboard-root {
+    -fx-background-color: #293031;
+}
+.topbar {
+    -fx-background-color: #293031 ;
+    -fx-background-radius: 12;
+    -fx-border-color: #4c595b;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.08), 8, 0, 0, 2);
+}
+.control-btn {
+    -fx-background-color: #293031;
+    -fx-text-fill: #5a5a65;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #4c595b;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.05), 3, 0, 0, 1);
+}
+.control-btn:hover {
+    -fx-background-color: #4d5a5c;
+    -fx-text-fill: #1a73e8;
+}
+.control-btn:disabled {
+    -fx-opacity: 0.5;
+    -fx-background-color: #657881;
+}
+.stat-card {
+    -fx-background-color: black;
+    -fx-background-radius: 12;
+    -fx-border-color:  #4c595b;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.08), 8, 0, 0, 2);
+}
+.stat-card.primary { /* Cars - Professional Blue */
+    -fx-background-color: linear-gradient(to right, #e3f2fd, #f8f9fa);
+    -fx-border-color: #1976d2;
+}
+.stat-card.accent { /* Parts - Professional Orange */
+    -fx-background-color: linear-gradient(to right, #fff3e0, #f8f9fa);
+    -fx-border-color: #f57c00;
+}
+.stat-card.red { /* Customization - Professional Red */
+    -fx-background-color: linear-gradient(to right, #ffebee, #f8f9fa);
+    -fx-border-color: #d32f2f;
+}
+.stat-card.green { /* Revenue - Professional Green */
+    -fx-background-color: linear-gradient(to right, #e8f5e8, #f8f9fa);
+    -fx-border-color: #388e3c;
+}
+.stat-title {
+    -fx-text-fill:#cccccc;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+.stat-main {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+}
+.stat-sub {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 16px;
+}
+.panel {
+    -fx-background-color:  #293031;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color:  #4c595b;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.08), 8, 0, 0, 2);
+}
+.panel-header {
+    -fx-background-color:#f5b42a;
+    -fx-background-radius: 12 12 0 0;
+    -fx-border-color:  #4c595b;
+    -fx-border-width: 0 0 1 0;
+}
+.panel-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+.value-primary { -fx-text-fill: #f6bc3e; -fx-font-weight: bold; }
+.ring-bg { -fx-stroke: #e9ecef; }
+.ring-car { -fx-stroke: #6d8196; }
+.ring-part { -fx-stroke: #f57c00; }
+
+.car, .part {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius:6;
+    -fx-border-radius:6;
+    -fx-font-size: 16px;
+}
+.car.active {
+    -fx-text-fill: #1976d2;
+}
+.part.active {
+    -fx-text-fill: #f57c00;
+}
+.car:hover {
+    -fx-text-fill: #1976d2;
+}
+.part:hover {
+    -fx-text-fill: #f57c00;
+}
+.admin-choice-box {
+    -fx-background-color:#86979A;
+    -fx-background-radius: 8px;
+    -fx-border-color: #4c595b;
+    -fx-border-radius: 8px;
+    -fx-background-insets: 0;
+    -fx-padding: 8px;
+
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.05), 3, 0, 0, 1);
+}
+
+.admin-choice-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.admin-choice-box .arrow {
+    -fx-background-color: #5a5a65;
+}
+
+.admin-choice-box .context-menu {
+    -fx-background-color:#86979A ;
+    -fx-border-color: #f8f9fa;
+    -fx-border-width: 1px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.25), 8, 0, 0, 2);
+}
+
+.admin-choice-box .menu-item {
+    -fx-background-color: #86979A;
+    -fx-text-fill: #dddde1;
+    -fx-padding: 8px 16px;
+}
+
+.admin-choice-box .menu-item:hover {
+    -fx-background-color: #b0bbbd;
+}
+.admin-choice-box .menu-item:focused {
+    -fx-background-color: #b0bbbd;
+}
+.chart-axis {
+    -fx-tick-label-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.axis-label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-vertical-grid-lines,
+.chart-horizontal-grid-lines {
+    -fx-stroke: rgba(255,255,255,0.2);
+}
+
+.chart-legend {
+    -fx-text-fill: white;
+}
+
+.chart-plot-background { -fx-background-color: transparent; }
+.default-color0.chart-series-line { -fx-stroke: #6d8196; }
+.default-color1.chart-series-line { -fx-stroke: #388e3c; }
 
 
+.default-color0.chart-series-area-line {
+    -fx-stroke:#ff4343;
+    -fx-stroke-width: 3px;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+
+.default-color0.chart-series-area-fill {
+    -fx-fill: rgba(255, 118, 118, 0.75);
+    -fx-fill-rule: even-odd;
+}
+.chart-line-symbol {
+    background-color: #ff4343;
+    -fx-background-color: #ffffff, #ff4343;
+    -fx-background-insets: 1, 2;
+    -fx-padding: 3px;
+}
+
+/* Bar Chart Colors - Light mode professional colors */
+.chart-bar { -fx-bar-fill: #6d8196; }
+.default-color0.chart-bar { -fx-bar-fill: #6d8196; }
+.default-color1.chart-bar { -fx-bar-fill: #f57c00; }
+.data0.chart-bar { -fx-bar-fill: #6d8196; }
+.data1.chart-bar { -fx-bar-fill: #f57c00; }
+
+/* Pie Chart Colors - Professional light mode palette */
+.default-color0.chart-pie { -fx-pie-color: #1976d2; }
+.default-color1.chart-pie { -fx-pie-color: #f57c00; }
+.default-color2.chart-pie { -fx-pie-color: #d32f2f; }
+.default-color3.chart-pie { -fx-pie-color: #388e3c; }
+.default-color4.chart-pie { -fx-pie-color: #7b1fa2; }
+.default-color5.chart-pie { -fx-pie-color: #00796b; }
+.default-color6.chart-pie { -fx-pie-color: #5d4037; }
+.default-color7.chart-pie { -fx-pie-color: #455a64; }
+
+.chart-pie-label {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-color: rgba(255,255,255,0.9);
+    -fx-background-radius: 4;
+    -fx-padding: 2 6 2 6;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+}
+.chart-pie-label-line {
+    -fx-stroke: white;
+    -fx-stroke-width: 1px;
+}
+.chart-bar {
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 3;
+}
