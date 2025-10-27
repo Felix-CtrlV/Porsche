@@ -166,6 +166,8 @@ public class adminDashboardController {
     
     @FXML
     private Label lockIcon, lockMessage;
+
+    @FXML private Label sun,moon,textMode;
     
     private final OTPService otpService = OTPService.getInstance();
     private final SecurityManager securityManager = SecurityManager.getInstance();
@@ -261,12 +263,34 @@ public class adminDashboardController {
     }
 
     Session current = Session.getInstance();
-    boolean isDarkMode = false;
     public void initialize() throws IOException {
 
             rootPane.getStylesheets().add(
-                    getClass().getResource("/CSS/admin_dark_mode.css").toExternalForm()
+                    getClass().getResource("/CSS/admin_light_mode.css").toExternalForm()
             );
+            sun.setVisible(true);
+            moon.setVisible(false);
+            textMode.setText("Light Mode");
+
+            Mode.setOnAction(e->{
+                rootPane.getStylesheets().clear();
+                if(sun.isVisible()){
+                    sun.setVisible(false);
+                    moon.setVisible(true);
+                    textMode.setText("Dark Mode");
+
+                    rootPane.getStylesheets().add(
+                            getClass().getResource("/CSS/admin_dark_mode.css").toExternalForm()
+                    );
+                }else{
+                    rootPane.getStylesheets().add(
+                            getClass().getResource("/CSS/admin_light_mode.css").toExternalForm()
+                    );
+                    sun.setVisible(true);
+                    moon.setVisible(false);
+                    textMode.setText("Light Mode");
+                }
+            });
 
 
         String name = current.getUsername();

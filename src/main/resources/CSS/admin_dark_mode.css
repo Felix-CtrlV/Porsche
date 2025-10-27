@@ -5,6 +5,7 @@
 /* head path of the admin dashboard */
 .glass_main{
     -fx-background-color : #293031 ; /* background color */
+    -fx-border-color : rgba(255,255,255,0.25);
 }
 .selected_dash_font {
     -fx-text-fill : white ;
@@ -148,16 +149,34 @@
     -fx-background-color: #364040;
     -fx-text-fill: white;
 }
-
-.scroll-bar:vertical .track,
-.scroll-bar:horizontal .track {
+/* Main scroll pane styling */
+.scroll-pane {
     -fx-background-color: #293031;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
 }
 
-.scroll-bar:vertical .thumb,
-.scroll-bar:horizontal .thumb {
-    -fx-background-color: #364040;
-    -fx-background-radius: 5;
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color:#293031;
+    -fx-background-radius: 6px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color:#364040;
+    -fx-background-radius: 6px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #6b7280;
 }
 .warningBox{
     -fx-background-color : 	rgba(254,243,199,0.6);
@@ -178,14 +197,12 @@
     -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.08), 8, 0, 0, 2);
 }
 .control-btn {
-    -fx-background-color: #293031;
+    -fx-background-color: transparent;
     -fx-text-fill: #5a5a65;
     -fx-font-weight: bold;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
     -fx-border-color: #4c595b;
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.05), 3, 0, 0, 1);
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
 }
 .control-btn:hover {
     -fx-background-color: #4d5a5c;
@@ -284,9 +301,11 @@
     -fx-border-radius: 8px;
     -fx-background-insets: 0;
     -fx-padding: 8px;
-
+    -fx-text-fill:  #5a5a65;
+    -fx-cursor: hand ;
     -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.05), 3, 0, 0, 1);
 }
+
 
 .admin-choice-box .arrow-button {
     -fx-background-color: transparent;
@@ -337,16 +356,12 @@
 .chart-horizontal-grid-lines {
     -fx-stroke: rgba(255,255,255,0.2);
 }
-
 .chart-legend {
     -fx-text-fill: white;
 }
-
 .chart-plot-background { -fx-background-color: transparent; }
 .default-color0.chart-series-line { -fx-stroke: #6d8196; }
 .default-color1.chart-series-line { -fx-stroke: #388e3c; }
-
-
 .default-color0.chart-series-area-line {
     -fx-stroke:#ff4343;
     -fx-stroke-width: 3px;
@@ -364,7 +379,6 @@
     -fx-background-insets: 1, 2;
     -fx-padding: 3px;
 }
-
 /* Bar Chart Colors - Light mode professional colors */
 .chart-bar { -fx-bar-fill: #6d8196; }
 .default-color0.chart-bar { -fx-bar-fill: #6d8196; }
@@ -399,4 +413,170 @@
 .chart-bar {
     -fx-background-insets: 0, 1;
     -fx-background-radius: 3;
+}
+/* admin account path */
+.listPath{
+    -fx-background-color: #323a3c;
+}
+.switchBtn{
+    -fx-background-color : #f6af3b;
+}
+.admin-card-header {
+    -fx-background-color: #293031;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.08), 8, 0, 0, 2);
+    -fx-padding: 15px 20px;
+}
+.profileHeader{
+    -fx-background-color:#f69476;
+}
+.admin-button-primary {
+    -fx-background-color: #f6b62c;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 12px 24px;
+    -fx-effect: dropshadow(gaussian, rgba(246, 182, 44, 0.3), 4, 0, 0, 2);
+}
+
+.admin-button-primary:hover {
+    -fx-background-color: #f8c352;
+    -fx-effect: dropshadow(gaussian, rgba(246, 182, 44, 0.4), 6, 0, 0, 3);
+}
+.gridColor{
+     -fx-border-color: #586769;
+}
+.admin-icon-warning {
+    -fx-font-size: 18px;
+    -fx-text-fill: #dc2626;
+}
+.admin-label-field {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: rgba(255,255,255,0.85);
+}
+.admin-label-value {
+    -fx-font-size: 16px;
+    -fx-text-fill: #f8f9fa;
+}
+.termination-reason {
+    -fx-background-color: #fef2f2;
+    -fx-padding: 16px;
+    -fx-background-radius: 8px;
+    -fx-border-color: #fecaca;
+    -fx-border-radius: 8px;
+}
+.termination-reason-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #991b1b;
+}
+.termination-reason-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #dc2626;
+}
+/* Progress circle styling */
+.progress-circle {
+    -fx-stroke-width: 12;
+    -fx-stroke-line-cap: round;
+    -fx-fill: transparent;
+}
+.progress-circle-background {
+    -fx-stroke: #e5e7eb;
+    -fx-stroke-width: 12;
+    -fx-fill: transparent;
+}
+
+.progress-circle-car {
+    -fx-stroke: #3b82f6;
+}
+
+.progress-circle-parts {
+    -fx-stroke: #f59e0b;
+}
+.progress-circle-attendance {
+    -fx-stroke: #3b82f6;
+}
+.legend-circle {
+    -fx-background-radius: 5px;
+}
+
+.legend-label {
+    -fx-text-fill:#f8f9fa;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+/* Table styling */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: #293031;
+    -fx-border-color: #404b4d;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 12px 16px;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: #f8f9fa;
+}
+
+.table-view .column-header:hover {
+    -fx-background-color: #66787c;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #3a4446;
+    -fx-border-color: transparent;
+    -fx-padding: 8px 0;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #4c595b;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color:#9aa8aa;
+    -fx-text-fill: #1e40af;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #5a6a6e;
+}
+
+.table-view .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #f8f9fa;
+}
+
+.table-view .table-cell:selected {
+    -fx-text-fill: #f8c964;
+}
+.admin-chart {
+    -fx-background-color: transparent;
+}
+
+.admin-chart .chart-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #374151;
+}
+
+.admin-chart .axis {
+    -fx-tick-label-fill: #6b7280;
+    -fx-tick-label-font-size: 12px;
+}
+
+.admin-chart .axis-label {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 12px;
 }
