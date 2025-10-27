@@ -416,7 +416,7 @@
 }
 /* admin account path */
 .listPath{
-    -fx-background-color: #323a3c;
+    -fx-background-color: #353e3f;
 }
 .switchBtn{
     -fx-background-color : #f6af3b;
@@ -485,7 +485,7 @@
 }
 .progress-circle-background {
     -fx-stroke: #e5e7eb;
-    -fx-stroke-width: 12;
+    -fx-stroke-width: 10;
     -fx-fill: transparent;
 }
 
@@ -561,22 +561,145 @@
 .table-view .table-cell:selected {
     -fx-text-fill: #f8c964;
 }
-.admin-chart {
-    -fx-background-color: transparent;
+/* Target card styling */
+.target-card {
+    -fx-background-color: #293031;
+    -fx-padding: 20px;
+    -fx-background-radius: 12px;
+    -fx-border-color: #444f51;
+    -fx-border-radius: 12px;
+
+}
+.target-card-header {
+    -fx-padding: 12px 16px;
+    -fx-background-radius: 8px;
+}
+.infoColor{
+    -fx-text-fill:#e36924;
+}
+.targetInfoColor{
+    -fx-text-fill :#d85f15;
+}
+.terminationHeader{
+    -fx-text-fill:#f60b0b;
+}
+.terminationReason{
+    -fx-text-fill: #d91010;
+}
+/* Management pane styling */
+.management-pane {
+    -fx-background-color: #353e3f;
+    -fx-border-color: #444f51;
+    -fx-border-width: 0 0 0 2px;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.15), 10, 0, -2, 0);
 }
 
-.admin-chart .chart-title {
+.management-section {
+    -fx-background-color: #414c4d;
+    -fx-padding: 15px;
+    -fx-background-radius: 8px;
+    -fx-border-color: #4c595b;
+    -fx-border-radius: 8px;
+}
+
+.management-section-salary {
+    -fx-background-color: #414c4d;
+    -fx-border-color: #4c595b;
+}
+
+.management-section-bonus {
+    -fx-background-color: #fef3c7;
+    -fx-border-color: #fbbf24;
+}
+
+.management-section-termination {
+    -fx-background-color: #fee2e2;
+    -fx-border-color: #ef4444;
+}
+
+.management-section-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #374151;
+    -fx-text-fill: #f8f9fa;
 }
+/* Close button styling */
+ .admin-close-button {
+     -fx-background-color: transparent;
+     -fx-text-fill: #64748b;
+     -fx-font-size: 20px;
+     -fx-cursor: hand;
+ }
 
-.admin-chart .axis {
-    -fx-tick-label-fill: #6b7280;
-    -fx-tick-label-font-size: 12px;
-}
+ .admin-close-button:hover {
+     -fx-text-fill: #374151;
+     -fx-background-color: #f3f4f6;
+     -fx-background-radius: 4px;
+ }
+ /* Action button styling */
+ .admin-action-button-success {
+     -fx-background-color: #10b981;
+     -fx-text-fill: white;
+     -fx-background-radius: 5px;
+     -fx-cursor: hand;
+     -fx-font-weight: bold;
+     -fx-padding: 8px 16px;
+ }
 
-.admin-chart .axis-label {
-    -fx-text-fill: #6b7280;
-    -fx-font-size: 12px;
-}
+ .admin-action-button-success:hover {
+     -fx-background-color: #059669;
+ }
+
+ .admin-action-button-warning {
+     -fx-background-color: #fbbf24;
+     -fx-text-fill: #78350f;
+     -fx-background-radius: 5px;
+     -fx-cursor: hand;
+     -fx-font-weight: bold;
+     -fx-padding: 8px 16px;
+ }
+
+ .admin-action-button-warning:hover {
+     -fx-background-color: #f59e0b;
+ }
+
+ .admin-action-button-danger {
+     -fx-background-color: #ef4444;
+     -fx-text-fill: white;
+     -fx-background-radius: 5px;
+     -fx-cursor: hand;
+     -fx-font-weight: bold;
+     -fx-padding: 8px 16px;
+ }
+
+ .admin-action-button-danger:hover {
+     -fx-background-color: #dc2626;
+ }
+  /* Form field styling */
+  .admin-text-field {
+      -fx-background-color: white;
+      -fx-background-radius: 5px;
+      -fx-border-color: #cbd5e1;
+      -fx-border-radius: 5px;
+      -fx-padding: 8px 12px;
+      -fx-font-size: 14px;
+  }
+
+  .admin-text-field:focused {
+      -fx-border-color: #3b82f6;
+      -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.2), 4, 0, 0, 0);
+  }
+
+  .admin-text-area {
+      -fx-background-color: white;
+      -fx-background-radius: 5px;
+      -fx-border-color: #ef4444;
+      -fx-border-radius: 5px;
+      -fx-padding: 8px 12px;
+      -fx-font-size: 14px;
+  }
+
+  .admin-text-area:focused {
+      -fx-border-color: #dc2626;
+      -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 4, 0, 0, 0);
+  }
+

@@ -500,7 +500,7 @@
 }
 .progress-circle-background {
     -fx-stroke: #e5e7eb;
-    -fx-stroke-width: 12;
+    -fx-stroke-width: 10;
     -fx-fill: transparent;
 }
 
@@ -549,13 +549,13 @@
 }
 
 .table-view .table-row-cell {
-    -fx-background-color: white;
+    -fx-background-color: #f5f5f5;
     -fx-border-color: transparent;
     -fx-padding: 8px 0;
 }
 
 .table-view .table-row-cell:odd {
-    -fx-background-color: #fafafa;
+    -fx-background-color: #ebebeb;
 }
 
 .table-view .table-row-cell:selected {
@@ -577,25 +577,6 @@
 .table-view .table-cell:selected {
     -fx-text-fill: #1e40af;
 }
-.admin-chart {
-    -fx-background-color: transparent;
-}
-
-.admin-chart .chart-title {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #374151;
-}
-
-.admin-chart .axis {
-    -fx-tick-label-fill: #6b7280;
-    -fx-tick-label-font-size: 12px;
-}
-
-.admin-chart .axis-label {
-    -fx-text-fill: #6b7280;
-    -fx-font-size: 12px;
-}
 /* Target card styling */
 .target-card {
     -fx-background-color: #f8f9fa;
@@ -605,16 +586,139 @@
     -fx-border-radius: 12px;
 
 }
-
 .target-card-header {
     -fx-padding: 12px 16px;
     -fx-background-radius: 8px;
 }
-
-.target-card-header-car {
-    -fx-background-color: #3b82f6;
+.infoColor{
+    -fx-text-fill: #78350f;
+}
+.targetInfoColor{
+    -fx-text-fill: #92400e;
+}
+.terminationHeader{
+    -fx-text-fill: #991b1b;
+}
+.terminationReason{
+    -fx-text-fill: #7f1d1d;
+}
+/* Management pane styling */
+.management-pane {
+    -fx-background-color: white;
+    -fx-border-color: #dadce0;
+    -fx-border-width: 0 0 0 2px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, -2, 0);
 }
 
-.target-card-header-parts {
-    -fx-background-color: #f59e0b;
+.management-section {
+    -fx-background-color: #f8fafc;
+    -fx-padding: 15px;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
 }
+
+.management-section-salary {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+}
+
+.management-section-bonus {
+    -fx-background-color: #fef3c7;
+    -fx-border-color: #fbbf24;
+}
+
+.management-section-termination {
+    -fx-background-color: #fee2e2;
+    -fx-border-color: #ef4444;
+}
+
+.management-section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+}
+.management-section-title-termination {
+    -fx-text-fill: #991b1b;
+}
+/* Close button styling */
+ .admin-close-button {
+     -fx-background-color: transparent;
+     -fx-text-fill: #64748b;
+     -fx-font-size: 20px;
+     -fx-cursor: hand;
+ }
+
+ .admin-close-button:hover {
+     -fx-text-fill: #374151;
+     -fx-background-color: #f3f4f6;
+     -fx-background-radius: 4px;
+ }
+ /* Action button styling */
+ .admin-action-button-success {
+     -fx-background-color: #10b981;
+     -fx-text-fill: white;
+     -fx-background-radius: 5px;
+     -fx-cursor: hand;
+     -fx-font-weight: bold;
+     -fx-padding: 8px 16px;
+ }
+
+ .admin-action-button-success:hover {
+     -fx-background-color: #059669;
+ }
+
+ .admin-action-button-warning {
+     -fx-background-color: #fbbf24;
+     -fx-text-fill: #78350f;
+     -fx-background-radius: 5px;
+     -fx-cursor: hand;
+     -fx-font-weight: bold;
+     -fx-padding: 8px 16px;
+ }
+
+ .admin-action-button-warning:hover {
+     -fx-background-color: #f59e0b;
+ }
+
+ .admin-action-button-danger {
+     -fx-background-color: #ef4444;
+     -fx-text-fill: white;
+     -fx-background-radius: 5px;
+     -fx-cursor: hand;
+     -fx-font-weight: bold;
+     -fx-padding: 8px 16px;
+ }
+
+ .admin-action-button-danger:hover {
+     -fx-background-color: #dc2626;
+ }
+ /* Form field styling */
+ .admin-text-field {
+     -fx-background-color: white;
+     -fx-background-radius: 5px;
+     -fx-border-color: #cbd5e1;
+     -fx-border-radius: 5px;
+     -fx-padding: 8px 12px;
+     -fx-font-size: 14px;
+ }
+
+ .admin-text-field:focused {
+     -fx-border-color: #3b82f6;
+     -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.2), 4, 0, 0, 0);
+ }
+
+ .admin-text-area {
+     -fx-background-color: white;
+     -fx-background-radius: 5px;
+     -fx-border-color: #ef4444;
+     -fx-border-radius: 5px;
+     -fx-padding: 8px 12px;
+     -fx-font-size: 14px;
+ }
+
+ .admin-text-area:focused {
+     -fx-border-color: #dc2626;
+     -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 4, 0, 0, 0);
+ }
+
