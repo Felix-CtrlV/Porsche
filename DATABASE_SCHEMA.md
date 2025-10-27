@@ -5,45 +5,18 @@ This document contains the complete database schema and sample data for the Pors
 ---
 
 ## Table of Contents
-1. [Car Models](#car-models)
-2. [Car Parts](#car-parts)
-3. [Cars](#cars)
-4. [Customer Info](#customer-info)
-5. [Customize](#customize)
-6. [Installment List](#installment-list)
-7. [Order Details](#order-details)
-8. [Orders](#orders)
-9. [Photos](#photos)
+1. [Car Parts](#car-parts)
+2. [Cars](#cars)
+3. [Customer Info](#customer-info)
+4. [Customize](#customize)
+5. [Installment List](#installment-list)
+6. [Order Details](#order-details)
+7. [Orders](#orders)
+8. [Security Attempts](#security-attempts)
+9. [Security Logs](#security-logs)
 10. [User Attendance](#user-attendance)
 11. [User Info](#user-info)
 12. [User Target](#user-target)
-13. [User Work Info](#user-work-info)
-
----
-
-## Car Models
-
-**Table:** `car_models`
-
-Stores information about different Porsche car models and their trims.
-
-| Column Name  | Type    | Description                           |
-|-------------|---------|---------------------------------------|
-| model_id    | INT     | Primary key, unique model identifier  |
-| model_name  | VARCHAR | Name of the car model (e.g., 911)     |
-| trim_name   | VARCHAR | Trim level (e.g., Turbo S, GTS)       |
-| model_photo | INT     | Foreign key to photos table           |
-
-**Sample Data:**
-- 911 Carrera S
-- 911 Turbo S Cabriolet
-- 718 Cayman GT4 RS
-- Cayenne SE-Hybrid
-- Panamera 4 E-Hybrid Executive
-- Taycan 4S, Turbo, Turbo Cross Turismo
-- Macan Turbo
-
-**Total Records:** 17 models
 
 ---
 
@@ -357,6 +330,57 @@ Stores employment and compensation details.
 - All staff (user_id=3-11) report to Manager (manager=2)
 
 **Note:** All bonuses currently set to 0
+
+---
+
+## User Work Info
+
+**Table:** `user_workinfo`
+
+Stores employment and compensation details for all users.
+
+| Column Name    | Type    | Description                          |
+|---------------|---------|--------------------------------------|
+| workinfo_id   | INT     | Primary key                          |
+| user_id       | INT     | Foreign key to user_info             |
+| manager       | INT     | Foreign key to user_info (manager)   |
+| salary_amount | DECIMAL | Monthly salary amount                |
+| bonus         | DECIMAL | Bonus amount                         |
+
+**Current Work Info Data:**
+
+| ID | User ID | Manager ID | Salary | Bonus |
+|----|---------|------------|--------|-------|
+| 1 | 1 | - | 5,000 | 0 |
+| 2 | 2 | 1 | 2,500 | 275 |
+| 3 | 3 | 2 | 1,000 | 0 |
+| 4 | 4 | 2 | 1,000 | 0 |
+| 5 | 5 | 2 | 1,000 | 40 |
+| 6 | 6 | 2 | 1,000 | 0 |
+| 7 | 7 | 2 | 1,000 | 0 |
+| 8 | 8 | 2 | 1,000 | 0 |
+| 9 | 9 | 2 | 1,000 | 0 |
+| 10 | 10 | 2 | 1,000 | 0 |
+| 11 | 11 | 2 | 1,000 | 0 |
+| 12 | 15 | 1 | 2,500 | 0 |
+
+**Total Records:** 12 work info entries
+
+**Updated Salary Structure:**
+- **Admin** (User ID 1): 5,000 salary, no manager
+- **Managers** (User ID 2, 15): 2,500 salary each, report to Admin (User ID 1)
+- **Staff** (User ID 3-11): 1,000 salary each, report to Manager (User ID 2)
+
+**Bonus Distribution:**
+- Manager (User ID 2): 275 bonus
+- Staff (User ID 5): 40 bonus
+- All others: 0 bonus
+
+**Updated Reporting Hierarchy:**
+- Admin (User ID 1) → No manager (top level)
+- Manager (User ID 2) → Reports to Admin (User ID 1)
+- Manager (User ID 15) → Reports to Admin (User ID 1)
+- All Staff (User ID 3-11) → Report to Manager (User ID 2)
 
 ---
 
