@@ -1,3 +1,4 @@
+
 .background_pane{
         -fx-background-color : #293031 ;
 }
@@ -86,6 +87,7 @@
 }
 .iconBorder {
     -fx-background-color : linear-gradient(to right, #f12711, #f5af19);
+    -fx-fill : linear-gradient(to right, #f12711, #f5af19);
 }
 .icon{
     -fx-text-fill: white;
@@ -428,7 +430,8 @@
     -fx-padding: 15px 20px;
 }
 .profileHeader{
-    -fx-background-color:#f69476;
+    -fx-background-color:#293031;
+    -fx-effect: dropshadow(gaussian, rgba(246, 182, 44,0.08), 8, 0, 0, 2);
 }
 .admin-button-primary {
     -fx-background-color: #f6b62c;
@@ -696,4 +699,7 @@
       -fx-border-color: #dc2626;
       -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 4, 0, 0, 0);
   }
-
+ .staffCard:hover{
+    -fx-background-color: #f7be44;
+    -fx-background-radius: 8;
+ }

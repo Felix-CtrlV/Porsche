@@ -189,6 +189,7 @@ public class adminDashboardController {
         setActiveButton(accountbtn);
     }
 
+    public static boolean isDarkMode = false;
     private void applyCircularClip(ImageView imageView, double size) {
         if (imageView == null) {
             return;
@@ -271,10 +272,10 @@ public class adminDashboardController {
             sun.setVisible(true);
             moon.setVisible(false);
             textMode.setText("Light Mode");
-
+            isDarkMode = false;
             Mode.setOnAction(e->{
                 rootPane.getStylesheets().clear();
-                if(sun.isVisible()){
+                if(!isDarkMode){
                     sun.setVisible(false);
                     moon.setVisible(true);
                     textMode.setText("Dark Mode");
@@ -282,6 +283,7 @@ public class adminDashboardController {
                     rootPane.getStylesheets().add(
                             getClass().getResource("/CSS/admin_dark_mode.css").toExternalForm()
                     );
+                    isDarkMode = true;
                 }else{
                     rootPane.getStylesheets().add(
                             getClass().getResource("/CSS/admin_light_mode.css").toExternalForm()
@@ -289,6 +291,7 @@ public class adminDashboardController {
                     sun.setVisible(true);
                     moon.setVisible(false);
                     textMode.setText("Light Mode");
+                    isDarkMode = false;
                 }
             });
 

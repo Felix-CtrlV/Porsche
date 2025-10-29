@@ -818,11 +818,31 @@ public class adminAccountController {
         staffListContainer.getChildren().forEach(node ->
                 node.setStyle("-fx-border-color: transparent;"));
 
-        staffListContainer.getChildren().stream()
-                .filter(n -> Objects.equals(n.getUserData(), id))
-                .findFirst()
-                .ifPresent(n -> n.setStyle("-fx-background-color: #e8f0fe; -fx-border-color: #1a73e8; -fx-border-radius: 8;"));
-    }
+        if(adminDashboardController.isDarkMode){
+            staffListContainer.getChildren().stream()
+                    .filter(n -> Objects.equals(n.getUserData(), id))
+                    .findFirst()
+                    .ifPresent(n -> n.setStyle(
+                            "-fx-background-color:#414c4d; " +
+                            "-fx-border-color: #f276ab; " +
+                            "-fx-border-radius: 8;" +
+                            "-fx-background-radius: 8;" +
+                            "-fx-effect: dropshadow(three-pass-box, rgba(246, 182, 44, 0.4), 10, 0, 0, 0);"
+                    ));
+
+        }else{
+            staffListContainer.getChildren().stream()
+                    .filter(n -> Objects.equals(n.getUserData(), id))
+                    .findFirst()
+                    .ifPresent(n -> n.setStyle(
+                            "-fx-background-color: #e8f0fe; " +
+                            "-fx-border-color: #1a73e8; " +
+                            "-fx-border-radius: 8;" +
+                            "-fx-background-radius: 8;"
+                    ));
+
+        }
+       }
 
     // ---------- Search ----------
     private void setupSearch() {

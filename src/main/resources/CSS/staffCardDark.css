@@ -1,0 +1,11 @@
+.staffCardBorder{
+    -fx-background-color: #fef6e8;
+    -fx-border-color: #fdecd0;
+    -fx-border-radius: 8;
+}
+.staffCardImageColor{
+       -fx-fill : linear-gradient(to right, #f12711, #f5af19);
+.
+.staffCardTextColor{
+    -fx-fill: white;
+}
