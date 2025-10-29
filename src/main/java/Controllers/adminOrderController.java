@@ -402,8 +402,8 @@ public class adminOrderController {
                 
                 boolean hasCars = false;
                 VBox carSection = new VBox(8);
-                carSection.setStyle("-fx-background-color: #f0f9ff; -fx-background-radius: 8; -fx-padding: 15; -fx-border-color: #bae6fd; -fx-border-radius: 8; -fx-border-width: 1;");
-                
+                carSection.setStyle(" -fx-background-radius: 8; -fx-padding: 15; -fx-border-radius: 8; -fx-border-width: 1;");
+                carSection.getStyleClass().add("car-section");
                 Label carHeader = new Label("🚗 Cars");
                 carHeader.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #0369a1;");
                 carSection.getChildren().add(carHeader);
@@ -418,13 +418,16 @@ public class adminOrderController {
                     double price = carRs.getDouble("total_price");
                     
                     VBox itemBox = new VBox(5);
-                    itemBox.setStyle("-fx-background-color: white; -fx-background-radius: 6; -fx-padding: 10;");
+                    itemBox.setStyle(" -fx-background-radius: 6; -fx-padding: 10;");
+                    itemBox.getStyleClass().add("section");
                     
                     Label nameLabel = new Label(modelName + (trimName != null && !trimName.isEmpty() ? " " + trimName : ""));
-                    nameLabel.setStyle("-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1e293b;");
+                    nameLabel.setStyle("-fx-font-size: 13; -fx-font-weight: bold; ");
+                    nameLabel.getStyleClass().add("textHeader");
                     
                     Label detailsLabel = new Label(String.format("%d %s • Qty: %d", year, color, qty));
-                    detailsLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #64748b;");
+                    detailsLabel.setStyle("-fx-font-size: 12;");
+                    detailsLabel.getStyleClass().add("textDetail");
                     
                     Label priceLabel = new Label(String.format("$%,.2f", price));
                     priceLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #0369a1;");
@@ -446,8 +449,9 @@ public class adminOrderController {
                 
                 boolean hasParts = false;
                 VBox partSection = new VBox(8);
-                partSection.setStyle("-fx-background-color: #fef3c7; -fx-background-radius: 8; -fx-padding: 15; -fx-border-color: #fde68a; -fx-border-radius: 8; -fx-border-width: 1;");
-                
+
+                partSection.setStyle(" -fx-background-radius: 8; -fx-padding: 15; -fx-border-radius: 8; -fx-border-width: 1;");
+                partSection.getStyleClass().add("part-section");
                 Label partHeader = new Label("🔧 Parts");
                 partHeader.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #92400e;");
                 partSection.getChildren().add(partHeader);
@@ -460,13 +464,16 @@ public class adminOrderController {
                     double price = partRs.getDouble("total_price");
                     
                     VBox itemBox = new VBox(5);
-                    itemBox.setStyle("-fx-background-color: white; -fx-background-radius: 6; -fx-padding: 10;");
+                    itemBox.setStyle(" -fx-background-radius: 6; -fx-padding: 10;");
+                    itemBox.getStyleClass().add("section");
                     
                     Label nameLabel = new Label(partName);
-                    nameLabel.setStyle("-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #1e293b;");
+                    nameLabel.setStyle("-fx-font-size: 13; -fx-font-weight: bold;");
+                    nameLabel.getStyleClass().add("textHeader");
                     
                     Label detailsLabel = new Label(String.format("%s • Qty: %d", forCar != null ? "For " + forCar : "Universal", qty));
-                    detailsLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #64748b;");
+                    detailsLabel.setStyle("-fx-font-size: 12;");
+                    detailsLabel.getStyleClass().add("textDetail");
                     
                     Label priceLabel = new Label(String.format("$%,.2f", price));
                     priceLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #92400e;");
