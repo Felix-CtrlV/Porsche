@@ -212,7 +212,6 @@
     -fx-background-color: transparent;
     -fx-text-fill: #5f6368;
     -fx-font-weight: bold;
-    -fx-border-color: #dadce0;
     -fx-font-size: 16px;
     -fx-cursor: hand;
 }
@@ -389,7 +388,7 @@
     background-color: #6366f1;
     -fx-background-color: #ffffff, #6366f1;
     -fx-background-insets: 0, 2;
-    padding: 6px;
+    -fx-padding: 6px;
     -fx-padding: 6;
 }
 
@@ -566,7 +565,7 @@
 }
 
 .table-view .table-row-cell:hover {
-    -fx-background-color: #f3f4f6;
+    -fx-background-color: #eaf1ff;
 }
 
 .table-view .table-cell {
@@ -579,6 +578,31 @@
 .table-view .table-cell:selected {
     -fx-text-fill: #1e40af;
 }
+.table-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px;
+}
+
+.table-view .scroll-bar:vertical .track {
+    -fx-background-color: #e5e7eb;
+    -fx-background-radius: 6px;
+}
+
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: #9ca3af;
+    -fx-background-radius: 6px;
+}
+
+.table-view .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #6b7280;
+}
+.table-view .corner{
+    -fx-background-color:transparent;
+}
+.table-view .column-header-background .filler {
+    -fx-fill: transparent;
+}
+
 /* Target card styling */
 .target-card {
     -fx-background-color: #f8f9fa;
@@ -719,3 +743,11 @@
     -fx-background-color: #91faff;
     -fx-background-radius: 8;
  }
+ .car-section{
+    -fx-background-color: #f0f9ff;
+     -fx-border-color: #bae6fd;
+ }
+.part-section{
+        -fx-background-color: #fef3c7;
+        -fx-border-color: #fde68a;
+}

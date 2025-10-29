@@ -195,10 +195,8 @@
     -fx-fill-rule: even-odd;
 }
 .chart-line-symbol { 
-    background-color: #6366f1;
     -fx-background-color: #ffffff, #6366f1;
     -fx-background-insets: 0, 2;
-    padding: 6px;
     -fx-padding: 6;
 }
 

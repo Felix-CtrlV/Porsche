@@ -14,24 +14,24 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #f8fafc;" stylesheets="@../CSS/admin_accounts.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOrderController">
+<BorderPane maxHeight="Infinity" maxWidth="Infinity" minHeight="600" minWidth="1000" styleClass="glass_mian" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminOrderController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
             <!-- Date Controls Bar -->
             <HBox alignment="CENTER_RIGHT" prefHeight="50.0" spacing="10.0">
                <children>
-                  <Label styleClass="heading" stylesheets="@../CSS/DashBoard_general.css" text="Orders" />
+                  <Label minWidth="120.0" style="-fx-font-family: 'Arial Black'; -fx-font-weight: bold; -fx-font-size: 32;" styleClass="textHeader" text="Orders" wrapText="true" />
                   <Region prefHeight="38.0" prefWidth="889.0" HBox.hgrow="ALWAYS" />
-                  <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="423.0" spacing="10.0" style="-fx-background-color: white; -fx-border-radius: 9; -fx-background-radius: 8; -fx-border-color: #dadce0;">
+                  <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="423.0" spacing="10.0" style=" -fx-border-radius: 9; -fx-background-radius: 8;" styleClass="section">
                      <children>
-                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                        <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" styleClass="admin-choice-box" stylesheets="@../CSS/general.css" />
-                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶" />
+                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-background-color: transparent;" styleClass="control-btn" text="◀" />
+                        <ChoiceBox fx:id="monthBox" prefHeight="26.0" prefWidth="76.0" style=" -fx-background-radius: 8;  -fx-border-radius: 9; -fx-background-insets: 0; -fx-padding: 0;" styleClass="admin-choice-box" />
+                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-background-color: transparent;" styleClass="control-btn" text="▶" />
                         <Region prefHeight="26.0" prefWidth="7.0" HBox.hgrow="NEVER" />
-                        <Button fx:id="PreviousYearbtn" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="◀" />
-                        <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx-background-color: white; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0; -fx-text-fill: #1f2937;" styleClass="admin-choice-box" stylesheets="@../CSS/general.css" />
-                        <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent;" styleClass="topic_font" text="▶">
+                        <Button fx:id="PreviousYearbtn" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-background-color: transparent;" styleClass="control-btn" text="◀" />
+                        <ChoiceBox fx:id="yearBox" prefHeight="26.0" prefWidth="76.0" style="-fx  -fx-background-radius: 8; -fx-border-radius: 8; -fx-background-insets: 0; -fx-padding: 0; " styleClass="admin-choice-box" />
+                        <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-background-color: transparent;" styleClass="control-btn" text="▶">
                            <HBox.margin>
                               <Insets right="20.0" />
                            </HBox.margin></Button>
@@ -44,12 +44,12 @@
             </HBox>
             
             <!-- Search Bar -->
-            <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="15.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="60.0"  spacing="15.0">
                <children>
                   <StackPane HBox.hgrow="ALWAYS">
                      <children>
-                        <TextField fx:id="searchField" promptText="Search by Customer Name, Order Items, or Status..." style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-padding: 12 20 12 45; -fx-font-size: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);" />
-                        <Label style="-fx-font-size: 18; -fx-text-fill: #94a3b8;" text="🔍" StackPane.alignment="CENTER_LEFT">
+                        <TextField fx:id="searchField" promptText="Search by Customer Name, Order Items, or Status..." styleClass="textField" style=" -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-width: 1;-fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2); -fx-padding: 12 20 12 45; -fx-font-size: 14; " />
+                        <Label style="-fx-font-size: 18;" styleClass="textHeader" text="🔍" StackPane.alignment="CENTER_LEFT">
                            <StackPane.margin>
                               <Insets left="15.0" />
                            </StackPane.margin>
@@ -73,7 +73,7 @@
             <!-- Table and Detail Pane -->
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
-                  <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" style=" -fx-background-radius: 12;  -fx-border-radius: 12; -fx-border-width: 1; " VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="orders_col" prefWidth="200.0" text="Order" />
                       <TableColumn fx:id="customer_col" prefWidth="150.0" text="Customer" />
@@ -87,13 +87,13 @@
                   </TableView>
                   
                   <!-- Order Detail Pane (Hidden by default) -->
-                  <VBox fx:id="detailPane" managed="false" maxHeight="350" prefHeight="350" spacing="0.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);" visible="false">
+                  <VBox fx:id="detailPane" managed="false" maxHeight="350" prefHeight="350" spacing="0.0" styleClass="glass_main" style=" -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-width: 1;" visible="false">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="10.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 12 12 0 0; -fx-padding: 10 15;">
-                           <children>
-                              <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Order Details" />
+                        <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="10.0" styleClass="section" style="-fx-background-radius: 12 12 0 0; -fx-padding: 10 15;">
+                            <children>
+                                <Label style="-fx-font-size: 14; -fx-font-weight: bold;" styleClass="textHeader" text="Order Details" />
                               <Region HBox.hgrow="ALWAYS" />
-                              <Button fx:id="closeDetailBtn" mnemonicParsing="false" onAction="#closeDetailPane" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 16; -fx-cursor: hand;" text="✕" />
+                              <Button fx:id="closeDetailBtn" mnemonicParsing="false" onAction="#closeDetailPane" styleClass="admin-close-button"  text="✕" />
                            </children>
                         </HBox>
                         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="310.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
@@ -110,12 +110,12 @@
             </VBox>
             
             <!-- Summary Cards on Right -->
-            <VBox prefHeight="200.0" prefWidth="220.0" spacing="15.0" HBox.hgrow="NEVER">
+            <VBox prefHeight="200.0" prefWidth="220.0" spacing="15.0" HBox.hgrow="NEVER" styleClass="glass_mian">
                <children>
                   <!-- Total Orders Card -->
-                  <VBox alignment="CENTER" minHeight="160.0" prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);">
+                  <VBox alignment="CENTER" minHeight="160.0" prefHeight="110.0" prefWidth="220.0" spacing="8.0" style=" -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-width: 1; " styleClass="section">
                      <children>
-                        <Label style="-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;" text="TOTAL ORDERS" />
+                        <Label style="-fx-font-size: 13; -fx-font-weight: 600;" styleClass="textHeader" text="TOTAL ORDERS" />
                         <Label fx:id="totalOrdersLbl" style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: #8b5cf6;" text="0" />
                      </children>
                      <padding>
@@ -124,9 +124,9 @@
                   </VBox>
                   
                   <!-- Results Count Card -->
-                  <VBox alignment="CENTER" minHeight="160.0" prefHeight="100.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);">
+                  <VBox alignment="CENTER" minHeight="160.0" prefHeight="100.0" prefWidth="220.0" spacing="8.0" style=" -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-width: 1; " styleClass="section">
                      <children>
-                        <Label style="-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;" text="RESULTS FOUND" />
+                        <Label styleClass="textHeader" style="-fx-font-size: 13; -fx-font-weight: 600;" text="RESULTS FOUND" />
                         <Label fx:id="resultCountLbl" style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: #3b82f6;" text="0" />
                      </children>
                      <padding>
@@ -135,9 +135,9 @@
                   </VBox>
                   
                   <!-- Total Amount Card -->
-                  <VBox alignment="CENTER" minHeight="160.0" prefHeight="100.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.5, 0, 3);">
+                  <VBox alignment="CENTER" minHeight="160.0" prefHeight="100.0" prefWidth="220.0" spacing="8.0" style=" -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-width: 1;" styleClass="section">
                      <children>
-                        <Label style="-fx-font-size: 13; -fx-text-fill: #64748b; -fx-font-weight: 600;" text="TOTAL AMOUNT" />
+                        <Label styleClass="textHeader" style="-fx-font-size: 13;] -fx-font-weight: 600;" text="TOTAL AMOUNT" />
                         <Label fx:id="totalAmountLbl" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #10b981;" text="0" />
                      </children>
                      <padding>

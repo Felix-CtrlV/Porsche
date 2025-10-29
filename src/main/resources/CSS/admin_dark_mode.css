@@ -202,7 +202,6 @@
     -fx-background-color: transparent;
     -fx-text-fill: #5a5a65;
     -fx-font-weight: bold;
-    -fx-border-color: #4c595b;
     -fx-font-size: 16px;
     -fx-cursor: hand;
 }
@@ -564,6 +563,31 @@
 .table-view .table-cell:selected {
     -fx-text-fill: #f8c964;
 }
+
+.table-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px;
+}
+
+.table-view .scroll-bar:vertical .track {
+    -fx-background-color:#293031;
+    -fx-background-radius: 6px;
+}
+
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color:#364040;
+    -fx-background-radius: 6px;
+}
+
+.table-view .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #6b7280;
+}
+.table-view .corner{
+    -fx-background-color:transparent;
+}
+.table-view .column-header-background .filler {
+    -fx-background-color: transparent;
+}
 /* Target card styling */
 .target-card {
     -fx-background-color: #293031;
@@ -700,6 +724,14 @@
       -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 4, 0, 0, 0);
   }
  .staffCard:hover{
-    -fx-background-color: #f7be44;
+    -fx-background-color: #5c9ea2;
     -fx-background-radius: 8;
  }
+.car-section{
+    -fx-background-color: #293031;
+    -fx-border-color: #a4daff;
+}
+.part-section{
+    -fx-background-color: #293031;
+    -fx-border-color: #fde37c;
+}
