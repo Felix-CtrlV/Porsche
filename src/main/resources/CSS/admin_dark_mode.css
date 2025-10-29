@@ -1,5 +1,5 @@
 .background_pane{
-        -fx-background-color : white ;
+        -fx-background-color : #293031 ;
 }
 
 /* head path of the admin dashboard */
@@ -586,12 +586,21 @@
 .terminationReason{
     -fx-text-fill: #d91010;
 }
+.bonusBox{
+    -fx-background-color: #718585;
+}
+.bonusText{
+    -fx-text-fill: #f8f9fa;
+}
+.totalBonusLabel{
+    -fx-text-fill: #14e8a2;
+}
 /* Management pane styling */
 .management-pane {
     -fx-background-color: #353e3f;
     -fx-border-color: #444f51;
     -fx-border-width: 0 0 0 2px;
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.15), 10, 0, -2, 0);
+    -fx-effect: dropshadow(gaussian, rgba(	68, 79, 81,0.15), 10, 0, -2, 0);
 }
 
 .management-section {
@@ -601,7 +610,6 @@
     -fx-border-color: #4c595b;
     -fx-border-radius: 8px;
 }
-
 .management-section-salary {
     -fx-background-color: #414c4d;
     -fx-border-color: #4c595b;
@@ -625,14 +633,14 @@
 /* Close button styling */
  .admin-close-button {
      -fx-background-color: transparent;
-     -fx-text-fill: #64748b;
+     -fx-text-fill: #eaedf0;
      -fx-font-size: 20px;
      -fx-cursor: hand;
  }
 
  .admin-close-button:hover {
-     -fx-text-fill: #374151;
-     -fx-background-color: #f3f4f6;
+     -fx-text-fill: #d3d9e0;
+     -fx-background-color: #424f5e;
      -fx-background-radius: 4px;
  }
  /* Action button styling */
@@ -648,20 +656,6 @@
  .admin-action-button-success:hover {
      -fx-background-color: #059669;
  }
-
- .admin-action-button-warning {
-     -fx-background-color: #fbbf24;
-     -fx-text-fill: #78350f;
-     -fx-background-radius: 5px;
-     -fx-cursor: hand;
-     -fx-font-weight: bold;
-     -fx-padding: 8px 16px;
- }
-
- .admin-action-button-warning:hover {
-     -fx-background-color: #f59e0b;
- }
-
  .admin-action-button-danger {
      -fx-background-color: #ef4444;
      -fx-text-fill: white;
@@ -678,19 +672,19 @@
   .admin-text-field {
       -fx-background-color: white;
       -fx-background-radius: 5px;
-      -fx-border-color: #cbd5e1;
+      -fx-border-color:#547293;
       -fx-border-radius: 5px;
       -fx-padding: 8px 12px;
       -fx-font-size: 14px;
   }
 
   .admin-text-field:focused {
-      -fx-border-color: #3b82f6;
-      -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.2), 4, 0, 0, 0);
+      -fx-border-color: #031e4a;
+      -fx-effect: dropshadow(gaussian, rgba(3, 30, 74, 0.2), 4, 0, 0, 0);
   }
 
   .admin-text-area {
-      -fx-background-color: white;
+      -fx-background-color: #718585;
       -fx-background-radius: 5px;
       -fx-border-color: #ef4444;
       -fx-border-radius: 5px;

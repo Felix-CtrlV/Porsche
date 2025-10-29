@@ -130,7 +130,7 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0" spacing="18.0">
                                     <children>
-                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0"  text="🔧" textAlignment="RIGHT" textFill="WHITE">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" minHeight="85.0" minWidth="83.0" prefHeight="104.0" prefWidth="102.0"  text="🔧" textAlignment="RIGHT" textFill="#81C784">
                                             <font>
                                                 <Font size="70.0" />
                                             </font>

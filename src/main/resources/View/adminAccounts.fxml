@@ -495,16 +495,16 @@
                                         </children>
                                     </VBox>
                                     
-                                    <VBox spacing="5.0" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #fbbf24; -fx-border-radius: 5;">
+                                    <VBox spacing="5.0" styleClass="bonusBox" style=" -fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #fbbf24; -fx-border-radius: 5;">
                                         <children>
                                             <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                 <children>
-                                                    <Label style="-fx-text-fill: #64748b; -fx-font-size: 14;" text="Total Bonus:" />
+                                                    <Label styleClass="bonusText" style=" -fx-font-size: 14;" text="Total Bonus:" />
                                                     <Region HBox.hgrow="ALWAYS" />
-                                                    <Label fx:id="totalBonusLabel" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #10b981;" text="0 MMK" />
+                                                    <Label fx:id="totalBonusLabel" style="-fx-font-size: 18; -fx-font-weight: bold;" styleClass="totalBonusLabel" text="0 MMK" />
                                                 </children>
                                             </HBox>
-                                            <Label fx:id="bonusBreakdownLabel" style="-fx-text-fill: #64748b; -fx-font-size: 11; -fx-wrap-text: true;" text="No bonus earned this month" wrapText="true" />
+                                            <Label fx:id="bonusBreakdownLabel" styleClass="bonusText" style=" -fx-font-size: 11; -fx-wrap-text: true;" text="No bonus earned this month" wrapText="true" />
                                         </children>
                                     </VBox>
                                     
