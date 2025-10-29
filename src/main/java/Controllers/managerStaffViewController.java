@@ -156,7 +156,7 @@ public class managerStaffViewController {
     private Circle attendanceCircle;
 
     @FXML
-    private Text attendancePercent;
+    private Text attendancePercent1;
 
     @FXML
     private Circle carCircle;
@@ -480,7 +480,7 @@ public class managerStaffViewController {
         // Initialize listeners only once
         if (!listenersInitialized) {
             yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal != null && selectedStaffId != 0) {
+                if (newVal != null && selectedStaffId != 0 && oldVal != null) {
                     currentYear = newVal;
                     // Update month box for the new year
                     user selectedStaff = staffInfoList.stream()
@@ -495,7 +495,7 @@ public class managerStaffViewController {
             });
 
             monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                if (!updatingMonthBox && newVal != null) {
+                if (!updatingMonthBox && newVal != null && oldVal != null) {
                     DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
                     Month parsedMonth = Month.from(fmt.parse(newVal));
                     currentMonth = parsedMonth.getValue();
@@ -1183,9 +1183,9 @@ public class managerStaffViewController {
 
         // Show/hide circles based on data
         attendanceCircle.setVisible(present_day > 0);
-        attendanceBackCircle.setVisible(absent_day > 0);
-
-        attendancePercent.setText(String.format("%.1f%%", attendance_percentage));
+       attendanceBackCircle.setVisible(absent_day > 0);
+ 
+       attendancePercent1.setText(String.format("%.1f%%", attendance_percentage));
     }
     
     // for monthly attendance circle
@@ -1357,7 +1357,10 @@ public class managerStaffViewController {
         }
 
         // Use async loading for better performance
-        loadStaffDataAsync();
+        // Only load data if we have a selected staff
+        if (selectedStaffId != 0) {
+            loadStaffDataAsync();
+        }
     }
 
 

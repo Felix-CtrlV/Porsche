@@ -1095,6 +1095,8 @@ public class managerOverviewController {
             cs.setInt(2, currentMonth);
             cs.setInt(3, currentYear);
             ResultSet rs = cs.executeQuery();
+            
+            System.out.println("DEBUG: Executing " + besti + " query for managerId=" + managerId + ", month=" + currentMonth + ", year=" + currentYear);
 
             // FIXED: Use OR condition instead of AND   
             if (besti.equals("car")) {
@@ -1104,8 +1106,11 @@ public class managerOverviewController {
                     int targetQty = rs.getInt(2);      // target_qty
                     int soldQty = rs.getInt(3);        // sold_qty  
                     String inventoryName = rs.getString(4); // inventory_name (model + trim)
+                    String imageUrl = rs.getString(10);     // image_url (column 10)
+                    System.out.println("DEBUG CAR: rank=" + rank + ", name=" + inventoryName + ", soldQty=" + soldQty + ", imageUrl=" + imageUrl);
+                    System.out.println("DEBUG PART: rank=" + rank + ", name=" + inventoryName + ", soldQty=" + soldQty + ", imageUrl=" + imageUrl);
                     managerOverview item = new managerOverview(
-                            rank, targetQty, soldQty, inventoryName
+                            rank, targetQty, soldQty, inventoryName, imageUrl
                     );
                     bestCarPartList.add(item);
                 }
@@ -1116,8 +1121,11 @@ public class managerOverviewController {
                     int targetQty = rs.getInt(2);      // target_qty
                     int soldQty = rs.getInt(3);        // sold_qty
                     String inventoryName = rs.getString(4); // inventory_name (part_name)
+                    String imageUrl = rs.getString(7);      // image_url (column 7)
+                    System.out.println("DEBUG CAR: rank=" + rank + ", name=" + inventoryName + ", soldQty=" + soldQty + ", imageUrl=" + imageUrl);
+                    System.out.println("DEBUG PART: rank=" + rank + ", name=" + inventoryName + ", soldQty=" + soldQty + ", imageUrl=" + imageUrl);
                     managerOverview item = new managerOverview(
-                            rank, targetQty, soldQty, inventoryName
+                            rank, targetQty, soldQty, inventoryName, imageUrl
                     );
                     bestCarPartList.add(item);
                 }
@@ -1143,6 +1151,8 @@ public class managerOverviewController {
 
             rs.close();
             cs.close();
+            
+            System.out.println("DEBUG: Total items in bestCarPartList: " + bestCarPartList.size());
 
 
             scrollPane.getChildren().clear();
