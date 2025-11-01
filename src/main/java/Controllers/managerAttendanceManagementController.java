@@ -43,6 +43,12 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class managerAttendanceManagementController implements Initializable {
+
+    private managerDashboardController dashboardController;
+
+    public void setDashboardController(managerDashboardController dashboardController) {
+        this.dashboardController = dashboardController;
+    }
     private static final Logger logger = LoggerFactory.getLogger(managerAttendanceManagementController.class);
 
     @FXML private ComboBox<String> staffCombo;
@@ -518,6 +524,7 @@ public class managerAttendanceManagementController implements Initializable {
                             "  ELSE '-' " +
                             "END as hours_worked, " +
                             "CASE " +
+                            "  WHEN TIME(ua.check_in) = '00:00:00' AND TIME(ua.check_out) = '00:00:00' THEN 'Absent' " +
                             "  WHEN ua.reason LIKE 'Absent%' THEN 'Absent' " +
                             "  WHEN ua.check_in IS NULL THEN 'Absent' " +
                             "  WHEN TIME(ua.check_in) > '08:00:00' THEN 'Late' " +
@@ -633,11 +640,13 @@ public class managerAttendanceManagementController implements Initializable {
                 roleFilter = "AND u.user_id = " + currentUserId + " AND u.user_status = TRUE";
             }
 
-            // Present today (checked in and on time)
+            // Present today (checked in and NOT both 00:00:00)
             String presentQuery = "SELECT COUNT(DISTINCT u.user_id) FROM user_info u " +
                     "JOIN user_attendance ua ON u.user_id = ua.user_id " +
                     "LEFT JOIN user_workinfo uw ON u.user_id = uw.user_id " +
-                    "WHERE DATE(ua.check_in) = ? AND TIME(ua.check_in) <= '09:30:00' " + roleFilter;
+                    "WHERE DATE(ua.check_in) = ? " +
+                    "AND ua.check_in IS NOT NULL " +
+                    "AND NOT (TIME(ua.check_in) = '00:00:00' AND TIME(ua.check_out) = '00:00:00') " + roleFilter;
             PreparedStatement presentStmt = conn.prepareStatement(presentQuery);
             presentStmt.setDate(1, java.sql.Date.valueOf(today));
             ResultSet presentRs = presentStmt.executeQuery();
@@ -678,11 +687,26 @@ public class managerAttendanceManagementController implements Initializable {
                 int totalStaff = totalRs.getInt(1);
                 totalStaffLabel.setText(String.valueOf(totalStaff));
 
-                // Calculate absent (total - present - late)
-                int present = Integer.parseInt(presentTodayLabel.getText());
-                int late = Integer.parseInt(lateTodayLabel.getText());
-                int absent = totalStaff - present - late;
-                absentTodayLabel.setText(String.valueOf(Math.max(0, absent)));
+                // Count only records where both check_in and check_out are 00:00:00 (manually marked as absent)
+                // Don't count staff with no records - they'll be auto-marked at 5 PM
+                String absentQuery = "SELECT COUNT(DISTINCT u.user_id) FROM user_info u " +
+                        "JOIN user_attendance ua ON u.user_id = ua.user_id " +
+                        "LEFT JOIN user_workinfo uw ON u.user_id = uw.user_id " +
+                        "WHERE DATE(ua.check_in) = ? " +
+                        "AND TIME(ua.check_in) = '00:00:00' " +
+                        "AND TIME(ua.check_out) = '00:00:00' " + roleFilter;
+                PreparedStatement absentStmt = conn.prepareStatement(absentQuery);
+                absentStmt.setDate(1, java.sql.Date.valueOf(today));
+                ResultSet absentRs = absentStmt.executeQuery();
+                
+                int markedAbsent = 0;
+                if (absentRs.next()) {
+                    markedAbsent = absentRs.getInt(1);
+                }
+
+                // Absent = only manually marked absent records (00:00:00)
+                // Staff with no records won't be counted until auto-mark at 5 PM
+                absentTodayLabel.setText(String.valueOf(markedAbsent));
             }
 
         } catch (SQLException e) {
@@ -696,7 +720,9 @@ public class managerAttendanceManagementController implements Initializable {
 
         // Only managers and admins can add absent records
         if (!"manager".equals(userRole) && !"admin".equals(userRole)) {
-            showAlert("Access Denied", "Only managers can add absent records.", Alert.AlertType.WARNING);
+            if (dashboardController != null) {
+                dashboardController.showToast("Access Denied", "Only managers can add absent records.", "warning");
+            }
             return;
         }
 
@@ -707,6 +733,7 @@ public class managerAttendanceManagementController implements Initializable {
             
             // Get the controller and set up callback
             AddAbsentDialogController dialogController = loader.getController();
+            dialogController.setDashboardController(dashboardController);
             dialogController.setOnSaveCallback((Void) -> {
                 // Refresh data when record is saved
                 loadAttendanceData();
@@ -735,7 +762,9 @@ public class managerAttendanceManagementController implements Initializable {
             
         } catch (Exception e) {
             logger.error("Error opening add absent dialog", e);
-            showAlert("Error", "Failed to open add absent dialog: " + e.getMessage(), Alert.AlertType.ERROR);
+            if (dashboardController != null) {
+                dashboardController.showToast("Error", "Failed to open add absent dialog: " + e.getMessage(), "error");
+            }
         }
     }
 
@@ -743,13 +772,6 @@ public class managerAttendanceManagementController implements Initializable {
 
 
 
-    private void showAlert(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
     private void exportToCSV(File file) {
         try (FileWriter writer = new FileWriter(file)) {

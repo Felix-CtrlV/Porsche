@@ -34,7 +34,7 @@
 .iconBorder {
     -fx-stroke: #e2e8f0;
     -fx-stroke-width: 2;
-    -fx-fill: linear-gradient(to right, #667eea, #764ba2);
+    -fx-fill: linear-gradient(to right, #667eea, #764ba2) ;
 }
 
 /* Main scroll pane styling */

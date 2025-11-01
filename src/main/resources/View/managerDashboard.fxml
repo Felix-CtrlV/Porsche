@@ -452,31 +452,11 @@
             </children>
         </VBox>
 
-        <!-- Toast Notification (top center) -->
-        <HBox fx:id="toastNotification" alignment="CENTER_LEFT"  maxHeight="60.0" maxWidth="360.0" spacing="12.0" styleClass="section" style=" -fx-background-radius: 10; -fx-padding: 12 16; -fx-border-color: #e5e7eb; -fx-border-width: 2; -fx-border-radius: 10;" translateY="-100" visible="false" StackPane.alignment="TOP_CENTER">
-            <StackPane.margin>
-                <Insets top="60.0" />
-            </StackPane.margin>
-            <children>
-                <StackPane minHeight="36.0" minWidth="36.0" style="-fx-background-color: #10b981; -fx-background-radius: 18;">
-                    <children>
-                        <Label fx:id="toastIcon" style="-fx-font-size: 18;" styleClass="textColor" text="✓" />
-                    </children>
-                </StackPane>
-                <VBox spacing="2.0" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label fx:id="toastTitle" style="-fx-font-size: 13; -fx-font-weight: bold;" styleClass="textHeader" text="Success" />
-                        <Label fx:id="toastMessage" style="-fx-font-size: 11;" styleClass="textDetail" text="Operation completed successfully" />
-                    </children>
-                </VBox>
-            </children>
-        </HBox>
-
         <!-- Confirmation Dialog Overlay -->
-        <Pane fx:id="confirmOverlay"  opacity="0.5" visible="false" />
+        <Pane fx:id="confirmOverlay" opacity="0.5" pickOnBounds="true" style="-fx-background-color: black;" visible="false" />
 
         <!-- Confirmation Dialog (top center) -->
-        <VBox fx:id="confirmDialog" alignment="CENTER" maxHeight="-Infinity" maxWidth="400.0" spacing="0.0" styleClass="section" style=" -fx-background-radius: 12; " translateY="-600.0" visible="false" StackPane.alignment="TOP_CENTER">
+        <VBox fx:id="confirmDialog" alignment="CENTER" maxHeight="-Infinity" maxWidth="400.0" spacing="0.0" styleClass="section" style=" -fx-background-radius: 12; " translateY="0" visible="false" StackPane.alignment="TOP_CENTER">
             <StackPane.margin>
                 <Insets top="100.0" />
             </StackPane.margin>
@@ -663,6 +643,26 @@
                 </VBox>
             </VBox>
         </StackPane>
+
+        <!-- Toast Notification (top center) - MUST BE LAST FOR Z-ORDER -->
+        <HBox fx:id="toastNotification" alignment="CENTER_LEFT" maxHeight="60.0" maxWidth="360.0" mouseTransparent="false" pickOnBounds="false" spacing="12.0" styleClass="section" style=" -fx-background-radius: 10; -fx-padding: 12 16; -fx-border-color: #e5e7eb; -fx-border-width: 2; -fx-border-radius: 10;" translateY="-100" visible="false" StackPane.alignment="TOP_CENTER">
+            <StackPane.margin>
+                <Insets top="60.0" />
+            </StackPane.margin>
+            <children>
+                <StackPane minHeight="36.0" minWidth="36.0" style="-fx-background-color: #10b981; -fx-background-radius: 18;">
+                    <children>
+                        <Label fx:id="toastIcon" style="-fx-font-size: 18;" styleClass="textColor" text="✓" />
+                    </children>
+                </StackPane>
+                <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label fx:id="toastTitle" style="-fx-font-size: 13; -fx-font-weight: bold;" styleClass="textHeader" text="Success" />
+                        <Label fx:id="toastMessage" style="-fx-font-size: 11;" styleClass="textDetail" text="Operation completed successfully" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
     </children>
 
 </StackPane>
