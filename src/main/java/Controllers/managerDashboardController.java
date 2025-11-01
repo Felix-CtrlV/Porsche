@@ -20,8 +20,10 @@ import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -47,9 +49,6 @@ import java.util.Optional;
 
 public class managerDashboardController {
     private static final Logger logger = LoggerFactory.getLogger(managerDashboardController.class);
-
-    @FXML
-    private ToggleButton Mode;
 
     @FXML
     private AnchorPane admin_anc;
@@ -202,8 +201,53 @@ public class managerDashboardController {
         openSetting();
     }
 
+    @FXML
+    private StackPane rootPane;  // Assuming this is your root in FXML
+    @FXML
+    private Label sun, moon, textMode;
+    @FXML
+    private ToggleButton Mode;  // Assuming Mode is a Button in FXML
+
+    public static boolean isDarkMode = false;
 
     public void initialize() throws IOException {
+        // Load the CSS file once (do NOT clear it later)
+        rootPane.getStylesheets().add(
+                getClass().getResource("/CSS/manager_light_mode.css").toExternalForm()
+        );
+
+        // Initial state: Light mode (default, as per CSS :root)
+        sun.setVisible(true);
+        moon.setVisible(false);
+        textMode.setText("Light Mode");
+        isDarkMode = false;
+
+        // Toggle button action
+        Mode.setOnAction(e -> {
+            rootPane.getStylesheets().clear();
+            if (!isDarkMode) {
+                // Switch to Dark Mode
+
+                rootPane.getStylesheets().add(
+                        getClass().getResource("/CSS/manager_dark_mode.css").toExternalForm()
+                );// Add the class to rootPane
+                sun.setVisible(false);
+                moon.setVisible(true);
+                textMode.setText("Dark Mode");
+                isDarkMode = true;
+            } else {
+                // Switch to Light Mode
+
+                rootPane.getStylesheets().add(
+                        getClass().getResource("/CSS/manager_light_mode.css").toExternalForm()
+                );// Remove the class from rootPane
+                sun.setVisible(true);
+                moon.setVisible(false);
+                textMode.setText("Light Mode");
+                isDarkMode = false;
+            }
+        });
+
         String name = current.getUsername();
         nameLbl.setText(name);
         profileName.setText(name);
@@ -219,7 +263,7 @@ public class managerDashboardController {
         checkAccountLockStatus();
 
         // Add clipping to change password dialog to hide notification overflow
-        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle();
+        Rectangle clip = new Rectangle();
         clip.widthProperty().bind(changePasswordDialog.widthProperty());
         clip.heightProperty().bind(changePasswordDialog.heightProperty());
         clip.setArcWidth(12);
@@ -277,7 +321,7 @@ public class managerDashboardController {
         // Add Enter key listener to password verification field
         if (verifyPasswordField != null) {
             verifyPasswordField.setOnKeyPressed(event -> {
-                if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
+                if (event.getCode() == KeyCode.ENTER) {
                     onVerifyPassword();
                 }
             });
