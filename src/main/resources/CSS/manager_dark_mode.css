@@ -285,3 +285,90 @@
     -fx-text-fill: #f8f9fa;
     -fx-border-color: #2db2c7;
 }
+/* Calendar Day Label Styles */
+.dayLabel {
+  -fx-font-size: 12px;
+  -fx-cursor: hand;
+  -fx-background-radius: 6px;
+  -fx-alignment: center;
+  -fx-padding: 4px;
+  -fx-pref-width: 35px;
+  -fx-pref-height: 35px;
+  -fx-border-radius: 6px;
+  -fx-border-width: 1px;
+  -fx-background-color: #293031;
+  -fx-text-fill: #f8f9fa;
+  -fx-border-color: transparent;
+}
+/* Normal state (default, applied via normalStyle class if needed) */
+.normalStyle {
+  -fx-background-color: #293031;
+  -fx-text-fill: #f8f9fa;
+  -fx-border-color: transparent;
+  -fx-font-weight: normal;
+  -fx-border-width: 1px;
+}
+/* Hover effect (applies to any dayLabel on hover, unless overridden) */
+.dayLabel:hover {
+  -fx-background-color: #1a2c3e;
+  -fx-text-fill: #f8f9fa;
+  -fx-border-color:  #667eea;
+  -fx-border-width: 1px;
+}
+/* Selected state (start/end date, applied via selectedStyle or singleDateStyle) */
+.selectedStyle, .singleDateStyle {
+    -fx-background-color: #293031;
+    -fx-text-fill: #f8f9fa;
+    -fx-border-color: #667eea;
+    -fx-font-weight: bold;
+    -fx-border-width: 1.5px;
+}
+/* In-range (between) state (applied via betweenStyle) */
+.betweenStyle {
+  -fx-background-color: #114249;
+  -fx-background-radius:0;
+  -fx-border-radius:0;
+  -fx-text-fill: #f8f9fa;
+  -fx-border-color: transparent;
+  -fx-font-weight: normal;
+  -fx-border-width: 1px;
+}
+/* Disabled/empty cells (no specific class in your code, but add if needed) */
+.dayLabel:disabled, .disabledStyle {
+ -fx-background-color: #293031;
+   -fx-text-fill: #f8f9fa;
+  -fx-cursor: default;
+  -fx-border-color: transparent; /* Fallback */
+}
+.dayLabelAbsent:hover {
+  -fx-background-color: #1a2c3e;
+  -fx-text-fill: #f8f9fa;
+  -fx-border-color: #ef4444;
+  -fx-border-width:1px;
+}
+.betweenAbsentStyle {
+  -fx-background-color:#fef2f2;
+  -fx-text-fill: #f8f9fa;
+  -fx-background-radius:0;
+  -fx-border-radius:0;
+  -fx-border-color: transparent;
+  -fx-font-weight: normal;
+  -fx-border-width: 1px;
+}
+.selectedAbsentStyle, .singleDateAbsentStyle {
+    -fx-background-color: #293031;
+    -fx-text-fill: #f8f9fa;
+    -fx-border-color: #ef4444;
+    -fx-font-weight: bold;
+    -fx-border-width: 1.5px;
+}
+.absentReasonTextField{
+    -fx-font-size: 13;
+    -fx-background-color: #293031;
+    -fx-text-fill: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-border-color: #f29210;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 12;
+}

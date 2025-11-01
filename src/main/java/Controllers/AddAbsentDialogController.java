@@ -142,7 +142,7 @@ public class AddAbsentDialogController implements Initializable {
                 dayLabel.setPrefWidth(35);
                 dayLabel.setPrefHeight(35);
                 dayLabel.setAlignment(Pos.CENTER);
-                dayLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #374151; -fx-cursor: hand;");
+                dayLabel.getStyleClass().addAll("dayLabel","dayLabelAbsent");
 
                 if (week == 0 && dayOfWeek < startDayOfWeek) {
                     // Empty cell for days before month starts
@@ -175,38 +175,29 @@ public class AddAbsentDialogController implements Initializable {
     }
 
     private void styleDayCell(Label dayLabel, LocalDate date) {
-        String baseStyle = "-fx-font-size: 12; -fx-cursor: hand; -fx-background-radius: 6; -fx-alignment: center; -fx-padding: 4;";
+        // Clear existing style classes (except base "dayLabel")
+        dayLabel.getStyleClass().removeAll("normalStyle", "selectedAbsentStyle", "betweenAbsentStyle", "singleDateAbsentStyle");
 
+        // No inline styles needed—CSS handles everything now
         if (tempStartDate != null && tempEndDate != null) {
             // Range selection
             if (date.equals(tempStartDate) || date.equals(tempEndDate)) {
-                // Start or end date - minimal red background
-                dayLabel.setStyle(baseStyle + "-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; -fx-font-weight: bold; -fx-border-color: #ef4444; -fx-border-width: 1.5; -fx-border-radius: 6;");
+                // Start or end date
+                dayLabel.getStyleClass().add("selectedAbsentStyle");
             } else if (date.isAfter(tempStartDate) && date.isBefore(tempEndDate)) {
-                // In between dates - subtle background
-                dayLabel.setStyle(baseStyle + "-fx-background-color: #fef2f2; -fx-text-fill: #b91c1c; -fx-background-radius: 6;");
+                // In between dates
+                dayLabel.getStyleClass().add("betweenAbsentStyle");
             } else {
                 // Normal day
-                dayLabel.setStyle(baseStyle + "-fx-text-fill: #374151; -fx-background-color: transparent;");
+                dayLabel.getStyleClass().add("normalStyle");
             }
         } else if (tempStartDate != null && date.equals(tempStartDate)) {
-            // Single date selected - minimal red background
-            dayLabel.setStyle(baseStyle + "-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; -fx-font-weight: bold; -fx-border-color: #ef4444; -fx-border-width: 1.5; -fx-border-radius: 6;");
+            // Single date selected
+            dayLabel.getStyleClass().add("singleDateAbsentStyle");
         } else {
             // Normal day
-            dayLabel.setStyle(baseStyle + "-fx-text-fill: #374151; -fx-background-color: transparent;");
+            dayLabel.getStyleClass().add("normalStyle");
         }
-
-        // Add minimal hover effect
-        dayLabel.setOnMouseEntered(e -> {
-            if (!dayLabel.getStyle().contains("#fee2e2") && !dayLabel.getStyle().contains("#fef2f2")) {
-                dayLabel.setStyle(baseStyle + "-fx-background-color: #f8fafc; -fx-text-fill: #374151; -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-border-radius: 6;");
-            }
-        });
-
-        dayLabel.setOnMouseExited(e -> {
-            styleDayCell(dayLabel, date); // Restore original style
-        });
     }
 
     private void handleDateClick(LocalDate clickedDate) {

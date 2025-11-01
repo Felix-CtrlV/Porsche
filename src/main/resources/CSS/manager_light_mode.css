@@ -312,8 +312,10 @@
 }
 /* In-range (between) state (applied via betweenStyle) */
 .betweenStyle {
-  -fx-background-color: #f0f4ff;
+  -fx-background-color: #d7e1ff;
   -fx-text-fill: #4f46e5;
+  -fx-background-radius:0;
+  -fx-border-radius:0;
   -fx-border-color: transparent;
   -fx-font-weight: normal;
   -fx-border-width: 1px;
@@ -323,5 +325,36 @@
  -fx-background-color: #f8f9fa;
    -fx-text-fill: #3730a3;
   -fx-cursor: default;
-  -fx-border-color: var(--border-disabled, var(--border-normal)); /* Fallback */
+  -fx-border-color: transparent; /* Fallback */
+}
+.dayLabelAbsent:hover {
+  -fx-background-color: #fef2f2;
+  -fx-text-fill: #374151;
+  -fx-border-color: #ef4444;
+}
+.betweenAbsentStyle {
+  -fx-background-color:#f69797;
+  -fx-text-fill: #4f46e5;
+  -fx-background-radius:0;
+  -fx-border-radius:0;
+  -fx-border-color: transparent;
+  -fx-font-weight: normal;
+  -fx-border-width: 1px;
+}
+.selectedAbsentStyle, .singleDateAbsentStyle {
+    -fx-background-color: #e0e7ff;
+    -fx-text-fill: #3730a3;
+    -fx-border-color: #ef4444;
+    -fx-font-weight: bold;
+    -fx-border-width: 1.5px;
+}
+.absentReasonTextField{
+    -fx-font-size: 13;
+    -fx-background-color: #f8fafc;
+    -fx-text-fill: black;
+    -fx-background-radius: 8;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 12;
 }
