@@ -22,42 +22,42 @@
         </padding>
 
         <!-- Header Card -->
-        <VBox spacing="6.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+        <VBox spacing="6.0" style="-fx-background-radius: 10; -fx-padding: 18;" styleClass="section">
             <HBox alignment="CENTER_LEFT" spacing="10.0">
-                <StackPane minHeight="40.0" minWidth="40.0" style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2); -fx-background-radius: 10;">
+                <StackPane minHeight="40.0" minWidth="40.0" styleClass="iconBorder" style=" -fx-background-radius: 10;">
                     <Label style="-fx-font-size: 20; -fx-text-fill: white;" text="📅" />
                 </StackPane>
                 <VBox spacing="2.0">
-                    <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Staff Attendance Management" />
-                    <Label style="-fx-font-size: 11; -fx-text-fill: #64748b;" text="Track and manage staff attendance records" />
+                    <Label style="-fx-font-size: 16; -fx-font-weight: bold; " styleClass="textHeader" text="Staff Attendance Management" />
+                    <Label style="-fx-font-size: 11;" styleClass="textDetail" text="Track and manage staff attendance records" />
                 </VBox>
             </HBox>
         </VBox>
 
         <!-- Filter Controls Card -->
-        <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+        <VBox spacing="15.0" style=" -fx-background-radius: 10; -fx-padding: 18; " styleClass="section">
             <children>
                 <!-- Filter Section -->
-                <VBox spacing="12.0" style="-fx-background-color: #f8fafc; -fx-padding: 15; -fx-background-radius: 10;">
+                <VBox spacing="12.0" styleClass="sectionBox" style=" -fx-padding: 15; -fx-background-radius: 10;">
                     <HBox alignment="CENTER_LEFT" spacing="8.0">
                         <Label style="-fx-font-size: 14; -fx-text-fill: #667eea;" text="🔍" />
-                        <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Filter Options" />
+                        <Label style="-fx-font-size: 14; -fx-font-weight: bold;" styleClass="textHeader" text="Filter Options" />
                     </HBox>
 
                     <HBox alignment="CENTER_LEFT" spacing="15.0">
                         <VBox spacing="5.0">
-                            <Label style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: #374151;" text="Staff Member" />
-                            <ComboBox fx:id="staffCombo" minHeight="49.0" prefWidth="180.0" promptText="Select staff..." style="-fx-font-size: 13; -fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #d1d5db; -fx-border-radius: 10; -fx-border-width: 1.5; -fx-padding: 8 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);" />
+                            <Label style="-fx-font-size: 12; -fx-font-weight: 600; " styleClass="textHeader" text="Staff Member" />
+                            <ComboBox fx:id="staffCombo" minHeight="49.0" prefWidth="180.0" promptText="Select staff..." styleClass="comboBox" style="-fx-font-size: 13; -fx-background-radius: 10;  -fx-border-radius: 10; -fx-border-width: 1.5; -fx-padding: 8 12;" />
                         </VBox>
 
                         <VBox spacing="5.0">
-                            <Label style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: #374151;" text="Date Range" />
-                            <Button fx:id="dateRangeBtn" minHeight="49.0" onAction="#showDateRangePicker" prefHeight="45.0" prefWidth="200.0" style="-fx-font-size: 13; -fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #d1d5db; -fx-border-radius: 10; -fx-border-width: 1.5; -fx-padding: 8 12; -fx-text-fill: #6b7280; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);" text="Select date range..." />
+                            <Label style="-fx-font-size: 12; -fx-font-weight: 600;" styleClass="textHeader" text="Date Range" />
+                            <Button fx:id="dateRangeBtn" minHeight="49.0" onAction="#showDateRangePicker" prefHeight="45.0" prefWidth="200.0" styleClass="comboBox" style="-fx-font-size: 13; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 1.5; -fx-padding: 8 12;  -fx-alignment: CENTER_LEFT; -fx-cursor: hand;" text="Select date range..." />
                         </VBox>
 
                         <VBox spacing="5.0">
-                            <Label style="-fx-font-size: 12; -fx-font-weight: 600; -fx-text-fill: #374151;" text="Status" />
-                            <ComboBox fx:id="statusCombo" minHeight="49.0" prefWidth="140.0" promptText="All" style="-fx-font-size: 13; -fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #d1d5db; -fx-border-radius: 10; -fx-border-width: 1.5; -fx-padding: 8 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);" />
+                            <Label style="-fx-font-size: 12; -fx-font-weight: 600;" styleClass="textHeader" text="Status" />
+                            <ComboBox fx:id="statusCombo" styleClass="comboBox" minHeight="49.0" prefWidth="140.0" promptText="All" style="-fx-font-size: 13; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 1.5; -fx-padding: 8 12;" />
                         </VBox>
                         <Button fx:id="addAbsentBtn" onAction="#onAddAbsent" prefHeight="28.0" prefWidth="80.0" style="-fx-background-color: linear-gradient(to right, #ef4444, #dc2626); -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);" text="➕Absent">
                             <cursor>
@@ -74,66 +74,66 @@
 
         <!-- Summary Stats Card -->
         <HBox spacing="15.0">
-            <VBox spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);" HBox.hgrow="ALWAYS">
+            <VBox spacing="8.0" style=" -fx-background-radius: 10; -fx-padding: 15;" styleClass="section" HBox.hgrow="ALWAYS">
                 <HBox alignment="CENTER_LEFT" spacing="8.0">
                     <StackPane minHeight="30.0" minWidth="30.0" style="-fx-background-color: #10b981; -fx-background-radius: 8;">
                         <Label style="-fx-font-size: 14; -fx-text-fill: white;" text="✓" />
                     </StackPane>
                     <VBox spacing="2.0">
-                        <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="Present Today" />
-                        <Label fx:id="presentTodayLabel" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="0" />
+                        <Label style="-fx-font-size: 12; " styleClass="textDetail" text="Present Today" />
+                        <Label fx:id="presentTodayLabel" style="-fx-font-size: 18; -fx-font-weight: bold;" styleClass="textHeader" text="0" />
                     </VBox>
                 </HBox>
             </VBox>
 
-            <VBox spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);" HBox.hgrow="ALWAYS">
+            <VBox spacing="8.0" style=" -fx-background-radius: 10; -fx-padding: 15;" styleClass="section" HBox.hgrow="ALWAYS">
                 <HBox alignment="CENTER_LEFT" spacing="8.0">
                     <StackPane minHeight="30.0" minWidth="30.0" style="-fx-background-color: #ef4444; -fx-background-radius: 8;">
                         <Label style="-fx-font-size: 14; -fx-text-fill: white;" text="✗" />
                     </StackPane>
                     <VBox spacing="2.0">
-                        <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="Absent Today" />
-                        <Label fx:id="absentTodayLabel" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="0" />
+                        <Label style="-fx-font-size: 12;" styleClass="textDetail" text="Absent Today" />
+                        <Label fx:id="absentTodayLabel" style="-fx-font-size: 18; -fx-font-weight: bold;" styleClass="textHeader" text="0" />
                     </VBox>
                 </HBox>
             </VBox>
 
-            <VBox spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);" HBox.hgrow="ALWAYS">
+            <VBox spacing="8.0" style=" -fx-background-radius: 10; -fx-padding: 15;" styleClass="section" HBox.hgrow="ALWAYS">
                 <HBox alignment="CENTER_LEFT" spacing="8.0">
                     <StackPane minHeight="30.0" minWidth="30.0" style="-fx-background-color: #f59e0b; -fx-background-radius: 8;">
                         <Label style="-fx-font-size: 14; -fx-text-fill: white;" text="⏰" />
                     </StackPane>
                     <VBox spacing="2.0">
-                        <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="Late Today" />
-                        <Label fx:id="lateTodayLabel" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="0" />
+                        <Label style="-fx-font-size: 12;" styleClass="textDetail" text="Late Today" />
+                        <Label fx:id="lateTodayLabel" style="-fx-font-size: 18; -fx-font-weight: bold;" styleClass="textHeader" text="0" />
                     </VBox>
                 </HBox>
             </VBox>
 
-            <VBox spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);" HBox.hgrow="ALWAYS">
+            <VBox spacing="8.0" style=" -fx-background-radius: 10; -fx-padding: 15;" styleClass="section" HBox.hgrow="ALWAYS">
                 <HBox alignment="CENTER_LEFT" spacing="8.0">
                     <StackPane minHeight="30.0" minWidth="30.0" style="-fx-background-color: #667eea; -fx-background-radius: 8;">
                         <Label style="-fx-font-size: 14; -fx-text-fill: white;" text="👥" />
                     </StackPane>
                     <VBox spacing="2.0">
-                        <Label style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="Total Staff" />
-                        <Label fx:id="totalStaffLabel" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="0" />
+                        <Label style="-fx-font-size: 12;" styleClass="textDetail" text="Total Staff" />
+                        <Label fx:id="totalStaffLabel" style="-fx-font-size: 18; -fx-font-weight: bold;" styleClass="textHeader" text="0" />
                     </VBox>
                 </HBox>
             </VBox>
         </HBox>
 
         <!-- Attendance Table Card -->
-        <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);" VBox.vgrow="ALWAYS">
+        <VBox spacing="10.0" style=" -fx-background-radius: 10; -fx-padding: 18;" styleClass="section" VBox.vgrow="ALWAYS">
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                 <Label style="-fx-font-size: 14; -fx-text-fill: #667eea;" text="📋" />
-                <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Attendance Records" />
+                <Label style="-fx-font-size: 14; -fx-font-weight: bold;" styleClass="textHeader" text="Attendance Records" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Label fx:id="recordCountLabel" style="-fx-font-size: 12; -fx-text-fill: #64748b;" text="0 records" />
+                <Label fx:id="recordCountLabel" style="-fx-font-size: 12; " styleClass="textDetail" text="0 records" />
             </HBox>
 
             <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
-                <TableView fx:id="attendanceTable" style="-fx-background-color: white; -fx-border-color: #e9ecef; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-size: 12; -fx-border-width: 1.5; -fx-table-cell-border-color: #e9ecef;">
+                <TableView fx:id="attendanceTable" style=" -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-width: 1.5;">
                     <columns>
                         <TableColumn fx:id="staffNameCol" prefWidth="140.0" text="Staff Name" />
                         <TableColumn fx:id="dateCol" prefWidth="120.0" text="Date" />
@@ -154,15 +154,16 @@
     <Pane fx:id="dateRangeBackdrop" onMouseClicked="#closeDateRangePicker" style="-fx-background-color: rgba(0,0,0,0.4);" visible="false" />
 
                          <!-- Date Range Picker Dialog -->
-    <VBox fx:id="dateRangePanel" alignment="TOP_CENTER" maxHeight="450.0" maxWidth="400.0" prefHeight="450.0" prefWidth="400.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 25, 0, 0, 8);" translateY="-180.0" visible="false" StackPane.alignment="CENTER">
+    <VBox fx:id="dateRangePanel" alignment="TOP_CENTER" maxHeight="450.0" maxWidth="400.0" prefHeight="450.0" prefWidth="400.0" styleClass="section" style=" -fx-background-radius: 12;" translateY="-180.0" visible="false" StackPane.alignment="CENTER">
         <children>
             <!-- Header -->
-            <HBox alignment="CENTER_LEFT" minHeight="50.0" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-background-radius: 12 12 0 0; -fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT" minHeight="50.0" spacing="12.0" styleClass="iconBorder" style=" -fx-background-radius: 12 12 0 0; -fx-padding: 15;">
                 <children>
-                    <StackPane minHeight="30.0" minWidth="30.0" style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 15;">
+                    <StackPane minHeight="30.0" minWidth="30.0"  style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 15;">
                         <Label style="-fx-font-size: 14; -fx-text-fill: white;" text="📅" />
                     </StackPane>
-                    <Label style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: white;" text="Select Date Range" HBox.hgrow="ALWAYS" />
+                    <Label style="-fx-font-size: 15; -fx-font-weight: bold;" styleClass="textHeader" text="Select Date Range" HBox.hgrow="ALWAYS" />
+                    <Region HBox.hgrow="ALWAYS" />
                     <Label fx:id="closeDateRangeBtn" onMouseClicked="#closeDateRangePicker" style="-fx-font-size: 14; -fx-text-fill: white; -fx-cursor: hand;" text="✕">
                         <cursor>
                             <Cursor fx:constant="HAND" />
@@ -175,16 +176,16 @@
             <VBox spacing="15.0" style="-fx-padding: 20;">
                 <children>
                     <!-- Always Visible Calendar -->
-                    <VBox fx:id="dateRangePickerPanel" prefHeight="280.0" prefWidth="360.0" spacing="0.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1.5; -fx-padding: 0;">
+                    <VBox fx:id="dateRangePickerPanel" prefHeight="280.0" prefWidth="360.0" spacing="0.0" styleClass="sectionBox" style=" -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-width: 1.5; -fx-padding: 0;">
                         <!-- Calendar Header -->
                         <HBox alignment="CENTER" spacing="0.0" style="-fx-padding: 15 20 10 20;">
-                            <Button fx:id="prevMonthBtn" onAction="#previousMonth" prefWidth="40.0" style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 16; -fx-cursor: hand; -fx-padding: 6;" text="‹">
+                            <Button fx:id="prevMonthBtn" onAction="#previousMonth" prefWidth="40.0" styleClass="textPointer" style="-fx-background-color: transparent; -fx-font-size: 16; -fx-cursor: hand; -fx-padding: 6;" text="‹">
                                 <cursor>
                                     <Cursor fx:constant="HAND" />
                                 </cursor>
                             </Button>
-                            <Label fx:id="monthYearLabel" alignment="CENTER" prefWidth="280.0" style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="October 2025" />
-                            <Button fx:id="nextMonthBtn" onAction="#nextMonth" prefWidth="40.0" style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 16; -fx-cursor: hand; -fx-padding: 6;" text="›">
+                            <Label fx:id="monthYearLabel" alignment="CENTER" prefWidth="280.0" style="-fx-font-size: 15; -fx-font-weight: bold;" styleClass="textHeader" text="October 2025" />
+                            <Button fx:id="nextMonthBtn" onAction="#nextMonth" prefWidth="40.0" styleClass="textPointer" style="-fx-background-color: transparent; -fx-font-size: 16; -fx-cursor: hand; -fx-padding: 6;" text="›">
                                 <cursor>
                                     <Cursor fx:constant="HAND" />
                                 </cursor>
@@ -193,13 +194,13 @@
 
                                              <!-- Day Headers -->
                         <HBox alignment="CENTER" spacing="0.0" style="-fx-padding: 0 20 8 20;">
-                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #9ca3af; -fx-alignment: center;" text="Sun" />
-                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #9ca3af; -fx-alignment: center;" text="Mon" />
-                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #9ca3af; -fx-alignment: center;" text="Tue" />
-                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #9ca3af; -fx-alignment: center;" text="Wed" />
-                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #9ca3af; -fx-alignment: center;" text="Thu" />
-                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #9ca3af; -fx-alignment: center;" text="Fri" />
-                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-text-fill: #9ca3af; -fx-alignment: center;" text="Sat" />
+                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-alignment: center;" styleClass="textHeader" text="Sun" />
+                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-alignment: center;" styleClass="textHeader" text="Mon" />
+                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-alignment: center;" styleClass="textHeader" text="Tue" />
+                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-alignment: center;" styleClass="textHeader" text="Wed" />
+                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-alignment: center;" styleClass="textHeader" text="Thu" />
+                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-alignment: center;" styleClass="textHeader" text="Fri" />
+                            <Label prefWidth="35.0" style="-fx-font-size: 11; -fx-font-weight: 600; -fx-alignment: center;" styleClass="textHeader" text="Sat" />
                         </HBox>
 
                                              <!-- Calendar Grid -->
