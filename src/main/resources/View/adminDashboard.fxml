@@ -51,7 +51,7 @@
                                 <Label fx:id="nameLbl" styleClass="selected_dash_font" text="Admin"  style = "-fx-font-family: 'Arial Black'; -fx-font-size: 14px;-fx-opacity: 0.70;-fx-font-weight: 700;"/>
                             </children>
                         </VBox>
-                        <Region maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="35.0" prefWidth="323.0" HBox.hgrow="ALWAYS" />
+                        <Region maxWidth="Infinity" minHeight="0.0" minWidth="0.0" prefHeight="35.0" prefWidth="323.0" HBox.hgrow="ALWAYS" />
                         <Button fx:id="overviewbtn" onAction="#clickOverview" prefHeight="24.0" prefWidth="88.0" styleClass="navbtn"  text="Overview" HBox.hgrow="NEVER">
                             <HBox.margin>
                                 <Insets right="15.0" />

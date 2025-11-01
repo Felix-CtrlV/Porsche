@@ -1,0 +1,327 @@
+
+.background_pane{
+        -fx-background-color : #f8f9fa ;
+}
+
+/* head path of the admin dashboard */
+.glass_main{
+    -fx-background-color : #f8f9fa ; /* background color */
+    -fx-border-color : rgba(0,0,0,0.25);
+
+}
+
+.selected_dash_font {
+    -fx-text-fill :black;
+}
+
+.navbtn {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 12px;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-family: "Arial Black";
+    -fx-opacity: 0.90;
+}
+
+.navbtn:hover {
+    -fx-background-color: #555555;
+    -fx-text-fill: #f8f9fa;
+    -fx-background-radius: 20;
+}
+
+.navbtn:pressed {
+    -fx-background-color: black;
+    -fx-opacity: 0.8;
+}
+
+.navbtn.active {
+    -fx-background-color: #333333;
+    -fx-text-fill: #f8f9fa;
+    -fx-background-radius: 20;
+    -fx-font-weight: bold;
+}
+
+/* setting section */
+.settingIcon{
+    -fx-text-fill : black;
+}
+
+.overlayPane{
+    -fx-background-color : black;
+
+
+}
+.settingPane{
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 20 0 0 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 25, 0, -8, 0);
+}
+.header{
+    -fx-background-color: #f8f9fa;
+}
+.settingTitle{
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+     -fx-text-fill: black;
+     -fx-font-family: 'Arial Black';
+}
+
+.settingContent{
+    -fx-background-color: #f8f9fa;
+}
+
+.section{
+    -fx-background-color: #f8f9fa;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+
+.title{
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b7280;
+    -fx-letter-spacing: 0.5;
+}
+
+.settings-item-hover{
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-padding: 14;
+    -fx-cursor: hand;
+}
+
+.settings-item-hover:hover {
+    -fx-background-color: #f1f5f9;
+}
+.iconBorder {
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-fill: linear-gradient(to right, #667eea, #764ba2);
+}
+.icon{
+    -fx-text-fill: white;
+}
+
+.textHeader{
+    -fx-fill: #1f2937;
+    -fx-text-fill: #1f2937;
+}
+
+.textDetail{
+    -fx-text-fill: #6b7280;
+}
+.textPointer{
+    -fx-font-size: 18;
+    -fx-text-fill: #9ca3af;
+}
+
+/*performance section */
+.mode{
+    -fx-background-color: #d1d5db;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+}
+
+.textField{
+    -fx-background-color: #f3f4f6;
+     -fx-text-fill: black;
+     -fx-prompt-text-fill: #9ca3af;
+    -fx-border-color: #e5e7eb;
+}
+.cancelBtn{
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #374151;
+}
+.imageCircle{
+    -fx-fill: linear-gradient(to right, #667eea, #764ba2);
+}
+.changePasswordBtn{
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e5e7eb;
+    -fx-text-fill: #1f2937;
+}
+.sectionBox{
+    -fx-background-color: #f3f4f6;
+}
+.iconColor{
+    -fx-text-fill: #667eea;
+}
+.comboBox{
+    -fx-border-color: #e2e8f0;
+    -fx-background-color: #f8f9fa;
+    -fx-control-inner-background: #f8f9fa;
+}
+.resetBtn{
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #64748b;
+}
+.textColor {
+    -fx-text-fill: #f8f9fa;
+}
+.labelStyle{
+    -fx-background-color : #f3f4f6;
+    -fx-text-fill: black;
+}
+/* Main scroll pane styling */
+.scroll-pane {
+    -fx-background-color: #f8f9fa;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: #e5e7eb;
+    -fx-background-radius: 6px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #9ca3af;
+    -fx-background-radius: 6px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #6b7280;
+}
+
+.warningBox{
+    -fx-background-color: #fef3c7;
+}
+.loadingStyle{
+    -fx-background-color: rgba(255,255,255,0.95);
+}
+/* Table styling */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 12px 16px;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: #374151;
+}
+
+.table-view .column-header:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: transparent;
+    -fx-padding: 8px 0;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #ebebeb;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1e40af;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #eaf1ff;
+}
+
+.table-view .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #374151;
+}
+
+.table-view .table-cell:selected {
+    -fx-text-fill: #1e40af;
+}
+.table-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px;
+}
+
+.table-view .scroll-bar:vertical .track {
+    -fx-background-color: #e5e7eb;
+    -fx-background-radius: 6px;
+}
+
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: #9ca3af;
+    -fx-background-radius: 6px;
+}
+
+.table-view .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #6b7280;
+}
+.table-view .corner{
+    -fx-background-color:transparent;
+}
+.table-view .column-header-background .filler {
+    -fx-fill: transparent;
+}
+/* Calendar Day Label Styles */
+.dayLabel {
+  -fx-font-size: 12px;
+  -fx-cursor: hand;
+  -fx-background-radius: 6px;
+  -fx-alignment: center;
+  -fx-padding: 4px;
+  -fx-pref-width: 35px;
+  -fx-pref-height: 35px;
+  -fx-border-radius: 6px;
+  -fx-border-width: 1px;
+  -fx-background-color: #f8f9fa;
+  -fx-text-fill: #3730a3;
+  -fx-border-color: transparent;
+}
+/* Normal state (default, applied via normalStyle class if needed) */
+.normalStyle {
+  -fx-background-color: #f8f9fa;
+  -fx-text-fill: #3730a3;
+  -fx-border-color: transparent;
+  -fx-font-weight: normal;
+  -fx-border-width: 1px;
+}
+/* Hover effect (applies to any dayLabel on hover, unless overridden) */
+.dayLabel:hover {
+  -fx-background-color: #f8fafc;
+  -fx-text-fill: #374151;
+  -fx-border-color: #e2e8f0;
+}
+/* Selected state (start/end date, applied via selectedStyle or singleDateStyle) */
+.selectedStyle, .singleDateStyle {
+    -fx-background-color: #e0e7ff;
+    -fx-text-fill: #3730a3;
+    -fx-border-color: #667eea;
+    -fx-font-weight: bold;
+    -fx-border-width: 1.5px;
+}
+/* In-range (between) state (applied via betweenStyle) */
+.betweenStyle {
+  -fx-background-color: #f0f4ff;
+  -fx-text-fill: #4f46e5;
+  -fx-border-color: transparent;
+  -fx-font-weight: normal;
+  -fx-border-width: 1px;
+}
+/* Disabled/empty cells (no specific class in your code, but add if needed) */
+.dayLabel:disabled, .disabledStyle {
+ -fx-background-color: #f8f9fa;
+   -fx-text-fill: #3730a3;
+  -fx-cursor: default;
+  -fx-border-color: var(--border-disabled, var(--border-normal)); /* Fallback */
+}
