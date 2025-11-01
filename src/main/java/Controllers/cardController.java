@@ -35,7 +35,7 @@ public class cardController {
         this.staffId = id;
         StaffId.setText(String.valueOf(id));
         StaffName.setText(name);
-        ActiveColor.setFill((isActive.toLowerCase().equals("active")) ? Color.LIME : Color.RED);
+        ActiveColor.setFill((isActive.toLowerCase().equals("active")) ? Color.web("#10b981") : Color.web("#ef4444"));
 
         if (StaffImage != null) {
             StaffImage.setImage(loadImage(imagePath));
