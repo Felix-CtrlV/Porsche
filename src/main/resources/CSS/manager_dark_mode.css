@@ -372,3 +372,185 @@
     -fx-border-width: 1.5;
     -fx-padding: 12;
 }
+/* Manager Overview */
+.car, .part, .staff {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius:6;
+    -fx-border-radius:6;
+    -fx-font-size: 16px;
+}
+.car.active {
+    -fx-text-fill: #627488;
+}
+.part.active {
+    -fx-text-fill: #f57c00;
+}
+.car:hover {
+    -fx-text-fill: #627488;
+}
+.part:hover {
+    -fx-text-fill: #f57c00;
+}
+.staff.active{
+    -fx-text-fill: #4d4dff;
+}
+.staff:hover{
+    -fx-text-fill:#4d4dff;
+}
+.admin-card-header {
+    -fx-background-color: #293031;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.08), 8, 0, 0, 2);
+    -fx-padding: 15px 20px;
+}
+.control-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5a5a65;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+}
+.control-btn:hover {
+    -fx-background-color: #4d5a5c;
+    -fx-text-fill: #1a73e8;
+}
+.control-btn:disabled {
+    -fx-opacity: 0.5;
+    -fx-background-color: #657881;
+}
+.admin-choice-box {
+    -fx-background-color:#86979A;
+    -fx-background-radius: 8px;
+    -fx-border-color: #4c595b;
+    -fx-border-radius: 8px;
+    -fx-background-insets: 0;
+    -fx-padding: 8px;
+    -fx-text-fill:  #5a5a65;
+    -fx-cursor: hand ;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.05), 3, 0, 0, 1);
+}
+
+
+.admin-choice-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.admin-choice-box .arrow {
+    -fx-background-color: #5a5a65;
+}
+
+.admin-choice-box .context-menu {
+    -fx-background-color:#86979A ;
+    -fx-border-color: #f8f9fa;
+    -fx-border-width: 1px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.25), 8, 0, 0, 2);
+}
+
+.admin-choice-box .menu-item {
+    -fx-background-color: #86979A;
+    -fx-text-fill: #dddde1;
+    -fx-padding: 8px 16px;
+}
+
+.admin-choice-box .menu-item:hover {
+    -fx-background-color: #b0bbbd;
+}
+.admin-choice-box .menu-item:focused {
+    -fx-background-color: #b0bbbd;
+}
+.panel {
+    -fx-background-color:  #293031;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color:  #4c595b;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.08), 8, 0, 0, 2);
+}
+.panel-header {
+    -fx-background-color:#f5b42a;
+    -fx-background-radius: 12 12 0 0;
+    -fx-border-color:  #4c595b;
+    -fx-border-width: 0 0 1 0;
+}
+.panel-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+/* Progress circle styling */
+.progress-circle {
+    -fx-stroke-width: 12;
+    -fx-stroke-line-cap: round;
+    -fx-fill: transparent;
+}
+.progress-circle-background {
+    -fx-stroke: #e5e7eb;
+    -fx-stroke-width: 10;
+    -fx-fill: transparent;
+}
+
+.progress-circle-car {
+    -fx-stroke: #3b82f6;
+}
+
+.progress-circle-parts {
+    -fx-stroke: #f59e0b;
+}
+.progress-circle-attendance {
+    -fx-stroke: #3b82f6;
+}
+.legend-circle {
+    -fx-background-radius: 5px;
+}
+.legend-label {
+    -fx-text-fill:#f8f9fa;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.chart-axis {
+    -fx-tick-label-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.axis-label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-vertical-grid-lines,
+.chart-horizontal-grid-lines {
+    -fx-stroke: rgba(255,255,255,0.2);
+}
+.chart-legend {
+    -fx-text-fill: white;
+}
+.chart-plot-background { -fx-background-color: transparent; }
+.default-color0.chart-series-line { -fx-stroke: #6d8196; }
+.default-color1.chart-series-line { -fx-stroke: #388e3c; }
+.default-color0.chart-series-area-line {
+    -fx-stroke:#ff4343;
+    -fx-stroke-width: 3px;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+
+.default-color0.chart-series-area-fill {
+    -fx-fill: rgba(255, 118, 118, 0.75);
+    -fx-fill-rule: even-odd;
+}
+.chart-line-symbol {
+    background-color: #ff4343;
+    -fx-background-color: #ffffff, #ff4343;
+    -fx-background-insets: 1, 2;
+    -fx-padding: 3px;
+}

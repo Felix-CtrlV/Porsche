@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="600.0" prefWidth="1200.0" stylesheets="@../CSS/general.css, @../CSS/manager_staffview.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
+<BorderPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
     <center>
         <VBox spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10;" BorderPane.alignment="CENTER">
             <children>
@@ -30,9 +30,9 @@
                 <HBox prefHeight="601.0" prefWidth="691.0" spacing="10.0" VBox.vgrow="ALWAYS">
                     <children>
                         <!-- Left Side: CAR/PART Content Area -->
-                        <VBox maxWidth="550.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e1e5e9;" HBox.hgrow="ALWAYS">
+                        <VBox maxWidth="550.0" style=" -fx-background-radius: 12; -fx-border-radius: 12;" styleClass="section" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="20.0" style="-fx-background-color: white;">
+                                <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="20.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
                                     <children>
                                         <Button id="car" fx:id="carbtn" mnemonicParsing="false" onAction="#clickCarbtn" styleClass="car" text="CAR" />
                                         <Button id="part" fx:id="partbtn" mnemonicParsing="false" onAction="#clickPartbtn" styleClass="part" text="PART" />
@@ -42,9 +42,9 @@
                                         <Insets left="10.0" right="10.0" top="10.0" />
                                     </VBox.margin>
                                 </HBox>
-                                <ScrollPane hbarPolicy="NEVER" style="-fx-background-color: white; -fx-border-color: white;" VBox.vgrow="ALWAYS">
+                                <ScrollPane hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                                     <content>
-                                        <VBox fx:id="scrollPane" alignment="CENTER" spacing="10.0" style="-fx-background-color: white; -fx-border-color: white;">
+                                        <VBox fx:id="scrollPane" alignment="CENTER" spacing="10.0" styleClass="sectionBox">
                                  <padding>
                                     <Insets right="10.0" top="20.0" />
                                  </padding></VBox>
@@ -61,23 +61,23 @@
                                 <HBox alignment="CENTER_RIGHT" maxHeight="40.0" minHeight="40.0" spacing="10.0" styleClass="admin-card-header">
                                     <children>
                                         <Region HBox.hgrow="ALWAYS" />
-                                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonth" styleClass="admin-button-secondary" text="◀" />
+                                        <Button fx:id="PreviousMonthbtn" mnemonicParsing="false" onAction="#clickPreviousMonth" style="-fx-border-color: transparent;" styleClass="control-btn" text="◀" />
                                         <ChoiceBox fx:id="monthBox" minHeight="30.0" prefHeight="32.0" prefWidth="76.0" style="-fx-padding: 0;" styleClass="admin-choice-box" />
-                                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonth" styleClass="admin-button-secondary" text="▶" />
+                                        <Button fx:id="NextMonthbtn" mnemonicParsing="false" onAction="#clickNextMonth" style="-fx-border-color: transparent;" styleClass="control-btn" text="▶" />
                                         <Region prefWidth="20.0" HBox.hgrow="NEVER" />
-                                        <Button fx:id="PreviousYearbth" mnemonicParsing="false" onAction="#clickPreviousYear" styleClass="admin-button-secondary" text="◀" />
+                                        <Button fx:id="PreviousYearbth" mnemonicParsing="false" onAction="#clickPreviousYear" style="-fx-border-color: transparent;" styleClass="control-btn" text="◀" />
                                         <ChoiceBox fx:id="yearBox" minHeight="30.0" prefHeight="32.0" prefWidth="76.0" style="-fx-padding: 0;" styleClass="admin-choice-box" />
-                                        <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" styleClass="admin-button-secondary" text="▶" />
+                                        <Button fx:id="NextYearbtn" mnemonicParsing="false" onAction="#clickNextYear" style="-fx-border-color: transparent;" styleClass="control-btn" text="▶" />
                                     </children>
                                 </HBox>
 
                                 <Region minHeight="10.0" prefHeight="10.0" VBox.vgrow="NEVER" />
 
-                                <StackPane id="carousel-stackpane" fx:id="carouselStackPane" style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e2e8f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 4);" VBox.vgrow="ALWAYS">
+                                <StackPane id="carousel-stackpane" fx:id="carouselStackPane" style=" -fx-background-radius: 16; -fx-border-radius: 16;" styleClass="section" VBox.vgrow="ALWAYS">
                                     <children>
                                         <VBox fx:id="attendanceBox" style="-fx-background-radius: 16;" StackPane.alignment="CENTER">
                                             <children>
-                                                <Label style="-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Detailed Attendance List">
+                                                <Label style="-fx-font-family: 'Arial Black'; -fx-font-size: 16px; -fx-font-weight: bold;" styleClass="textHeader" text="Detailed Attendance List">
                                                     <VBox.margin>
                                                         <Insets left="15.0" top="15.0" />
                                                     </VBox.margin>
@@ -94,17 +94,17 @@
                                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                             </columnResizePolicy>
                                                         </TableView>
-                                                        <VBox prefWidth="120.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-background-radius: 8; -fx-border-radius: 8;" HBox.hgrow="ALWAYS">
+                                                        <VBox prefWidth="120.0" styleClass="panel" HBox.hgrow="ALWAYS">
                                                             <children>
-                                                                <HBox alignment="CENTER_LEFT" prefHeight="35.0" style="-fx-background-color: #6eaef3; -fx-background-radius: 8 8 0 0;">
+                                                                <HBox alignment="CENTER_LEFT" prefHeight="35.0" styleClass="panel-header">
                                                                     <children>
-                                                                        <Label style="-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 14;" text="Attendance Summary">
+                                                                        <Label style=" -fx-font-weight: bold; -fx-font-size: 14;" styleClass="textHeader" text="Attendance Summary">
                                                                             <padding>
                                                                                 <Insets left="10.0" top="8.0" />
                                                                             </padding>
-                                                         <HBox.margin>
-                                                            <Insets bottom="6.0" />
-                                                         </HBox.margin>
+                                                                            <HBox.margin>
+                                                                            <Insets bottom="6.0" />
+                                                                         </HBox.margin>
                                                                         </Label>
                                                                     </children>
                                                                 </HBox>
@@ -114,7 +114,7 @@
                                                                         <HBox alignment="CENTER_LEFT" spacing="8">
                                                                             <children>
                                                                                 <Circle fill="#3498db" radius="5" />
-                                                                                <Label style="-fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 11;" text="Present" />
+                                                                                <Label style=" -fx-font-weight: bold; -fx-font-size: 11;" styleClass="textHeader" text="Present" />
                                                                             </children>
                                                                             <VBox.margin>
                                                                                 <Insets left="15.0" />
@@ -123,7 +123,7 @@
                                                                         <HBox alignment="CENTER_LEFT" spacing="8">
                                                                             <children>
                                                                                 <Circle fill="#e16136" radius="5" />
-                                                                                <Label style="-fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 11;" text="Absent" />
+                                                                                <Label style=" -fx-font-weight: bold; -fx-font-size: 11;" styleClass="textHeader" text="Absent" />
                                                                             </children>
                                                                             <VBox.margin>
                                                                                 <Insets left="15.0" />
@@ -149,16 +149,16 @@
 
                                         <VBox fx:id="targetBox" style="-fx-background-radius: 16;" visible="false" StackPane.alignment="CENTER">
                                             <children>
-                                                <Label style="-fx-font-family: 'Segoe UI'; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="TARGET OVERVIEW">
+                                                <Label style="-fx-font-family: 'Arial Black'; -fx-font-size: 18px; -fx-font-weight: bold;" styleClass="textHeader" text="TARGET OVERVIEW">
                                                     <VBox.margin>
                                                         <Insets bottom="8.0" left="20.0" top="20.0" />
                                                     </VBox.margin>
                                                 </Label>
                                                 <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                                                     <children>
-                                                        <VBox style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 12; -fx-border-radius: 12;" HBox.hgrow="ALWAYS">
+                                                        <VBox style=" -fx-background-radius: 12; -fx-border-radius: 12;" styleClass="section" HBox.hgrow="ALWAYS">
                                                             <children>
-                                                                <HBox prefHeight="35.0" style="-fx-background-color: #6D8196; -fx-background-radius: 12 12 0 0;">
+                                                                <HBox prefHeight="35.0" style="-fx-background-color: #627488; -fx-background-radius: 12 12 0 0;">
                                                                     <children>
                                                                         <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;" text="🚗 CARS">
                                                                             <padding>
@@ -179,7 +179,7 @@
                                                                                 </Group>
                                                                                 <VBox alignment="CENTER">
                                                                                     <children>
-                                                                                        <Text fx:id="targetCar" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #6d8196;" text="0/0" />
+                                                                                        <Text fx:id="targetCar" style="-fx-font-size: 18; -fx-font-weight: bold;" styleClass="textHeader" text="0/0" />
                                                                                         <Label fx:id="targetOverCar" style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 15;" text="-1" />
                                                                                     </children>
                                                                                 </VBox>
@@ -188,13 +188,13 @@
                                                                         <HBox alignment="CENTER" spacing="8.0">
                                                                             <children>
                                                                                 <Circle fill="#6d8196" radius="4" />
-                                                                                <Label style="-fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 10;" text="Achieved" />
+                                                                                <Label style=" -fx-font-weight: bold; -fx-font-size: 10;" styleClass="textHeader" text="Achieved" />
                                                                             </children>
                                                                         </HBox>
                                                                         <HBox alignment="CENTER" spacing="8.0">
                                                                             <children>
                                                                                 <Circle fill="#f1f5f9" radius="4" stroke="#94a3b8" strokeWidth="1" />
-                                                                                <Label style="-fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 10;" text="Target" />
+                                                                                <Label style=" -fx-font-weight: bold; -fx-font-size: 10;" styleClass="textHeader" text="Target" />
                                                                             </children>
                                                                         </HBox>
                                                                         <Label fx:id="targetCarMessagelbl" alignment="CENTER" style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 11;" text="Missed the target" wrapText="true" />
@@ -203,7 +203,7 @@
                                                             </children>
                                                         </VBox>
 
-                                                        <VBox style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-background-radius: 12; -fx-border-radius: 12;" HBox.hgrow="ALWAYS">
+                                                        <VBox style=" -fx-background-radius: 12; -fx-border-radius: 12;" styleClass="section" HBox.hgrow="ALWAYS">
                                                             <children>
                                                                 <HBox prefHeight="35.0" style="-fx-background-color: #FFA500; -fx-background-radius: 12 12 0 0;">
                                                                     <children>
@@ -226,7 +226,7 @@
                                                                                 </Group>
                                                                                 <VBox alignment="CENTER">
                                                                                     <children>
-                                                                                        <Text fx:id="targetPart" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: #ffa500;" text="10/10" />
+                                                                                        <Text fx:id="targetPart" style="-fx-font-size: 18; -fx-font-weight: bold;" styleClass="textHeader" text="10/10" />
                                                                                         <Label fx:id="targetOverPart" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 15;" text="+0" />
                                                                                     </children>
                                                                                 </VBox>
@@ -235,13 +235,13 @@
                                                                         <HBox alignment="CENTER" spacing="8.0">
                                                                             <children>
                                                                                 <Circle fill="ORANGE" radius="4" />
-                                                                                <Label style="-fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 10;" text="Achieved" />
+                                                                                <Label style=" -fx-font-weight: bold; -fx-font-size: 10;" styleClass="textHeader" text="Achieved" />
                                                                             </children>
                                                                         </HBox>
                                                                         <HBox alignment="CENTER" spacing="8.0">
                                                                             <children>
                                                                                 <Circle fill="#f1f5f9" radius="4" stroke="#94a3b8" strokeWidth="1" />
-                                                                                <Label style="-fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 10;" text="Target" />
+                                                                                <Label style=" -fx-font-weight: bold; -fx-font-size: 10;" styleClass="textHeader" text="Target" />
                                                                             </children>
                                                                         </HBox>
                                                                         <Label fx:id="targetPartMessagelbl" alignment="CENTER" style="-fx-text-fill: #10b981; -fx-font-weight: bold; -fx-font-size: 11;" text="Target Achieved! 🎉" wrapText="true" />
@@ -259,13 +259,13 @@
 
                                         <HBox alignment="CENTER_RIGHT" StackPane.alignment="CENTER_RIGHT">
                                             <children>
-                                                <Button fx:id="arrowLeftbtn" minHeight="70.0" minWidth="30.0" onAction="#clickArrowLeftbtn" style="-fx-background-color: transparent; -fx-text-fill: #ccd5ae; -fx-background-radius: 20; -fx-font-size: 30;" text="‹">
+                                                <Button fx:id="arrowLeftbtn" minHeight="70.0" minWidth="30.0" onAction="#clickArrowLeftbtn" style="-fx-cursor:hand; -fx-background-color: transparent; -fx-background-radius: 20; -fx-font-size: 30;" styleClass="textDetail" text="‹">
                                                     <font>
-                                                        <Font name="System Bold" size="14.0" />
+                                                        <Font name="Arial Black" size="14.0" />
                                                     </font>
                                                 </Button>
-                                                <Region HBox.hgrow="ALWAYS" />
-                                                <Button fx:id="arrowRightbtn" minHeight="70.0" minWidth="30.0" onAction="#clickArrowRightbtn" style="-fx-background-color: transparent; -fx-text-fill: #ccd5ae; -fx-background-radius: 20; -fx-font-size: 30;" text="›">
+                                                <Region focusTraversable="true" visible="false" HBox.hgrow="ALWAYS" />
+                                                <Button fx:id="arrowRightbtn" minHeight="70.0" minWidth="30.0" onAction="#clickArrowRightbtn" style="-fx-background-color: transparent; -fx-cursor:hand; -fx-background-radius: 20; -fx-font-size: 30;" styleClass="textDetail" text="›">
                                                     <font>
                                                         <Font size="14.0" />
                                                     </font>
@@ -280,14 +280,14 @@
                 </HBox>
 
                 <!-- Analytics Dashboard Section -->
-                <HBox maxHeight="1.7976931348623157E308" prefHeight="710.0" prefWidth="691.0" spacing="20.0" VBox.vgrow="ALWAYS">
+                <HBox maxHeight="Infinity" prefHeight="710.0" prefWidth="691.0" spacing="20.0" VBox.vgrow="ALWAYS">
                     <children>
                         <!-- Sales Quantity Chart -->
-                        <VBox maxWidth="700.0" prefHeight="464.0" prefWidth="350.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <VBox maxWidth="700.0" prefHeight="464.0" prefWidth="350.0" styleClass="section" style=" -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="66.0" prefWidth="378.0" style="-fx-background-color: #6eaef3; -fx-background-radius: 12 12 0 0;">
+                                <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="66.0" prefWidth="378.0" styleClass="panel-header">
                                     <children>
-                                        <Label style="-fx-text-fill: black; -fx-font-size: 14; -fx-font-weight: bold;" text="SALES QUANTITY">
+                                        <Label style="-fx-font-size: 14; -fx-font-weight: bold;" styleClass="textHeader" text="SALES QUANTITY">
                                             <font>
                                                 <Font name="System Bold" size="12.0" />
                                             </font>
@@ -298,8 +298,8 @@
                                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                         <HBox alignment="CENTER" minHeight="20.0" prefHeight="35.0" prefWidth="158.0" spacing="5.0">
                                             <children>
-                                                <Button fx:id="carChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickCarChart" prefHeight="13.0" prefWidth="78.0" style="-fx-background-color: transparent; -fx-font-weight: bold; -fx-text-fill: black;" text="CAR" wrapText="true" HBox.hgrow="ALWAYS" />
-                                                <Button fx:id="partChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickPartChart" prefHeight="19.0" prefWidth="78.0" style="-fx-background-color: transparent; -fx-font-weight: bold; -fx-text-fill: black;" text="PART" wrapText="true" HBox.hgrow="ALWAYS" />
+                                                <Button fx:id="carChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickCarChart" prefHeight="13.0" prefWidth="78.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" styleClass="car" text="CAR" wrapText="true" HBox.hgrow="ALWAYS" />
+                                                <Button fx:id="partChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickPartChart" prefHeight="19.0" prefWidth="78.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" styleClass="part" text="PART" wrapText="true" HBox.hgrow="ALWAYS" />
                                             </children>
                                         </HBox>
                                     </children>
@@ -323,13 +323,13 @@
                         </VBox>
                         
                         <!-- Revenue Chart -->
-                        <VBox maxWidth="750.0" prefHeight="474.0" prefWidth="154.0" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-border-color: #e1e5e9; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <VBox maxWidth="750.0" prefHeight="474.0" prefWidth="154.0" styleClass="section" style=" -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="35.0" style="-fx-background-color: #6eaef3; -fx-background-radius: 12 12 0 0;">
+                                <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="35.0" styleClass="panel-header">
                                     <children>
-                                        <Label style="-fx-text-fill: black; -fx-font-size: 14; -fx-font-weight: bold;" text="REVENUE">
+                                        <Label style=" -fx-font-size: 14; -fx-font-weight: bold;" styleClass="textHeader" text="REVENUE">
                                             <font>
-                                                <Font name="System Bold" size="12.0" />
+                                                <Font name="Arial Black" size="12.0" />
                                             </font>
                                             <HBox.margin>
                                                 <Insets left="15.0" />
@@ -337,7 +337,7 @@
                                         </Label>
                                     </children>
                                 </HBox>
-                                <AreaChart fx:id="revenueAreaChart" createSymbols="false" legendVisible="false" styleClass="manager-revenue-chart" stylesheets="@../CSS/manager.css">
+                                <AreaChart fx:id="revenueAreaChart" createSymbols="false" legendVisible="false" >
                                     <xAxis>
                                         <CategoryAxis label="Month" side="BOTTOM" />
                                     </xAxis>

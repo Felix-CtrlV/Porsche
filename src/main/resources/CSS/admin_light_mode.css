@@ -336,13 +336,13 @@
     -fx-font-size: 16px;
 }
 .car.active {
-    -fx-text-fill: #1976d2;
+    -fx-text-fill:#627488;
 }
 .part.active {
     -fx-text-fill: #f57c00;
 }
 .car:hover {
-    -fx-text-fill: #1976d2;
+    -fx-text-fill: #627488;
 }
 .part:hover {
     -fx-text-fill: #f57c00;
