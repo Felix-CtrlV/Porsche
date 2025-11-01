@@ -45,6 +45,13 @@ import java.util.ArrayList;
 public class managerAttendanceManagementController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(managerAttendanceManagementController.class);
 
+    // Dashboard controller reference for notifications
+    private managerDashboardController dashboardController;
+
+    public void setDashboardController(managerDashboardController dashboardController) {
+        this.dashboardController = dashboardController;
+    }
+
     @FXML private ComboBox<String> staffCombo;
     @FXML private Button dateRangeBtn;
     @FXML private ComboBox<String> statusCombo;
@@ -695,7 +702,7 @@ public class managerAttendanceManagementController implements Initializable {
             // Load the new dialog FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/addAbsentDialog.fxml"));
             VBox dialogRoot = loader.load();
-            
+
             // Get the controller and set up callback
             AddAbsentDialogController dialogController = loader.getController();
             dialogController.setOnSaveCallback((Void) -> {
@@ -708,31 +715,40 @@ public class managerAttendanceManagementController implements Initializable {
             Stage dialogStage = new Stage();
             dialogStage.initStyle(StageStyle.UNDECORATED);
             dialogStage.initModality(Modality.APPLICATION_MODAL);
-            
+
             // Get the current stage to set as owner
             Stage currentStage = (Stage) addAbsentBtn.getScene().getWindow();
             dialogStage.initOwner(currentStage);
-            
+
             // Create scene and set it to the stage
             Scene scene = new Scene(dialogRoot);
+
+            // Add stylesheet to the scene (adjust path as needed, e.g., "/styles/dialog.css")
+            if(managerDashboardController.isDarkMode){
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("/CSS/manager_dark_mode.css").toExternalForm());
+
+            }else {
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("/CSS/manager_light_mode.css").toExternalForm());
+            }
+            // Alternatively, add a style class to the root VBox for targeted styling
+            dialogRoot.getStyleClass().add("absent-dialog");
+
             dialogStage.setScene(scene);
-            
+
             // Make the dialog non-resizable and center it
             dialogStage.setResizable(false);
             dialogStage.centerOnScreen();
-            
+
             // Show the dialog
             dialogStage.showAndWait();
-            
+
         } catch (Exception e) {
             logger.error("Error opening add absent dialog", e);
             showAlert("Error", "Failed to open add absent dialog: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
-
-
-
 
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
