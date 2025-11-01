@@ -384,14 +384,26 @@ public class managerDashboardController {
     }
 
     private void loadView(String fxmlPath) {
-        Task<Parent> task = new Task<>() {
+        Task<FXMLLoader> task = new Task<>() {
             @Override
-            protected Parent call() throws Exception {
-                return FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+            protected FXMLLoader call() throws Exception {
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+                loader.load();
+                return loader;
             }
         };
         task.setOnSucceeded(e -> {
-            Parent pane = task.getValue();
+            FXMLLoader loader = task.getValue();
+            Parent pane = loader.getRoot();
+            Object controller = loader.getController();
+            
+            // Set dashboard controller reference for toast notifications
+            if (controller instanceof managerInventoryController) {
+                ((managerInventoryController) controller).setDashboardController(this);
+            } else if (controller instanceof managerAttendanceManagementController) {
+                ((managerAttendanceManagementController) controller).setDashboardController(this);
+            }
+            
             admin_anc.getChildren().setAll(pane);
             AnchorPane.setTopAnchor(pane, 0.0);
             AnchorPane.setBottomAnchor(pane, 0.0);
@@ -634,7 +646,15 @@ public class managerDashboardController {
         } else {
             // Load content if not preloaded yet
             try {
-                Parent content = FXMLLoader.load(getClass().getResource("/View/managerAttendanceManagement.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/managerAttendanceManagement.fxml"));
+                Parent content = loader.load();
+                
+                // Set dashboard controller reference
+                Object controller = loader.getController();
+                if (controller instanceof managerAttendanceManagementController) {
+                    ((managerAttendanceManagementController) controller).setDashboardController(this);
+                }
+                
                 attendanceContentPane.getChildren().clear();
                 attendanceContentPane.getChildren().add(content);
                 this.attendanceContent = content;
@@ -1128,14 +1148,67 @@ public class managerDashboardController {
     }
 
     // Confirmation dialog methods
+    /**
+     * Show a confirmation dialog with custom title and message
+     */
+    public void showConfirmationDialog(String title, String message, Runnable onConfirm) {
+        confirmTitle.setText(title);
+        confirmMessage.setText(message);
+        confirmCallback = onConfirm;
+
+        // Show overlay and dialog
+        confirmOverlay.setVisible(true);
+        confirmOverlay.setOpacity(0);
+        confirmDialog.setVisible(true);
+        confirmDialog.setOpacity(0);
+
+        FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
+        overlayFade.setFromValue(0);
+        overlayFade.setToValue(0.5);
+
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), confirmDialog);
+        slideIn.setFromY(-100);
+        slideIn.setToY(0);
+
+        FadeTransition dialogFade = new FadeTransition(Duration.millis(300), confirmDialog);
+        dialogFade.setFromValue(0);
+        dialogFade.setToValue(1);
+
+        ParallelTransition show = new ParallelTransition(overlayFade, slideIn, dialogFade);
+        show.play();
+    }
+
     @FXML
     private void onConfirmOk() {
-        // Confirm OK
+        // Execute callback if set
+        if (confirmCallback != null) {
+            confirmCallback.run();
+        }
+        closeConfirmationDialog();
     }
 
     @FXML
     private void onConfirmCancel() {
-        // Confirm Cancel
+        closeConfirmationDialog();
+    }
+
+    private void closeConfirmationDialog() {
+        FadeTransition overlayFadeOut = new FadeTransition(Duration.millis(300), confirmOverlay);
+        overlayFadeOut.setFromValue(0.5);
+        overlayFadeOut.setToValue(0);
+        overlayFadeOut.setOnFinished(e -> confirmOverlay.setVisible(false));
+
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), confirmDialog);
+        slideOut.setFromY(0);
+        slideOut.setToY(-100);
+
+        FadeTransition dialogFadeOut = new FadeTransition(Duration.millis(300), confirmDialog);
+        dialogFadeOut.setFromValue(1);
+        dialogFadeOut.setToValue(0);
+        dialogFadeOut.setOnFinished(e -> confirmDialog.setVisible(false));
+
+        ParallelTransition hide = new ParallelTransition(overlayFadeOut, slideOut, dialogFadeOut);
+        hide.play();
     }
 
     // Change password methods

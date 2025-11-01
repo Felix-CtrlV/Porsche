@@ -30,6 +30,12 @@ import java.util.function.Consumer;
 public class AddAbsentDialogController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(AddAbsentDialogController.class);
 
+    private managerDashboardController dashboardController;
+
+    public void setDashboardController(managerDashboardController dashboardController) {
+        this.dashboardController = dashboardController;
+    }
+
     @FXML private ComboBox<String> staffComboDialog;
     @FXML private TextField reasonField;
     @FXML private Label closeDialogBtn;
@@ -253,27 +259,58 @@ public class AddAbsentDialogController implements Initializable {
         String reason = reasonField.getText().trim();
 
         if (selectedStaff == null || tempStartDate == null || reason.isEmpty()) {
-            showAlert("Invalid Input", "Please fill all fields and select a date range.", Alert.AlertType.ERROR);
+            if (dashboardController != null) {
+                dashboardController.showToast("Invalid Input", "Please fill all fields and select a date range.", "error");
+            }
             return;
         }
 
         LocalDate endDate = tempEndDate != null ? tempEndDate : tempStartDate;
 
         if (tempStartDate.isAfter(endDate)) {
-            showAlert("Invalid Date Range", "Start date cannot be after end date.", Alert.AlertType.ERROR);
+            if (dashboardController != null) {
+                dashboardController.showToast("Invalid Date Range", "Start date cannot be after end date.", "error");
+            }
             return;
         }
 
-        if (addAbsentRecord(selectedStaff, tempStartDate, endDate, reason)) {
-            // Notify parent window to refresh data
-            if (onSaveCallback != null) {
-                onSaveCallback.accept(null);
+        // Store result to show toast after dialog closes
+        int recordsAdded = addAbsentRecord(selectedStaff, tempStartDate, endDate, reason);
+        
+        // Handle errors immediately (don't close dialog)
+        if (recordsAdded == -1) {
+            if (dashboardController != null) {
+                dashboardController.showToast("Error", "Staff member not found.", "error");
             }
-            closeDialog();
+            return;
+        } else if (recordsAdded == -2) {
+            if (dashboardController != null) {
+                dashboardController.showToast("Database Error", "Failed to add absent record. Please try again.", "error");
+            }
+            return;
+        }
+        
+        // Success or no records - close dialog and show toast
+        // Notify parent window to refresh data
+        if (onSaveCallback != null) {
+            onSaveCallback.accept(null);
+        }
+        closeDialog();
+        
+        // Show toast after dialog closes with a small delay
+        if (dashboardController != null) {
+            final int count = recordsAdded;
+            javafx.application.Platform.runLater(() -> {
+                if (count > 0) {
+                    dashboardController.showToast("Success", count + " absent record(s) added successfully.", "success");
+                } else {
+                    dashboardController.showToast("No Records Added", "Records already exist for the selected date range.", "warning");
+                }
+            });
         }
     }
 
-    private boolean addAbsentRecord(String staffName, LocalDate fromDate, LocalDate toDate, String reason) {
+    private int addAbsentRecord(String staffName, LocalDate fromDate, LocalDate toDate, String reason) {
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection()) {
             // Get staff user_id
             String getUserIdQuery = "SELECT user_id FROM user_info WHERE user_name = ?";
@@ -282,13 +319,13 @@ public class AddAbsentDialogController implements Initializable {
             ResultSet rs = getUserIdStmt.executeQuery();
 
             if (!rs.next()) {
-                showAlert("Error", "Staff member not found.", Alert.AlertType.ERROR);
-                return false;
+                return -1; // Staff not found
             }
 
             int staffUserId = rs.getInt("user_id");
 
             // Insert absent records for each day in the range
+            // For absent records: check_in and check_out are NULL to mark as absent
             String insertQuery = "INSERT INTO user_attendance (user_id, check_in, check_out, reason) VALUES (?, ?, ?, ?)";
             PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
 
@@ -304,12 +341,12 @@ public class AddAbsentDialogController implements Initializable {
                 ResultSet checkRs = checkStmt.executeQuery();
 
                 if (checkRs.next() && checkRs.getInt(1) == 0) {
-                    // No record exists, add absent record
-                    java.sql.Timestamp absentTimestamp = java.sql.Timestamp.valueOf(currentDate.atStartOfDay());
-
+                    // No record exists, add absent record with 00:00:00 for both times
+                    // This marks them as absent (both check_in and check_out = 00:00:00)
                     insertStmt.setInt(1, staffUserId);
-                    insertStmt.setTimestamp(2, absentTimestamp);
-                    insertStmt.setTimestamp(3, absentTimestamp);
+                    java.sql.Timestamp midnightTimestamp = java.sql.Timestamp.valueOf(currentDate.atStartOfDay());
+                    insertStmt.setTimestamp(2, midnightTimestamp); // 00:00:00 check_in = absent
+                    insertStmt.setTimestamp(3, midnightTimestamp); // 00:00:00 check_out = absent
                     insertStmt.setString(4, "Absent - " + reason);
                     insertStmt.executeUpdate();
                     recordsAdded++;
@@ -318,26 +355,12 @@ public class AddAbsentDialogController implements Initializable {
                 currentDate = currentDate.plusDays(1);
             }
 
-            if (recordsAdded > 0) {
-                showAlert("Success", recordsAdded + " absent record(s) added successfully.", Alert.AlertType.INFORMATION);
-                return true;
-            } else {
-                showAlert("No Records Added", "Records already exist for the selected date range.", Alert.AlertType.WARNING);
-                return false;
-            }
+            return recordsAdded; // Return number of records added
 
         } catch (SQLException e) {
             logger.error("Error adding absent record", e);
-            showAlert("Database Error", "Failed to add absent record: " + e.getMessage(), Alert.AlertType.ERROR);
-            return false;
+            return -2; // Database error
         }
     }
 
-    private void showAlert(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 }

@@ -52,6 +52,12 @@ import java.util.*;
 
 public class managerInventoryController {
 
+    private managerDashboardController dashboardController;
+
+    public void setDashboardController(managerDashboardController dashboardController) {
+        this.dashboardController = dashboardController;
+    }
+
     @FXML
     private TableColumn<inventory, Double> priceCol;
 
@@ -424,7 +430,9 @@ public class managerInventoryController {
                 ObservableList<inventory> items = inventoryTable.getItems();
                 
                 if (items.isEmpty()) {
-                    showAlert("No Data", "There is no data to export.", Alert.AlertType.WARNING);
+                    if (dashboardController != null) {
+                        dashboardController.showToast("No Data", "There is no data to export.", "warning");
+                    }
                     return;
                 }
                 
@@ -464,12 +472,14 @@ public class managerInventoryController {
                     writer.newLine();
                 }
                 
-                showAlert("Export Successful", "Data exported successfully to:\n" + file.getAbsolutePath(), 
-                         Alert.AlertType.INFORMATION);
+                if (dashboardController != null) {
+                    dashboardController.showToast("Export Successful", "Data exported successfully to:\n" + file.getAbsolutePath(), "success");
+                }
                 
             } catch (IOException e) {
-                showAlert("Export Failed", "Failed to export data: " + e.getMessage(), 
-                         Alert.AlertType.ERROR);
+                if (dashboardController != null) {
+                    dashboardController.showToast("Export Failed", "Failed to export data: " + e.getMessage(), "error");
+                }
                 e.printStackTrace();
             }
         }
@@ -486,13 +496,6 @@ public class managerInventoryController {
         return value;
     }
     
-    private void showAlert(String title, String content, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
 
     @FXML
     void clickInventoryAdd(ActionEvent event) {
@@ -1036,155 +1039,104 @@ public class managerInventoryController {
                     insertPart();
                 }
             } catch (SQLException e) {
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Error");
-                errorAlert.setContentText("Failed to add: " + e.getMessage());
-                errorAlert.showAndWait();
+                if (dashboardController != null) {
+                    dashboardController.showToast("Error", "Failed to add: " + e.getMessage(), "error");
+                }
                 return;
             }
             
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Finished");
-            if(in.contains("carsAdd")){
-                alert.setContentText("Successfully Added The Car");
-            }else if(in.contains("partsAdd")){
-                alert.setContentText("Successfully Added The Part");
-            }else if(in.contains("carsEdit")){
-                alert.setContentText("Successfully Edited The Car");
-            }else if(in.contains("partsEdit")){
-                alert.setContentText("Successfully Edited The Part");
-            }else if(in.contains("partsUpdate")){
-                alert.setContentText("Successfully Updated The Part");
-            }else if(in.contains("carsUpdate")){
-                alert.setContentText("Successfully Updated The Car");
+            if (dashboardController != null) {
+                String message = "";
+                if(in.contains("carsAdd")){
+                    message = "Successfully Added The Car";
+                }else if(in.contains("partsAdd")){
+                    message = "Successfully Added The Part";
+                }else if(in.contains("carsEdit")){
+                    message = "Successfully Edited The Car";
+                }else if(in.contains("partsEdit")){
+                    message = "Successfully Edited The Part";
+                }else if(in.contains("partsUpdate")){
+                    message = "Successfully Updated The Part";
+                }else if(in.contains("carsUpdate")){
+                    message = "Successfully Updated The Car";
+                }
+                dashboardController.showToast("Finished", message, "success");
             }
-            alert.showAndWait();
             clearCarPartForm(in);
         }else{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/alert.fxml"));
-            Parent root = loader.load();
-
-            alertController alertController = loader.getController();
-
+            String title = "";
+            String message = "";
+            
             if(in.contains("carsAdd")){
-                alertController.setAlert("You have unsaved changes for adding a car. Are you sure you want to cancel?");
+                title = "Cancel Adding Car";
+                message = "You have unsaved changes for adding a car. Are you sure you want to cancel?";
             }else if(in.contains("partsAdd")){
-                alertController.setAlert("You have unsaved changes for adding a part. Are you sure you want to cancel?");
+                title = "Cancel Adding Part";
+                message = "You have unsaved changes for adding a part. Are you sure you want to cancel?";
             }else if(in.contains("carsEdit")){
-                alertController.setAlert("You have unsaved changes for editing a car. Are you sure you want to cancel?");
+                title = "Cancel Editing Car";
+                message = "You have unsaved changes for editing a car. Are you sure you want to cancel?";
             }else if(in.contains("partsEdit")){
-                alertController.setAlert("You have unsaved changes for editing a part. Are you sure you want to cancel?");
+                title = "Cancel Editing Part";
+                message = "You have unsaved changes for editing a part. Are you sure you want to cancel?";
             }else if(in.contains("partsDelete")){
-                alertController.setAlert("Do you really want to Delete this part ?");
+                title = "Delete Part";
+                message = "Do you really want to Delete this part?";
             }else if(in.contains("carsDelete")){
-                alertController.setAlert("Do you really want to Delete this car ?");
+                title = "Delete Car";
+                message = "Do you really want to Delete this car?";
             }else if(in.contains("partsRestore")){
-                alertController.setAlert("Do you want to restore this part?");
+                title = "Restore Part";
+                message = "Do you want to restore this part?";
             }else if(in.contains("carsRestore")){
-                alertController.setAlert("Do you want to restore this car?");
-            }
-            Stage alertStage = new Stage();
-            alertStage.initModality(Modality.APPLICATION_MODAL);
-            alertStage.initStyle(StageStyle.TRANSPARENT);
-            alertStage.setScene(new Scene(root));
-
-            if (in.equals("carsAddBtn") || in.equals("partsAddBtn")
-                    || in.equals("carsEdit") || in.equals("partsEdit")
-                ){
-                alertController.confirmBtn.setOnAction(e -> {
-                    clearCarPartForm(in);
-                    alertStage.close();
-                });
-                alertController.cancelBtn.setOnAction(e -> {
-                    alertStage.close();
-                });
-            }else if( in.equals("carsDelete") || in.equals("partsDelete")){
-                alertController.confirmBtn.setOnAction(e -> {
-                    try {
-                        boolean success = tableAddUpdateDelete(false);
-                        alertStage.close();
-                        
-                        if (success) {
-                            // Show success message
-                            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                            successAlert.setTitle("Success");
-                            successAlert.setHeaderText(null);
-                            if (in.equals("carsDelete")) {
-                                successAlert.setContentText("Car has been marked as unavailable!");
-                            } else {
-                                successAlert.setContentText("Part has been marked as unavailable!");
-                            }
-                            successAlert.showAndWait();
-                        } else {
-                            // Show error message
-                            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                            errorAlert.setTitle("Delete Failed");
-                            errorAlert.setHeaderText(null);
-                            errorAlert.setContentText("Failed to delete the item. Please try again.");
-                            errorAlert.showAndWait();
-                        }
-                    } catch (Exception ex) {
-                        alertStage.close();
-                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                        errorAlert.setTitle("Error");
-                        errorAlert.setHeaderText(null);
-                        errorAlert.setContentText("An error occurred: " + ex.getMessage());
-                        errorAlert.showAndWait();
-                        ex.printStackTrace();
-                    }
-                });
-                alertController.cancelBtn.setOnAction(e -> {
-                    alertStage.close();
-                });
-            }else if( in.equals("carsRestore") || in.equals("partsRestore")){
-                alertController.confirmBtn.setOnAction(e -> {
-                    try {
-                        boolean success = tableAddUpdateDelete(true);
-                        alertStage.close();
-                        
-                        if (success) {
-                            // Show success message
-                            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                            successAlert.setTitle("Success");
-                            successAlert.setHeaderText(null);
-                            if (in.equals("carsRestore")) {
-                                successAlert.setContentText("Car has been restored successfully!");
-                            } else {
-                                successAlert.setContentText("Part has been restored successfully!");
-                            }
-                            successAlert.showAndWait();
-                        } else {
-                            // Show error message
-                            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                            errorAlert.setTitle("Restore Failed");
-                            errorAlert.setHeaderText(null);
-                            errorAlert.setContentText("Failed to restore the item. Please try again.");
-                            errorAlert.showAndWait();
-                        }
-                    } catch (Exception ex) {
-                        alertStage.close();
-                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                        errorAlert.setTitle("Error");
-                        errorAlert.setHeaderText(null);
-                        errorAlert.setContentText("An error occurred: " + ex.getMessage());
-                        errorAlert.showAndWait();
-                        ex.printStackTrace();
-                    }
-                });
-                alertController.cancelBtn.setOnAction(e -> {
-                    alertStage.close();
-                });
-            }else {
-                alertController.confirmBtn.setOnAction(e -> {
-                    clearCarPartForm(in);
-                    alertStage.close();
-                });
-                alertController.cancelBtn.setOnAction(e -> {
-                    alertStage.close();
-                });
+                title = "Restore Car";
+                message = "Do you want to restore this car?";
             }
 
-            alertStage.showAndWait();
+            if (dashboardController != null) {
+                if (in.equals("carsAddBtn") || in.equals("partsAddBtn")
+                        || in.equals("carsEdit") || in.equals("partsEdit")) {
+                    dashboardController.showConfirmationDialog(title, message, () -> clearCarPartForm(in));
+                } else if (in.equals("carsDelete") || in.equals("partsDelete")) {
+                    dashboardController.showConfirmationDialog(title, message, () -> {
+                        try {
+                            boolean success = tableAddUpdateDelete(false);
+                            if (success) {
+                                if (in.equals("carsDelete")) {
+                                    dashboardController.showToast("Success", "Car has been marked as unavailable!", "success");
+                                } else {
+                                    dashboardController.showToast("Success", "Part has been marked as unavailable!", "success");
+                                }
+                            } else {
+                                dashboardController.showToast("Delete Failed", "Failed to delete the item. Please try again.", "error");
+                            }
+                        } catch (Exception ex) {
+                            dashboardController.showToast("Error", "An error occurred: " + ex.getMessage(), "error");
+                            ex.printStackTrace();
+                        }
+                    });
+                } else if (in.equals("carsRestore") || in.equals("partsRestore")) {
+                    dashboardController.showConfirmationDialog(title, message, () -> {
+                        try {
+                            boolean success = tableAddUpdateDelete(true);
+                            if (success) {
+                                if (in.equals("carsRestore")) {
+                                    dashboardController.showToast("Success", "Car has been restored successfully!", "success");
+                                } else {
+                                    dashboardController.showToast("Success", "Part has been restored successfully!", "success");
+                                }
+                            } else {
+                                dashboardController.showToast("Restore Failed", "Failed to restore the item. Please try again.", "error");
+                            }
+                        } catch (Exception ex) {
+                            dashboardController.showToast("Error", "An error occurred: " + ex.getMessage(), "error");
+                            ex.printStackTrace();
+                        }
+                    });
+                } else {
+                    dashboardController.showConfirmationDialog(title, message, () -> clearCarPartForm(in));
+                }
+            }
         }
 
     }
@@ -1506,70 +1458,30 @@ public class managerInventoryController {
                     final inventory item = getTableView().getItems().get(getIndex());
                     editPath = item;
                     
-                    // Create and show alert with captured item reference
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/alert.fxml"));
-                        Parent root = loader.load();
-                        alertController alertCtrl = loader.getController();
+                    if (dashboardController != null) {
+                        String title = item.getInventoryId().contains("C") ? "Restore Car" : "Restore Part";
+                        String message = item.getInventoryId().contains("C") ? 
+                            "Do you want to restore this car?" : "Do you want to restore this part?";
                         
-                        if (item.getInventoryId().contains("C")) {
-                            alertCtrl.setAlert("Do you want to restore this car?");
-                        } else {
-                            alertCtrl.setAlert("Do you want to restore this part?");
-                        }
-                        
-                        Stage alertStage = new Stage();
-                        alertStage.initModality(Modality.APPLICATION_MODAL);
-                        alertStage.initStyle(StageStyle.TRANSPARENT);
-                        alertStage.setScene(new Scene(root));
-                        
-                        alertCtrl.confirmBtn.setOnAction(e -> {
+                        dashboardController.showConfirmationDialog(title, message, () -> {
                             try {
-                                // Use the captured item reference
                                 editPath = item;
                                 boolean success = tableAddUpdateDelete(true);
-                                alertStage.close();
                                 
                                 if (success) {
-                                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                                    successAlert.setTitle("Success");
-                                    successAlert.setHeaderText(null);
                                     if (item.getInventoryId().contains("C")) {
-                                        successAlert.setContentText("Car has been restored successfully!");
+                                        dashboardController.showToast("Success", "Car has been restored successfully!", "success");
                                     } else {
-                                        successAlert.setContentText("Part has been restored successfully!");
+                                        dashboardController.showToast("Success", "Part has been restored successfully!", "success");
                                     }
-                                    successAlert.showAndWait();
                                 } else {
-                                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                                    errorAlert.setTitle("Restore Failed");
-                                    errorAlert.setHeaderText(null);
-                                    errorAlert.setContentText("Failed to restore the item. Please try again.");
-                                    errorAlert.showAndWait();
+                                    dashboardController.showToast("Restore Failed", "Failed to restore the item. Please try again.", "error");
                                 }
                             } catch (Exception ex) {
-                                alertStage.close();
-                                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                                errorAlert.setTitle("Error");
-                                errorAlert.setHeaderText(null);
-                                errorAlert.setContentText("An error occurred: " + ex.getMessage());
-                                errorAlert.showAndWait();
+                                dashboardController.showToast("Error", "An error occurred: " + ex.getMessage(), "error");
                                 ex.printStackTrace();
                             }
                         });
-                        
-                        alertCtrl.cancelBtn.setOnAction(e -> {
-                            alertStage.close();
-                        });
-                        
-                        alertStage.showAndWait();
-                    } catch (Exception e) {
-                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                        errorAlert.setTitle("Error");
-                        errorAlert.setHeaderText(null);
-                        errorAlert.setContentText("Failed to show restore dialog: " + e.getMessage());
-                        errorAlert.showAndWait();
-                        e.printStackTrace();
                     }
                 });
 
