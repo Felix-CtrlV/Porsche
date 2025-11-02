@@ -283,9 +283,9 @@
                 <HBox maxHeight="Infinity" prefHeight="710.0" prefWidth="691.0" spacing="20.0" VBox.vgrow="ALWAYS">
                     <children>
                         <!-- Sales Quantity Chart -->
-                        <VBox maxWidth="700.0" prefHeight="464.0" prefWidth="350.0" styleClass="section" style=" -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
+                        <VBox maxWidth="700.0" prefHeight="464.0" prefWidth="350.0" style=" -fx-border-radius: 12; -fx-background-radius: 12;" styleClass="section" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="66.0" prefWidth="378.0" styleClass="panel-header">
+                                <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="35.0" prefWidth="378.0" styleClass="panel-header">
                                     <children>
                                         <Label style="-fx-font-size: 14; -fx-font-weight: bold;" styleClass="textHeader" text="SALES QUANTITY">
                                             <font>
@@ -299,7 +299,7 @@
                                         <HBox alignment="CENTER" minHeight="20.0" prefHeight="35.0" prefWidth="158.0" spacing="5.0">
                                             <children>
                                                 <Button fx:id="carChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickCarChart" prefHeight="13.0" prefWidth="78.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" styleClass="car" text="CAR" wrapText="true" HBox.hgrow="ALWAYS" />
-                                                <Button fx:id="partChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickPartChart" prefHeight="19.0" prefWidth="78.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" styleClass="part" text="PART" wrapText="true" HBox.hgrow="ALWAYS" />
+                                                <Button fx:id="partChart" minHeight="30.0" mnemonicParsing="false" onAction="#clickPartChart" prefHeight="13.0" prefWidth="78.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" styleClass="part" text="PART" wrapText="true" HBox.hgrow="ALWAYS" />
                                             </children>
                                         </HBox>
                                     </children>
@@ -323,7 +323,7 @@
                         </VBox>
                         
                         <!-- Revenue Chart -->
-                        <VBox maxWidth="750.0" prefHeight="474.0" prefWidth="154.0" styleClass="section" style=" -fx-border-radius: 12; -fx-background-radius: 12;" HBox.hgrow="ALWAYS">
+                        <VBox maxWidth="750.0" prefHeight="474.0" prefWidth="154.0" style=" -fx-border-radius: 12; -fx-background-radius: 12;" styleClass="section" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox alignment="CENTER_LEFT" minHeight="35.0" prefHeight="35.0" styleClass="panel-header">
                                     <children>
@@ -337,7 +337,7 @@
                                         </Label>
                                     </children>
                                 </HBox>
-                                <AreaChart fx:id="revenueAreaChart" createSymbols="false" legendVisible="false" >
+                                <AreaChart fx:id="revenueAreaChart" createSymbols="false" legendVisible="false">
                                     <xAxis>
                                         <CategoryAxis label="Month" side="BOTTOM" />
                                     </xAxis>

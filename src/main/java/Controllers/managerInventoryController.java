@@ -1420,8 +1420,11 @@ public class managerInventoryController {
             private final HBox buttonsContainer = new HBox(8);
             {
                 editButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.EDIT));
+                editButton.getStyleClass().add("textHeader");
                 deleteButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.BAN));
+                deleteButton.getStyleClass().add("textHeader");
                 restoreButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.UNDO));
+                restoreButton.getStyleClass().add("textHeader");
                 editButton.setStyle("-fx-background-color: transparent;");
                 deleteButton.setStyle("-fx-background-color: transparent;");
                 restoreButton.setStyle("-fx-background-color: transparent;");

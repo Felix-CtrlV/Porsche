@@ -271,7 +271,15 @@
     -fx-background-color:transparent;
 }
 .table-view .column-header-background .filler {
-    -fx-fill: transparent;
+    -fx-background-color: transparent;
+}
+.table-container {
+  -fx-overflow: auto;
+  -fx-scrollbar-gutter: stable both-edges; /* keeps layout stable but hides empty corner */
+}
+
+.table-container::-webkit-scrollbar-corner {
+  -fx-background: transparent; /* or match header color */
 }
 /* Calendar Day Label Styles */
 .dayLabel {
@@ -366,6 +374,7 @@
     -fx-background-radius:6;
     -fx-border-radius:6;
     -fx-font-size: 16px;
+    -fx-cursor: hand;
 }
 .car.active {
     -fx-text-fill: #627488;
@@ -539,5 +548,13 @@
     -fx-background-insets: 0, 2;
     -fx-padding: 6px;
     -fx-padding: 6;
+}
+/* manager Inventory */
+.addEditInventory{
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 10 10 0 0;
+}
+.addCarPartBackgroundColor{
+    -fx-background-color: #334155;
 }
 
