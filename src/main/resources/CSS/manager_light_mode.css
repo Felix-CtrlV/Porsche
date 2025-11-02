@@ -127,6 +127,12 @@
      -fx-prompt-text-fill: #9ca3af;
     -fx-border-color: #e5e7eb;
 }
+.text-area{
+    -fx-background-color: #f3f4f6;
+     -fx-text-fill: black;
+     -fx-prompt-text-fill: #9ca3af;
+    -fx-border-color: #e5e7eb;
+}
 .cancelBtn{
     -fx-background-color: #e5e7eb;
     -fx-text-fill: #374151;

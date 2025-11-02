@@ -530,7 +530,7 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" maxHeight="55.0" maxWidth="448.0" minHeight="55.0" minWidth="448.0" prefHeight="55.0" prefWidth="532.0" styleClass="addEditInventory">
                                  <children>
-                                    <Label style=" -fx-font-weight: bold; -fx-font-size: 16; -fx-padding: 15;" styleClass="textHeader" text="EDIT INVENTORY" />
+                                    <Label style="-fx-font-weight: bold; -fx-font-size: 16; -fx-padding: 15; -fx-text-fill: white;"  text="EDIT INVENTORY" />
                                     <Label fx:id="editTitle" styleClass="textDetail" text="(Car)" />
                                     <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onMouseClicked="#clickBackBtn" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: #ff4757; -fx-border-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="✕">
                                        <font>
@@ -695,7 +695,7 @@
                                                                   <VBox minHeight="90.0" spacing="8">
                                                                      <children>
                                                                         <Label style=" -fx-font-weight: bold;" styleClass="textHeader" text="Description" />
-                                                                        <TextArea fx:id="editCarDescription" styleClass="textField" minHeight="70.0" prefHeight="22.0" prefWidth="214.0" promptText="Enter car description..."  style="-fx-background-radius: 6; -fx-border-radius: 6;" wrapText="true" />
+                                                                        <TextArea fx:id="editCarDescription" minHeight="70.0" prefHeight="22.0" prefWidth="214.0" promptText="Enter car description..."  style="-fx-background-color: #364040; -fx-border-color: #4c595b;-fx-background-radius: 6; -fx-border-radius: 6;" wrapText="true" />
                                                                      </children>
                                                                   </VBox>
                                                                </children>
