@@ -1151,12 +1151,8 @@ public class managerOverviewController {
 
             rs.close();
             cs.close();
-            
-            System.out.println("DEBUG: Total items in bestCarPartList: " + bestCarPartList.size());
-
 
             scrollPane.getChildren().clear();
-            // FIXED: Use OR condition instead of AND
             if (besti.equals("car") || besti.equals("part")) {
 
                 for (managerOverview item : bestCarPartList) {
