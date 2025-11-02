@@ -563,4 +563,13 @@
 .addCarPartBackgroundColor{
     -fx-background-color: #334155;
 }
-
+/* manager Order */
+.orderCircleBackground{
+    -fx-stoke-fill: #f1f5f9;
+    -fx-fill: transparent;
+    -fx-stroke-width: 12;
+}
+.dueDateStyle{
+    -fx-background-color: #fff7ed;
+    -fx-border-color: #fed7aa;
+}

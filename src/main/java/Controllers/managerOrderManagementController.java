@@ -283,7 +283,6 @@ public class managerOrderManagementController {
             @Override
             protected void updateItem(Date item, boolean empty) {
                 super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                 if (empty || item == null) {
                     setText(null);
                 } else {
@@ -297,7 +296,6 @@ public class managerOrderManagementController {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                 if (empty || item == null) {
                     setText(null);
                 } else {
@@ -311,7 +309,6 @@ public class managerOrderManagementController {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                 if (empty || item == null) {
                     setText(null);
                 } else {
@@ -325,7 +322,6 @@ public class managerOrderManagementController {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                 if (empty || item == null) {
                     setText(null);
                 } else {
@@ -339,7 +335,6 @@ public class managerOrderManagementController {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                 if (empty || item == null) {
                     setText(null);
                 } else {
@@ -353,7 +348,6 @@ public class managerOrderManagementController {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                 if (empty || item == null) {
                     setText(null);
                 } else {
@@ -364,7 +358,6 @@ public class managerOrderManagementController {
 
         // Force table and text visibility with normal font weight
         orderTable.setFixedCellSize(-1);
-        orderTable.setStyle("-fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-background-color: white;");
         
         orderTable.setRowFactory(tv -> {
             TableRow<managerOrderView> row = new TableRow<>();
@@ -374,18 +367,6 @@ public class managerOrderManagementController {
             row.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateRowStyle(row));
             
             row.setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
-
-            row.setOnMouseEntered(e -> {
-                if (!row.isEmpty() && !row.isSelected()) {
-                    row.setStyle("-fx-background-color: #f8f9fa; " +
-                                "-fx-text-fill: black !important; " +
-                                "-fx-font-size: 14px !important; " +
-                                "-fx-font-weight: normal; " +
-                                "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0; " +
-                                "-fx-padding: 8 0 8 0;");
-                }
-            });
 
             row.setOnMouseExited(e -> {
                 updateRowStyle(row);
@@ -434,41 +415,8 @@ public class managerOrderManagementController {
         });
         
         // Set up installment table with fixed row size
-        installmentTable.setFixedCellSize(35);
-        installmentTable.setRowFactory(tv -> {
-            TableRow<String> row = new TableRow<>();
-            
-            row.itemProperty().addListener((obs, oldItem, newItem) -> {
-                if (row.isEmpty()) {
-                    row.setStyle("");
-                } else {
-                    // Add border to installment rows
-                    row.setStyle("-fx-background-color: white; " +
-                                "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0;");
-                }
-            });
-            
-            // Add hover effect
-            row.setOnMouseEntered(e -> {
-                if (!row.isEmpty()) {
-                    row.setStyle("-fx-background-color: #f8f9fa; " +
-                                "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0;");
-                }
-            });
-            
-            row.setOnMouseExited(e -> {
-                if (!row.isEmpty()) {
-                    row.setStyle("-fx-background-color: white; " +
-                                "-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0;");
-                }
-            });
-            
-            return row;
-        });
-        
+        installmentTable.setFixedCellSize(40);
+
         // Connect search button to searchOrder method
         if (Searchbtn != null) {
             Searchbtn.setOnAction(event -> handleSearch());
