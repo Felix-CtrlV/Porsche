@@ -930,6 +930,7 @@ public class adminDashboardController {
             CSSManager.removeAdminTextField(profilePhone);
             CSSManager.removeAdminTextField(profileAddress);
             saveProfileBtn.setVisible(false);
+            editProfilePhotoBtn.setVisible(false);
             editProfileBtn.setText("✏");
             
             // Deselect any text and revert changes

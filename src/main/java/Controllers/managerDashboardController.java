@@ -854,6 +854,7 @@ public class managerDashboardController {
             editProfileBtn.setText("✖");
         } else {
             // Disable editing
+
             profileEmail.setEditable(false);
             profilePhone.setEditable(false);
             profileAddress.setEditable(false);
@@ -864,6 +865,7 @@ public class managerDashboardController {
             profilePhone.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
             profileAddress.setStyle("-fx-background-color: #f3f4f6; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14; -fx-text-fill: #1f2937; -fx-border-color: transparent; -fx-prompt-text-fill: #9ca3af;");
             saveProfileBtn.setVisible(false);
+            editProfilePhotoBtn.setVisible(false);
             editProfileBtn.setText("✏");
 
             // Deselect any text and revert changes

@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<HBox maxHeight="120.0" maxWidth="500.0" minHeight="120.0" minWidth="300.0" style="-fx-background-color: linear-gradient(to right, #ffffff 0%, #fdfeff 100%); -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #f1f5f9; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerCarPartProgressBarController">
+<HBox maxHeight="120.0" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="300.0" style="-fx-background-color: linear-gradient(to right, #ffffff 0%, #fdfeff 100%); -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #f1f5f9; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerCarPartProgressBarController">
     <padding>
         <Insets bottom="20" left="25" right="25" top="20" />
     </padding>
