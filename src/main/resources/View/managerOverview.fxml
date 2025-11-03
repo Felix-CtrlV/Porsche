@@ -73,7 +73,7 @@
 
                                 <Region minHeight="10.0" prefHeight="10.0" VBox.vgrow="NEVER" />
 
-                                <StackPane id="carousel-stackpane" fx:id="carouselStackPane" style=" -fx-background-radius: 16; -fx-border-radius: 16;" styleClass="section" VBox.vgrow="ALWAYS">
+                                <StackPane id="carousel-stackpane" fx:id="carouselStackPane" style="-fx-background-radius: 12; -fx-border-radius: 12;" styleClass="section" VBox.vgrow="ALWAYS">
                                     <children>
                                         <VBox fx:id="attendanceBox" style="-fx-background-radius: 16;" StackPane.alignment="CENTER">
                                             <children>

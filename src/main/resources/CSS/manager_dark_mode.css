@@ -637,10 +637,10 @@
     -fx-text-fill: #f8f9fa;
 }
 .termination-reason {
-    -fx-background-color: #fef2f2;
+    -fx-background-color: #293031;
     -fx-padding: 16px;
     -fx-background-radius: 8px;
-    -fx-border-color: #fecaca;
+    -fx-border-color: #f9abab;
     -fx-border-radius: 8px;
 }
 .termination-reason-label {
