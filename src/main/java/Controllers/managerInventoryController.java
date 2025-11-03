@@ -1419,12 +1419,16 @@ public class managerInventoryController {
             private final Button restoreButton = new Button();
             private final HBox buttonsContainer = new HBox(8);
             {
-                editButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.EDIT));
-                editButton.getStyleClass().add("textHeader");
-                deleteButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.BAN));
-                deleteButton.getStyleClass().add("textHeader");
-                restoreButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.UNDO));
-                restoreButton.getStyleClass().add("textHeader");
+                FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.EDIT);
+                FontAwesomeIconView banIcon = new FontAwesomeIconView(FontAwesomeIcon.BAN);
+                FontAwesomeIconView undoIcon = new FontAwesomeIconView(FontAwesomeIcon.UNDO);
+                editIcon.getStyleClass().add("textHeader");
+                banIcon.getStyleClass().add("textHeader");
+                undoIcon.getStyleClass().add("textHeader");
+                editButton.setGraphic(editIcon);
+                deleteButton.setGraphic(banIcon);
+                restoreButton.setGraphic(undoIcon);
+
                 editButton.setStyle("-fx-background-color: transparent;");
                 deleteButton.setStyle("-fx-background-color: transparent;");
                 restoreButton.setStyle("-fx-background-color: transparent;");
@@ -1503,24 +1507,10 @@ public class managerInventoryController {
                     if ("Unavailable".equals(item.getStatus())) {
                         // Show only restore button for unavailable items (status = false)
                         buttonsContainer.getChildren().add(restoreButton);
-                        setStyle("-fx-background-color: #fff3cd; -fx-text-fill: #856404;");
-                        restoreButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #28a745;");
                     } else {
                         // Status is true (available) - show edit and delete buttons
                         buttonsContainer.getChildren().addAll(editButton, deleteButton);
-                        
-                        // Apply styling based on quantity
-                        if ("Out".equals(item.getStatus()) || item.getQty() <= 0) {
-                            // Gray out out of stock items but keep both buttons
-                            setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: #6c757d;");
-                            editButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #6c757d;");
-                            deleteButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #6c757d;");
-                        } else {
-                            // Normal styling for available items with stock
-                            setStyle("");
-                            editButton.setStyle("-fx-background-color: transparent;");
-                            deleteButton.setStyle("-fx-background-color: transparent;");
-                        }
+
                     }
                     
                     setGraphic(buttonsContainer);
@@ -1562,31 +1552,19 @@ public class managerInventoryController {
             @Override
             protected void updateItem(inventory item, boolean empty) {
                 super.updateItem(item, empty);
-                
-                if (empty || item == null) {
+                getStyleClass().removeAll("unavailableColStyle","soldOutColStyle");
+             if (empty || item == null) {
                     setStyle("");
                 } else {
                     // Apply different colors based on status with row separation
                     if ("Unavailable".equals(item.getStatus())) {
                         // Yellow/warning color for unavailable items with border separation
-                        setStyle("-fx-background-color: #fff3cd; " +
-                                "-fx-text-fill: #856404; " +
-                                "-fx-border-color: #ffc107; " +
-                                "-fx-border-width: 0 0 2 0; " +
-                                "-fx-padding: 8 0 8 0;");
+                        getStyleClass().add("unavailableColStyle");
                     } else if ("Out".equals(item.getStatus()) || item.getQty() <= 0) {
-                        // Light gray for out of stock items with border separation
-                        setStyle("-fx-background-color: #f8f9fa; " +
-                                "-fx-text-fill: #6c757d; " +
-                                "-fx-border-color: #dee2e6; " +
-                                "-fx-border-width: 0 0 1 0; " +
-                                "-fx-padding: 8 0 8 0;");
-                    } else {
-                        // Normal styling for available items with subtle separation
-                        setStyle("-fx-border-color: #e9ecef; " +
-                                "-fx-border-width: 0 0 1 0; " +
-                                "-fx-padding: 8 0 8 0;");
+                        // Light gray for out of stock items with border separationmanama
+                        getStyleClass().add("soldOutColStyle");
                     }
+
                 }
             }
         });
