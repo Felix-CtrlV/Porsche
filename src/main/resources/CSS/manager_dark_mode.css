@@ -235,7 +235,7 @@
     -fx-background-color: #5a6a6e;
 }
 
-.table-view .table-cell {
+.table-view .table-cell,.table-view .table-cell .installmentNameCol {
     -fx-border-color: transparent;
     -fx-padding: 8px 16px;
     -fx-font-size: 14px;
@@ -559,21 +559,6 @@
     -fx-padding: 3px;
 }
 
-/* Additional table text styling for dark mode - Fix for black text issue */
-.table-view .table-cell .text {
-    -fx-fill: #f8f9fa !important;
-}
-
-.table-view .table-row-cell .table-cell {
-    -fx-text-fill: #f8f9fa !important;
-}
-
-/* Ensure all table text is white in dark mode */
-.table-view .table-cell,
-.table-view .table-cell .label,
-.table-view .table-cell .text-field {
-    -fx-text-fill: #f8f9fa !important;
-}
 /* manager Inventory */
 .addEditInventory{
     -fx-background-color: #867079;

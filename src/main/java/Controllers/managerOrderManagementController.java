@@ -363,14 +363,14 @@ public class managerOrderManagementController {
             TableRow<managerOrderView> row = new TableRow<>();
             
             // Update row style based on selection
-            row.itemProperty().addListener((obs, oldItem, newItem) -> updateRowStyle(row));
-            row.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateRowStyle(row));
+//            row.itemProperty().addListener((obs, oldItem, newItem) -> updateRowStyle(row));
+//            row.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateRowStyle(row));
             
             row.setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
 
-            row.setOnMouseExited(e -> {
-                updateRowStyle(row);
-            });
+//            row.setOnMouseExited(e -> {
+//                updateRowStyle(row);
+//            });
 
             return row;
         });
@@ -384,8 +384,9 @@ public class managerOrderManagementController {
         // Add text wrapping to name column
         installmentNameCol.setCellFactory(column -> {
             TableCell<String, String> cell = new TableCell<String, String>() {
+
+
                 private final Text text = new Text();
-                
                 {
                     text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
                     setGraphic(text);
@@ -398,6 +399,7 @@ public class managerOrderManagementController {
                         text.setText(null);
                     } else {
                         text.setText(item);
+                        text.getStyleClass().add("textHeader");
                     }
                 }
             };
@@ -415,7 +417,7 @@ public class managerOrderManagementController {
         });
         
         // Set up installment table with fixed row size
-        installmentTable.setFixedCellSize(40);
+        installmentTable.setFixedCellSize(60);
 
         // Connect search button to searchOrder method
         if (Searchbtn != null) {
@@ -1403,29 +1405,30 @@ public class managerOrderManagementController {
     /**
      * Updates the style of a table row based on its selection state
      */
-    private void updateRowStyle(TableRow<managerOrderView> row) {
-        if (row.isEmpty()) {
-            row.setStyle("");
-        } else if (row.isSelected()) {
-            // Selected row: bold text with highlight background and spacing
-            row.setStyle("-fx-background-color: #e3f2fd; " +
-                        "-fx-text-fill: black !important; " +
-                        "-fx-font-size: 14px !important; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-border-color: #2196f3; " +
-                        "-fx-border-width: 0 0 2 0; " +
-                        "-fx-padding: 8 0 8 0;");
-        } else {
-            // Normal row: regular text with spacing
-            row.setStyle("-fx-background-color: white; " +
-                        "-fx-text-fill: black !important; " +
-                        "-fx-font-size: 14px !important; " +
-                        "-fx-font-weight: normal; " +
-                        "-fx-border-color: #e9ecef; " +
-                        "-fx-border-width: 0 0 1 0; " +
-                        "-fx-padding: 8 0 8 0;");
-        }
-    }
+//    private void updateRowStyle(TableRow<managerOrderView> row) {
+//
+//        if (row.isEmpty()) {
+//            row.setStyle("");
+//        } else if (row.isSelected()) {
+//            // Selected row: bold text with highlight background and spacing
+//            row.setStyle("-fx-background-color: #e3f2fd; " +
+//                        "-fx-text-fill: black !important; " +
+//                        "-fx-font-size: 14px !important; " +
+//                        "-fx-font-weight: bold; " +
+//                        "-fx-border-color: #2196f3; " +
+//                        "-fx-border-width: 0 0 2 0; " +
+//                        "-fx-padding: 8 0 8 0;");
+//        } else {
+//            // Normal row: regular text with spacing
+//            row.setStyle("-fx-background-color: white; " +
+//                        "-fx-text-fill: black !important; " +
+//                        "-fx-font-size: 14px !important; " +
+//                        "-fx-font-weight: normal; " +
+//                        "-fx-border-color: #e9ecef; " +
+//                        "-fx-border-width: 0 0 1 0; " +
+//                        "-fx-padding: 8 0 8 0;");
+//        }
+//    }
     
     // ---------- Smooth Curve Methods ----------
     private void applySmoothCurves() {

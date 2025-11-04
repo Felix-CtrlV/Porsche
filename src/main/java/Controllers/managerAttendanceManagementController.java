@@ -112,22 +112,7 @@ public class managerAttendanceManagementController implements Initializable {
         remarksCol.setCellValueFactory(new PropertyValueFactory<>("remarks"));
 
         attendanceTable.setItems(attendanceData);
-        
-        // Apply styling to make headers visible and professional
-        attendanceTable.setStyle(attendanceTable.getStyle() + 
-            "; -fx-table-header-border-color: #dee2e6" +
-            "; -fx-table-header-border-width: 0 0 2 0" +
-            "; -fx-control-inner-background: white" +
-            "; -fx-table-column-border-insets: 0" +
-            "; -fx-table-header-border-insets: 0");
-            
-        // Set header styling for each column
-        staffNameCol.setStyle("-fx-alignment: CENTER-LEFT; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
-        dateCol.setStyle("-fx-alignment: CENTER; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
-        checkInCol.setStyle("-fx-alignment: CENTER; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
-        checkOutCol.setStyle("-fx-alignment: CENTER; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
-        hoursWorkedCol.setStyle("-fx-alignment: CENTER; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
-        remarksCol.setStyle("-fx-alignment: CENTER-LEFT; -fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
+
     }
 
     private void setupComboBoxes() {
