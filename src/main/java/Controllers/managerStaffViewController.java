@@ -36,10 +36,7 @@ import java.time.Month;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -294,7 +291,6 @@ public class managerStaffViewController {
                 {
                     text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
                     setGraphic(text);
-                    setStyle("-fx-text-fill: black; -fx-alignment: CENTER-LEFT;");
                 }
                 @Override
                 protected void updateItem(String item, boolean empty) {
@@ -315,7 +311,6 @@ public class managerStaffViewController {
                 @Override
                 protected void updateItem(Integer item, boolean empty) {
                     super.updateItem(item, empty);
-                    setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                     if (empty || item == null) {
                         setText(null);
                     } else {
@@ -331,7 +326,6 @@ public class managerStaffViewController {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                 if (empty || item == null) {
                     setText(null);
                 } else {
@@ -345,7 +339,6 @@ public class managerStaffViewController {
             @Override
             protected void updateItem(Date item, boolean empty) {
                 super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                 if (empty || item == null) {
                     setText("---");
                 } else {
@@ -359,7 +352,6 @@ public class managerStaffViewController {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                setStyle("-fx-text-fill: black; -fx-alignment: CENTER;");
                 if (empty || item == null) {
                     setText(null);
                 } else {
@@ -370,25 +362,19 @@ public class managerStaffViewController {
         
         // Set table style and row factory
         ordersTable.setFixedCellSize(-1);
-        ordersTable.setStyle("-fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-background-color: white;");
         
         ordersTable.setRowFactory(tv -> {
             TableRow<managerOrderView> row = new TableRow<>();
             
             // Update row style based on selection
-            row.itemProperty().addListener((obs, oldItem, newItem) -> updateRowStyle(row));
-            row.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateRowStyle(row));
-            
+//            row.itemProperty().addListener((obs, oldItem, newItem) -> updateRowStyle(row));
+//            row.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateRowStyle(row));
+//
             row.setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
 
-            row.setOnMouseEntered(e -> {
-                if (!row.isEmpty() && !row.isSelected()) {
-                    row.setStyle("-fx-background-color: #f8f9fa; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
-                }
-            });
 
             row.setOnMouseExited(e -> {
-                updateRowStyle(row);
+//                updateRowStyle(row);
             });
 
             return row;
@@ -435,7 +421,6 @@ public class managerStaffViewController {
                 {
                     text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
                     setGraphic(text);
-                    setStyle("-fx-alignment: CENTER;");
                 }
                 @Override
                 protected void updateItem(String item, boolean empty) {
@@ -462,7 +447,7 @@ public class managerStaffViewController {
                 {
                     text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
                     setGraphic(text);
-                    setStyle("-fx-alignment: CENTER-RIGHT;");
+
                 }
                 @Override
                 protected void updateItem(String item, boolean empty) {
@@ -471,6 +456,7 @@ public class managerStaffViewController {
                         text.setText(null);
                     } else {
                         text.setText(item);
+                        text.getStyleClass().add("textHeader");
                     }
                 }
             };
@@ -584,7 +570,7 @@ public class managerStaffViewController {
             }
         }
 
-        highlightSelectedCard(staff.getId());
+        highlightCard(staff.getId());
         selectedStaffId = staff.getId();
 
         // For inactive staff, set date to their end_date instead of today
@@ -813,20 +799,33 @@ public class managerStaffViewController {
     }
 
     // for staff card add and highlight the select card
-    private void highlightSelectedCard(int staffId) {
-        // Reset all cards to default style
-        for (Node node : staffListContainer.getChildren()) {
-            node.setStyle(" -fx-border-color: transparent;");
-        }
+    private void highlightCard(int id) {
+        staffListContainer.getChildren().forEach(node ->
+                node.setStyle("-fx-border-color: transparent;"));
 
-        // Highlight selected card
-        for (Node node : staffListContainer.getChildren()) {
-            if (node.getUserData() != null && node.getUserData() instanceof Integer) {
-                if ((int) node.getUserData() == staffId) {
-                    node.setStyle("-fx-background-color: #e8f0fe; -fx-border-color: #1a73e8; -fx-border-radius: 8; -fx-background-radius: 8;");
-                    break;
-                }
-            }
+        if(managerDashboardController.isDarkMode){
+            staffListContainer.getChildren().stream()
+                    .filter(n -> Objects.equals(n.getUserData(), id))
+                    .findFirst()
+                    .ifPresent(n -> n.setStyle(
+                            "-fx-background-color:#414c4d; " +
+                                    "-fx-border-color: #f276ab; " +
+                                    "-fx-border-radius: 8;" +
+                                    "-fx-background-radius: 8;" +
+                                    "-fx-effect: dropshadow(three-pass-box, rgba(246, 182, 44, 0.4), 10, 0, 0, 0);"
+                    ));
+
+        }else{
+            staffListContainer.getChildren().stream()
+                    .filter(n -> Objects.equals(n.getUserData(), id))
+                    .findFirst()
+                    .ifPresent(n -> n.setStyle(
+                            "-fx-background-color: #e8f0fe; " +
+                                    "-fx-border-color: #1a73e8; " +
+                                    "-fx-border-radius: 8;" +
+                                    "-fx-background-radius: 8;"
+                    ));
+
         }
     }
 
@@ -1452,18 +1451,18 @@ public class managerStaffViewController {
     /**
      * Updates the style of a table row based on its selection state
      */
-    private void updateRowStyle(TableRow<managerOrderView> row) {
-        if (row.isEmpty()) {
-            row.setStyle("");
-        } else if (row.isSelected()) {
-            // Selected row: bold text with highlight background
-            row.setStyle("-fx-background-color: #e3f2fd; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: bold; -fx-border-color: #2196f3; -fx-border-width: 0 0 1 0;");
-        } else {
-            // Normal row: regular text
-            row.setStyle("-fx-background-color: white; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
-        }
-    }
-    
+//    private void updateRowStyle(TableRow<managerOrderView> row) {
+//        if (row.isEmpty()) {
+//            row.setStyle("");
+//        } else if (row.isSelected()) {
+//            // Selected row: bold text with highlight background
+//            row.setStyle("-fx-background-color: #e3f2fd; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: bold; -fx-border-color: #2196f3; -fx-border-width: 0 0 1 0;");
+//        } else {
+//            // Normal row: regular text
+//            row.setStyle("-fx-background-color: white; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
+//        }
+//    }
+//
     /**
      * Resolves image path - handles absolute, relative, and network (UNC) paths
      * Supports:
