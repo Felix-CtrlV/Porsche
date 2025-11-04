@@ -116,6 +116,12 @@
     -fx-text-fill: white;
     -fx-prompt-text-fill: #cfcfcf;
 }
+.text-area{
+    -fx-background-color: #364040;
+    -fx-border-color: #4c595b;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #cfcfcf;
+}
 .cancelBtn{
     -fx-background-color: #4c595b;
     -fx-text-fill: #c0c0c0;
@@ -229,7 +235,7 @@
     -fx-background-color: #5a6a6e;
 }
 
-.table-view .table-cell {
+.table-view .table-cell,.table-view .table-cell .installmentNameCol {
     -fx-border-color: transparent;
     -fx-padding: 8px 16px;
     -fx-font-size: 14px;
@@ -259,9 +265,6 @@
 }
 .table-view .corner{
     -fx-background-color:transparent;
-}
-.table-view .column-header-background .filler {
-    -fx-background-color: transparent;
 }
 .selectedStyle{
             -fx-background-color: #293031;
@@ -380,6 +383,7 @@
     -fx-background-radius:6;
     -fx-border-radius:6;
     -fx-font-size: 16px;
+    -fx-cursor: hand;
 }
 .car.active {
     -fx-text-fill: #627488;
@@ -554,3 +558,97 @@
     -fx-background-insets: 1, 2;
     -fx-padding: 3px;
 }
+
+/* manager Inventory */
+.addEditInventory{
+    -fx-background-color: #867079;
+    -fx-background-radius: 10 10 0 0;
+}
+.addCarPartBackgroundColor{
+    -fx-background-color: #646c78;
+}
+.orderCircleBackground{
+    -fx-stoke-fill: #e5e7eb;
+     -fx-fill: transparent;
+        -fx-stroke-width: 12;
+}
+.dueDateStyle{
+    -fx-background-color: #293031;
+    -fx-border-color: #fed7aa;
+}
+/* Manager account */
+.listPath{
+    -fx-background-color: #353e3f;
+}
+.admin-card-header {
+    -fx-background-color: #293031;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.08), 8, 0, 0, 2);
+    -fx-padding: 15px 20px;
+}
+.profileHeader{
+    -fx-background-color:#293031;
+    -fx-effect: dropshadow(gaussian, rgba(246, 182, 44,0.08), 8, 0, 0, 2);
+}
+.admin-button-primary {
+    -fx-background-color: #f6b62c;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 12px 24px;
+    -fx-effect: dropshadow(gaussian, rgba(246, 182, 44, 0.3), 4, 0, 0, 2);
+}
+
+.admin-button-primary:hover {
+    -fx-background-color: #f8c352;
+    -fx-effect: dropshadow(gaussian, rgba(246, 182, 44, 0.4), 6, 0, 0, 3);
+}
+.gridColor{
+     -fx-border-color: #586769;
+}
+.admin-icon-warning {
+    -fx-font-size: 18px;
+    -fx-text-fill: #dc2626;
+}
+.admin-label-field {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: rgba(255,255,255,0.85);
+}
+.admin-label-value {
+    -fx-font-size: 16px;
+    -fx-text-fill: #f8f9fa;
+}
+.termination-reason {
+    -fx-background-color: #293031;
+    -fx-padding: 16px;
+    -fx-background-radius: 8px;
+    -fx-border-color: #f9abab;
+    -fx-border-radius: 8px;
+}
+.termination-reason-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #991b1b;
+}
+.termination-reason-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #dc2626;
+}
+/*for the table of the unavailable */
+.table-view .unavailableColStyle{
+       -fx-border-color: #ff0745;
+       -fx-border-width: 0 0 5 0;
+       -fx-padding: 8 0 8 0;
+}
+.table-view .soldOutColStyle{
+    -fx-border-color: #ffc107;
+    -fx-border-width: 0 0 5 0;
+    -fx-padding: 8 0 8 0;
+}
+ .staffCard:hover{
+    -fx-background-color: #5c9ea2;
+    -fx-background-radius: 8;
+ }

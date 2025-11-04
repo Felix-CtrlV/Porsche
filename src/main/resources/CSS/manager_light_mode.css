@@ -127,6 +127,12 @@
      -fx-prompt-text-fill: #9ca3af;
     -fx-border-color: #e5e7eb;
 }
+.text-area{
+    -fx-background-color: #f3f4f6;
+     -fx-text-fill: black;
+     -fx-prompt-text-fill: #9ca3af;
+    -fx-border-color: #e5e7eb;
+}
 .cancelBtn{
     -fx-background-color: #e5e7eb;
     -fx-text-fill: #374151;
@@ -271,7 +277,15 @@
     -fx-background-color:transparent;
 }
 .table-view .column-header-background .filler {
-    -fx-fill: transparent;
+    -fx-background-color: transparent;
+}
+.table-container {
+  -fx-overflow: auto;
+  -fx-scrollbar-gutter: stable both-edges; /* keeps layout stable but hides empty corner */
+}
+
+.table-container::-webkit-scrollbar-corner {
+  -fx-background: transparent; /* or match header color */
 }
 /* Calendar Day Label Styles */
 .dayLabel {
@@ -366,6 +380,7 @@
     -fx-background-radius:6;
     -fx-border-radius:6;
     -fx-font-size: 16px;
+    -fx-cursor: hand;
 }
 .car.active {
     -fx-text-fill: #627488;
@@ -540,4 +555,98 @@
     -fx-padding: 6px;
     -fx-padding: 6;
 }
+/* manager Inventory */
+.addEditInventory{
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 10 10 0 0;
+}
+.addCarPartBackgroundColor{
+    -fx-background-color: #334155;
+}
+/* manager Order */
+.orderCircleBackground{
+    -fx-stoke-fill: #f1f5f9;
+    -fx-fill: transparent;
+    -fx-stroke-width: 12;
+}
+.dueDateStyle{
+    -fx-background-color: #fff7ed;
+    -fx-border-color: #fed7aa;
+}
+/* Manager Account */
+.listPath{
+    -fx-background-color: #eff2ed;
+}
+.admin-card-header {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+    -fx-padding: 15px 20px;
+}
+.profileHeader{
+    -fx-background-color: #f0f9ff;
+}
+.admin-button-primary {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 12px 24px;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 4, 0, 0, 2);
+}
+.admin-button-primary:hover {
+    -fx-background-color: #2563eb;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 6, 0, 0, 3);
+}
+.gridColor{
+    -fx-border-color: #f1f5f9;
+}
+.admin-icon-warning {
+    -fx-font-size: 18px;
+    -fx-text-fill: #dc2626;
+}
+.admin-label-field {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b7280;
+}
 
+.admin-label-value {
+    -fx-font-size: 16px;
+    -fx-text-fill: #1f2937;
+}
+.termination-reason {
+    -fx-background-color: #fef2f2;
+    -fx-padding: 16px;
+    -fx-background-radius: 8px;
+    -fx-border-color: #fecaca;
+    -fx-border-radius: 8px;
+}
+.termination-reason-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #991b1b;
+}
+
+.termination-reason-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #dc2626;
+}
+/*for the table of the unavailable */
+.table-view .unavailableColStyle{
+       -fx-border-color: #ff0745;
+       -fx-border-width: 0 0 5 0;
+       -fx-padding: 8 0 8 0;
+}
+.table-view .soldOutColStyle{
+    -fx-fill : red;
+    -fx-border-color: #ffc107;
+    -fx-border-width: 0 0 5 0;
+    -fx-padding: 8 0 8 0;
+}
+ .staffCard:hover{
+    -fx-background-color: #91faff;
+    -fx-background-radius: 8;
+ }
