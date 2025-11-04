@@ -735,3 +735,6 @@
     -fx-background-color: #293031;
     -fx-border-color: #fde37c;
 }
+.toggleircle{
+    -fx-fill: linear-gradient(to right, #f12711, #f5af19);
+}
