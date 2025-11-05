@@ -148,25 +148,28 @@
                             <children>
                                 <Label styleClass="title"  text="PREFERENCES" />
 
-                                <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="settings-item-hover">
+                                <HBox alignment="CENTER_LEFT" onMouseClicked="#lightDarkToggle" spacing="15.0" styleClass="settings-item-hover">
                                     <children>
-                                        <StackPane minHeight="48.0" minWidth="48.0" styleClass="iconBorder" style=" -fx-background-radius: 12;">
+                                        <StackPane minHeight="48.0" minWidth="48.0" style=" -fx-background-radius: 12;" styleClass="iconBorder">
                                             <children>
-                                                <Label fx:id="moon" style = "-fx-font-size: 22;" styleClass="icon" text="🌙" />
-                                                <Label fx:id="sun" style = "-fx-font-size: 22;" styleClass="icon" text="🔆" />
+                                                <Label fx:id="moon" style="-fx-font-size: 22;" styleClass="icon" text="🌙" />
+                                                <Label fx:id="sun" style="-fx-font-size: 22;" styleClass="icon" text="🔆" />
                                             </children>
                                         </StackPane>
                                         <VBox spacing="3.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label fx:id="textMode" styleClass="textHeader" text="Dark Mode" style = " -fx-font-size: 15;-fx-font-weight: bold;" />
-                                                <Label styleClass="textDetail"    style = "-fx-font-size: 12;" text="Toggle dark/light theme" />
+                                                <Label fx:id="textMode" style=" -fx-font-size: 15;-fx-font-weight: bold;" styleClass="textHeader" text="Dark Mode" />
+                                                <Label style="-fx-font-size: 12;" styleClass="textDetail" text="Toggle dark/light theme" />
                                             </children>
                                         </VBox>
-                                        <ToggleButton fx:id="Mode"  minWidth="52.0" prefHeight="28.0" prefWidth="52.0" styleClass="mode" >
-                                            <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                            </cursor>
-                                        </ToggleButton>
+                                        <StackPane minWidth="52.0" prefHeight="48.0" prefWidth="52.0">
+                                            <ToggleButton fx:id="Mode" minWidth="52.0" prefHeight="28.0" prefWidth="89.0" styleClass="mode">
+                                                <cursor>
+                                                    <Cursor fx:constant="HAND" />
+                                                </cursor>
+                                            </ToggleButton>
+                                            <Circle fx:id="toggleCircle" styleClass="toggleCircle" radius="13"  strokeWidth="5" StackPane.alignment="CENTER_LEFT" />
+                                        </StackPane>
                                     </children>
                                 </HBox>
                             </children>

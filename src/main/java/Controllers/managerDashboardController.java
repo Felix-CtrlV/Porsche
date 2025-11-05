@@ -2,11 +2,8 @@ package Controllers;
 
 import Database.DatabaseConnectionManager;
 import MainUI.login;
-import Utils.LogoutHelper;
-import Utils.OTPService;
-import Utils.Session;
+import Utils.*;
 import Utils.SecurityManager;
-import Utils.SecurityEmailService;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -21,6 +18,7 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -210,43 +208,53 @@ public class managerDashboardController {
 
     public static boolean isDarkMode = false;
 
+    @FXML Circle toggleCircle;
+    @FXML
+    void lightDarkToggle(MouseEvent event) {
+        lightDarkToggle.getInstance().toggleTheme();
+        TranslateTransition transition = new TranslateTransition(Duration.millis(300), toggleCircle);
+        if(isDarkMode){
+            transition.setToX(0);
+        }else{
+            transition.setToX(25);
+        }
+        transition.setOnFinished(e->{
+
+            try {
+                if (!isDarkMode) {
+                    // Switch to dark mode
+                    sun.setVisible(false);
+                    moon.setVisible(true);
+                    textMode.setText("Dark Mode");
+
+
+                } else {
+                    sun.setVisible(true);
+                    moon.setVisible(false);
+                    textMode.setText("Light Mode");
+
+                }
+                isDarkMode = lightDarkToggle.getInstance().isDarkMode();
+            } catch (Exception ex) {
+                System.err.println("Error loading CSS: " + ex.getMessage());
+            }
+        });
+        transition.play();
+
+    }
+
+
     public void initialize() throws IOException {
         // Load the CSS file once (do NOT clear it later)
-        rootPane.getStylesheets().add(
-                getClass().getResource("/CSS/manager_light_mode.css").toExternalForm()
-        );
-
-        // Initial state: Light mode (default, as per CSS :root)
+        isDarkMode = lightDarkToggle.getInstance().isDarkMode();
         sun.setVisible(true);
         moon.setVisible(false);
         textMode.setText("Light Mode");
-        isDarkMode = false;
-
-        // Toggle button action
-        Mode.setOnAction(e -> {
-            rootPane.getStylesheets().clear();
-            if (!isDarkMode) {
-                // Switch to Dark Mode
-
-                rootPane.getStylesheets().add(
-                        getClass().getResource("/CSS/manager_dark_mode.css").toExternalForm()
-                );// Add the class to rootPane
-                sun.setVisible(false);
-                moon.setVisible(true);
-                textMode.setText("Dark Mode");
-                isDarkMode = true;
-            } else {
-                // Switch to Light Mode
-
-                rootPane.getStylesheets().add(
-                        getClass().getResource("/CSS/manager_light_mode.css").toExternalForm()
-                );// Remove the class from rootPane
-                sun.setVisible(true);
-                moon.setVisible(false);
-                textMode.setText("Light Mode");
-                isDarkMode = false;
-            }
+        lightDarkToggle.getInstance().register(rootPane, "/CSS/manager_light_mode.css", "/CSS/manager_dark_mode.css");
+        Mode.setOnAction(e->{
+            lightDarkToggle(null);
         });
+
 
         String name = current.getUsername();
         nameLbl.setText(name);
