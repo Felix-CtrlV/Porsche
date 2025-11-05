@@ -250,6 +250,7 @@ public class managerDashboardController {
         sun.setVisible(true);
         moon.setVisible(false);
         textMode.setText("Light Mode");
+
         lightDarkToggle.getInstance().register(rootPane, "/CSS/manager_light_mode.css", "/CSS/manager_dark_mode.css");
         Mode.setOnAction(e->{
             lightDarkToggle(null);

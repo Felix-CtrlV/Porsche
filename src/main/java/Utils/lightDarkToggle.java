@@ -40,6 +40,7 @@ public class lightDarkToggle {
         this.parent = root;
         this.lighCss = lightCss;
         this.darkCss = darkCss;
+        darkModeProperty.setValue(false);
         root.getStylesheets().clear();
         String css = darkModeProperty.get() ? darkCss : lightCss;
         root.getStylesheets().add(getClass().getResource(css).toExternalForm());
