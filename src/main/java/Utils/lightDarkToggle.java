@@ -73,7 +73,7 @@ public class lightDarkToggle {
                         new KeyValue(region.opacityProperty(), 0, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(250),
-                        new KeyValue(blur.radiusProperty(), 10, Interpolator.EASE_BOTH),
+                        new KeyValue(blur.radiusProperty(), 5, Interpolator.EASE_BOTH),
                         new KeyValue(region.opacityProperty(), 0.25, Interpolator.EASE_BOTH)
                 )
 
@@ -84,7 +84,7 @@ public class lightDarkToggle {
 
             Timeline blurOut = new Timeline(
                     new KeyFrame(Duration.ZERO,
-                            new KeyValue(blur.radiusProperty(), 10, Interpolator.EASE_BOTH),
+                            new KeyValue(blur.radiusProperty(), 5, Interpolator.EASE_BOTH),
                             new KeyValue(region.opacityProperty(), 0.25, Interpolator.EASE_BOTH)
                     ),
                     new KeyFrame(Duration.millis(250),

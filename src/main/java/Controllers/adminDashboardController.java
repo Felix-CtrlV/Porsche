@@ -188,24 +188,35 @@ public class adminDashboardController {
     @FXML
     void lightDarkToggle(MouseEvent event) {
         lightDarkToggle.getInstance().toggleTheme();
-        isDarkMode = lightDarkToggle.getInstance().isDarkMode();
-        try {
-            if (!isDarkMode) {
-                // Switch to dark mode
-                sun.setVisible(false);
-                moon.setVisible(true);
-                textMode.setText("Dark Mode");
-
-
-            } else {
-
-                sun.setVisible(true);
-                moon.setVisible(false);
-                textMode.setText("Light Mode");
-            }
-        } catch (Exception ex) {
-            System.err.println("Error loading CSS: " + ex.getMessage());
+        TranslateTransition transition = new TranslateTransition(Duration.millis(300), toggleCircle);
+        if(isDarkMode){
+            transition.setToX(0);
+        }else{
+            transition.setToX(25);
         }
+        transition.setOnFinished(e->{
+
+            try {
+                if (!isDarkMode) {
+                    // Switch to dark mode
+                    sun.setVisible(false);
+                    moon.setVisible(true);
+                    textMode.setText("Dark Mode");
+
+
+                } else {
+                    sun.setVisible(true);
+                    moon.setVisible(false);
+                    textMode.setText("Light Mode");
+
+                }
+                isDarkMode = lightDarkToggle.getInstance().isDarkMode();
+            } catch (Exception ex) {
+                System.err.println("Error loading CSS: " + ex.getMessage());
+            }
+        });
+        transition.play();
+
     }
 
     @FXML
