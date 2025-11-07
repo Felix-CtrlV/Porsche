@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<StackPane styleClass="root-container" stylesheets="@../CSS/finalCheckout.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffShopingCartController">
+<StackPane styleClass="root-container" stylesheets="@../CSS/finalCheckout.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffShopingCartController">
 
     <ScrollPane fx:id="scrollPane" fitToWidth="true" styleClass="scroll-pane">
         <VBox alignment="TOP_CENTER" spacing="20">
@@ -70,7 +70,10 @@
                             <ToggleGroup fx:id="paymentMethodGroup" />
                         </fx:define>
 
-                        <RadioButton fx:id="fullPaymentRadio" selected="true" styleClass="payment-radio" text="Full Payment" toggleGroup="$paymentMethodGroup" />
+                        <RadioButton fx:id="fullPaymentRadio" selected="true" styleClass="payment-radio" text="Full Payment">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="paymentMethodGroup" />
+                     </toggleGroup></RadioButton>
                         <RadioButton fx:id="installmentRadio" styleClass="payment-radio" text="Installment Plan" toggleGroup="$paymentMethodGroup" />
                     </VBox>
                 </VBox>
@@ -131,20 +134,20 @@
                 <VBox spacing="12" styleClass="summary-container">
                     <HBox alignment="CENTER_LEFT" spacing="15">
                         <Label minWidth="200" styleClass="summary-label" text="Base Price:" />
-                        <Label fx:id="summaryBasePriceLabel" styleClass="summary-value" text="115,000" />
+                        <Label fx:id="summaryBasePriceLabel" styleClass="summary-value" text="Price" />
                     </HBox>
                     <HBox alignment="CENTER_LEFT" spacing="15">
                         <Label minWidth="200" styleClass="summary-label" text="Accessories Total:" />
-                        <Label fx:id="accessoriesTotalLabel" styleClass="summary-value" text="12,000" />
+                        <Label fx:id="accessoriesTotalLabel" styleClass="summary-value" text="Price" />
                     </HBox>
                     <HBox alignment="CENTER_LEFT" spacing="15">
                         <Label minWidth="200" styleClass="summary-label" text="Tax (8%):" />
-                        <Label fx:id="taxLabel" styleClass="summary-value" text="10,160" />
+                        <Label fx:id="taxLabel" styleClass="summary-value" text="Tax Rate" />
                     </HBox>
                     <Line endX="920" strokeWidth="3" styleClass="total-divider" />
                     <HBox alignment="CENTER_LEFT" spacing="15">
                         <Label minWidth="200" styleClass="total-label" text="Grand Total:" />
-                        <Label fx:id="totalPriceLabel" styleClass="total-value" text="137,160" />
+                        <Label fx:id="totalPriceLabel" styleClass="total-value" text="Price" />
                     </HBox>
                 </VBox>
 

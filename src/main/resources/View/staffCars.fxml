@@ -34,7 +34,7 @@
                 </VBox.margin>
             </Line>
 
-            <GridPane alignment="CENTER" hgap="24" styleClass="models-grid" vgap="24" VBox.vgrow="ALWAYS">
+            <GridPane alignment="CENTER" hgap="24" vgap="24" VBox.vgrow="ALWAYS">
                 <padding>
                     <Insets bottom="20" left="40" right="40" top="20" />
                 </padding>

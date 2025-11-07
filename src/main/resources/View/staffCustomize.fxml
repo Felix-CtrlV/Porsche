@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -13,16 +12,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="root-pane" stylesheets="@../CSS/customize_page.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffCustomizeController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="root-pane" stylesheets="@../CSS/customize_page.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffCustomizeController">
 
     <center>
         <StackPane minWidth="511.0" prefHeight="265.0" prefWidth="640.0" BorderPane.alignment="CENTER">
             <children>
-                <ImageView fx:id="modelImage" fitHeight="320.0" fitWidth="640.0" pickOnBounds="true" preserveRatio="true" styleClass="car-image-view" StackPane.alignment="CENTER">
-                    <image>
-                        <Image url="@../Image/911_select_model.png" />
-                    </image>
-                </ImageView>
+                <ImageView fx:id="modelImage" fitHeight="320.0" fitWidth="640.0" pickOnBounds="true" preserveRatio="true" styleClass="car-image-view" StackPane.alignment="CENTER" />
             </children>
             <BorderPane.margin>
                 <Insets bottom="10.0" top="20.0" />
@@ -210,7 +205,7 @@
                             </VBox.margin>
                             <children>
                                 <Label alignment="CENTER" prefHeight="17.0" prefWidth="99.0" styleClass="option-price-label" text="Starting From" />
-                                <Label fx:id="modelPrice" styleClass="price-value" text="140,000" />
+                                <Label fx:id="modelPrice" alignment="CENTER" prefHeight="30.0" prefWidth="104.0" styleClass="price-value" text="100000" />
                             </children>
                         </VBox>
 

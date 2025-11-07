@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<StackPane prefHeight="800" prefWidth="1200" styleClass="root-container" stylesheets="@../CSS/staffasset.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffassetController">
+<StackPane prefHeight="800" prefWidth="1200" styleClass="root-container" stylesheets="@../CSS/staffasset.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffassetController">
 
     <VBox spacing="0">
         <HBox alignment="CENTER_LEFT" spacing="15" styleClass="header-container">
@@ -56,8 +56,8 @@
                             <padding>
                                 <Insets bottom="25" left="25" />
                             </padding>
-                            <Label fx:id="sliderTitle" styleClass="slider-title" text="Premium Floor Mats" />
-                            <Label fx:id="sliderDescription" styleClass="slider-description" text="Custom-fitted luxury floor mats" />
+                            <Label fx:id="sliderTitle" styleClass="slider-title" text="Item Name" />
+                            <Label fx:id="sliderDescription" styleClass="slider-description" text="Item Description" />
                         </VBox>
                     </StackPane>
                 </VBox>
