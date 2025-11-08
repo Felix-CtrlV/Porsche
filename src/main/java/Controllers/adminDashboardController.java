@@ -2,17 +2,15 @@ package Controllers;
 
 import Database.DatabaseConnectionManager;
 import MainUI.login;
-import Utils.OTPService;
-import Utils.Session;
-import Utils.CSSManager;
+import Utils.*;
 import Utils.SecurityManager;
-import Utils.SecurityEmailService;
+import javafx.animation.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +23,7 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
@@ -52,6 +51,9 @@ public class adminDashboardController {
 
     @FXML
     private HBox optionProfile, optionTarget, optionSalary, optionChange;
+
+    @FXML
+    private Circle toggleCircle;
 
     @FXML
     private Label profileName, profileDOB;
@@ -96,83 +98,83 @@ public class adminDashboardController {
 
     @FXML
     private VBox settingPane, passwordVerifyPane, profilePane, targetPane, salaryPane;
-    
+
     @FXML
     private StackPane targetContentPane, salaryContentPane,rootPane;
-    
+
     @FXML
     private AnchorPane oldProfilePane;
 
     @FXML
     private Label settingIcon, backToSettingsBtn, backToSettingsFromTarget, backToSettingsFromSalary, editProfileBtn, passwordErrorLabel;
-    
+
     @FXML
     private javafx.scene.control.PasswordField verifyPasswordField;
-    
+
     @FXML
     private Button verifyPasswordBtn, cancelVerifyBtn, saveProfileBtn;
 
     @FXML
     private Button editProfilePhotoBtn;
-    
+
     @FXML
     private HBox toastNotification;
-    
+
     @FXML
     private Label toastIcon, toastTitle, toastMessage;
-    
+
     @FXML
     private VBox confirmDialog, confirmContent;
-    
+
     @FXML
     private Pane confirmOverlay;
-    
+
     @FXML
     private Label confirmIcon, confirmTitle, confirmMessage;
-    
+
     @FXML
     private Button confirmOkBtn, confirmCancelBtn;
-    
+
     private Runnable confirmCallback;
-    
+
     // Change Password Dialog
     @FXML
     private VBox changePasswordDialog, passwordVerificationPane, otpVerificationPane, newPasswordPane;
-    
+
     @FXML
     private PasswordField currentPasswordField, newPasswordField, confirmPasswordField;
-    
+
     @FXML
     private TextField otpField;
-    
+
     @FXML
     private Button verifyCurrentPasswordBtn, verifyOtpBtn, resendOtpBtn, changePasswordBtn;
-    
+
     @FXML
     private Label passwordVerifyStatus, otpVerifyStatus, changePasswordStatus, otpEmailLabel;
-    
+
     @FXML
     private StackPane passwordMessagePane;
-    
+
     @FXML
     private Label passwordMessageLabel, closePasswordDialogBtn;
-    
+
     @FXML
     private StackPane passwordLoadingPane;
-    
+
     // Security Lock Overlay Components
     @FXML
     private StackPane securityLockOverlay;
-    
+
     @FXML
     private Label lockIcon, lockMessage;
 
     @FXML private Label sun,moon,textMode;
-    
+
     private final OTPService otpService = OTPService.getInstance();
     private final SecurityManager securityManager = SecurityManager.getInstance();
     private final SecurityEmailService emailService = SecurityEmailService.getInstance();
-    
+
     private SequentialTransition currentPasswordAnimation;
 
     @FXML
@@ -182,6 +184,40 @@ public class adminDashboardController {
 
     private File selectedProfilePhoto;
     private String cachedPhotoPath;
+
+    @FXML
+    void lightDarkToggle(MouseEvent event) {
+        lightDarkToggle.getInstance().toggleTheme();
+        TranslateTransition transition = new TranslateTransition(Duration.millis(300), toggleCircle);
+        if(isDarkMode){
+            transition.setToX(0);
+        }else{
+            transition.setToX(25);
+        }
+        transition.setOnFinished(e->{
+
+            try {
+                if (!isDarkMode) {
+                    // Switch to dark mode
+                    sun.setVisible(false);
+                    moon.setVisible(true);
+                    textMode.setText("Dark Mode");
+
+
+                } else {
+                    sun.setVisible(true);
+                    moon.setVisible(false);
+                    textMode.setText("Light Mode");
+
+                }
+                isDarkMode = lightDarkToggle.getInstance().isDarkMode();
+            } catch (Exception ex) {
+                System.err.println("Error loading CSS: " + ex.getMessage());
+            }
+        });
+        transition.play();
+
+    }
 
     @FXML
     void clickAccount(ActionEvent event) throws IOException {
@@ -266,33 +302,13 @@ public class adminDashboardController {
     Session current = Session.getInstance();
     public void initialize() throws IOException {
 
-            rootPane.getStylesheets().add(
-                    getClass().getResource("/CSS/admin_light_mode.css").toExternalForm()
-            );
+            isDarkMode = lightDarkToggle.getInstance().isDarkMode();
             sun.setVisible(true);
             moon.setVisible(false);
             textMode.setText("Light Mode");
-            isDarkMode = false;
+            lightDarkToggle.getInstance().register(rootPane, "/CSS/admin_light_mode.css", "/CSS/admin_dark_mode.css");
             Mode.setOnAction(e->{
-                rootPane.getStylesheets().clear();
-                if(!isDarkMode){
-                    sun.setVisible(false);
-                    moon.setVisible(true);
-                    textMode.setText("Dark Mode");
-
-                    rootPane.getStylesheets().add(
-                            getClass().getResource("/CSS/admin_dark_mode.css").toExternalForm()
-                    );
-                    isDarkMode = true;
-                }else{
-                    rootPane.getStylesheets().add(
-                            getClass().getResource("/CSS/admin_light_mode.css").toExternalForm()
-                    );
-                    sun.setVisible(true);
-                    moon.setVisible(false);
-                    textMode.setText("Light Mode");
-                    isDarkMode = false;
-                }
+                lightDarkToggle(null);
             });
 
 
