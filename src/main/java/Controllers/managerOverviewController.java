@@ -927,17 +927,6 @@ public class managerOverviewController {
                 node.setStyle("-fx-bar-fill: " + color + ";");
             });
             
-            // Apply styling to area chart elements using CSS classes
-            revenueAreaChart.lookupAll(".chart-series-area-line").forEach(node -> {
-                String strokeColor = chartMode.equals("car") ? "#6D8196" : "#ffa500";
-                node.setStyle("-fx-stroke: " + strokeColor + "; -fx-stroke-width: 3px; -fx-stroke-line-cap: round; -fx-stroke-line-join: round;");
-            });
-            
-            revenueAreaChart.lookupAll(".chart-series-area-fill").forEach(node -> {
-                String fillColor = chartMode.equals("car") ? "rgba(109,129,150,0.2)" : "rgba(255,165,0,0.2)";
-                node.setStyle("-fx-fill: " + fillColor + "; -fx-fill-rule: even-odd;");
-            });
-            
             // Remove data point symbols styling since we disabled them
             
             // Hide chart temporarily while applying smooth curves

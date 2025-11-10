@@ -301,8 +301,6 @@ public class adminDashboardController {
 
     Session current = Session.getInstance();
     public void initialize() throws IOException {
-
-            isDarkMode = lightDarkToggle.getInstance().isDarkMode();
             sun.setVisible(true);
             moon.setVisible(false);
             textMode.setText("Light Mode");

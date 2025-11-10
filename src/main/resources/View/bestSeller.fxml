@@ -18,27 +18,7 @@
       <StackPane maxHeight="120.0" maxWidth="500.0" minHeight="120.0" minWidth="300.0" HBox.hgrow="ALWAYS">
           <children>
               <!-- Modern Card Background -->
-              <Rectangle arcHeight="14" arcWidth="14" height="120.0" width="500.0">
-                  <fill>
-                      <LinearGradient endX="1.0" endY="1.0">
-                          <stops>
-                              <Stop color="#ffffff" offset="0.0" />
-                              <Stop color="#fafbfc" offset="1.0" />
-                          </stops>
-                      </LinearGradient>
-                  </fill>
-                  <stroke>
-                      <LinearGradient endX="1.0" endY="1.0">
-                          <stops>
-                              <Stop color="#f1f5f9" offset="0.0" />
-                              <Stop color="#e2e8f0" offset="1.0" />
-                          </stops>
-                      </LinearGradient>
-                  </stroke>
-                  <effect>
-                      <DropShadow color="rgba(15,23,42,0.06)" offsetX="0" offsetY="2" radius="8" />
-                  </effect>
-              </Rectangle>
+              <Rectangle arcHeight="14" arcWidth="14" height="120.0" width="500.0" styleClass="rectangle"/>
       
               <HBox minHeight="120.0" minWidth="500.0" prefHeight="120.0" prefWidth="500.0" spacing="12" StackPane.alignment="CENTER">
                   <children>
@@ -68,8 +48,8 @@
                           <!-- Name and Rank Row -->
                           <HBox alignment="CENTER_LEFT" spacing="12">
                               <children>
-                                  <Label fx:id="name" style="-fx-font-size: 16px; -fx-font-weight: 800; -fx-text-fill: #0f172a; -fx-font-family: 'Segoe UI', system;" text="John Smith" />
-                                  <Label fx:id="rank" style="-fx-font-size: 18px; -fx-font-weight: 900; -fx-text-fill: #f59e0b; -fx-font-family: 'Segoe UI', system;" text="#1" />
+                                  <Label fx:id="name" styleClass="textHeader" style="-fx-font-size: 16px; -fx-font-weight: 800; -fx-font-family: 'Arial Black', system;" text="John Smith" />
+                                  <Label fx:id="rank" style="-fx-font-size: 18px; -fx-font-weight: 900; -fx-text-fill: #f59e0b; -fx-font-family: 'Arial Black', system;" text="#1" />
                               </children>
                           </HBox>
                           

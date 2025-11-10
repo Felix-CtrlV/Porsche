@@ -245,8 +245,7 @@ public class managerDashboardController {
 
 
     public void initialize() throws IOException {
-        // Load the CSS file once (do NOT clear it later)
-        isDarkMode = lightDarkToggle.getInstance().isDarkMode();
+
         sun.setVisible(true);
         moon.setVisible(false);
         textMode.setText("Light Mode");

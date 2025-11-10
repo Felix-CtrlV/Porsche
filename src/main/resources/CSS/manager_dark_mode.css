@@ -652,3 +652,7 @@
     -fx-background-color: #5c9ea2;
     -fx-background-radius: 8;
  }
+.rectangle{
+    -fx-fill: #293031;
+     -fx-effect: dropshadow(gaussian, #556365 , 25, 0, -8, 0);
+}
