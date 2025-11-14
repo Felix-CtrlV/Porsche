@@ -252,7 +252,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <TableView fx:id="installmentTable" prefHeight="150.0" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="installmentTable" onMouseClicked="#installmentTableClick" prefHeight="150.0" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="installmentNameCol" text="Name" />
                               <TableColumn fx:id="installmentQtyCol"  text="Quantity" />

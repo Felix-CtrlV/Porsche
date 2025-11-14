@@ -3,6 +3,7 @@ package Controllers;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -53,6 +54,13 @@ public class managerOrderManagementController {
     private int managerId;
     private ContextMenu searchSuggestions = new ContextMenu();
     private boolean dataLoaded = false; // Track if data has been loaded from database
+    
+    // Dashboard controller reference for customization pane and toast notifications
+    private managerDashboardController dashboardController;
+    
+    public void setDashboardController(managerDashboardController dashboardController) {
+        this.dashboardController = dashboardController;
+    }
     
     private LocalDate today = LocalDate.now();
     private int currentMonth;
@@ -254,6 +262,28 @@ public class managerOrderManagementController {
             return;
         }
         orderDetails(selectedOrder);
+    }
+
+    @FXML
+    void installmentTableClick(MouseEvent event) {
+        String selectedRow = installmentTable.getSelectionModel().getSelectedItem();
+        if (selectedRow == null || selectedRow.equals("No order data available|---|---")) {
+            return;
+        }
+        
+        managerOrderView selectedOrder = orderTable.getSelectionModel().getSelectedItem();
+        if (selectedOrder == null) {
+            return;
+        }
+        
+        // Extract item name from the row data
+        String[] parts = selectedRow.split("\\|");
+        if (parts.length == 0) {
+            return;
+        }
+        
+        String itemName = parts[0].trim();
+        handleItemClick(selectedOrder.getOrder_id(), itemName);
     }
 
     @FXML
@@ -1645,6 +1675,124 @@ public class managerOrderManagementController {
         });
         
         timeline.play();
+    }
+
+    // ========== CUSTOMIZATION PANE METHODS ==========
+    
+    /**
+     * Handles click on an item in the installment table
+     * Checks if it's a car and shows customization details or toast notification
+     */
+    private void handleItemClick(int orderId, String itemName) {
+        try {
+            Porsche_DB db = new Porsche_DB();
+            Connection con = db.connect();
+            
+            // First, check if this item is a car and get its detail_id
+            String checkCarQuery = "SELECT od.detail_id, od.car_id " +
+                                  "FROM order_details od " +
+                                  "JOIN orders o ON od.order_id = o.order_id " +
+                                  "LEFT JOIN cars c ON od.car_id = c.car_id " +
+                                  "WHERE o.order_id = ? AND " +
+                                  "CONCAT(c.model_name, ' ', c.trim_name) = ?";
+            
+            PreparedStatement ps = con.prepareStatement(checkCarQuery);
+            ps.setInt(1, orderId);
+            ps.setString(2, itemName);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                int detailId = rs.getInt("detail_id");
+                int carId = rs.getInt("car_id");
+                
+                // Check if it's a car (car_id is not null)
+                if (carId > 0) {
+                    // Get customizations for this car
+                    List<CustomizationItem> customizations = getCustomizations(detailId, con);
+                    
+                    if (customizations.isEmpty()) {
+                        // Show toast notification - No customization
+                        if (dashboardController != null) {
+                            dashboardController.showToast("No Customization", "This car has no customization options.", "info");
+                        }
+                    } else {
+                        // Convert to dashboard controller's CustomizationItem format
+                        List<managerDashboardController.CustomizationItem> dashboardItems = new ArrayList<>();
+                        for (CustomizationItem item : customizations) {
+                            dashboardItems.add(new managerDashboardController.CustomizationItem(
+                                item.getType(), item.getValue(), item.getPrice()));
+                        }
+                        // Show customization pane with details
+                        if (dashboardController != null) {
+                            dashboardController.showCustomizationPane(dashboardItems);
+                        }
+                    }
+                } else {
+                    // It's a part, not a car - do nothing or show a message
+                    return;
+                }
+            } else {
+                // Item not found or it's a part
+                return;
+            }
+            
+            rs.close();
+            ps.close();
+            con.close();
+            
+        } catch (SQLException e) {
+            logger.error("Error checking item for customization", e);
+            if (dashboardController != null) {
+                dashboardController.showToast("Error", "Failed to load customization details.", "error");
+            }
+        }
+    }
+    
+    /**
+     * Fetches customization data for a given detail_id
+     */
+    private List<CustomizationItem> getCustomizations(int detailId, Connection con) throws SQLException {
+        List<CustomizationItem> customizations = new ArrayList<>();
+        
+        String query = "SELECT customization_type, customization_value, customization_price " +
+                      "FROM customize " +
+                      "WHERE detail_id = ?";
+        
+        PreparedStatement ps = con.prepareStatement(query);
+        ps.setInt(1, detailId);
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            String type = rs.getString("customization_type");
+            String value = rs.getString("customization_value");
+            double price = rs.getDouble("customization_price");
+            
+            customizations.add(new CustomizationItem(type, value, price));
+        }
+        
+        rs.close();
+        ps.close();
+        
+        return customizations;
+    }
+    
+    /**
+     * Inner class to hold customization item data (used internally before converting to dashboard format)
+     */
+    private static class CustomizationItem {
+        private String type;
+        private String value;
+        private double price;
+        
+        public CustomizationItem(String type, String value, double price) {
+            this.type = type;
+            this.value = value;
+            this.price = price;
+        }
+        
+        public String getType() { return type; }
+        public String getValue() { return value; }
+        public double getPrice() { return price; }
     }
 
 }

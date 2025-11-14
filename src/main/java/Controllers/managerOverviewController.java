@@ -39,6 +39,8 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ForkJoinPool;
 
 public class managerOverviewController {
 
@@ -444,15 +446,83 @@ public class managerOverviewController {
         }
         updateMonthBoxForYear(currentYear);
 
-        //to set target
-        try {
-            setTarget();
-            setCharts();
-            setBesti();
-        } catch (SQLException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        // Load data asynchronously in parallel for better performance
+        loadOverviewDataAsync();
     }
+    
+    /**
+     * Loads overview data asynchronously in parallel for better performance
+     */
+    private void loadOverviewDataAsync() {
+        // Load target, charts, and best sellers in parallel
+        // Database operations run async, UI updates run on JavaFX thread
+        CompletableFuture<Void> targetFuture = CompletableFuture.runAsync(() -> {
+            try {
+                // Fetch data in background thread
+                CallableStatement cs = con.prepareCall("CALL targetViewChart(?,?,?)");
+                cs.setInt(1, managerId);
+                cs.setInt(2, currentMonth);
+                cs.setInt(3, currentYear);
+                ResultSet rs = cs.executeQuery();
+                
+                int target_car = 0, target_part = 0, achieve_car = 0, achieve_part = 0;
+                if (rs.next()) {
+                    target_car = rs.getInt(4);
+                    target_part = rs.getInt(5);
+                    achieve_car = rs.getInt(6);
+                    achieve_part = rs.getInt(7);
+                }
+                rs.close();
+                cs.close();
+                
+                // Update UI on JavaFX thread
+                final int tCar = target_car, tPart = target_part, aCar = achieve_car, aPart = achieve_part;
+                Platform.runLater(() -> {
+                    setCarCircle(tCar, aCar);
+                    setPartCircle(tPart, aPart);
+                });
+            } catch (SQLException e) {
+                Platform.runLater(() -> {
+                    System.err.println("Error loading target data: " + e.getMessage());
+                    e.printStackTrace();
+                });
+            }
+        }, ForkJoinPool.commonPool());
+        
+        CompletableFuture<Void> chartsFuture = CompletableFuture.runAsync(() -> {
+            try {
+                // Fetch chart data in background thread
+                setChartsDataAsync();
+            } catch (SQLException e) {
+                Platform.runLater(() -> {
+                    System.err.println("Error loading chart data: " + e.getMessage());
+                    e.printStackTrace();
+                });
+            }
+        }, ForkJoinPool.commonPool());
+        
+        CompletableFuture<Void> bestiFuture = CompletableFuture.runAsync(() -> {
+            try {
+                // Load best sellers in background thread
+                setBestiDataAsync();
+            } catch (SQLException | IOException e) {
+                Platform.runLater(() -> {
+                    System.err.println("Error loading best sellers data: " + e.getMessage());
+                    e.printStackTrace();
+                });
+            }
+        }, ForkJoinPool.commonPool());
+        
+        // Wait for all tasks to complete
+        CompletableFuture.allOf(targetFuture, chartsFuture, bestiFuture)
+            .exceptionally(ex -> {
+                Platform.runLater(() -> {
+                    System.err.println("Error loading overview data: " + ex.getMessage());
+                });
+                return null;
+            });
+    }
+    
     private void updateMonthBoxForYear(int year) {
         int startMonth = 1;
         int endMonth = 12;
@@ -894,13 +964,11 @@ public class managerOverviewController {
         qtyBarChart.setCategoryGap(20);
 
         // Apply custom colors to match the selected mode (car or part)
-        Platform.runLater(() -> {
-            String color = chartMode.equals("car") ? "#6D8196" : "#ffa500";
-            
-            // Apply styling to all bars using lookupAll
-            qtyBarChart.lookupAll(".chart-bar").forEach(node -> {
-                node.setStyle("-fx-bar-fill: " + color + ";");
-            });
+        String color = chartMode.equals("car") ? "#6D8196" : "#ffa500";
+        
+        // Apply styling to all bars using lookupAll (already on JavaFX thread)
+        qtyBarChart.lookupAll(".chart-bar").forEach(node -> {
+            node.setStyle("-fx-bar-fill: " + color + ";");
         });
     }
     
@@ -919,35 +987,31 @@ public class managerOverviewController {
         revenueAreaChart.setCreateSymbols(false); // Disable symbols for cleaner look
 
         // Apply custom colors to match the selected mode (car or part)
-        Platform.runLater(() -> {
-            String color = chartMode.equals("car") ? "#6D8196" : "#ffa500";
-            
-            // Apply styling to all bars using lookupAll (like adminOverviewController)
-            qtyBarChart.lookupAll(".chart-bar").forEach(node -> {
-                node.setStyle("-fx-bar-fill: " + color + ";");
-            });
-            
-            // Apply styling to area chart elements using CSS classes
-            revenueAreaChart.lookupAll(".chart-series-area-line").forEach(node -> {
-                String strokeColor = chartMode.equals("car") ? "#6D8196" : "#ffa500";
-                node.setStyle("-fx-stroke: " + strokeColor + "; -fx-stroke-width: 3px; -fx-stroke-line-cap: round; -fx-stroke-line-join: round;");
-            });
-            
-            revenueAreaChart.lookupAll(".chart-series-area-fill").forEach(node -> {
-                String fillColor = chartMode.equals("car") ? "rgba(109,129,150,0.2)" : "rgba(255,165,0,0.2)";
-                node.setStyle("-fx-fill: " + fillColor + "; -fx-fill-rule: even-odd;");
-            });
-            
-            // Remove data point symbols styling since we disabled them
-            
-            // Hide chart temporarily while applying smooth curves
-            revenueAreaChart.setOpacity(0);
-            
-            // Apply smooth curves after a short delay to ensure paths are created
-            javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
-            pause.setOnFinished(e -> applySmoothCurves());
-            pause.play();
+        String color = chartMode.equals("car") ? "#6D8196" : "#ffa500";
+        
+        // Apply styling to all bars using lookupAll (like adminOverviewController)
+        qtyBarChart.lookupAll(".chart-bar").forEach(node -> {
+            node.setStyle("-fx-bar-fill: " + color + ";");
         });
+        
+        // Apply styling to area chart elements using CSS classes
+        revenueAreaChart.lookupAll(".chart-series-area-line").forEach(node -> {
+            String strokeColor = chartMode.equals("car") ? "#6D8196" : "#ffa500";
+            node.setStyle("-fx-stroke: " + strokeColor + "; -fx-stroke-width: 3px; -fx-stroke-line-cap: round; -fx-stroke-line-join: round;");
+        });
+        
+        revenueAreaChart.lookupAll(".chart-series-area-fill").forEach(node -> {
+            String fillColor = chartMode.equals("car") ? "rgba(109,129,150,0.2)" : "rgba(255,165,0,0.2)";
+            node.setStyle("-fx-fill: " + fillColor + "; -fx-fill-rule: even-odd;");
+        });
+        
+        // Hide chart temporarily while applying smooth curves
+        revenueAreaChart.setOpacity(0);
+        
+        // Apply smooth curves after a short delay to ensure paths are created
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
+        pause.setOnFinished(e -> applySmoothCurves());
+        pause.play();
     }
     
     // ---------- Smooth Curve Methods ----------
@@ -958,40 +1022,87 @@ public class managerOverviewController {
         if (revenueAreaChart == null)
             return;
 
-        Platform.runLater(() -> {
-            // Find all series paths in the chart
-            java.util.Set<javafx.scene.Node> linePaths = revenueAreaChart.lookupAll(".chart-series-area-line");
-            java.util.Set<javafx.scene.Node> fillPaths = revenueAreaChart.lookupAll(".chart-series-area-fill");
-            
-            // Process each line path to ensure smooth curves
-            for (javafx.scene.Node node : linePaths) {
+        revenueAreaChart.applyCss();
+        revenueAreaChart.layout();
+
+        // Check if paths are ready, if not, retry after a short delay
+        var linePaths = revenueAreaChart.lookupAll(".chart-series-area-line");
+        var fillPaths = revenueAreaChart.lookupAll(".chart-series-area-fill");
+
+        if (linePaths.isEmpty() || fillPaths.isEmpty()) {
+            // Paths not ready yet, try again after 50ms
+            javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(50));
+            pause.setOnFinished(e -> applySmoothCurves());
+            pause.play();
+            return;
+        }
+
+        java.util.List<javafx.scene.shape.PathElement> smoothedLineElements = new java.util.ArrayList<>();
+
+        linePaths.forEach(node -> {
                 if (node instanceof javafx.scene.shape.Path) {
                     javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
                     path.setStrokeLineJoin(javafx.scene.shape.StrokeLineJoin.ROUND);
                     path.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
                     path.setStrokeWidth(3);
-                    
-                    // Apply smooth curve algorithm
-                    smoothPath(path, false);
-                }
+                smoothPath(path);
+                smoothedLineElements.addAll(new java.util.ArrayList<>(path.getElements()));
             }
-            
-            // Process each fill path to ensure smooth curves
-            for (javafx.scene.Node node : fillPaths) {
-                if (node instanceof javafx.scene.shape.Path) {
-                    javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
-                    
-                    // Apply smooth curve algorithm to fill area
-                    smoothPath(path, true);
-                }
-            }
-            
-            // Show the chart again after styling
-            revenueAreaChart.setOpacity(1);
         });
+
+        fillPaths.forEach(node -> {
+            if (node instanceof javafx.scene.shape.Path && !smoothedLineElements.isEmpty()) {
+                javafx.scene.shape.Path fillPath = (javafx.scene.shape.Path) node;
+                var originalFillElements = new java.util.ArrayList<>(fillPath.getElements());
+
+                double baselineY = 0;
+                double startX = 0;
+                double endX = 0;
+
+                for (var element : originalFillElements) {
+                    if (element instanceof javafx.scene.shape.LineTo) {
+                        javafx.scene.shape.LineTo lt = (javafx.scene.shape.LineTo) element;
+                        baselineY = Math.max(baselineY, lt.getY());
+                    }
+                }
+
+                if (smoothedLineElements.get(0) instanceof javafx.scene.shape.MoveTo) {
+                    javafx.scene.shape.MoveTo firstMove = (javafx.scene.shape.MoveTo) smoothedLineElements.get(0);
+                    startX = firstMove.getX();
+                }
+
+                var lastElement = smoothedLineElements.get(smoothedLineElements.size() - 1);
+                if (lastElement instanceof javafx.scene.shape.CubicCurveTo) {
+                    javafx.scene.shape.CubicCurveTo lastCurve = (javafx.scene.shape.CubicCurveTo) lastElement;
+                    endX = lastCurve.getX();
+                }
+
+                fillPath.getElements().clear();
+
+                for (var element : smoothedLineElements) {
+                    if (element instanceof javafx.scene.shape.MoveTo) {
+                        javafx.scene.shape.MoveTo mt = (javafx.scene.shape.MoveTo) element;
+                        fillPath.getElements().add(new javafx.scene.shape.MoveTo(mt.getX(), mt.getY()));
+                    } else if (element instanceof javafx.scene.shape.CubicCurveTo) {
+                        javafx.scene.shape.CubicCurveTo cc = (javafx.scene.shape.CubicCurveTo) element;
+                        fillPath.getElements().add(new javafx.scene.shape.CubicCurveTo(
+                                cc.getControlX1(), cc.getControlY1(),
+                                cc.getControlX2(), cc.getControlY2(),
+                                cc.getX(), cc.getY()
+                        ));
+                    }
+                }
+
+                fillPath.getElements().add(new javafx.scene.shape.LineTo(endX, baselineY));
+                fillPath.getElements().add(new javafx.scene.shape.LineTo(startX, baselineY));
+                fillPath.getElements().add(new javafx.scene.shape.ClosePath());
+            }
+        });
+
+        revenueAreaChart.setOpacity(1);
     }
 
-    private void smoothPath(javafx.scene.shape.Path path, boolean isFillArea) {
+    private void smoothPath(javafx.scene.shape.Path path) {
         var elements = path.getElements();
         if (elements.size() < 3)
             return;
@@ -1056,6 +1167,172 @@ public class managerOverviewController {
 
             elements.add(new javafx.scene.shape.CubicCurveTo(cp1x, cp1y, cp2x, cp2y, x2, y2));
         }
+    }
+
+    /**
+     * Async version of setCharts - loads data in background thread, updates UI on JavaFX thread
+     */
+    private void setChartsDataAsync() throws SQLException {
+        String selectedPeriod = "Monthly";
+        
+        CallableStatement cs = con.prepareCall("CALL getSalesChartData(?,?,?,?)");
+        cs.setInt(1, managerId);
+        cs.setInt(2, currentMonth);
+        cs.setInt(3, currentYear);
+        cs.setString(4, selectedPeriod);
+
+        ResultSet rs = cs.executeQuery();
+        
+        // Collect data in background thread
+        java.util.List<javafx.scene.chart.XYChart.Data<String, Integer>> carData = new java.util.ArrayList<>();
+        java.util.List<javafx.scene.chart.XYChart.Data<String, Integer>> partData = new java.util.ArrayList<>();
+        java.util.List<javafx.scene.chart.XYChart.Data<String, Double>> revenueData = new java.util.ArrayList<>();
+        
+        while (rs.next()) {
+            String periodLabel = rs.getString("period_label");
+            int carQty = rs.getInt("car_qty");
+            int partQty = rs.getInt("part_qty");
+            double revenue = rs.getDouble("revenue");
+
+            carData.add(new XYChart.Data<>(periodLabel, carQty));
+            partData.add(new XYChart.Data<>(periodLabel, partQty));
+            revenueData.add(new XYChart.Data<>(periodLabel, revenue));
+        }
+        rs.close();
+        cs.close();
+        
+        // Update UI on JavaFX thread (clear and add must be on JavaFX thread)
+        Platform.runLater(() -> {
+            carSeries.getData().clear();
+            partSeries.getData().clear();
+            revenueSeries.getData().clear();
+            carSeries.getData().addAll(carData);
+            partSeries.getData().addAll(partData);
+            revenueSeries.getData().addAll(revenueData);
+            updateChartSeries();
+        });
+    }
+    
+    /**
+     * Async version of setBesti - loads data in background thread, updates UI on JavaFX thread
+     */
+    private void setBestiDataAsync() throws SQLException, IOException {
+
+        CallableStatement cs = null;
+        boolean check = true;
+
+        switch (besti) {
+            case "car":
+                cs = con.prepareCall("CALL getBestSellingCars(?,?,?)");
+                break;
+            case "part":
+                cs = con.prepareCall("CALL getBestSellingParts(?,?,?)");
+                break;
+            case "staff":
+                cs = con.prepareCall("CALL getBestStaff(?,?,?)");
+                break;
+            default:
+                check = false;
+                break;
+        }
+
+        if (!check) {
+            return;
+        }
+
+        cs.setInt(1, managerId);
+        cs.setInt(2, currentMonth);
+        cs.setInt(3, currentYear);
+        ResultSet rs = cs.executeQuery();
+
+        // Collect data in background thread
+        java.util.List<managerOverview> carPartItems = new java.util.ArrayList<>();
+        java.util.List<managerOverview> sellerItems = new java.util.ArrayList<>();
+
+        if (besti.equals("car")) {
+            while (rs.next()) {
+                int rank = rs.getInt(1);
+                int targetQty = rs.getInt(2);
+                int soldQty = rs.getInt(3);
+                String inventoryName = rs.getString(4);
+                String imageUrl = rs.getString(10);
+                managerOverview item = new managerOverview(rank, targetQty, soldQty, inventoryName, imageUrl);
+                carPartItems.add(item);
+            }
+        } else if (besti.equals("part")) {
+            while (rs.next()) {
+                int rank = rs.getInt(1);
+                int targetQty = rs.getInt(2);
+                int soldQty = rs.getInt(3);
+                String inventoryName = rs.getString(4);
+                String imageUrl = rs.getString(7);
+                managerOverview item = new managerOverview(rank, targetQty, soldQty, inventoryName, imageUrl);
+                carPartItems.add(item);
+            }
+        } else {
+            while (rs.next()) {
+                int rank = rs.getInt(1);
+                int staffId = rs.getInt(2);
+                String staffName = rs.getString(3);
+                String staffPhoto = rs.getString(4);
+                int workHour = rs.getInt(5);
+                int prevWorkHour = rs.getInt(6);
+                double totalSale = rs.getDouble(7);
+                double prevTotalSale = rs.getDouble(8);
+                managerOverview seller = new managerOverview(rank, staffId, workHour, prevWorkHour,
+                        staffPhoto, staffName, totalSale, prevTotalSale);
+                sellerItems.add(seller);
+            }
+        }
+
+        rs.close();
+        cs.close();
+
+        // Update UI on JavaFX thread (all list/UI operations must be on JavaFX thread)
+        Platform.runLater(() -> {
+            // Initialize lists if needed
+            if (bestSellerList == null) {
+                bestSellerList = FXCollections.observableArrayList();
+            }
+            if (bestCarPartList == null) {
+                bestCarPartList = FXCollections.observableArrayList();
+            }
+
+            // Clear previous data
+            bestSellerList.clear();
+            bestCarPartList.clear();
+            bestCarPartList.addAll(carPartItems);
+            bestSellerList.addAll(sellerItems);
+            
+            scrollPane.getChildren().clear();
+            if (besti.equals("car") || besti.equals("part")) {
+                for (managerOverview item : bestCarPartList) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/managerCarPartProgressBar.fxml"));
+                        HBox progressCard = loader.load();
+                        managerCarPartProgressBarController controller = loader.getController();
+                        controller.setDate(item);
+                        scrollPane.getChildren().add(progressCard);
+                    } catch (IOException e) {
+                        System.err.println("Error loading progress bar card: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                for (managerOverview seller : bestSellerList) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/bestSeller.fxml"));
+                        HBox sellerCard = loader.load();
+                        bestSellerController controller = loader.getController();
+                        controller.setData(seller, currentMonth, currentYear);
+                        scrollPane.getChildren().add(sellerCard);
+                    } catch (IOException e) {
+                        System.err.println("Error loading seller card: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     //for besti of cars,parts and staff

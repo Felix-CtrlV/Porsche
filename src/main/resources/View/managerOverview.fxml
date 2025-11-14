@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
+<BorderPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerOverviewController">
     <center>
         <VBox spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10;" BorderPane.alignment="CENTER">
             <children>
@@ -44,7 +44,7 @@
                                 </HBox>
                                 <ScrollPane hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                                     <content>
-                                        <VBox fx:id="scrollPane" alignment="CENTER" spacing="10.0" styleClass="sectionBox">
+                                        <VBox fx:id="scrollPane" alignment="CENTER" prefHeight="290.0" prefWidth="519.0" spacing="10.0" styleClass="sectionBox">
                                  <padding>
                                     <Insets right="10.0" top="20.0" />
                                  </padding></VBox>

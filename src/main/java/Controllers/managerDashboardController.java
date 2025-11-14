@@ -21,6 +21,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.geometry.Pos;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -41,6 +42,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -108,6 +110,16 @@ public class managerDashboardController {
 
     @FXML
     private Label toastIcon, toastTitle, toastMessage;
+
+    // Customization Pane Components
+    @FXML
+    private VBox customizationPane;
+
+    @FXML
+    private VBox customizationContent;
+
+    @FXML
+    private Button closeCustomizationBtn;
 
     // Confirmation Dialog Components
     @FXML
@@ -411,6 +423,8 @@ public class managerDashboardController {
                 ((managerInventoryController) controller).setDashboardController(this);
             } else if (controller instanceof managerAttendanceManagementController) {
                 ((managerAttendanceManagementController) controller).setDashboardController(this);
+            } else if (controller instanceof managerOrderManagementController) {
+                ((managerOrderManagementController) controller).setDashboardController(this);
             }
             
             admin_anc.getChildren().setAll(pane);
@@ -1156,6 +1170,109 @@ public class managerDashboardController {
         ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
         hide.setOnFinished(e -> toastNotification.setVisible(false));
         hide.play();
+    }
+
+    // ========== CUSTOMIZATION PANE METHODS ==========
+    
+    /**
+     * Shows the customization pane with sliding animation
+     * Called from other controllers (e.g., managerOrderManagementController)
+     */
+    public void showCustomizationPane(List<CustomizationItem> customizations) {
+        // Clear previous content
+        customizationContent.getChildren().clear();
+        
+        // Populate customization details
+        for (CustomizationItem item : customizations) {
+            VBox itemBox = new VBox(5);
+            itemBox.setStyle("-fx-background-color: rgba(59, 130, 246, 0.1); -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: #3b82f6; -fx-border-width: 1; -fx-border-radius: 8;");
+            
+            HBox typeBox = new HBox(10);
+            typeBox.setAlignment(Pos.CENTER_LEFT);
+            Label typeLabel = new Label("Type:");
+            typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
+            Label typeValue = new Label(item.getType());
+            typeValue.setStyle("-fx-font-size: 12; -fx-text-fill: #3b82f6;");
+            typeBox.getChildren().addAll(typeLabel, typeValue);
+            
+            HBox valueBox = new HBox(10);
+            valueBox.setAlignment(Pos.CENTER_LEFT);
+            Label valueLabel = new Label("Value:");
+            valueLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
+            Label valueValue = new Label(item.getValue());
+            valueValue.setStyle("-fx-font-size: 12; -fx-text-fill: #1e40af;");
+            valueBox.getChildren().addAll(valueLabel, valueValue);
+            
+            HBox priceBox = new HBox(10);
+            priceBox.setAlignment(Pos.CENTER_LEFT);
+            Label priceLabel = new Label("Price:");
+            priceLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
+            Label priceValue = new Label("$" + String.format("%.2f", item.getPrice()));
+            priceValue.setStyle("-fx-font-size: 12; -fx-text-fill: #10b981; -fx-font-weight: bold;");
+            priceBox.getChildren().addAll(priceLabel, priceValue);
+            
+            itemBox.getChildren().addAll(typeBox, valueBox, priceBox);
+            customizationContent.getChildren().add(itemBox);
+        }
+        
+        // Show pane with animation
+        customizationPane.setVisible(true);
+        customizationPane.setTranslateY(-450);
+        customizationPane.setOpacity(0);
+        
+        TranslateTransition slideDown = new TranslateTransition(Duration.millis(300), customizationPane);
+        slideDown.setFromY(-450);
+        slideDown.setToY(0);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), customizationPane);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        ParallelTransition showPane = new ParallelTransition(slideDown, fadeIn);
+        showPane.play();
+    }
+    
+    /**
+     * Hides the customization pane with sliding animation
+     */
+    @FXML
+    void closeCustomizationPane(ActionEvent event) {
+        hideCustomizationPane();
+    }
+    
+    private void hideCustomizationPane() {
+        TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), customizationPane);
+        slideUp.setFromY(0);
+        slideUp.setToY(-450);
+        
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), customizationPane);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        
+        ParallelTransition hidePane = new ParallelTransition(slideUp, fadeOut);
+        hidePane.setOnFinished(e -> customizationPane.setVisible(false));
+        hidePane.play();
+    }
+    
+    // ========== CUSTOMIZATION ITEM CLASS ==========
+    
+    /**
+     * Inner class to hold customization item data
+     */
+    public static class CustomizationItem {
+        private String type;
+        private String value;
+        private double price;
+        
+        public CustomizationItem(String type, String value, double price) {
+            this.type = type;
+            this.value = value;
+            this.price = price;
+        }
+        
+        public String getType() { return type; }
+        public String getValue() { return value; }
+        public double getPrice() { return price; }
     }
 
     // Confirmation dialog methods

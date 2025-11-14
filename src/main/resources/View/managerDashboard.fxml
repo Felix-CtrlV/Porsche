@@ -647,6 +647,31 @@
             </VBox>
         </StackPane>
 
+        <!-- Customization Pane (slides down from top) -->
+        <VBox fx:id="customizationPane" alignment="TOP_CENTER" maxHeight="400.0" maxWidth="600.0" spacing="15.0" styleClass="section" style="-fx-background-radius: 16; -fx-border-radius: 16; -fx-border-width: 1.5; -fx-padding: 20;" translateY="-450" visible="false" StackPane.alignment="TOP_CENTER">
+            <StackPane.margin>
+                <Insets top="80.0" />
+            </StackPane.margin>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <Label style="-fx-font-size: 16; -fx-font-weight: bold;" styleClass="textHeader" text="🚗 Car Customization" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="closeCustomizationBtn" mnemonicParsing="false" onAction="#closeCustomizationPane" style="-fx-background-color: transparent; -fx-text-fill: #ef4444; -fx-font-size: 16; -fx-cursor: hand; -fx-padding: 4 8;" text="✕" />
+                    </children>
+                </HBox>
+                <ScrollPane fitToWidth="true" prefHeight="300.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                    <content>
+                        <VBox fx:id="customizationContent" spacing="12.0" style="-fx-padding: 5;">
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+
         <!-- Toast Notification (top center) - MUST BE LAST FOR Z-ORDER -->
         <HBox fx:id="toastNotification" alignment="CENTER_LEFT" maxHeight="60.0" maxWidth="360.0" mouseTransparent="false" pickOnBounds="false" spacing="12.0" styleClass="section" style=" -fx-background-radius: 10; -fx-padding: 12 16; -fx-border-color: #e5e7eb; -fx-border-width: 2; -fx-border-radius: 10;" translateY="-100" visible="false" StackPane.alignment="TOP_CENTER">
             <StackPane.margin>

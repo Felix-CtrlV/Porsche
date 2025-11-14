@@ -8,9 +8,12 @@ import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.Cursor;
@@ -33,7 +36,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
@@ -195,6 +197,9 @@ public class managerStaffViewController {
 
     @FXML
     void SwitchMouseClick(MouseEvent event) throws SQLException, IOException {
+        // Stop any ongoing search debounce
+        searchDebounce.stop();
+        
         if (cardtype) {
             cardtype = false;
             StaffListTitleLabel.setText("Staff List (InActive)");
@@ -205,6 +210,10 @@ public class managerStaffViewController {
             StaffListTitleLabel.setText("Staff List (Active)");
             addStaffCard(cardtype);
         }
+        
+        // Clear search and reset filter when switching between active/inactive
+        StaffSearchText.clear();
+        applyStaffFilter("");
     }
 
     @FXML
@@ -214,7 +223,6 @@ public class managerStaffViewController {
             currentMonth = 1;
             currentYear++;
         }
-        ;
         updateYearMonthLabel();
     }
 
@@ -236,7 +244,7 @@ public class managerStaffViewController {
         if (currentMonth < 1) {
             currentMonth = 12;
             currentYear--;
-        };
+        }
         updateYearMonthLabel();
 
     }
@@ -365,18 +373,7 @@ public class managerStaffViewController {
         
         ordersTable.setRowFactory(tv -> {
             TableRow<managerOrderView> row = new TableRow<>();
-            
-            // Update row style based on selection
-//            row.itemProperty().addListener((obs, oldItem, newItem) -> updateRowStyle(row));
-//            row.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateRowStyle(row));
-//
             row.setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
-
-
-            row.setOnMouseExited(e -> {
-//                updateRowStyle(row);
-            });
-
             return row;
         });
         
@@ -466,7 +463,7 @@ public class managerStaffViewController {
         // Initialize listeners only once
         if (!listenersInitialized) {
             yearBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal != null && selectedStaffId != 0 && oldVal != null) {
+                if (!suppressDataLoad && newVal != null && selectedStaffId != 0 && oldVal != null) {
                     currentYear = newVal;
                     // Update month box for the new year
                     user selectedStaff = staffInfoList.stream()
@@ -481,7 +478,7 @@ public class managerStaffViewController {
             });
 
             monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                if (!updatingMonthBox && newVal != null && oldVal != null) {
+                if (!suppressDataLoad && !updatingMonthBox && newVal != null && oldVal != null) {
                     DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
                     Month parsedMonth = Month.from(fmt.parse(newVal));
                     currentMonth = parsedMonth.getValue();
@@ -492,8 +489,7 @@ public class managerStaffViewController {
             listenersInitialized = true;
         }
 
-        //for car and parts of the show circle
-        setTarget();
+        //for car and parts of the show circle - will be loaded when staff is selected
         setupSearchBar();
         
         // Set up staff image click handler
@@ -513,9 +509,12 @@ public class managerStaffViewController {
     private int managerId;
     private int selectedStaffId = 0;
     private boolean listenersInitialized = false;
+    private boolean suppressDataLoad = false; // Flag to prevent double loading
 
-    private List<user> staffInfoList = new ArrayList<user>();
-    private List<File> file = new ArrayList<>();
+    private ObservableList<user> staffInfoList = FXCollections.observableArrayList();
+    private FilteredList<user> filteredStaff = new FilteredList<>(staffInfoList, s -> true);
+    private final PauseTransition searchDebounce = new PauseTransition(Duration.millis(500));
+    private String pendingSearchText = "";
     private ExecutorService executorService = Executors.newFixedThreadPool(4);
 
     public managerStaffViewController() throws SQLException, ClassNotFoundException, IOException {
@@ -555,18 +554,12 @@ public class managerStaffViewController {
 
         // Show/hide termination reason for inactive employees
         boolean isInactive = "Inactive".equalsIgnoreCase(staff.getIs_active());
-        System.out.println("DEBUG: Staff status = " + staff.getIs_active() + ", isInactive = " + isInactive);
-        System.out.println("DEBUG: Staff reason = " + staff.getReason());
-        System.out.println("DEBUG: terminationReasonBox is null? " + (terminationReasonBox == null));
-        System.out.println("DEBUG: StaffReasonLabel is null? " + (StaffReasonLabel == null));
-        
         if (terminationReasonBox != null) {
             terminationReasonBox.setVisible(isInactive);
             terminationReasonBox.setManaged(isInactive);
             if (isInactive && StaffReasonLabel != null) {
                 String reasonText = staff.getReason() != null ? staff.getReason() : "No reason provided";
                 StaffReasonLabel.setText(reasonText);
-                System.out.println("DEBUG: Set reason text to: " + reasonText);
             }
         }
 
@@ -584,8 +577,11 @@ public class managerStaffViewController {
             currentDateSelect();
         }
         
+        // Suppress listener-triggered loads while programmatically updating values
+        suppressDataLoad = true;
         insertMonthYearChoiceBox(staff);
         updateChoiceBoxes();
+        suppressDataLoad = false;
         
         // Execute all database calls in parallel for faster loading
         loadStaffDataAsync();
@@ -686,17 +682,6 @@ public class managerStaffViewController {
             });
     }
 
-    //for the staff of monthly sold out the order table
-    private void refreshOrdersTable() throws SQLException {
-        if (selectedStaffId != 0) {
-            ordersTable.getItems().clear();
-            showOrdersTable(selectedStaffId, currentMonth, currentYear);
-
-            ordersTable.getSelectionModel().clearSelection();
-            ordersTable.refresh();
-        }
-    }
-
     // Fetch orders data without UI updates (for async use)
     private List<managerOrderView> getOrdersByUserId(int staffId, int month, int year) throws SQLException {
         CallableStatement cs = null;
@@ -737,11 +722,6 @@ public class managerStaffViewController {
             if (rs != null) rs.close();
             if (cs != null) cs.close();
         }
-    }
-    
-    private void showOrdersTable(int staffId, int month, int year) throws SQLException {
-        List<managerOrderView> orders = getOrdersByUserId(staffId, month, year);
-        ordersTable.getItems().addAll(orders);
     }
 
     //to see like a slip of the order table
@@ -789,14 +769,6 @@ public class managerStaffViewController {
             if (cs != null) cs.close();
         }
     }
-    
-    // for monthly order status box
-    private void monthlyOrdersStatus(int staffid, int month, int year) throws SQLException {
-        int[] statusCounts = getMonthlyOrderStatusData(staffid, month, year);
-        TotalOrderlbl.setText(String.valueOf(statusCounts[0]));
-        CompleOrderlbl.setText(String.valueOf(statusCounts[1]));
-        PendOrderlbl.setText(String.valueOf(statusCounts[2]));
-    }
 
     // for staff card add and highlight the select card
     private void highlightCard(int id) {
@@ -836,8 +808,6 @@ public class managerStaffViewController {
         CallableStatement cs = null;
         ResultSet rs = null;
         
-        System.out.println("DEBUG addStaffCard: Loading " + (check ? "ACTIVE" : "INACTIVE") + " staff for manager ID=" + managerId);
-        
         try {
             cs = con.prepareCall("CALL createCards(?,?)");
             cs.setInt(1, managerId);
@@ -861,10 +831,7 @@ public class managerStaffViewController {
                 imagePath = rs.getString("user_photo");
             } catch (SQLException e) {
                 // Column might not exist in older database versions
-                System.out.println("Note: user_photo column not found in createCards result");
             }
-
-            System.out.println("DEBUG addStaffCard: Loading staff ID=" + id + ", name=" + name + ", status=" + status + ", reason=" + reason);
 
             LocalDate str = (sqlStart != null) ? sqlStart.toLocalDate() : null;
             LocalDate end = (sqlEnd != null) ? sqlEnd.toLocalDate() : null;
@@ -872,65 +839,10 @@ public class managerStaffViewController {
             user staff = new user(id, name, phone, email, address, LocalDate.parse(dob), status, str, end, reason);
             staff.setImagePath(imagePath);
             staffInfoList.add(staff);
-            
-            System.out.println("DEBUG addStaffCard: Created user object, getReason()=" + staff.getReason());
-
-            // Use cached loader or create new one
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/userCards.fxml"));
-            Node staffCard = loader.load();
-
-            cardController cardController = loader.getController();
-
-            staffCard.setUserData(staff.getId());
-
-            cardController.setData(
-                    staff.getId(),
-                    staff.getUsername(),
-                    staff.getIs_active(),
-                    staff.getImagePath()
-            );
-
-            final user currentStaff = staff;
-            staffCard.setOnMouseClicked(event -> {
-                showStaffDetails(currentStaff);
-            });
-            staffListContainer.getChildren().add(staffCard);
             }
-            
-            System.out.println("DEBUG addStaffCard: Loaded " + staffInfoList.size() + " staff members");
 
-            boolean selectedExists = false;
-        for (user u : staffInfoList) {
-            if (u.getId() == selectedStaffId) {
-                selectedExists = true;
-                break;
-            }
-        }
-        if (!selectedExists) {
-            if (!staffInfoList.isEmpty()) {
-                selectedStaffId = staffInfoList.get(0).getId();
-            } else {
-                selectedStaffId = 0; // nothing to select
-            }
-        }
-
-        // If we now have a valid selectedStaffId, show its details.
-        if (selectedStaffId != 0) {
-            for (user staffInfo : staffInfoList) {
-                if (staffInfo.getId() == selectedStaffId) {
-                    showStaffDetails(staffInfo);
-                    break;
-                }
-            }
-        } else {
-            // no staff: clear details and orders
-            StaffNameLable.setText("");
-            StaffPhoneLabel.setText("");
-            StaffEmailLabel.setText("");
-            StaffAddressLabel.setText("");
-            StaffDOBLabel.setText("");
-            ordersTable.getItems().clear();
-            }
+            // Apply current search filter and populate cards
+            applyStaffFilter(pendingSearchText != null ? pendingSearchText : "");
         } finally {
             if (rs != null) rs.close();
             if (cs != null) cs.close();
@@ -963,12 +875,6 @@ public class managerStaffViewController {
         }
     }
     
-    //target side
-    private void setTarget() throws SQLException {
-        int[] targetData = getTargetData(selectedStaffId, currentMonth, currentYear);
-        setCarCircle(targetData[0], targetData[2]);
-        setPartCircle(targetData[1], targetData[3]);
-    }
     private void setCarCircle(int target,int achieve){
         carCircle.setVisible(true);
         targetCar.setText(String.valueOf(achieve) + "/" + String.valueOf(target));
@@ -1187,11 +1093,6 @@ public class managerStaffViewController {
        attendancePercent1.setText(String.format("%.1f%%", attendance_percentage));
     }
     
-    // for monthly attendance circle
-    private void monthlyAttendance() throws SQLException {
-        double[] attendanceData = getAttendanceData(selectedStaffId, currentMonth, currentYear);
-        updateAttendanceUI(attendanceData);
-    }
     // for search bar
     private ContextMenu searchSuggestions = new ContextMenu();
 
@@ -1199,62 +1100,118 @@ public class managerStaffViewController {
         // Set up key listener for Enter key
         StaffSearchText.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
+                searchDebounce.stop();
+                applyStaffFilter(StaffSearchText.getText());
                 handleSearch();
             }
         });
 
         // Set up search button click handler
         SearchNamebtn.setOnMouseClicked(event -> {
+            searchDebounce.stop();
+            applyStaffFilter(StaffSearchText.getText());
             handleSearch();
         });
 
-        // Set up text change listener for suggestions
+        // Real-time search with debounce
         StaffSearchText.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText.isEmpty()) {
-                searchSuggestions.hide();
-                return;
-            }
-
-            // Clear previous suggestions
-            searchSuggestions.getItems().clear();
-
-            // Find matching staff
-            List<MenuItem> matches = new ArrayList<>();
-            for (user staff : staffInfoList) {
-                String searchText = newText.toLowerCase();
-                String staffId = String.valueOf(staff.getId()).toLowerCase();
-                String staffName = staff.getUsername().toLowerCase();
-
-                if (staffId.contains(searchText) || staffName.contains(searchText)) {
-                    String suggestionText = staff.getId() + " - " + staff.getUsername();
-                    MenuItem item = new MenuItem(suggestionText);
-
-                    // Set action for when suggestion is clicked
-                    item.setOnAction(e -> {
-                        StaffSearchText.setText(suggestionText);
-                        searchSuggestions.hide();
-                        showStaffDetails(staff);
-                    });
-
-                    matches.add(item);
-                }
-            }
-
-            // Show suggestions if matches found
-            if (!matches.isEmpty()) {
-                searchSuggestions.getItems().addAll(matches);
-                searchSuggestions.show(StaffSearchText, Side.BOTTOM, 0, 0);
-            } else {
+            pendingSearchText = newText;
+            searchDebounce.playFromStart();
+            if (searchSuggestions.isShowing()) {
                 searchSuggestions.hide();
             }
         });
+
+        // Apply filter after debounce delay
+        searchDebounce.setOnFinished(ev -> applyStaffFilter(pendingSearchText));
 
         // Hide suggestions when text field loses focus
         StaffSearchText.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
-                searchSuggestions.hide();
+                        searchSuggestions.hide();
             }
         });
+    }
+
+    /**
+     * Applies real-time filter to staff list based on search text
+     */
+    private void applyStaffFilter(String text) {
+        String filter = text == null ? "" : text.trim().toLowerCase();
+
+        if (filter.isEmpty()) {
+            filteredStaff.setPredicate(s -> true);
+            } else {
+            filteredStaff.setPredicate(s -> {
+                if (s == null) {
+                    return false;
+                }
+                String name = (s.getUsername() != null) ? s.getUsername().toLowerCase() : "";
+                String idString = String.valueOf(s.getId());
+                return name.contains(filter) || idString.contains(filter);
+            });
+        }
+
+        populateStaffCards();
+    }
+
+    /**
+     * Populates staff cards from the filtered list
+     */
+    private void populateStaffCards() {
+        staffListContainer.getChildren().clear();
+
+        for (user staff : filteredStaff) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/userCards.fxml"));
+                Node staffCard = loader.load();
+
+                cardController cardController = loader.getController();
+
+                staffCard.setUserData(staff.getId());
+
+                cardController.setData(
+                        staff.getId(),
+                        staff.getUsername(),
+                        staff.getIs_active(),
+                        staff.getImagePath()
+                );
+
+                final user currentStaff = staff;
+                staffCard.setOnMouseClicked(event -> {
+                    showStaffDetails(currentStaff);
+                });
+                staffListContainer.getChildren().add(staffCard);
+            } catch (IOException e) {
+                System.err.println("Failed to load staff card for user ID: " + staff.getId());
+                e.printStackTrace();
+            }
+        }
+
+        // Auto-select first filtered staff if available
+        if (!filteredStaff.isEmpty()) {
+            user firstStaff = filteredStaff.get(0);
+            if (selectedStaffId == 0 || !filteredStaff.stream().anyMatch(s -> s.getId() == selectedStaffId)) {
+                selectedStaffId = firstStaff.getId();
+                showStaffDetails(firstStaff);
+            } else {
+                // Keep current selection if it exists in filtered list
+                filteredStaff.stream()
+                        .filter(s -> s.getId() == selectedStaffId)
+                        .findFirst()
+                        .ifPresent(this::showStaffDetails);
+            }
+        } else {
+            // Clear details if no filtered results
+            selectedStaffId = 0;
+            StaffNameLable.setText("");
+            StaffPhoneLabel.setText("");
+            StaffEmailLabel.setText("");
+            StaffAddressLabel.setText("");
+            StaffDOBLabel.setText("");
+            StaffImage.setImage(null);
+            ordersTable.getItems().clear();
+        }
     }
 
     private void handleSearch() {
@@ -1263,8 +1220,8 @@ public class managerStaffViewController {
             return;
         }
 
-        // Try to find a matching staff member
-        for (user staff : staffInfoList) {
+        // Try to find a matching staff member from filtered list
+        for (user staff : filteredStaff) {
             String staffId = String.valueOf(staff.getId());
             String staffName = staff.getUsername();
 
@@ -1281,9 +1238,7 @@ public class managerStaffViewController {
     }
 
     private void updateYearMonthLabel() {
-        Year nyear = Year.of(currentYear);
         Month nmonth = Month.of(currentMonth);
-        String formattedMonth = nmonth.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
 
         if (!staffInfoList.isEmpty()) {
             user selected = staffInfoList.stream()
@@ -1355,9 +1310,8 @@ public class managerStaffViewController {
             yearBox.setValue(currentYear);
         }
 
-        // Use async loading for better performance
-        // Only load data if we have a selected staff
-        if (selectedStaffId != 0) {
+        // Only load data if we have a selected staff and not suppressing loads
+        if (!suppressDataLoad && selectedStaffId != 0) {
             loadStaffDataAsync();
         }
     }
@@ -1419,6 +1373,7 @@ public class managerStaffViewController {
     }
 
     private void updateChoiceBoxes() {
+        suppressDataLoad = true;
         String monthName = Month.of(currentMonth).getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
         if (!monthBox.getItems().contains(monthName) && !monthBox.getItems().isEmpty()) {
             monthName = monthBox.getItems().get(0);
@@ -1426,6 +1381,7 @@ public class managerStaffViewController {
         }
         monthBox.setValue(monthName);
         yearBox.setValue(currentYear);
+        suppressDataLoad = false;
     }
 
     private void handleImageSelection(ImageView targetImageView) {
@@ -1440,29 +1396,12 @@ public class managerStaffViewController {
             try {
                 Image image = new Image(new FileInputStream(selectedFile));
                 targetImageView.setImage(image);
-                file.clear();
-                file.add(selectedFile);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
     
-    /**
-     * Updates the style of a table row based on its selection state
-     */
-//    private void updateRowStyle(TableRow<managerOrderView> row) {
-//        if (row.isEmpty()) {
-//            row.setStyle("");
-//        } else if (row.isSelected()) {
-//            // Selected row: bold text with highlight background
-//            row.setStyle("-fx-background-color: #e3f2fd; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: bold; -fx-border-color: #2196f3; -fx-border-width: 0 0 1 0;");
-//        } else {
-//            // Normal row: regular text
-//            row.setStyle("-fx-background-color: white; -fx-text-fill: black !important; -fx-font-size: 14px !important; -fx-font-weight: normal; -fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0;");
-//        }
-//    }
-//
     /**
      * Resolves image path - handles absolute, relative, and network (UNC) paths
      * Supports:

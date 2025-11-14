@@ -17,11 +17,7 @@
         <!-- Image Section on Left -->
         <StackPane prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: transparent;" HBox.hgrow="NEVER">
             <children>
-                <ImageView fx:id="carImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);">
-                    <clip>
-                        <Circle centerX="40.0" centerY="40.0" radius="40.0" />
-                    </clip>
-                </ImageView>
+                <ImageView fx:id="carImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);" />
             </children>
             <padding>
                 <Insets right="15" />

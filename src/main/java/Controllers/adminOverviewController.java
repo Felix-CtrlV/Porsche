@@ -256,19 +256,6 @@ public class adminOverviewController implements Initializable {
         loadAllData(true);
     }
 
-    private void loadAllData() {
-        Integer selectedYear = yearBox.getValue();
-        if (selectedYear == null) {
-            loadAllData(true);
-            year = currentYear;
-        } else if (year != selectedYear) {
-            loadAllData(true);
-            year = selectedYear;
-        } else {
-            loadAllData(false);
-        }
-    }
-
     private void loadAllData(boolean reloadYearData) {
         loadTopPaneMetrics();
         if (reloadYearData) {
