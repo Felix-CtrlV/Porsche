@@ -36,6 +36,7 @@ public class AddAbsentDialogController implements Initializable {
         this.dashboardController = dashboardController;
     }
 
+
     @FXML private ComboBox<String> staffComboDialog;
     @FXML private TextField reasonField;
     @FXML private Label closeDialogBtn;
