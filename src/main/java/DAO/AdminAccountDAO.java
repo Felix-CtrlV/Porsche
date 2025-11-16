@@ -464,6 +464,63 @@ public class AdminAccountDAO {
             return rowsAffected > 0;
         }
     }
+    
+    /**
+     * Gets all active admin accounts excluding the specified admin ID
+     */
+    public List<user> getAvailableAdmins(int excludeAdminId) throws SQLException {
+        String sql = """
+            SELECT user_id, user_name, user_phone, user_email, user_address, dob, start_date, end_date, user_status, reason, user_photo
+            FROM user_info
+            WHERE user_role = 'admin' AND user_status = 1 AND user_id != ?
+            ORDER BY user_id
+        """;
+
+        List<user> list = new ArrayList<>();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, excludeAdminId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    user admin = new user(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("user_phone"),
+                            rs.getString("user_email"),
+                            rs.getString("user_address"),
+                            rs.getDate("dob") != null ? rs.getDate("dob").toLocalDate() : null,
+                            rs.getInt("user_status") == 1 ? "Active" : "Inactive",
+                            rs.getDate("start_date") != null ? rs.getDate("start_date").toLocalDate() : null,
+                            rs.getDate("end_date") != null ? rs.getDate("end_date").toLocalDate() : null,
+                            rs.getString("reason")
+                    );
+                    try {
+                        admin.setImagePath(rs.getString("user_photo"));
+                    } catch (SQLException ignored) {
+                        // user_photo column may be absent in some schema versions
+                    }
+                    list.add(admin);
+                }
+            }
+        }
+        return list;
+    }
+    
+    /**
+     * Terminates an admin account with a reason
+     */
+    public boolean terminateAdmin(int adminId, String reason) throws SQLException {
+        String updateUserSql = "UPDATE user_info SET user_status = 0, end_date = CURDATE(), reason = ? WHERE user_id = ?";
+        
+        try (PreparedStatement ps = conn.prepareStatement(updateUserSql)) {
+            ps.setString(1, reason);
+            ps.setInt(2, adminId);
+            
+            int rowsAffected = ps.executeUpdate();
+            logger.info("Terminated admin ID: {} with reason: {}", adminId, reason);
+            return rowsAffected > 0;
+        }
+    }
 
     public void close() {
         try {

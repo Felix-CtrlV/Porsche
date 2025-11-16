@@ -174,6 +174,10 @@ public class adminAccountController {
         updatePerformanceLabel("Manager");
         roleCombo.valueProperty().addListener((obs, o, n) -> {
             updatePerformanceLabel(n);
+            // Reset to active when role changes
+            cardtype = true;
+            showActive = true;
+            StaffListTitleLabel.setText("List (Active)");
             loadStaffCardsAsync(showActive);
         });
 
@@ -1060,6 +1064,7 @@ public class adminAccountController {
     @FXML
     void SwitchMouseClick(MouseEvent event) {
         cardtype = !cardtype;
+        showActive = cardtype; // Synchronize showActive with cardtype
         StaffListTitleLabel.setText(cardtype ? "List (Active)" : "List (InActive)");
         loadStaffCardsAsync(cardtype);
     }

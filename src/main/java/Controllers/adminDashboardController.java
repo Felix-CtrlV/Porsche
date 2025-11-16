@@ -1,7 +1,9 @@
 package Controllers;
 
+import DAO.AdminAccountDAO;
 import Database.DatabaseConnectionManager;
 import MainUI.login;
+import Model.user;
 import Utils.*;
 import Utils.SecurityManager;
 import javafx.animation.*;
@@ -46,8 +48,11 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class adminDashboardController {
+    private static final Logger logger = LoggerFactory.getLogger(adminDashboardController.class);
 
     @FXML
     private HBox optionProfile, optionTarget, optionSalary, optionChange;
@@ -170,6 +175,27 @@ public class adminDashboardController {
     private Label lockIcon, lockMessage;
 
     @FXML private Label sun,moon,textMode;
+    
+    // Self Terminate Components
+    @FXML
+    private Button selfTerminateBtn;
+    
+    @FXML
+    private VBox chooseAdminPane, adminListContainer, noAdminMessageBox;
+    
+    @FXML
+    private Label chooseAdminTitle, chooseAdminMessage, closeChooseAdminBtn;
+    
+    @FXML
+    private Button cancelChooseAdminBtn, confirmTerminateBtn;
+    
+    @FXML
+    private StackPane celebrationOverlay;
+    
+    @FXML
+    private Label celebrationIcon, celebrationTitle, celebrationMessage, celebrationAdminName;
+    
+    private Integer selectedNewAdminId = null;
 
     private final OTPService otpService = OTPService.getInstance();
     private final SecurityManager securityManager = SecurityManager.getInstance();
@@ -1766,6 +1792,359 @@ public class adminDashboardController {
                 }
             });
             fadeOut.play();
+        }
+    }
+
+    // ========== SELF TERMINATE METHODS ==========
+    
+    @FXML
+    private void onSelfTerminateClick() {
+        // Check if there are available admins
+        Task<java.util.List<user>> checkAdminsTask = new Task<>() {
+            @Override
+            protected java.util.List<user> call() throws Exception {
+                AdminAccountDAO dao = new AdminAccountDAO();
+                try {
+                    return dao.getAvailableAdmins(current.getUserid());
+                } finally {
+                    dao.close();
+                }
+            }
+        };
+        
+        checkAdminsTask.setOnSucceeded(e -> {
+            java.util.List<user> availableAdmins = checkAdminsTask.getValue();
+            if (availableAdmins == null || availableAdmins.isEmpty()) {
+                showToast("Warning", "No new admins available.", "warning");
+            } else {
+                showChooseAdminPane(availableAdmins);
+            }
+        });
+        
+        checkAdminsTask.setOnFailed(e -> {
+            logger.error("Failed to check available admins", checkAdminsTask.getException());
+            showToast("Error", "Failed to check available admins", "error");
+        });
+        
+        Thread t = new Thread(checkAdminsTask);
+        t.setDaemon(true);
+        t.start();
+    }
+    
+    private void showChooseAdminPane(java.util.List<user> availableAdmins) {
+        if (chooseAdminPane == null) return;
+        
+        selectedNewAdminId = null;
+        adminListContainer.getChildren().clear();
+        
+        // Always show scroll pane, even if empty
+        adminListContainer.setVisible(true);
+        
+        if (availableAdmins.isEmpty()) {
+            // Show message in the scroll pane itself
+            Label noAdminLabel = new Label("No admins available. Please register a new admin before self-terminating.");
+            noAdminLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #dc2626; -fx-text-alignment: center; -fx-wrap-text: true; -fx-padding: 20;");
+            noAdminLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+            adminListContainer.getChildren().add(noAdminLabel);
+            confirmTerminateBtn.setDisable(true);
+        } else {
+            confirmTerminateBtn.setDisable(false);
+            
+            // Create admin cards
+            for (user admin : availableAdmins) {
+                HBox adminCard = createAdminCard(admin);
+                adminListContainer.getChildren().add(adminCard);
+            }
+        }
+        
+        // Show overlay
+        if (confirmOverlay != null) {
+            confirmOverlay.setVisible(true);
+            confirmOverlay.setOpacity(0);
+            FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
+            overlayFade.setFromValue(0);
+            overlayFade.setToValue(1);
+            overlayFade.play();
+        }
+        
+        // Show pane with slide-down animation
+        chooseAdminPane.setVisible(true);
+        chooseAdminPane.setTranslateY(-600);
+        
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), chooseAdminPane);
+        slideIn.setFromY(-600);
+        slideIn.setToY(0);
+        slideIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(400), chooseAdminPane);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        ParallelTransition showPane = new ParallelTransition(slideIn, fadeIn);
+        showPane.play();
+    }
+    
+    private HBox createAdminCard(user admin) {
+        HBox card = new HBox();
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 18; -fx-cursor: hand; -fx-border-color: #e5e7eb; -fx-border-radius: 12; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+        card.setSpacing(15);
+        card.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        
+        // Admin image
+        ImageView adminImage = new ImageView();
+        adminImage.setFitWidth(50);
+        adminImage.setFitHeight(50);
+        applyCircularClip(adminImage, 50);
+        
+        try {
+            if (admin.getImagePath() != null && !admin.getImagePath().isBlank()) {
+                String path = admin.getImagePath();
+                String uri = path.startsWith("http://") || path.startsWith("https://") || path.startsWith("file:")
+                        ? path
+                        : new File(path).toURI().toString();
+                adminImage.setImage(new Image(uri, true));
+            } else {
+                adminImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/Image/defaultUserProfile.jpg")).toExternalForm(), true));
+            }
+        } catch (Exception e) {
+            try {
+                adminImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/Image/defaultUserProfile.jpg")).toExternalForm(), true));
+            } catch (Exception ignored) {}
+        }
+        
+        // Admin info
+        VBox infoBox = new VBox(6);
+        Label nameLabel = new Label(admin.getUsername());
+        nameLabel.setStyle("-fx-font-size: 16; -fx-font-weight: 600; -fx-text-fill: #111827;");
+        Label emailLabel = new Label(admin.getEmail());
+        emailLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #6b7280;");
+        infoBox.getChildren().addAll(nameLabel, emailLabel);
+        
+        // Selection indicator
+        StackPane indicator = new StackPane();
+        indicator.setPrefWidth(28);
+        indicator.setPrefHeight(28);
+        indicator.setStyle("-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #d1d5db; -fx-border-radius: 14; -fx-border-width: 2;");
+        
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        card.getChildren().addAll(adminImage, infoBox, spacer, indicator);
+        
+        // Click handler
+        final boolean[] isSelected = {false};
+        card.setOnMouseClicked(e -> {
+            // Deselect all cards
+            adminListContainer.getChildren().forEach(node -> {
+                if (node instanceof HBox c) {
+                    c.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 18; -fx-cursor: hand; -fx-border-color: #e5e7eb; -fx-border-radius: 12; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+                    StackPane ind = (StackPane) c.getChildren().get(c.getChildren().size() - 1);
+                    ind.setStyle("-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #d1d5db; -fx-border-radius: 14; -fx-border-width: 2;");
+                    ind.getChildren().clear();
+                }
+            });
+            
+            // Select this card
+            isSelected[0] = !isSelected[0];
+            if (isSelected[0]) {
+                selectedNewAdminId = admin.getId();
+                card.setStyle("-fx-background-color: linear-gradient(to right, #dbeafe, #e0e7ff); -fx-background-radius: 12; -fx-padding: 18; -fx-cursor: hand; -fx-border-color: #3b82f6; -fx-border-radius: 12; -fx-border-width: 2.5; -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 10, 0, 0, 3);");
+                indicator.setStyle("-fx-background-color: #3b82f6; -fx-background-radius: 14; -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.4), 5, 0, 0, 2);");
+                Label check = new Label("✓");
+                check.setStyle("-fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold;");
+                indicator.getChildren().setAll(check);
+            } else {
+                selectedNewAdminId = null;
+                card.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 18; -fx-cursor: hand; -fx-border-color: #e5e7eb; -fx-border-radius: 12; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+                indicator.setStyle("-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #d1d5db; -fx-border-radius: 14; -fx-border-width: 2;");
+                indicator.getChildren().clear();
+            }
+            
+            confirmTerminateBtn.setDisable(selectedNewAdminId == null);
+        });
+        
+        return card;
+    }
+    
+    @FXML
+    private void hideChooseAdminPane() {
+        hideChooseAdminPane(null);
+    }
+    
+    private void hideChooseAdminPane(Runnable onFinished) {
+        if (chooseAdminPane == null || !chooseAdminPane.isVisible()) {
+            if (onFinished != null) {
+                onFinished.run();
+            }
+            return;
+        }
+        
+        // Fade out overlay
+        if (confirmOverlay != null) {
+            FadeTransition overlayFadeOut = new FadeTransition(Duration.millis(300), confirmOverlay);
+            overlayFadeOut.setFromValue(1);
+            overlayFadeOut.setToValue(0);
+            overlayFadeOut.setOnFinished(e -> confirmOverlay.setVisible(false));
+            overlayFadeOut.play();
+        }
+        
+        // Slide out pane
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), chooseAdminPane);
+        slideOut.setFromY(0);
+        slideOut.setToY(-600);
+        slideOut.setInterpolator(javafx.animation.Interpolator.EASE_IN);
+        
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), chooseAdminPane);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        
+        ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
+        hide.setOnFinished(e -> {
+            chooseAdminPane.setVisible(false);
+            if (onFinished == null) {
+                // Only clear selection if we're not proceeding to confirmation
+                selectedNewAdminId = null;
+                adminListContainer.getChildren().clear();
+            }
+            if (onFinished != null) {
+                onFinished.run();
+            }
+        });
+        hide.play();
+    }
+    
+    @FXML
+    private void onConfirmSelfTerminate() {
+        if (selectedNewAdminId == null) {
+            showToast("Warning", "Please select a new admin before terminating", "warning");
+            return;
+        }
+        
+        // Capture the selected admin ID before showing the confirm dialog
+        final int newAdminId = selectedNewAdminId;
+        
+        // Hide the choose admin pane first
+        hideChooseAdminPane(() -> {
+            // After the pane is hidden, show the confirm dialog
+            showConfirmDialog("Confirm Self Termination", 
+                "⚠ WARNING: This action cannot be undone!\n\n" +
+                "You are about to terminate your own admin account. " +
+                "Are you sure you want to proceed?", 
+                "⚠", 
+                () -> executeSelfTermination(newAdminId));
+        });
+    }
+    
+    private void executeSelfTermination(int newAdminId) {
+        
+        Task<Boolean> terminateTask = new Task<>() {
+            @Override
+            protected Boolean call() throws Exception {
+                AdminAccountDAO dao = new AdminAccountDAO();
+                try {
+                    String reason = "Self-terminated. Admin ID " + newAdminId + " is taking over.";
+                    return dao.terminateAdmin(current.getUserid(), reason);
+                } finally {
+                    dao.close();
+                }
+            }
+        };
+        
+        terminateTask.setOnSucceeded(e -> {
+            if (terminateTask.getValue()) {
+                showCelebrationOverlay();
+            } else {
+                showToast("Error", "Failed to terminate account", "error");
+            }
+        });
+        
+        terminateTask.setOnFailed(ex -> {
+            logger.error("Failed to terminate admin account", terminateTask.getException());
+            showToast("Error", "An error occurred during termination", "error");
+        });
+        
+        Thread t = new Thread(terminateTask);
+        t.setDaemon(true);
+        t.start();
+    }
+    
+    private void showCelebrationOverlay() {
+        if (celebrationOverlay == null) return;
+        
+        celebrationAdminName.setText("Thank you, " + current.getUsername() + "!");
+        
+        // Make overlay fill the entire screen - bind to root pane size
+        if (rootPane != null) {
+            celebrationOverlay.prefWidthProperty().bind(rootPane.widthProperty());
+            celebrationOverlay.prefHeightProperty().bind(rootPane.heightProperty());
+            celebrationOverlay.maxWidthProperty().bind(rootPane.widthProperty());
+            celebrationOverlay.maxHeightProperty().bind(rootPane.heightProperty());
+            
+            // Also bind the background pane to fill entire space
+            javafx.scene.Node backgroundPane = celebrationOverlay.getChildren().get(0);
+            if (backgroundPane instanceof Pane) {
+                ((Pane) backgroundPane).prefWidthProperty().bind(rootPane.widthProperty());
+                ((Pane) backgroundPane).prefHeightProperty().bind(rootPane.heightProperty());
+                ((Pane) backgroundPane).maxWidthProperty().bind(rootPane.widthProperty());
+                ((Pane) backgroundPane).maxHeightProperty().bind(rootPane.heightProperty());
+            }
+        }
+        
+        celebrationOverlay.setVisible(true);
+        celebrationOverlay.setOpacity(0);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(600), celebrationOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        // Subtle pulse animation for farewell logo (no rotation)
+        ScaleTransition scale = new ScaleTransition(Duration.seconds(1.5), celebrationIcon);
+        scale.setFromX(1.0);
+        scale.setFromY(1.0);
+        scale.setToX(1.08);
+        scale.setToY(1.08);
+        scale.setCycleCount(Timeline.INDEFINITE);
+        scale.setAutoReverse(true);
+        scale.play();
+        
+        fadeIn.play();
+        
+        // Wait 10 seconds then redirect to login
+        PauseTransition pause = new PauseTransition(Duration.seconds(10));
+        pause.setOnFinished(e -> {
+            scale.stop();
+            redirectToLogin();
+        });
+        pause.play();
+    }
+    
+    private void redirectToLogin() {
+        try {
+            // Close current window
+            Stage stage = (Stage) root.getScene().getWindow();
+            stage.close();
+            
+            // Logout from database
+            try {
+                Connection con = DatabaseConnectionManager.getInstance().getConnection();
+                CallableStatement check_out = con.prepareCall("call logout(?, ?)");
+                if (current != null) {
+                    check_out.setInt(1, current.getUserid());
+                    check_out.setString(2, String.valueOf(LocalDateTime.now()));
+                    check_out.execute();
+                }
+                con.close();
+            } catch (SQLException ex) {
+                logger.error("Failed to logout from database", ex);
+            }
+            
+            // Clear session
+            Session.clearSession();
+            
+            // Open login page
+            login log_in = new login();
+            log_in.startDirectLogin(new Stage());
+        } catch (Exception ex) {
+            logger.error("Failed to redirect to login", ex);
         }
     }
 

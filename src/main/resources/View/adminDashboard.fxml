@@ -7,6 +7,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
@@ -22,7 +23,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<StackPane fx:id="rootPane" minHeight="300.0" minWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminDashboardController">
+<StackPane fx:id="rootPane" minHeight="300.0" minWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.adminDashboardController">
     <children>
         <BorderPane fx:id="root" minHeight="768.0" minWidth="1366.0" styleClass="background_pane">
             <center>
@@ -183,7 +184,7 @@
                                                     <Cursor fx:constant="HAND" />
                                                 </cursor>
                                             </ToggleButton>
-                                            <Circle fx:id="toggleCircle" styleClass="toggleCircle" radius="13"  strokeWidth="5" StackPane.alignment="CENTER_LEFT" />
+                                            <Circle fx:id="toggleCircle" radius="13" strokeWidth="5" styleClass="toggleCircle" StackPane.alignment="CENTER_LEFT" />
                                         </StackPane>
                                     </children>
                                 </HBox>
@@ -417,6 +418,11 @@
                                             </cursor>
                                         </Button>
                                         <Button fx:id="changePasswordBtn" onAction="#showChangePasswordDialog" prefHeight="48.0" prefWidth="380.0" style=" -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;" styleClass="changePasswordBtn" text="🔐  Change Password">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </Button>
+                                        <Button fx:id="selfTerminateBtn" onAction="#onSelfTerminateClick" prefHeight="48.0" prefWidth="380.0" style=" -fx-font-size: 15; -fx-font-weight: bold; -fx-background-radius: 10; -fx-background-color: #dc2626; -fx-text-fill: white; -fx-cursor: hand;" text="🚪  Self Terminate">
                                             <cursor>
                                                 <Cursor fx:constant="HAND" />
                                             </cursor>
@@ -703,6 +709,119 @@
                     </VBox>
                 </VBox>
             </VBox>
+        </StackPane>
+        
+        <!-- Choose New Admin Pane (slides from top) -->
+        <VBox fx:id="chooseAdminPane" alignment="CENTER" maxHeight="550.0" maxWidth="500.0" spacing="0.0" style=" -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 5);" styleClass="section" translateY="-600.0" visible="false" StackPane.alignment="TOP_CENTER">
+            <StackPane.margin>
+                <Insets top="80.0" />
+            </StackPane.margin>
+            <children>
+                <!-- Header with gradient -->
+                <VBox spacing="0.0" style="-fx-background-radius: 16 16 0 0; -fx-background-color: linear-gradient(to right, #667eea, #764ba2);">
+                    <children>
+                        <HBox alignment="CENTER" minHeight="50.0" prefHeight="65.0" prefWidth="500.0" spacing="15.0" style="-fx-padding: 25 30;">
+                            <children>
+                                <StackPane minHeight="45.0" minWidth="45.0" style="-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 22.5;">
+                                    <Label style="-fx-font-size: 24; -fx-text-fill: white;" text="👥" />
+                                </StackPane>
+                                <VBox alignment="CENTER_LEFT" spacing="2.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label fx:id="chooseAdminTitle" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: white;" text="Select Successor Admin" />
+                                        <Label style="-fx-font-size: 12; -fx-text-fill: rgba(255,255,255,0.9);" text="Choose who will take over your responsibilities" />
+                                    </children>
+                                </VBox>
+                                <Label fx:id="closeChooseAdminBtn" onMouseClicked="#hideChooseAdminPane" style="-fx-font-size: 20; -fx-text-fill: white; -fx-cursor: hand; -fx-opacity: 0.8;" text="✕">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Label>
+                            </children>
+                        </HBox>
+                        <Separator style="-fx-background-color: rgba(255,255,255,0.2);" />
+                    </children>
+                </VBox>
+                
+                <!-- Content -->
+                <VBox alignment="CENTER" spacing="20.0" style="-fx-padding: 25; -fx-background-color: white;" VBox.vgrow="ALWAYS">
+                    <children>
+                        <VBox alignment="CENTER" spacing="8.0">
+                            <children>
+                                <Label fx:id="chooseAdminMessage" style="-fx-font-size: 14; -fx-font-weight: 600; -fx-text-fill: #374151; -fx-text-alignment: center; -fx-wrap-text: true;" text="Please select the admin who will take over your account." textAlignment="CENTER" wrapText="true" />
+                                <Label style="-fx-font-size: 12; -fx-text-fill: #6b7280; -fx-text-alignment: center; -fx-wrap-text: true;" text="Click on an admin card below to select them." textAlignment="CENTER" wrapText="true" />
+                            </children>
+                        </VBox>
+                        
+                        <!-- Admin List -->
+                        <ScrollPane fitToWidth="true" maxHeight="250.0" prefHeight="250.0" style="-fx-background-color: #f9fafb; -fx-background-radius: 12; -fx-border-color: #e5e7eb; -fx-border-radius: 12; -fx-border-width: 1;" styleClass="scrollPane">
+                            <content>
+                                <VBox fx:id="adminListContainer" alignment="CENTER" spacing="12.0" style="-fx-padding: 8;">
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+                
+                <!-- Buttons Footer -->
+                <VBox spacing="12.0" style="-fx-padding: 20 25 25 25; -fx-background-color: #f9fafb; -fx-background-radius: 0 0 16 16; -fx-border-color: #e5e7eb; -fx-border-width: 1 0 0 0;">
+                    <children>
+                        <Separator />
+                        <HBox alignment="TOP_CENTER" spacing="50.0">
+                            <children>
+                                <Button fx:id="cancelChooseAdminBtn" onAction="#hideChooseAdminPane" prefHeight="42.0" prefWidth="180.0" style=" -fx-font-size: 14; -fx-font-weight: 600; -fx-background-radius: 10; -fx-cursor: hand; -fx-background-color: white; -fx-text-fill: #6b7280; -fx-border-color: #e5e7eb; -fx-border-radius: 10; -fx-border-width: 1.5;" text="Cancel">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                                <Button fx:id="confirmTerminateBtn" onAction="#onConfirmSelfTerminate" prefHeight="42.0" prefWidth="180.0" style=" -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: 600; -fx-background-radius: 10; -fx-background-color: linear-gradient(to right, #dc2626, #b91c1c); -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.3), 8, 0, 0, 2);" text="Continue to Terminate">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+        
+        <!-- Celebration Overlay (covers whole dashboard) -->
+        <StackPane fx:id="celebrationOverlay" style="-fx-background-color: rgba(0, 0, 0, 0.95);" visible="false" StackPane.alignment="CENTER">
+            <children>
+                <!-- Full screen background overlay -->
+                <Pane style="-fx-background-color: rgba(0, 0, 0, 0.95);" />
+                
+                <!-- Centered content container -->
+                <VBox alignment="CENTER" spacing="25.0" style="-fx-background-color: white; -fx-background-radius: 24; -fx-padding: 60 50; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 40, 0, 0, 15);" StackPane.alignment="CENTER">
+                    <children>
+                        <!-- Farewell Logo with green background -->
+                        <StackPane prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: rgb(16, 185, 128); -fx-background-radius: 70; -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.4), 20, 0, 0, 8);">
+                            <Label fx:id="celebrationIcon" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: white; -fx-letter-spacing: 2;" text="Farewell" />
+                        </StackPane>
+                        
+                        <!-- Title and Messages -->
+                        <VBox alignment="CENTER" spacing="20.0" style="-fx-padding: 10;">
+                            <children>
+                                <Label fx:id="celebrationTitle" style="-fx-font-size: 38; -fx-font-weight: bold; -fx-text-fill: #10b981; -fx-letter-spacing: 0.5;" text="Thank You!" />
+                                
+                                <!-- Admin Name -->
+                                <Label fx:id="celebrationAdminName" style="-fx-font-size: 24; -fx-font-weight: 600; -fx-text-fill: #667eea; -fx-text-alignment: center;" textAlignment="CENTER" wrapText="true" />
+                                
+                                <!-- Main Message -->
+                                <VBox alignment="CENTER" spacing="12.0" style="-fx-padding: 10;">
+                                    <children>
+                                        <Label fx:id="celebrationMessage" style="-fx-font-size: 16; -fx-text-fill: #374151; -fx-text-alignment: center; -fx-line-spacing: 4; -fx-wrap-text: true; -fx-max-width: 550;" text="Your dedication, leadership, and contributions have made a lasting impact on this organization. We are truly grateful for everything you've accomplished during your time here." textAlignment="CENTER" wrapText="true" />
+                                        
+                                        <Label style="-fx-font-size: 15; -fx-text-fill: #6b7280; -fx-text-alignment: center; -fx-font-style: italic; -fx-wrap-text: true; -fx-max-width: 550;" text="Your legacy will continue through the work you've done and the team you've built." textAlignment="CENTER" wrapText="true" />
+                                        
+                                        <Label style="-fx-font-size: 14; -fx-text-fill: #9ca3af; -fx-alignment: center; -fx-text-alignment: center; -fx-wrap-text: true; -fx-max-width: 550; -fx-padding: 15 0 0 0;" text="You will be redirected to the login page shortly..." textAlignment="CENTER" wrapText="true" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
         </StackPane>
     </children>
 </StackPane>
