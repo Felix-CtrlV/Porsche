@@ -1133,84 +1133,84 @@ public class managerOverviewController {
             return;
 
         Platform.runLater(() -> {
-            revenueAreaChart.applyCss();
-            revenueAreaChart.layout();
+        revenueAreaChart.applyCss();
+        revenueAreaChart.layout();
 
-            // Check if paths are ready, if not, retry after a short delay
-            var linePaths = revenueAreaChart.lookupAll(".chart-series-area-line");
-            var fillPaths = revenueAreaChart.lookupAll(".chart-series-area-fill");
+        // Check if paths are ready, if not, retry after a short delay
+        var linePaths = revenueAreaChart.lookupAll(".chart-series-area-line");
+        var fillPaths = revenueAreaChart.lookupAll(".chart-series-area-fill");
 
-            if (linePaths.isEmpty() || fillPaths.isEmpty()) {
-                // Paths not ready yet, try again after 50ms
-                javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(50));
-                pause.setOnFinished(e -> applySmoothCurves());
-                pause.play();
-                return;
-            }
+        if (linePaths.isEmpty() || fillPaths.isEmpty()) {
+            // Paths not ready yet, try again after 50ms
+            javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(50));
+            pause.setOnFinished(e -> applySmoothCurves());
+            pause.play();
+            return;
+        }
 
-            java.util.List<javafx.scene.shape.PathElement> smoothedLineElements = new java.util.ArrayList<>();
+        java.util.List<javafx.scene.shape.PathElement> smoothedLineElements = new java.util.ArrayList<>();
 
-            linePaths.forEach(node -> {
+        linePaths.forEach(node -> {
                 if (node instanceof javafx.scene.shape.Path) {
                     javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
                     path.setStrokeLineJoin(javafx.scene.shape.StrokeLineJoin.ROUND);
                     path.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
                     path.setStrokeWidth(3);
-                    smoothPath(path);
-                    smoothedLineElements.addAll(new java.util.ArrayList<>(path.getElements()));
+                smoothPath(path);
+                smoothedLineElements.addAll(new java.util.ArrayList<>(path.getElements()));
+            }
+        });
+
+        fillPaths.forEach(node -> {
+            if (node instanceof javafx.scene.shape.Path && !smoothedLineElements.isEmpty()) {
+                javafx.scene.shape.Path fillPath = (javafx.scene.shape.Path) node;
+                var originalFillElements = new java.util.ArrayList<>(fillPath.getElements());
+
+                double baselineY = 0;
+                double startX = 0;
+                double endX = 0;
+
+                for (var element : originalFillElements) {
+                    if (element instanceof javafx.scene.shape.LineTo) {
+                        javafx.scene.shape.LineTo lt = (javafx.scene.shape.LineTo) element;
+                        baselineY = Math.max(baselineY, lt.getY());
+                    }
                 }
-            });
 
-            fillPaths.forEach(node -> {
-                if (node instanceof javafx.scene.shape.Path && !smoothedLineElements.isEmpty()) {
-                    javafx.scene.shape.Path fillPath = (javafx.scene.shape.Path) node;
-                    var originalFillElements = new java.util.ArrayList<>(fillPath.getElements());
-
-                    double baselineY = 0;
-                    double startX = 0;
-                    double endX = 0;
-
-                    for (var element : originalFillElements) {
-                        if (element instanceof javafx.scene.shape.LineTo) {
-                            javafx.scene.shape.LineTo lt = (javafx.scene.shape.LineTo) element;
-                            baselineY = Math.max(baselineY, lt.getY());
-                        }
-                    }
-
-                    if (smoothedLineElements.get(0) instanceof javafx.scene.shape.MoveTo) {
-                        javafx.scene.shape.MoveTo firstMove = (javafx.scene.shape.MoveTo) smoothedLineElements.get(0);
-                        startX = firstMove.getX();
-                    }
-
-                    var lastElement = smoothedLineElements.get(smoothedLineElements.size() - 1);
-                    if (lastElement instanceof javafx.scene.shape.CubicCurveTo) {
-                        javafx.scene.shape.CubicCurveTo lastCurve = (javafx.scene.shape.CubicCurveTo) lastElement;
-                        endX = lastCurve.getX();
-                    }
-
-                    fillPath.getElements().clear();
-
-                    for (var element : smoothedLineElements) {
-                        if (element instanceof javafx.scene.shape.MoveTo) {
-                            javafx.scene.shape.MoveTo mt = (javafx.scene.shape.MoveTo) element;
-                            fillPath.getElements().add(new javafx.scene.shape.MoveTo(mt.getX(), mt.getY()));
-                        } else if (element instanceof javafx.scene.shape.CubicCurveTo) {
-                            javafx.scene.shape.CubicCurveTo cc = (javafx.scene.shape.CubicCurveTo) element;
-                            fillPath.getElements().add(new javafx.scene.shape.CubicCurveTo(
-                                    cc.getControlX1(), cc.getControlY1(),
-                                    cc.getControlX2(), cc.getControlY2(),
-                                    cc.getX(), cc.getY()
-                            ));
-                        }
-                    }
-
-                    fillPath.getElements().add(new javafx.scene.shape.LineTo(endX, baselineY));
-                    fillPath.getElements().add(new javafx.scene.shape.LineTo(startX, baselineY));
-                    fillPath.getElements().add(new javafx.scene.shape.ClosePath());
+                if (smoothedLineElements.get(0) instanceof javafx.scene.shape.MoveTo) {
+                    javafx.scene.shape.MoveTo firstMove = (javafx.scene.shape.MoveTo) smoothedLineElements.get(0);
+                    startX = firstMove.getX();
                 }
-            });
 
-            revenueAreaChart.setOpacity(1);
+                var lastElement = smoothedLineElements.get(smoothedLineElements.size() - 1);
+                if (lastElement instanceof javafx.scene.shape.CubicCurveTo) {
+                    javafx.scene.shape.CubicCurveTo lastCurve = (javafx.scene.shape.CubicCurveTo) lastElement;
+                    endX = lastCurve.getX();
+                }
+
+                fillPath.getElements().clear();
+
+                for (var element : smoothedLineElements) {
+                    if (element instanceof javafx.scene.shape.MoveTo) {
+                        javafx.scene.shape.MoveTo mt = (javafx.scene.shape.MoveTo) element;
+                        fillPath.getElements().add(new javafx.scene.shape.MoveTo(mt.getX(), mt.getY()));
+                    } else if (element instanceof javafx.scene.shape.CubicCurveTo) {
+                        javafx.scene.shape.CubicCurveTo cc = (javafx.scene.shape.CubicCurveTo) element;
+                        fillPath.getElements().add(new javafx.scene.shape.CubicCurveTo(
+                                cc.getControlX1(), cc.getControlY1(),
+                                cc.getControlX2(), cc.getControlY2(),
+                                cc.getX(), cc.getY()
+                        ));
+                    }
+                }
+
+                fillPath.getElements().add(new javafx.scene.shape.LineTo(endX, baselineY));
+                fillPath.getElements().add(new javafx.scene.shape.LineTo(startX, baselineY));
+                fillPath.getElements().add(new javafx.scene.shape.ClosePath());
+            }
+        });
+
+        revenueAreaChart.setOpacity(1);
         });
     }
 

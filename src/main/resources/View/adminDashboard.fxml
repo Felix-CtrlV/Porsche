@@ -729,7 +729,7 @@
                                     <children>
                                         <Label fx:id="chooseAdminTitle" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: white;" text="Select Successor Admin" />
                                         <Label style="-fx-font-size: 12; -fx-text-fill: rgba(255,255,255,0.9);" text="Choose who will take over your responsibilities" />
-                                    </children>
+    </children>
                                 </VBox>
                                 <Label fx:id="closeChooseAdminBtn" onMouseClicked="#hideChooseAdminPane" style="-fx-font-size: 20; -fx-text-fill: white; -fx-cursor: hand; -fx-opacity: 0.8;" text="✕">
                                     <cursor>

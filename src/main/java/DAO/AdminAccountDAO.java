@@ -220,7 +220,7 @@ public class AdminAccountDAO {
         }
         return 0;
     }
-    
+
     public int[][] getTargetData(int userId, int month, int year) throws SQLException {
         // Check if user is a manager by checking if they have staff reporting to them
         if (isManager(userId)) {

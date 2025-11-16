@@ -587,10 +587,10 @@ public class managerDashboardController {
         confirmOverlay.setVisible(true);
         confirmOverlay.setOpacity(0);
 
-        FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
-        overlayFade.setFromValue(0);
-        overlayFade.setToValue(1);
-        overlayFade.play();
+//        FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
+//        overlayFade.setFromValue(0);
+//        overlayFade.setToValue(1);
+//        overlayFade.play();
 
         // Show dialog
         changePasswordDialog.setVisible(true);
@@ -1343,11 +1343,11 @@ public class managerDashboardController {
     @FXML
     public void closePasswordDialog() {
         // Fade out overlay
-        FadeTransition overlayFadeOut = new FadeTransition(Duration.millis(300), confirmOverlay);
-        overlayFadeOut.setFromValue(1);
-        overlayFadeOut.setToValue(0);
-        overlayFadeOut.setOnFinished(e -> confirmOverlay.setVisible(false));
-        overlayFadeOut.play();
+//        FadeTransition overlayFadeOut = new FadeTransition(Duration.millis(300), confirmOverlay);
+//        overlayFadeOut.setFromValue(1);
+//        overlayFadeOut.setToValue(0);
+//        overlayFadeOut.setOnFinished(e -> confirmOverlay.setVisible(false));
+//        overlayFadeOut.play();
 
         // Slide out dialog
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), changePasswordDialog);
