@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<HBox maxHeight="120.0" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="300.0" style="-fx-background-color: linear-gradient(to right, #ffffff 0%, #fdfeff 100%); -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #f1f5f9; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerCarPartProgressBarController">
+<HBox maxHeight="120.0" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="300.0" styleClass="carPartCard" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerCarPartProgressBarController">
     <padding>
         <Insets bottom="20" left="25" right="25" top="20" />
     </padding>
@@ -28,7 +28,7 @@
         <VBox alignment="CENTER_LEFT" spacing="5" HBox.hgrow="ALWAYS">
             <children>
                 <!-- Name -->
-                <Label fx:id="Name" style="-fx-text-fill: #1e293b; -fx-font-weight: bold; -fx-font-size: 16;" text="TOYOTA CAMRY" wrapText="true">
+                <Label fx:id="Name" styleClass="cardName" style="-fx-font-weight: bold; -fx-font-size: 16;" text="TOYOTA CAMRY" wrapText="true">
                     <font>
                         <Font name="System Bold" size="16" />
                     </font>
@@ -37,8 +37,8 @@
                 <!-- Sold and Rank in one row -->
                 <HBox alignment="CENTER_LEFT" spacing="20">
                     <HBox alignment="CENTER_LEFT" spacing="5">
-                        <Label style="-fx-text-fill: #64748b; -fx-font-size: 12;" text="Sold:" />
-                        <Label fx:id="soldQty" style="-fx-text-fill: #dc2626; -fx-font-weight: bold;" text="1,250">
+                        <Label styleClass="cardLabel" style="-fx-font-size: 12;" text="Sold:" />
+                        <Label fx:id="soldQty" styleClass="cardSold" style="-fx-font-weight: bold;" text="1,250">
                             <font>
                                 <Font name="System Bold" size="14" />
                             </font>
@@ -46,8 +46,8 @@
                     </HBox>
                     
                     <HBox alignment="CENTER_LEFT" spacing="5">
-                        <Label style="-fx-text-fill: #64748b; -fx-font-size: 12;" text="Rank:" />
-                        <Label fx:id="rank" style="-fx-text-fill: #f59e0b; -fx-font-weight: bold;" text="#3">
+                        <Label styleClass="cardLabel" style="-fx-font-size: 12;" text="Rank:" />
+                        <Label fx:id="rank" styleClass="cardRank" style="-fx-font-weight: bold;" text="#3">
                             <font>
                                 <Font name="System Bold" size="14" />
                             </font>

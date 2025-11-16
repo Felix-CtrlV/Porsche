@@ -1,5 +1,6 @@
 package Utils;
 
+import DAO.AdminAccountDAO;
 import Database.DatabaseConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +17,139 @@ public class MonthEndSalaryService {
     
     /**
      * Process month-end salary payments:
-     * 1. Get all active employees with their salary + bonus
-     * 2. Send email notification to each employee
-     * 3. Reset bonus to 0 for next month
+     * 1. Automatically calculate and apply bonuses for employees with >= 80% attendance
+     * 2. Get all active employees with their salary + bonus
+     * 3. Send email notification to each employee
+     * 4. Reset bonus to 0 for next month
      */
     public static void processMonthEndSalary() {
         logger.info("Starting month-end salary processing...");
+        
+        try {
+            // First, automatically calculate and apply bonuses
+            applyBonusesAutomatically();
+            
+            // Then process salaries with the applied bonuses
+            processSalariesWithBonuses();
+            
+        } catch (Exception e) {
+            logger.error("Error during month-end salary processing", e);
+        }
+    }
+    
+    /**
+     * Automatically calculate and apply bonuses for all eligible employees (>= 80% attendance)
+     */
+    private static void applyBonusesAutomatically() {
+        logger.info("Automatically calculating and applying bonuses...");
+        
+        AdminAccountDAO dao = null;
+        try {
+            dao = new AdminAccountDAO();
+            LocalDate now = LocalDate.now();
+            int currentMonth = now.getMonthValue();
+            int currentYear = now.getYear();
+            
+            // Get all active employees
+            try (Connection conn = DatabaseConnectionManager.getInstance().getConnection()) {
+                String query = """
+                    SELECT 
+                        ui.user_id,
+                        ui.user_name,
+                        ui.user_role,
+                        uw.salary_amount
+                    FROM user_info ui
+                    JOIN user_workinfo uw ON ui.user_id = uw.user_id
+                    WHERE ui.user_status = 1 AND ui.user_role IN ('staff', 'manager')
+                    ORDER BY ui.user_role, ui.user_name
+                """;
+                
+                PreparedStatement ps = conn.prepareStatement(query);
+                ResultSet rs = ps.executeQuery();
+                
+                int bonusAppliedCount = 0;
+                int bonusSkippedCount = 0;
+                
+                while (rs.next()) {
+                    int userId = rs.getInt("user_id");
+                    String userName = rs.getString("user_name");
+                    double salary = rs.getDouble("salary_amount");
+                    
+                    try {
+                        // Check attendance
+                        double attendancePercent = dao.getUserAttendancePercentage(userId, currentMonth, currentYear);
+                        
+                        if (attendancePercent < 80.0) {
+                            logger.info("Skipping bonus for user {} ({}): Attendance is {}% (minimum 80% required)", 
+                                userName, userId, attendancePercent >= 0 ? attendancePercent : 0.0);
+                            bonusSkippedCount++;
+                            continue;
+                        }
+                        
+                        // Get target data and calculate bonus
+                        int[][] targetData = dao.getTargetData(userId, currentMonth, currentYear);
+                        int carAchieved = targetData[0][0];
+                        int carTarget = targetData[0][1];
+                        int partAchieved = targetData[1][0];
+                        int partTarget = targetData[1][1];
+                        
+                        // Calculate bonus (same logic as in adminAccountController)
+                        int carsOverTarget = Math.max(0, carAchieved - carTarget);
+                        double carBonusPercent = carsOverTarget * 2.0;
+                        double carBonusAmount = (salary * carBonusPercent) / 100.0;
+                        
+                        int partsOverTarget = Math.max(0, partAchieved - partTarget);
+                        double partBonusPercent = partsOverTarget * 1.0;
+                        double partBonusAmount = (salary * partBonusPercent) / 100.0;
+                        
+                        double totalBonus = carBonusAmount + partBonusAmount;
+                        
+                        // Apply bonus if > 0
+                        if (totalBonus > 0) {
+                            boolean applied = dao.applyBonus(userId, totalBonus);
+                            if (applied) {
+                                logger.info("Applied bonus ${} for user {} (ID: {}), Attendance: {}%", 
+                                    totalBonus, userName, userId, attendancePercent);
+                                bonusAppliedCount++;
+                            } else {
+                                logger.warn("Failed to apply bonus for user {} (ID: {})", userName, userId);
+                                bonusSkippedCount++;
+                            }
+                        } else {
+                            logger.info("No bonus earned for user {} (ID: {}): Targets not exceeded", userName, userId);
+                            bonusSkippedCount++;
+                        }
+                        
+                    } catch (Exception e) {
+                        logger.error("Error processing bonus for user {} (ID: {})", userName, userId, e);
+                        bonusSkippedCount++;
+                    }
+                }
+                
+                logger.info("Bonus application completed. Applied: {}, Skipped: {}", bonusAppliedCount, bonusSkippedCount);
+                
+            } catch (SQLException e) {
+                logger.error("Database error during bonus application", e);
+            }
+            
+        } catch (SQLException e) {
+            logger.error("Failed to initialize AdminAccountDAO for bonus application", e);
+        } finally {
+            if (dao != null) {
+                try {
+                    dao.close();
+                } catch (Exception e) {
+                    logger.error("Error closing AdminAccountDAO", e);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Process salaries with the applied bonuses
+     */
+    private static void processSalariesWithBonuses() {
+        logger.info("Processing salaries with bonuses...");
         
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection()) {
             // Get all active employees with their salary and bonus

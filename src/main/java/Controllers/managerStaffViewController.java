@@ -83,7 +83,7 @@ public class managerStaffViewController {
     private Button PreviousMonthbtn;
 
     @FXML
-    private Button PreviousYearbth;
+    private Button PreviousYearbtn;
 
     @FXML
     private Button SearchNamebtn;
@@ -1279,9 +1279,10 @@ public class managerStaffViewController {
 
 
                 if (currentYear <= start.getYear()) {
-                    PreviousYearbth.setDisable(true);
-                    PreviousYearbth.setVisible(false);
-
+                    if (PreviousYearbtn != null) {
+                        PreviousYearbtn.setDisable(true);
+                        PreviousYearbtn.setVisible(false);
+                    }
 
                     if (currentYear == start.getYear() && currentMonth <= start.getMonthValue()) {
                         PreviousMonthbtn.setDisable(true);
@@ -1291,8 +1292,10 @@ public class managerStaffViewController {
                         PreviousMonthbtn.setVisible(true);
                     }
                 } else {
-                    PreviousYearbth.setDisable(false);
-                    PreviousYearbth.setVisible(true);
+                    if (PreviousYearbtn != null) {
+                        PreviousYearbtn.setDisable(false);
+                        PreviousYearbtn.setVisible(true);
+                    }
                     PreviousMonthbtn.setDisable(false);
                     PreviousMonthbtn.setVisible(true);
                 }

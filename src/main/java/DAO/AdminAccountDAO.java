@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -186,6 +187,40 @@ public class AdminAccountDAO {
         }
     }
 
+    /**
+     * Get attendance percentage for a specific user
+     * @param userId The user ID to check attendance for
+     * @param month The month (1-12)
+     * @param year The year
+     * @return Attendance percentage (0-100), or -1 if not found
+     */
+    public double getUserAttendancePercentage(int userId, int month, int year) throws SQLException {
+        // Find an admin user to use as requester (admin can see all users)
+        int adminId = findAdminUserId();
+        if (adminId == 0) {
+            logger.warn("No admin user found, cannot retrieve attendance");
+            return -1;
+        }
+        
+        AttendanceSummary summary = getMonthlyAttendance(adminId, month, year);
+        AttendanceRecord record = summary != null ? summary.findByUserId(userId) : null;
+        return record != null ? record.getAttendancePercentage() : -1;
+    }
+    
+    /**
+     * Find any admin user ID to use as requester for attendance queries
+     */
+    private int findAdminUserId() throws SQLException {
+        String sql = "SELECT user_id FROM user_info WHERE user_role = 'admin' AND user_status = 1 LIMIT 1";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("user_id");
+            }
+        }
+        return 0;
+    }
+    
     public int[][] getTargetData(int userId, int month, int year) throws SQLException {
         // Check if user is a manager by checking if they have staff reporting to them
         if (isManager(userId)) {
@@ -406,6 +441,19 @@ public class AdminAccountDAO {
             return false;
         }
 
+        // Check attendance requirement (>= 80%)
+        LocalDate now = LocalDate.now();
+        int currentMonth = now.getMonthValue();
+        int currentYear = now.getYear();
+        
+        double attendancePercent = getUserAttendancePercentage(userId, currentMonth, currentYear);
+        
+        if (attendancePercent < 80.0) {
+            logger.warn("Cannot apply bonus for user {}: Attendance is {}% (minimum 80% required)", 
+                userId, attendancePercent >= 0 ? attendancePercent : 0.0);
+            return false;
+        }
+
         double maxBonus = getBonusColumnMaxValue();
         if (Double.isFinite(maxBonus) && bonusAmount > maxBonus) {
             logger.warn("Requested bonus {} exceeds database column limit {} for user {}", bonusAmount, maxBonus, userId);
@@ -420,7 +468,7 @@ public class AdminAccountDAO {
             ps.setInt(2, userId);
 
             int rowsAffected = ps.executeUpdate();
-            logger.info("Set bonus for user ID: {} to {}", userId, normalizedBonus);
+            logger.info("Set bonus for user ID: {} to {} (Attendance: {}%)", userId, normalizedBonus, attendancePercent);
             return rowsAffected > 0;
         }
     }

@@ -652,3 +652,38 @@
     -fx-background-color: #5c9ea2;
     -fx-background-radius: 8;
  }
+
+/* Manager Overview Cards - Dark Mode */
+.carPartCard {
+    -fx-background-color: linear-gradient(to right, #293031 0%, #2d3638 100%);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #364040;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 5);
+}
+
+.bestSellerCard {
+    -fx-fill: #293031;
+    -fx-stroke: #364040;
+}
+
+.cardName {
+    -fx-text-fill: #e6e6e6;
+}
+
+.cardLabel {
+    -fx-text-fill: #a6b3b4;
+}
+
+.cardSold {
+    -fx-text-fill: #ff6b6b;
+}
+
+.cardRank {
+    -fx-text-fill: #f5af19;
+}
+
+.cardRevenueRate {
+    -fx-text-fill: #10b981;
+}

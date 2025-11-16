@@ -1,10 +1,13 @@
 package Controllers;
 
+import Database.DatabaseConnectionManager;
 import Database.Porsche_DB;
 import Model.ManagerOfAttendanceView;
 
 import Model.managerOverview;
 import Utils.Session;
+import Utils.ThreadPoolManager;
+import javafx.concurrent.Task;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
@@ -279,14 +282,13 @@ public class managerOverviewController {
         carSeries.setName("Cars Sold");
         partSeries = new XYChart.Series<>();
         partSeries.setName("Parts Sold");
-        revenueSeries = new XYChart.Series<>();
-        revenueSeries.setName("Revenue");
-        
-        // Add revenue series to chart first
-        revenueAreaChart.getData().add(revenueSeries);
+        // Note: revenueSeries is no longer used - area chart loads separately via loadAreaChart()
         
         // Initialize chart buttons - set car as default active
         activateChartButton(carChart);
+        
+        // Load area chart separately using Task-based approach
+        loadAreaChart();
 
         //for besti of cars and parts and staff
         besti = "car";
@@ -369,7 +371,12 @@ public class managerOverviewController {
             if (newVal != null) {
                 currentYear = newVal;
                 updateYearMonthLabel();
-                // Update chart when year changes
+                // Reload charts when year changes
+                try {
+                    setChartsDataAsync();
+                } catch (SQLException e) {
+                    System.err.println("Error reloading charts: " + e.getMessage());
+                }
             }
         });
         monthBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -378,7 +385,12 @@ public class managerOverviewController {
                 Month parsedMonth = Month.from(fmt.parse(newVal));
                 currentMonth = parsedMonth.getValue();
                 updateYearMonthLabel();
-
+                // Reload charts when month changes
+                try {
+                    setChartsDataAsync();
+                } catch (SQLException e) {
+                    System.err.println("Error reloading charts: " + e.getMessage());
+                }
             }
         });
 
@@ -858,18 +870,16 @@ public class managerOverviewController {
         // Add appropriate series based on chart mode
         if (chartMode.equals("car")) {
             qtyBarChart.getData().add(carSeries);
-            revenueSeries.setName("Car Revenue");
             System.out.println("Added car series to bar chart. Car series data points: " + carSeries.getData().size());
         } else if (chartMode.equals("part")) {
             qtyBarChart.getData().add(partSeries);
-            revenueSeries.setName("Part Revenue");
             System.out.println("Added part series to bar chart. Part series data points: " + partSeries.getData().size());
         }
         
         System.out.println("Chart mode: " + chartMode + ", Bar chart series count: " + qtyBarChart.getData().size());
         
         // Apply styling after updating series
-        styleCharts();
+        styleBarChartOnly();
     }
     
     /**
@@ -914,12 +924,115 @@ public class managerOverviewController {
     }
     
     /**
-     * Updates BOTH bar chart and revenue chart (used when month/year changes)
+     * Load area chart with revenue data using Task-based approach (like admin overview)
+     */
+    private void loadAreaChart() {
+        if (revenueAreaChart == null)
+            return;
+
+        Task<List<XYChart.Data<String, Double>>> task = new Task<>() {
+            @Override
+            protected List<XYChart.Data<String, Double>> call() throws Exception {
+                List<XYChart.Data<String, Double>> revenueData = new ArrayList<>();
+                String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+                try (Connection con = DatabaseConnectionManager.getInstance().getConnection()) {
+                    // Get paid revenue for each month for manager's subordinates
+                    String revenueQuery = """
+                        SELECT 
+                            MONTH(o.order_date) as month_num,
+                            COALESCE(SUM(o.paid_amount), 0) as total_revenue
+                        FROM orders o 
+                        WHERE YEAR(o.order_date) = ? 
+                          AND o.order_status IN ('confirm', 'pending')
+                          AND o.user_id IN (
+                              SELECT ui.user_id 
+                              FROM user_info ui
+                              INNER JOIN user_workinfo uw ON ui.user_id = uw.user_id
+                              WHERE uw.manager = ?
+                          )
+                        GROUP BY MONTH(o.order_date)
+                        ORDER BY MONTH(o.order_date)
+                        """;
+
+                    try (PreparedStatement ps = con.prepareStatement(revenueQuery)) {
+                        ps.setInt(1, currentYear);
+                        ps.setInt(2, managerId);
+
+                        try (ResultSet rs = ps.executeQuery()) {
+                            // Initialize all months with 0
+                            java.util.Map<Integer, Double> monthRevenueMap = new java.util.HashMap<>();
+                            for (int i = 1; i <= 12; i++) {
+                                monthRevenueMap.put(i, 0.0);
+                            }
+
+                            // Fill in actual revenue data
+                            while (rs.next()) {
+                                int monthNum = rs.getInt("month_num");
+                                double revenue = rs.getDouble("total_revenue");
+                                monthRevenueMap.put(monthNum, revenue);
+                            }
+
+                            // Create data points for all 12 months
+                            for (int i = 1; i <= 12; i++) {
+                                Double revenue = monthRevenueMap.get(i);
+                                revenueData.add(new XYChart.Data<>(monthNames[i - 1], revenue));
+                            }
+                        }
+                    }
+                }
+                return revenueData;
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            List<XYChart.Data<String, Double>> revenueData = task.getValue();
+
+            Platform.runLater(() -> {
+                revenueAreaChart.getData().clear();
+                revenueAreaChart.setAnimated(false);
+                revenueAreaChart.setLegendVisible(false);
+                revenueAreaChart.setCreateSymbols(true);
+
+                XYChart.Series<String, Double> revenueSeries = new XYChart.Series<>();
+                revenueSeries.setName("Monthly Revenue");
+                revenueSeries.getData().addAll(revenueData);
+
+                revenueAreaChart.getData().add(revenueSeries);
+
+                // Style the area chart
+                styleAreaChart();
+
+                // Hide chart temporarily while smoothing
+                revenueAreaChart.setOpacity(0);
+
+                javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
+                pause.setOnFinished(ev -> applySmoothCurves());
+                pause.play();
+            });
+        });
+
+        task.setOnFailed(e -> {
+            System.err.println("Failed to load revenue area chart: " + task.getException().getMessage());
+            Platform.runLater(() -> {
+                revenueAreaChart.getData().clear();
+                // Add placeholder data
+                XYChart.Series<String, Double> errorSeries = new XYChart.Series<>();
+                errorSeries.setName("No Data Available");
+                errorSeries.getData().add(new XYChart.Data<>("Error", 0.0));
+                revenueAreaChart.getData().add(errorSeries);
+            });
+        });
+
+        ThreadPoolManager.getInstance().execute(task);
+    }
+    
+    /**
+     * Updates bar chart only (revenue chart is loaded separately)
      */
     private void setCharts() throws SQLException {
         carSeries.getData().clear();
         partSeries.getData().clear();
-        revenueSeries.getData().clear();
 
         // Use "Monthly" as the default period since combo box was removed
         String selectedPeriod = "Monthly";
@@ -937,17 +1050,18 @@ public class managerOverviewController {
                 String periodLabel = rs.getString("period_label");
                 int carQty = rs.getInt("car_qty");
                 int partQty = rs.getInt("part_qty");
-                double revenue = rs.getDouble("revenue");
 
                 carSeries.getData().add(new XYChart.Data<>(periodLabel, carQty));
                 partSeries.getData().add(new XYChart.Data<>(periodLabel, partQty));
-                revenueSeries.getData().add(new XYChart.Data<>(periodLabel, revenue));
             }
             rs.close();
             cs.close();
             
             // Update chart series after loading data
             updateChartSeries();
+            
+            // Reload area chart when month/year changes
+            loadAreaChart();
             
         } catch (Exception e) {
             System.err.println("Error loading chart data: " + e.getMessage());
@@ -973,6 +1087,26 @@ public class managerOverviewController {
     }
     
     /**
+     * Styles the area chart (called from loadAreaChart)
+     */
+    private void styleAreaChart() {
+        Platform.runLater(() -> {
+            // Apply styling to area chart elements
+            revenueAreaChart.lookupAll(".chart-series-area-line").forEach(node -> {
+                node.setStyle("-fx-stroke: #6366f1; -fx-stroke-width: 3px; -fx-stroke-line-cap: round; -fx-stroke-line-join: round;");
+            });
+            
+            revenueAreaChart.lookupAll(".chart-series-area-fill").forEach(node -> {
+                node.setStyle("-fx-fill: rgba(226, 232, 240, 0.75); -fx-fill-rule: even-odd;");
+            });
+            
+            revenueAreaChart.lookupAll(".chart-area-symbol").forEach(node -> {
+                node.setStyle("-fx-background-color: #ffffff, #6366f1; -fx-background-insets: 0, 2; -fx-padding: 6;");
+            });
+        });
+    }
+    
+    /**
      * Styles BOTH bar chart and revenue chart
      */
     private void styleCharts() {
@@ -981,11 +1115,6 @@ public class managerOverviewController {
         qtyBarChart.setAnimated(false);
         qtyBarChart.setCategoryGap(20);
 
-        // Style area chart
-        revenueAreaChart.setLegendVisible(false);
-        revenueAreaChart.setAnimated(false);
-        revenueAreaChart.setCreateSymbols(false); // Disable symbols for cleaner look
-
         // Apply custom colors to match the selected mode (car or part)
         String color = chartMode.equals("car") ? "#6D8196" : "#ffa500";
         
@@ -993,113 +1122,96 @@ public class managerOverviewController {
         qtyBarChart.lookupAll(".chart-bar").forEach(node -> {
             node.setStyle("-fx-bar-fill: " + color + ";");
         });
-        
-        // Apply styling to area chart elements using CSS classes
-        revenueAreaChart.lookupAll(".chart-series-area-line").forEach(node -> {
-            String strokeColor = chartMode.equals("car") ? "#6D8196" : "#ffa500";
-            node.setStyle("-fx-stroke: " + strokeColor + "; -fx-stroke-width: 3px; -fx-stroke-line-cap: round; -fx-stroke-line-join: round;");
-        });
-        
-        revenueAreaChart.lookupAll(".chart-series-area-fill").forEach(node -> {
-            String fillColor = chartMode.equals("car") ? "rgba(109,129,150,0.2)" : "rgba(255,165,0,0.2)";
-            node.setStyle("-fx-fill: " + fillColor + "; -fx-fill-rule: even-odd;");
-        });
-        
-        // Hide chart temporarily while applying smooth curves
-        revenueAreaChart.setOpacity(0);
-        
-        // Apply smooth curves after a short delay to ensure paths are created
-        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
-        pause.setOnFinished(e -> applySmoothCurves());
-        pause.play();
     }
     
     // ---------- Smooth Curve Methods ----------
     /**
-     * Applies smooth curve styling to the area chart
+     * Applies smooth curve styling to the area chart (like admin overview)
      */
     private void applySmoothCurves() {
         if (revenueAreaChart == null)
             return;
 
-        revenueAreaChart.applyCss();
-        revenueAreaChart.layout();
+        Platform.runLater(() -> {
+            revenueAreaChart.applyCss();
+            revenueAreaChart.layout();
 
-        // Check if paths are ready, if not, retry after a short delay
-        var linePaths = revenueAreaChart.lookupAll(".chart-series-area-line");
-        var fillPaths = revenueAreaChart.lookupAll(".chart-series-area-fill");
+            // Check if paths are ready, if not, retry after a short delay
+            var linePaths = revenueAreaChart.lookupAll(".chart-series-area-line");
+            var fillPaths = revenueAreaChart.lookupAll(".chart-series-area-fill");
 
-        if (linePaths.isEmpty() || fillPaths.isEmpty()) {
-            // Paths not ready yet, try again after 50ms
-            javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(50));
-            pause.setOnFinished(e -> applySmoothCurves());
-            pause.play();
-            return;
-        }
+            if (linePaths.isEmpty() || fillPaths.isEmpty()) {
+                // Paths not ready yet, try again after 50ms
+                javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(50));
+                pause.setOnFinished(e -> applySmoothCurves());
+                pause.play();
+                return;
+            }
 
-        java.util.List<javafx.scene.shape.PathElement> smoothedLineElements = new java.util.ArrayList<>();
+            java.util.List<javafx.scene.shape.PathElement> smoothedLineElements = new java.util.ArrayList<>();
 
-        linePaths.forEach(node -> {
+            linePaths.forEach(node -> {
                 if (node instanceof javafx.scene.shape.Path) {
                     javafx.scene.shape.Path path = (javafx.scene.shape.Path) node;
                     path.setStrokeLineJoin(javafx.scene.shape.StrokeLineJoin.ROUND);
                     path.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
                     path.setStrokeWidth(3);
-                smoothPath(path);
-                smoothedLineElements.addAll(new java.util.ArrayList<>(path.getElements()));
-            }
-        });
+                    smoothPath(path);
+                    smoothedLineElements.addAll(new java.util.ArrayList<>(path.getElements()));
+                }
+            });
 
-        fillPaths.forEach(node -> {
-            if (node instanceof javafx.scene.shape.Path && !smoothedLineElements.isEmpty()) {
-                javafx.scene.shape.Path fillPath = (javafx.scene.shape.Path) node;
-                var originalFillElements = new java.util.ArrayList<>(fillPath.getElements());
+            fillPaths.forEach(node -> {
+                if (node instanceof javafx.scene.shape.Path && !smoothedLineElements.isEmpty()) {
+                    javafx.scene.shape.Path fillPath = (javafx.scene.shape.Path) node;
+                    var originalFillElements = new java.util.ArrayList<>(fillPath.getElements());
 
-                double baselineY = 0;
-                double startX = 0;
-                double endX = 0;
+                    double baselineY = 0;
+                    double startX = 0;
+                    double endX = 0;
 
-                for (var element : originalFillElements) {
-                    if (element instanceof javafx.scene.shape.LineTo) {
-                        javafx.scene.shape.LineTo lt = (javafx.scene.shape.LineTo) element;
-                        baselineY = Math.max(baselineY, lt.getY());
+                    for (var element : originalFillElements) {
+                        if (element instanceof javafx.scene.shape.LineTo) {
+                            javafx.scene.shape.LineTo lt = (javafx.scene.shape.LineTo) element;
+                            baselineY = Math.max(baselineY, lt.getY());
+                        }
                     }
-                }
 
-                if (smoothedLineElements.get(0) instanceof javafx.scene.shape.MoveTo) {
-                    javafx.scene.shape.MoveTo firstMove = (javafx.scene.shape.MoveTo) smoothedLineElements.get(0);
-                    startX = firstMove.getX();
-                }
-
-                var lastElement = smoothedLineElements.get(smoothedLineElements.size() - 1);
-                if (lastElement instanceof javafx.scene.shape.CubicCurveTo) {
-                    javafx.scene.shape.CubicCurveTo lastCurve = (javafx.scene.shape.CubicCurveTo) lastElement;
-                    endX = lastCurve.getX();
-                }
-
-                fillPath.getElements().clear();
-
-                for (var element : smoothedLineElements) {
-                    if (element instanceof javafx.scene.shape.MoveTo) {
-                        javafx.scene.shape.MoveTo mt = (javafx.scene.shape.MoveTo) element;
-                        fillPath.getElements().add(new javafx.scene.shape.MoveTo(mt.getX(), mt.getY()));
-                    } else if (element instanceof javafx.scene.shape.CubicCurveTo) {
-                        javafx.scene.shape.CubicCurveTo cc = (javafx.scene.shape.CubicCurveTo) element;
-                        fillPath.getElements().add(new javafx.scene.shape.CubicCurveTo(
-                                cc.getControlX1(), cc.getControlY1(),
-                                cc.getControlX2(), cc.getControlY2(),
-                                cc.getX(), cc.getY()
-                        ));
+                    if (smoothedLineElements.get(0) instanceof javafx.scene.shape.MoveTo) {
+                        javafx.scene.shape.MoveTo firstMove = (javafx.scene.shape.MoveTo) smoothedLineElements.get(0);
+                        startX = firstMove.getX();
                     }
+
+                    var lastElement = smoothedLineElements.get(smoothedLineElements.size() - 1);
+                    if (lastElement instanceof javafx.scene.shape.CubicCurveTo) {
+                        javafx.scene.shape.CubicCurveTo lastCurve = (javafx.scene.shape.CubicCurveTo) lastElement;
+                        endX = lastCurve.getX();
+                    }
+
+                    fillPath.getElements().clear();
+
+                    for (var element : smoothedLineElements) {
+                        if (element instanceof javafx.scene.shape.MoveTo) {
+                            javafx.scene.shape.MoveTo mt = (javafx.scene.shape.MoveTo) element;
+                            fillPath.getElements().add(new javafx.scene.shape.MoveTo(mt.getX(), mt.getY()));
+                        } else if (element instanceof javafx.scene.shape.CubicCurveTo) {
+                            javafx.scene.shape.CubicCurveTo cc = (javafx.scene.shape.CubicCurveTo) element;
+                            fillPath.getElements().add(new javafx.scene.shape.CubicCurveTo(
+                                    cc.getControlX1(), cc.getControlY1(),
+                                    cc.getControlX2(), cc.getControlY2(),
+                                    cc.getX(), cc.getY()
+                            ));
+                        }
+                    }
+
+                    fillPath.getElements().add(new javafx.scene.shape.LineTo(endX, baselineY));
+                    fillPath.getElements().add(new javafx.scene.shape.LineTo(startX, baselineY));
+                    fillPath.getElements().add(new javafx.scene.shape.ClosePath());
                 }
+            });
 
-                fillPath.getElements().add(new javafx.scene.shape.LineTo(endX, baselineY));
-                fillPath.getElements().add(new javafx.scene.shape.LineTo(startX, baselineY));
-                fillPath.getElements().add(new javafx.scene.shape.ClosePath());
-            }
+            revenueAreaChart.setOpacity(1);
         });
-
-        revenueAreaChart.setOpacity(1);
     }
 
     private void smoothPath(javafx.scene.shape.Path path) {
@@ -1205,11 +1317,11 @@ public class managerOverviewController {
         Platform.runLater(() -> {
             carSeries.getData().clear();
             partSeries.getData().clear();
-            revenueSeries.getData().clear();
             carSeries.getData().addAll(carData);
             partSeries.getData().addAll(partData);
-            revenueSeries.getData().addAll(revenueData);
             updateChartSeries();
+            // Reload area chart when month/year changes
+            loadAreaChart();
         });
     }
     

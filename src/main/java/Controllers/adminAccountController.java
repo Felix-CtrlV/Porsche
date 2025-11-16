@@ -1258,13 +1258,45 @@ public class adminAccountController {
             if (bonusAmount <= 0) {
                 showToast("warning", "No Bonus", "There is no bonus to apply for this employee.");
                 return;
-            }else {
-                dashboardController.showConfirmDialog("Confirm Apply Bonus", String.format("Are you sure you want to apply bonus of $ %.2f?", bonusAmount), "⚠", () -> applyBonusAsync(bonusAmount));
             }
-        } catch (
-                NumberFormatException e) {
+            
+            // Check attendance before applying bonus
+            checkAttendanceAndApplyBonus(bonusAmount);
+        } catch (NumberFormatException e) {
             showToast("error", "Invalid Bonus", "Unable to parse bonus amount.");
         }
+    }
+    
+    private void checkAttendanceAndApplyBonus(double bonusAmount) {
+        Task<Double> attendanceTask = new Task<>() {
+            @Override
+            protected Double call() throws Exception {
+                LocalDate now = LocalDate.now();
+                return dao.getUserAttendancePercentage(selectedStaffId, now.getMonthValue(), now.getYear());
+            }
+        };
+        
+        attendanceTask.setOnSucceeded(e -> {
+            double attendancePercent = attendanceTask.getValue();
+            
+            if (attendancePercent < 80.0 || attendancePercent < 0) {
+                showToast("warning", "Attendance Requirement Not Met", 
+                    String.format("Cannot apply bonus. Minimum 80%% attendance required.",
+                        attendancePercent >= 0 ? attendancePercent : 0.0));
+                return;
+            }
+            
+            dashboardController.showConfirmDialog("Confirm Apply Bonus", 
+                String.format("Are you sure you want to apply bonus of $ %.2f?\n\nEmployee attendance: %.1f%%", bonusAmount, attendancePercent), 
+                "⚠", () -> applyBonusAsync(bonusAmount));
+        });
+        
+        attendanceTask.setOnFailed(e -> {
+            logger.error("Failed to check attendance", attendanceTask.getException());
+            showToast("error", "Error", "Failed to check attendance. Cannot apply bonus.");
+        });
+        
+        ThreadPoolManager.getInstance().execute(attendanceTask);
     }
 
     private void applyBonusAsync(double bonusAmount) {
