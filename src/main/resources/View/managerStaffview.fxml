@@ -20,7 +20,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerStaffViewController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.managerStaffViewController">
     <BorderPane>
         <left>
             <VBox minWidth="301.0" prefHeight="700.0" prefWidth="301.0" spacing="10.0" styleClass="listPath">
@@ -244,7 +244,7 @@
                                                             </HBox>
                                                             <HBox alignment="CENTER" spacing="8" styleClass="legend-item">
                                                                 <children>
-                                                                    <Circle fill="#ef4444" radius="6" styleClass="legend-circle" />
+                                                                    <Circle fill="#e5e7eb" radius="6" styleClass="legend-circle" />
                                                                     <Label styleClass="legend-label" text="Absent" />
                                                                 </children>
                                                             </HBox>
@@ -433,7 +433,7 @@
                                 <children>
                                     <VBox spacing="15.0" styleClass="admin-card" HBox.hgrow="ALWAYS">
                                         <children>
-                                            <Label styleClass="textHeader" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="📋 Order History" />
+                                            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" styleClass="textHeader" text="📋 Order History" />
                                             <TableView fx:id="ordersTable" onMouseClicked="#ordersTableClick" styleClass="admin-table" VBox.vgrow="ALWAYS">
                                                 <columns>
                                                     <TableColumn fx:id="NoCol" prefWidth="50.0" text="No" />
@@ -462,21 +462,21 @@
                                                         <children>
                                                             <HBox spacing="10.0">
                                                                 <children>
-                                                                    <Label styleClass="textHeader" style="-fx-font-weight: bold; -fx-font-size: 12;" text="Total Price:" />
+                                                                    <Label style="-fx-font-weight: bold; -fx-font-size: 12;" styleClass="textHeader" text="Total Price:" />
                                                                     <Region minWidth="137.0" prefHeight="18.0" HBox.hgrow="ALWAYS" />
                                                                     <Label fx:id="totalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #3b82f6; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
                                                                 </children>
                                                             </HBox>
                                                             <HBox spacing="10.0">
                                                                 <children>
-                                                                    <Label styleClass="textHeader" style="-fx-font-weight: bold; -fx-font-size: 12;" text="Paid Amount:" />
+                                                                    <Label style="-fx-font-weight: bold; -fx-font-size: 12;" styleClass="textHeader" text="Paid Amount:" />
                                                                     <Region HBox.hgrow="ALWAYS" />
                                                                     <Label fx:id="paidAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #10b981; -fx-font-size: 14; -fx-background-color: rgba(16, 185, 129, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
                                                                 </children>
                                                             </HBox>
                                                             <HBox spacing="10.0">
                                                                 <children>
-                                                                    <Label styleClass="textHeader" style="-fx-font-weight: bold; -fx-font-size: 12;" text="Remain Amount:" />
+                                                                    <Label style="-fx-font-weight: bold; -fx-font-size: 12;" styleClass="textHeader" text="Remain Amount:" />
                                                                     <Region HBox.hgrow="ALWAYS" />
                                                                     <Label fx:id="remainAmountLabel" style="-fx-font-weight: bold; -fx-text-fill: #ef4444; -fx-font-size: 14; -fx-background-color: rgba(239, 68, 68, 0.1); -fx-background-radius: 6; -fx-padding: 3 6 3 6;" text="0.00" />
                                                                 </children>
@@ -500,7 +500,7 @@
                                                     </TableView>
                                                 </center>
                                                 <top>
-                                                    <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="253.0" spacing="10.0" styleClass="dueDateStyle" style=" -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 1; -fx-padding: 9;">
+                                                    <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="253.0" spacing="10.0" style=" -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 1; -fx-padding: 9;" styleClass="dueDateStyle">
                                                         <children>
                                                             <Label minWidth="70.0" style="-fx-font-weight: bold;" styleClass="textHeader" text="Due Date" />
                                                             <Region maxWidth="10000.0" minWidth="55.0" HBox.hgrow="ALWAYS" />
