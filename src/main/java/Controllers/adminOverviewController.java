@@ -216,12 +216,13 @@ public class adminOverviewController implements Initializable {
             currentMonth = 1;
             currentYear++;
             yearBox.setValue(currentYear);
+            loadAllData(true);
         } else {
             currentMonth++;
         }
         updateMonthBox();
         updateDateControls();
-        loadAllData(true);
+        loadAllData(false);
     }
 
     @FXML
@@ -230,12 +231,13 @@ public class adminOverviewController implements Initializable {
             currentMonth = 12;
             currentYear--;
             yearBox.setValue(currentYear);
+            loadAllData(true);
         } else {
             currentMonth--;
         }
         updateMonthBox();
         updateDateControls();
-        loadAllData(true);
+        loadAllData(false);
     }
 
     @FXML

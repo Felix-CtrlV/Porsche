@@ -1190,15 +1190,22 @@ public class managerDashboardController {
             HBox typeBox = new HBox(10);
             typeBox.setAlignment(Pos.CENTER_LEFT);
             Label typeLabel = new Label("Type:");
-            typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
-            Label typeValue = new Label(item.getType());
+            typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12; -fx-text-fill: black;");
+            Label typeValue = new Label("");
+            if(item.getType().equals("wheel")){
+                typeValue = new Label(("Wheel"));
+            }else if(item.getType().equals("i_color")){
+                typeValue = new Label(("Interior Color"));
+            }else if(item.getType().equals("c_color")){
+                typeValue = new Label(("Exterior Color"));
+            }
             typeValue.setStyle("-fx-font-size: 12; -fx-text-fill: #3b82f6;");
             typeBox.getChildren().addAll(typeLabel, typeValue);
             
             HBox valueBox = new HBox(10);
             valueBox.setAlignment(Pos.CENTER_LEFT);
             Label valueLabel = new Label("Value:");
-            valueLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
+            valueLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;  -fx-text-fill: black;");
             Label valueValue = new Label(item.getValue());
             valueValue.setStyle("-fx-font-size: 12; -fx-text-fill: #1e40af;");
             valueBox.getChildren().addAll(valueLabel, valueValue);
@@ -1206,7 +1213,7 @@ public class managerDashboardController {
             HBox priceBox = new HBox(10);
             priceBox.setAlignment(Pos.CENTER_LEFT);
             Label priceLabel = new Label("Price:");
-            priceLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
+            priceLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;  -fx-text-fill: black;");
             Label priceValue = new Label("$" + String.format("%.2f", item.getPrice()));
             priceValue.setStyle("-fx-font-size: 12; -fx-text-fill: #10b981; -fx-font-weight: bold;");
             priceBox.getChildren().addAll(priceLabel, priceValue);
