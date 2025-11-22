@@ -725,42 +725,44 @@ public class managerOverviewController {
         cs.close();
         return temporylist;
     }
-    private  void setAttendancePieChart() throws SQLException {
-        ObservableList<PieChart.Data> piechartdata = FXCollections.observableArrayList();
-        String rating ="0 %";
+    private void setAttendancePieChart() throws SQLException {
+    ObservableList<PieChart.Data> piechartdata = FXCollections.observableArrayList();
+    String rating = "0 %";
 
-        CallableStatement cs = con.prepareCall("call getAttendancePercentage();");
-        ResultSet rs = cs.executeQuery();
+    // Call the new stored procedure
+    CallableStatement cs = con.prepareCall("CALL getAttendancePercentage()");
+    ResultSet rs = cs.executeQuery();
 
-        while(rs.next()){
-            Integer attendedUsers = rs.getInt(1);    // Workers who attended
-            Integer totalWorkers = rs.getInt(2);     // Total workers
-            rating = rs.getString(3);
-            
-            // Calculate absent workers
-            Integer absentUsers = totalWorkers - attendedUsers;
-            
-            // Only add slices if there are workers
-            if (totalWorkers > 0) {
-                if (attendedUsers > 0) {
-                    piechartdata.add(new PieChart.Data("Present (" + attendedUsers + ")", attendedUsers));
-                }
-                if (absentUsers > 0) {
-                    piechartdata.add(new PieChart.Data("Absent (" + absentUsers + ")", absentUsers));
-                }
-                
-                // If all workers attended, show only the "Present" slice (100%)
-                if (absentUsers == 0 && attendedUsers > 0) {
-                    // Chart will show 100% attendance
-                }
-            }
+    if (rs.next()) {
+        int attendedUsers = rs.getInt("attended_users");  // Get attended users count
+        int absentUsers = rs.getInt("absent_users");      // Get absent users count
+        int totalWorkingUsers = rs.getInt("total_working_users"); // Get total working users
+        rating = rs.getString("rate");                    // Get the attendance rate as a percentage
+
+        // Only add slices if there are workers
+        if (totalWorkingUsers > 0) {
+            int present = Math.max(attendedUsers, 0);
+            int absentCalc = Math.max(totalWorkingUsers - present, 0);
+            piechartdata.add(new PieChart.Data("Present (" + present + ")", present));
+            piechartdata.add(new PieChart.Data("Absent (" + absentCalc + ")", absentCalc));
+        } else {
+            piechartdata.add(new PieChart.Data("Present (0)", 0));
+            piechartdata.add(new PieChart.Data("Absent (0)", 0));
         }
-        rs.close();
-        cs.close();
 
-        attendancePieChart.setData(piechartdata);
     }
+    rs.close();
+    cs.close();
 
+    // Update the pie chart data
+    attendancePieChart.setData(piechartdata);
+    attendancePieChart.setLabelsVisible(true);
+    attendancePieChart.setLegendVisible(true);
+    
+    // You might want to update any UI elements that display the attendance percentage
+    // For example, if you have a label for the attendance percentage:
+    // attendancePercentageLabel.setText(rating);
+}
     //for slide pane of target and attendance
     private VBox[] carouselScreens;
     private int currentCarouselScreenIndex = 0;

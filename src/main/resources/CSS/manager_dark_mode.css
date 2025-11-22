@@ -687,3 +687,15 @@
 .cardRevenueRate {
     -fx-text-fill: #10b981;
 }
+.chart-pie-label {
+    -fx-fill: White;
+    -fx-font-size: 12px; /* Font size */
+    -fx-font-weight: bold; /* Bold font */
+    -fx-font-family: "Arial"; /* Font family */
+}
+/* Style for legend labels (e.g., "Present (5)" in the legend box) */
+.chart-legend-item {
+    -fx-text-fill: #333333; /* Dark gray text color */
+    -fx-font-size: 11px; /* Slightly smaller font */
+    -fx-font-weight: normal; /* Normal weight */
+}
