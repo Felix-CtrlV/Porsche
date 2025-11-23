@@ -303,9 +303,6 @@
                         <Insets bottom="4.0" />
                      </HBox.margin></Label>
                         <Label fx:id="editProfileBtn" style="-fx-font-size: 20; -fx-cursor: hand;" styleClass="settingIcon" text="✏" visible="true">
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor>
                      <HBox.margin>
                         <Insets bottom="4.0" />
                      </HBox.margin>

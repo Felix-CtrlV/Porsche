@@ -163,6 +163,13 @@ public class adminAccountController {
     public void initialize() {
         currentMonth = today.getMonthValue();
         currentYear = today.getYear();
+        Tooltip addUserTip = new Tooltip("Add User");
+        addUserTip.setShowDelay(Duration.ZERO);
+        addUserTip.setHideDelay(Duration.ZERO);
+        addUserTip.setShowDuration(Duration.INDEFINITE);
+        addUserTip.setStyle("-fx-font-size: 12px;");
+
+        Tooltip.install(addUser, addUserTip);
 
         if (StaffImage != null) {
             applyCircularClip(StaffImage);

@@ -48,6 +48,7 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,10 +106,7 @@ public class adminDashboardController {
     private VBox settingPane, passwordVerifyPane, profilePane, targetPane, salaryPane;
 
     @FXML
-    private StackPane targetContentPane, salaryContentPane,rootPane;
-
-    @FXML
-    private AnchorPane oldProfilePane;
+    private StackPane targetContentPane, salaryContentPane, rootPane;
 
     @FXML
     private Label settingIcon, backToSettingsBtn, backToSettingsFromTarget, backToSettingsFromSalary, editProfileBtn, passwordErrorLabel;
@@ -174,27 +172,28 @@ public class adminDashboardController {
     @FXML
     private Label lockIcon, lockMessage;
 
-    @FXML private Label sun,moon,textMode;
-    
+    @FXML
+    private Label sun, moon, textMode;
+
     // Self Terminate Components
     @FXML
     private Button selfTerminateBtn;
-    
+
     @FXML
     private VBox chooseAdminPane, adminListContainer, noAdminMessageBox;
-    
+
     @FXML
     private Label chooseAdminTitle, chooseAdminMessage, closeChooseAdminBtn;
-    
+
     @FXML
     private Button cancelChooseAdminBtn, confirmTerminateBtn;
-    
+
     @FXML
     private StackPane celebrationOverlay;
-    
+
     @FXML
     private Label celebrationIcon, celebrationTitle, celebrationMessage, celebrationAdminName;
-    
+
     private Integer selectedNewAdminId = null;
 
     private final OTPService otpService = OTPService.getInstance();
@@ -215,12 +214,12 @@ public class adminDashboardController {
     void lightDarkToggle(MouseEvent event) {
         lightDarkToggle.getInstance().toggleTheme();
         TranslateTransition transition = new TranslateTransition(Duration.millis(300), toggleCircle);
-        if(isDarkMode){
+        if (isDarkMode) {
             transition.setToX(0);
-        }else{
+        } else {
             transition.setToX(25);
         }
-        transition.setOnFinished(e->{
+        transition.setOnFinished(e -> {
 
             try {
                 if (!isDarkMode) {
@@ -237,7 +236,8 @@ public class adminDashboardController {
 
                 }
                 isDarkMode = lightDarkToggle.getInstance().isDarkMode();
-            } catch (Exception ex) {
+            } catch (
+                    Exception ex) {
                 System.err.println("Error loading CSS: " + ex.getMessage());
             }
         });
@@ -252,6 +252,7 @@ public class adminDashboardController {
     }
 
     public static boolean isDarkMode = false;
+
     private void applyCircularClip(ImageView imageView, double size) {
         if (imageView == null) {
             return;
@@ -307,7 +308,7 @@ public class adminDashboardController {
 
     }
 
-    private void updateDatabase(){
+    private void updateDatabase() {
         try {
             Connection con = DatabaseConnectionManager.getInstance().getConnection();
             PreparedStatement p = con.prepareStatement("Update user_info set user_email = ?, user_phone = ?, user_address = ? where user_id = ?");
@@ -316,7 +317,8 @@ public class adminDashboardController {
             p.setString(3, profileAddress.getText());
             p.setInt(4, current.getUserid());
             p.execute();
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex) {
             throw new RuntimeException(ex);
         }
         current.setEmail(profileEmail.getText());
@@ -326,16 +328,25 @@ public class adminDashboardController {
     }
 
     Session current = Session.getInstance();
+
     public void initialize() throws IOException {
 
-            isDarkMode = lightDarkToggle.getInstance().isDarkMode();
-            sun.setVisible(true);
-            moon.setVisible(false);
-            textMode.setText("Light Mode");
-            lightDarkToggle.getInstance().register(rootPane, "/CSS/admin_light_mode.css", "/CSS/admin_dark_mode.css");
-            Mode.setOnAction(e->{
-                lightDarkToggle(null);
-            });
+        isDarkMode = lightDarkToggle.getInstance().isDarkMode();
+        sun.setVisible(true);
+        moon.setVisible(false);
+        textMode.setText("Light Mode");
+        lightDarkToggle.getInstance().register(rootPane, "/CSS/admin_light_mode.css", "/CSS/admin_dark_mode.css");
+        Mode.setOnAction(e -> {
+            lightDarkToggle(null);
+        });
+
+        Tooltip profileEditTip = new Tooltip("Edit");
+        profileEditTip.setShowDelay(Duration.ZERO);
+        profileEditTip.setHideDelay(Duration.ZERO);
+        profileEditTip.setShowDuration(Duration.INDEFINITE);
+        profileEditTip.setStyle("-fx-font-size: 12px;");
+
+        Tooltip.install(editProfileBtn, profileEditTip);
 
 
         String name = current.getUsername();
@@ -348,7 +359,7 @@ public class adminDashboardController {
 
         // Check if account is locked on initialization
         checkAccountLockStatus();
-        
+
         // Add clipping to change password dialog to hide notification overflow
         javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle();
         clip.widthProperty().bind(changePasswordDialog.widthProperty());
@@ -363,50 +374,50 @@ public class adminDashboardController {
         optionProfile.setOnMouseClicked(e -> {
             showPasswordVerification();
         });
-        
+
         // Change password click in settings
         optionChange.setOnMouseClicked(e -> {
             showChangePasswordDialog();
         });
-        
+
         // Target click in settings
         optionTarget.setOnMouseClicked(e -> {
             showTargetPane();
         });
-        
+
         // Salary click in settings
         optionSalary.setOnMouseClicked(e -> {
             showSalaryPane();
         });
-        
+
         // Back to settings from profile
         if (backToSettingsBtn != null) {
             backToSettingsBtn.setOnMouseClicked(e -> {
                 hideProfilePane();
             });
         }
-        
+
         // Back to settings from target
         if (backToSettingsFromTarget != null) {
             backToSettingsFromTarget.setOnMouseClicked(e -> {
                 hideTargetPane();
             });
         }
-        
+
         // Back to settings from salary
         if (backToSettingsFromSalary != null) {
             backToSettingsFromSalary.setOnMouseClicked(e -> {
                 hideSalaryPane();
             });
         }
-        
+
         // Edit profile button
         if (editProfileBtn != null) {
             editProfileBtn.setOnMouseClicked(e -> {
                 toggleEditMode();
             });
         }
-        
+
         // Add Enter key listener to password verification field
         if (verifyPasswordField != null) {
             verifyPasswordField.setOnKeyPressed(event -> {
@@ -415,9 +426,6 @@ public class adminDashboardController {
                 }
             });
         }
-
-        // Old edit button code removed
-
 
         settingPane.setTranslateX(420);
         overlayPane.setVisible(false);
@@ -518,7 +526,8 @@ public class adminDashboardController {
             check_out.setString(2, String.valueOf(LocalDateTime.now()));
             check_out.execute();
             con.close();
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex) {
             ex.printStackTrace();
         }
         login log_in = new login();
@@ -544,7 +553,7 @@ public class adminDashboardController {
         settingPane.setVisible(true);
         passwordVerifyPane.setVisible(false);
         profilePane.setVisible(false);
-        
+
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), settingPane);
         slideIn.setFromX(420);
         slideIn.setToX(0);
@@ -603,8 +612,8 @@ public class adminDashboardController {
             // Send OTP to user's email
             OTPService otpService = OTPService.getInstance();
             String userEmail = current.getEmail();
-            
-            
+
+
             // Send OTP in background
             javafx.concurrent.Task<Boolean> sendOtpTask = new javafx.concurrent.Task<>() {
                 @Override
@@ -612,32 +621,32 @@ public class adminDashboardController {
                     return otpService.sendOTP(userEmail);
                 }
             };
-            
+
             sendOtpTask.setOnSucceeded(e -> {
                 if (sendOtpTask.getValue()) {
                     // OTP sent successfully, open change password dialog
                     showChangePasswordDialog();
                 } else {
                     showErrorMessage("Failed to send OTP. Please check email configuration in OTPService.java\n\n" +
-                                   "1. Update SENDER_EMAIL with your Gmail address\n" +
-                                   "2. Update SENDER_PASSWORD with Gmail App Password\n" +
-                                   "3. Enable 2-Factor Authentication in Google Account\n" +
-                                   "4. Generate App Password in Google Account settings");
+                            "1. Update SENDER_EMAIL with your Gmail address\n" +
+                            "2. Update SENDER_PASSWORD with Gmail App Password\n" +
+                            "3. Enable 2-Factor Authentication in Google Account\n" +
+                            "4. Generate App Password in Google Account settings");
                 }
             });
-            
+
             sendOtpTask.setOnFailed(e -> {
                 showErrorMessage("Error sending OTP: " + sendOtpTask.getException().getMessage());
             });
-            
+
             new Thread(sendOtpTask).start();
-            
-        } catch (Exception ex) {
+
+        } catch (
+                Exception ex) {
             ex.printStackTrace();
             showErrorMessage("Error initializing OTP system");
         }
     }
-
 
 
     /**
@@ -668,9 +677,9 @@ public class adminDashboardController {
 
         return username.charAt(0) + "***" + username.charAt(username.length() - 1) + "@" + domain;
     }
-    
+
     // ========== NEW PROFILE VIEW METHODS ==========
-    
+
     private void closeAllPanesAndResetToSettings() {
         // Determine which pane is currently visible and close it
         if (profilePane.isVisible()) {
@@ -681,11 +690,11 @@ public class adminDashboardController {
             TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), targetPane);
             slideOut.setFromX(0);
             slideOut.setToX(420);
-            
+
             FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
             fadeOut.setFromValue(0.5);
             fadeOut.setToValue(0);
-            
+
             ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
             hide.setOnFinished(e -> {
                 targetPane.setVisible(false);
@@ -700,11 +709,11 @@ public class adminDashboardController {
             TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), salaryPane);
             slideOut.setFromX(0);
             slideOut.setToX(420);
-            
+
             FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
             fadeOut.setFromValue(0.5);
             fadeOut.setToValue(0);
-            
+
             ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
             hide.setOnFinished(e -> {
                 salaryPane.setVisible(false);
@@ -719,11 +728,11 @@ public class adminDashboardController {
             TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
             slideOut.setFromX(0);
             slideOut.setToX(420);
-            
+
             FadeTransition fadeOut = new FadeTransition(Duration.millis(300), overlayPane);
             fadeOut.setFromValue(0.5);
             fadeOut.setToValue(0);
-            
+
             ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
             hide.setOnFinished(e -> {
                 passwordVerifyPane.setVisible(false);
@@ -740,7 +749,7 @@ public class adminDashboardController {
             closeSetting();
         }
     }
-    
+
     private void showPasswordVerification() {
         // Slide out settings pane first
         TranslateTransition slideOutSettings = new TranslateTransition(Duration.millis(300), settingPane);
@@ -748,13 +757,13 @@ public class adminDashboardController {
         slideOutSettings.setToX(420);
         slideOutSettings.setOnFinished(e -> {
             settingPane.setVisible(false);
-            
+
             // Then slide in verification pane
             passwordVerifyPane.setVisible(true);
             passwordVerifyPane.setTranslateX(420);
             verifyPasswordField.clear();
             passwordErrorLabel.setVisible(false);
-            
+
             TranslateTransition slideInVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
             slideInVerify.setFromX(420);
             slideInVerify.setToX(0);
@@ -762,26 +771,26 @@ public class adminDashboardController {
         });
         slideOutSettings.play();
     }
-    
+
     @FXML
     private void onVerifyPassword() {
         String enteredPassword = verifyPasswordField.getText();
-        
+
         if (enteredPassword.isEmpty()) {
             passwordErrorLabel.setText("Please enter your password");
             passwordErrorLabel.setVisible(true);
             return;
         }
-        
+
         // Check if account is already locked
         if (securityManager.isAccountLocked(current.getUserid(), "admin")) {
             showSecurityLockOverlay();
             return;
         }
-        
+
         // Verify password against session
         String sessionPassword = current.getPassword();
-        
+
         if (sessionPassword != null && sessionPassword.equals(enteredPassword)) {
             // Password correct - reset attempts and transition to profile pane
             securityManager.resetAttempts(current.getUserid(), "admin");
@@ -789,10 +798,10 @@ public class adminDashboardController {
         } else {
             // Password incorrect - clear field immediately for instant feedback
             verifyPasswordField.clear();
-            
+
             // Record failed attempt (now optimized with caching and async operations)
             boolean shouldLock = securityManager.recordFailedAttempt(current.getUserid(), "admin");
-            
+
             if (shouldLock) {
                 // Account locked - send notifications asynchronously and show lock overlay immediately
                 emailService.sendBruteForceAlert(current.getUserid(), "admin");
@@ -805,12 +814,12 @@ public class adminDashboardController {
             }
         }
     }
-    
+
     @FXML
     private void onCancelVerify() {
         hidePasswordVerification();
     }
-    
+
     private void hidePasswordVerification() {
         // Slide out verification pane first
         TranslateTransition slideOutVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
@@ -820,11 +829,11 @@ public class adminDashboardController {
             passwordVerifyPane.setVisible(false);
             verifyPasswordField.clear();
             passwordErrorLabel.setVisible(false);
-            
+
             // Prepare settings pane off-screen before making it visible
             settingPane.setTranslateX(420);
             settingPane.setVisible(true);
-            
+
             // Then slide in settings pane
             TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
             slideInSettings.setFromX(420);
@@ -833,10 +842,10 @@ public class adminDashboardController {
         });
         slideOutVerify.play();
     }
-    
+
     private void showProfilePane() {
         // Settings pane is already hidden from verification step, no need to touch it
-        
+
         if (settingPane != null) {
             settingPane.setVisible(false);
         }
@@ -847,7 +856,7 @@ public class adminDashboardController {
             profileEmail.setText(current.getEmail() != null ? current.getEmail() : "");
             profilePhone.setText(current.getPhone() != null ? current.getPhone() : "");
             profileAddress.setText(current.getAddress() != null ? current.getAddress() : "");
-            
+
             // Format DOB nicely
             if (current.getDob() != null) {
                 java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MMMM dd, yyyy");
@@ -856,7 +865,7 @@ public class adminDashboardController {
                 profileDOB.setText("");
             }
         }
-        
+
         // Ensure fields are not editable and deselect any text
         profileEmail.setEditable(false);
         profilePhone.setEditable(false);
@@ -864,18 +873,18 @@ public class adminDashboardController {
         profileEmail.setFocusTraversable(false);
         profilePhone.setFocusTraversable(false);
         profileAddress.setFocusTraversable(false);
-        
+
         // Slide out verification pane first
         TranslateTransition slideOutVerify = new TranslateTransition(Duration.millis(300), passwordVerifyPane);
         slideOutVerify.setFromX(0);
         slideOutVerify.setToX(420);
         slideOutVerify.setOnFinished(e -> {
             passwordVerifyPane.setVisible(false);
-            
+
             // Then slide in profile pane
             profilePane.setVisible(true);
             profilePane.setTranslateX(420);
-            
+
             TranslateTransition slideInProfile = new TranslateTransition(Duration.millis(300), profilePane);
             slideInProfile.setFromX(420);
             slideInProfile.setToX(0);
@@ -889,7 +898,7 @@ public class adminDashboardController {
         });
         slideOutVerify.play();
     }
-    
+
     private void hideProfilePane() {
         closeProfilePane(true);
     }
@@ -940,10 +949,10 @@ public class adminDashboardController {
             slideOutProfile.play();
         }
     }
-    
+
     private void toggleEditMode() {
         boolean isEditable = profileEmail.isEditable();
-        
+
         if (!isEditable) {
             // Enable editing
             profileEmail.setEditable(true);
@@ -974,7 +983,7 @@ public class adminDashboardController {
             saveProfileBtn.setVisible(false);
             editProfilePhotoBtn.setVisible(false);
             editProfileBtn.setText("✏");
-            
+
             // Deselect any text and revert changes
             profileEmail.deselect();
             profilePhone.deselect();
@@ -987,7 +996,7 @@ public class adminDashboardController {
             applyPhotoToImages(cachedPhotoPath);
         }
     }
-    
+
     @FXML
     private void onSaveProfile() {
         try {
@@ -1017,7 +1026,7 @@ public class adminDashboardController {
 
             applyPhotoToImages(cachedPhotoPath);
 
-            // Disable editing
+
             toggleEditMode();
 
             if (editProfilePhotoBtn != null) {
@@ -1028,7 +1037,8 @@ public class adminDashboardController {
             // Show success toast
             showToast("Success", "Profile updated successfully!", "success");
 
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex) {
             // Show error toast
             showToast("Error", "Failed to update profile", "error");
             ex.printStackTrace();
@@ -1050,7 +1060,8 @@ public class adminDashboardController {
                     return rs.getString("user_photo");
                 }
             }
-        } catch (SQLException ignored) {
+        } catch (
+                SQLException ignored) {
         }
         return null;
     }
@@ -1063,7 +1074,8 @@ public class adminDashboardController {
             if (resolved.isPresent()) {
                 try {
                     image = new Image(resolved.get(), true);
-                } catch (Exception ignored) {
+                } catch (
+                        Exception ignored) {
                     image = null;
                 }
             }
@@ -1072,7 +1084,8 @@ public class adminDashboardController {
         if (image == null) {
             try {
                 image = new Image(Objects.requireNonNull(getClass().getResource("/Image/defaultUserProfile.jpg")).toExternalForm(), true);
-            } catch (Exception ignored) {
+            } catch (
+                    Exception ignored) {
                 image = null;
             }
         }
@@ -1100,7 +1113,8 @@ public class adminDashboardController {
             Files.copy(file.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
 
             return "Images/" + fileName;
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
         return cachedPhotoPath;
@@ -1120,7 +1134,7 @@ public class adminDashboardController {
         }
         return value.trim().toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9]+", "_");
     }
-    
+
     public void showToast(String title, String message, String type) {
         toastTitle.setText(title);
         toastMessage.setText(message);
@@ -1129,10 +1143,10 @@ public class adminDashboardController {
 
         // Set icon and color based on type
         StackPane iconContainer = (StackPane) toastIcon.getParent();
-        
+
         // Clear existing toast styles
         iconContainer.getStyleClass().removeAll("toast-icon-success", "toast-icon-error", "toast-icon-warning", "toast-icon-info");
-        
+
         switch (normalizedType) {
             case "success":
                 toastIcon.setText("✓");
@@ -1155,93 +1169,93 @@ public class adminDashboardController {
                 iconContainer.setStyle("-fx-background-color: rgb(79, 122, 188); -fx-background-radius: 50;");
                 break;
         }
-        
+
         toastNotification.setVisible(true);
         toastNotification.setTranslateY(-100);
-        
+
         // Slide in animation from top
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), toastNotification);
         slideIn.setFromY(-100);
         slideIn.setToY(0);
-        
+
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), toastNotification);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
-        
+
         ParallelTransition showToast = new ParallelTransition(slideIn, fadeIn);
-        
+
         // Auto hide after 3 seconds
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
         pause.setOnFinished(e -> hideToast());
-        
+
         SequentialTransition sequence = new SequentialTransition(showToast, pause);
         sequence.play();
     }
-    
+
     private void hideToast() {
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), toastNotification);
         slideOut.setFromY(0);
         slideOut.setToY(-100);
-        
+
         FadeTransition fadeOut = new FadeTransition(Duration.millis(300), toastNotification);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
-        
+
         ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
         hide.setOnFinished(e -> toastNotification.setVisible(false));
         hide.play();
     }
-    
+
     @FXML
     public void showChangePasswordDialog() {
         // Reset to step 1
         passwordVerificationPane.setVisible(true);
         otpVerificationPane.setVisible(false);
         newPasswordPane.setVisible(false);
-        
+
         // Clear fields
         currentPasswordField.clear();
         otpField.clear();
         newPasswordField.clear();
         confirmPasswordField.clear();
-        
+
         // Clear status labels
         passwordVerifyStatus.setText("");
         otpVerifyStatus.setText("");
         changePasswordStatus.setText("");
-        
+
         // Show overlay
         confirmOverlay.setVisible(true);
         confirmOverlay.setOpacity(0);
-        
+
         FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
         overlayFade.setFromValue(0);
         overlayFade.setToValue(1);
         overlayFade.play();
-        
+
         // Show dialog
         changePasswordDialog.setVisible(true);
         changePasswordDialog.setTranslateY(-700);
-        
+
         // Slide in animation from top
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), changePasswordDialog);
         slideIn.setFromY(-700);
         slideIn.setToY(0);
         slideIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-        
+
         FadeTransition fadeIn = new FadeTransition(Duration.millis(400), changePasswordDialog);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
-        
+
         ParallelTransition showDialog = new ParallelTransition(slideIn, fadeIn);
         showDialog.play();
-        
+
         // Set up enter key handlers
         currentPasswordField.setOnAction(e -> onVerifyCurrentPassword());
         otpField.setOnAction(e -> onVerifyOTP());
         confirmPasswordField.setOnAction(e -> onSubmitPasswordChange());
     }
-    
+
     @FXML
     public void closePasswordDialog() {
         // Fade out overlay
@@ -1250,22 +1264,22 @@ public class adminDashboardController {
         overlayFadeOut.setToValue(0);
         overlayFadeOut.setOnFinished(e -> confirmOverlay.setVisible(false));
         overlayFadeOut.play();
-        
+
         // Slide out dialog
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), changePasswordDialog);
         slideOut.setFromY(0);
         slideOut.setToY(-700);
         slideOut.setInterpolator(javafx.animation.Interpolator.EASE_IN);
-        
+
         FadeTransition fadeOut = new FadeTransition(Duration.millis(300), changePasswordDialog);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
-        
+
         ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
         hide.setOnFinished(e -> changePasswordDialog.setVisible(false));
         hide.play();
     }
-    
+
     @FXML
     void onVerifyCurrentPassword() {
         String password = currentPasswordField.getText().trim();
@@ -1357,7 +1371,8 @@ public class adminDashboardController {
     }
 
     @FXML
-    void onSubmitPasswordChange() {        String newPassword = newPasswordField.getText().trim();
+    void onSubmitPasswordChange() {
+        String newPassword = newPasswordField.getText().trim();
         String confirmPassword = confirmPasswordField.getText().trim();
 
         if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
@@ -1385,7 +1400,7 @@ public class adminDashboardController {
                 if (success) {
                     showPasswordMessage("Password changed successfully!", true);
                     Session.getInstance().setPassword(newPassword);
-                    
+
                     // Close dialog after 2 seconds
                     PauseTransition pause = new PauseTransition(Duration.seconds(2));
                     pause.setOnFinished(ev -> closePasswordDialog());
@@ -1397,7 +1412,7 @@ public class adminDashboardController {
             });
         }).start();
     }
-    
+
     private boolean updatePasswordInDatabase(int userId, String newPassword) {
         String sql = "UPDATE user_info SET password = SHA2(?, 256) WHERE user_id = ?";
 
@@ -1410,7 +1425,8 @@ public class adminDashboardController {
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
 
-        } catch (SQLException e) {
+        } catch (
+                SQLException e) {
             return false;
         }
     }
@@ -1428,7 +1444,7 @@ public class adminDashboardController {
         newPasswordPane.setVisible(true);
         newPasswordField.requestFocus();
     }
-    
+
     private void showPasswordLoading(boolean show) {
         passwordLoadingPane.setVisible(show);
     }
@@ -1445,212 +1461,214 @@ public class adminDashboardController {
 
         showToast(title, message, type);
     }
-    
+
     // ========== TARGET PANE METHODS ==========
-    
+
     private void showTargetPane() {
         // Load target management content if not already loaded
         if (targetContentPane.getChildren().isEmpty()) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/adminTargetManagement.fxml"));
                 javafx.scene.Node targetContent = loader.load();
-                
+
                 // Get the controller and pass reference to this dashboard controller
                 adminTargetManagementController targetController = loader.getController();
                 targetController.setDashboardController(this);
-                
+
                 targetContentPane.getChildren().add(targetContent);
-            } catch (IOException e) {
+            } catch (
+                    IOException e) {
                 e.printStackTrace();
                 showToast("Error", "Failed to load target management", "error");
                 return;
             }
         }
-        
+
         // Slide out settings pane to the right first
         TranslateTransition slideOutSettings = new TranslateTransition(Duration.millis(300), settingPane);
         slideOutSettings.setFromX(0);
         slideOutSettings.setToX(420);
-        
+
         slideOutSettings.setOnFinished(e -> {
             settingPane.setVisible(false);
             settingPane.setTranslateX(0); // Reset position
-            
+
             // Then slide in target pane from the right
             targetPane.setVisible(true);
             targetPane.setTranslateX(420);
-            
+
             TranslateTransition slideInTarget = new TranslateTransition(Duration.millis(300), targetPane);
             slideInTarget.setFromX(420);
             slideInTarget.setToX(0);
             slideInTarget.play();
         });
-        
+
         slideOutSettings.play();
     }
-    
+
     private void hideTargetPane() {
         // Slide out target pane to the right first
         TranslateTransition slideOutTarget = new TranslateTransition(Duration.millis(300), targetPane);
         slideOutTarget.setFromX(0);
         slideOutTarget.setToX(420);
-        
+
         slideOutTarget.setOnFinished(e -> {
             targetPane.setVisible(false);
-            
+
             // Then slide in settings pane from the right
             settingPane.setVisible(true);
             settingPane.setTranslateX(420);
-            
+
             TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
             slideInSettings.setFromX(420);
             slideInSettings.setToX(0);
             slideInSettings.play();
         });
-        
+
         slideOutTarget.play();
     }
-    
+
     // ========== SALARY PANE METHODS ==========
-    
+
     private void showSalaryPane() {
         // Load salary management content if not already loaded
         if (salaryContentPane.getChildren().isEmpty()) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/adminSalaryManagement.fxml"));
                 javafx.scene.Node salaryContent = loader.load();
-                
+
                 // Get the controller and pass reference to this dashboard controller
                 adminSalaryManagementController salaryController = loader.getController();
                 salaryController.setDashboardController(this);
-                
+
                 salaryContentPane.getChildren().add(salaryContent);
-            } catch (IOException e) {
+            } catch (
+                    IOException e) {
                 e.printStackTrace();
                 showToast("Error", "Failed to load salary management", "error");
                 return;
             }
         }
-        
+
         // Slide out settings pane to the right first
         TranslateTransition slideOutSettings = new TranslateTransition(Duration.millis(300), settingPane);
         slideOutSettings.setFromX(0);
         slideOutSettings.setToX(420);
-        
+
         slideOutSettings.setOnFinished(e -> {
             settingPane.setVisible(false);
             settingPane.setTranslateX(0); // Reset position
-            
+
             // Then slide in salary pane from the right
             salaryPane.setVisible(true);
             salaryPane.setTranslateX(420);
-            
+
             TranslateTransition slideInSalary = new TranslateTransition(Duration.millis(300), salaryPane);
             slideInSalary.setFromX(420);
             slideInSalary.setToX(0);
             slideInSalary.play();
         });
-        
+
         slideOutSettings.play();
     }
-    
+
     private void hideSalaryPane() {
         // Slide out salary pane to the right first
         TranslateTransition slideOutSalary = new TranslateTransition(Duration.millis(300), salaryPane);
         slideOutSalary.setFromX(0);
         slideOutSalary.setToX(420);
-        
+
         slideOutSalary.setOnFinished(e -> {
             salaryPane.setVisible(false);
-            
+
             // Then slide in settings pane from the right
             settingPane.setVisible(true);
             settingPane.setTranslateX(420);
-            
+
             TranslateTransition slideInSettings = new TranslateTransition(Duration.millis(300), settingPane);
             slideInSettings.setFromX(420);
             slideInSettings.setToX(0);
             slideInSettings.play();
         });
-        
+
         slideOutSalary.play();
     }
-    
+
     // ========== CONFIRMATION DIALOG METHODS ==========
-    
+
     public void showConfirmDialog(String title, String message, String icon, Runnable onConfirm) {
         confirmTitle.setText(title);
         confirmMessage.setText(message);
         confirmIcon.setText(icon);
         confirmCallback = onConfirm;
-        
+
         // Clear any custom content
         confirmContent.getChildren().clear();
         confirmContent.getChildren().add(confirmMessage);
-        
+
         // Show overlay
         confirmOverlay.setVisible(true);
         confirmOverlay.setOpacity(0);
-        
+
         FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
         overlayFade.setFromValue(0);
         overlayFade.setToValue(1);
         overlayFade.play();
-        
+
         // Show dialog
         confirmDialog.setVisible(true);
         confirmDialog.setTranslateY(-600);
-        
+
         // Slide in animation from top
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), confirmDialog);
         slideIn.setFromY(-600);
         slideIn.setToY(0);
         slideIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-        
+
         FadeTransition fadeIn = new FadeTransition(Duration.millis(400), confirmDialog);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
-        
+
         ParallelTransition showDialog = new ParallelTransition(slideIn, fadeIn);
         showDialog.play();
     }
-    
+
     public void showConfirmDialogWithDetails(String title, String icon, javafx.scene.Node detailsNode, Runnable onConfirm) {
         confirmTitle.setText(title);
         confirmIcon.setText(icon);
         confirmCallback = onConfirm;
-        
+
         // Set custom content
         confirmContent.getChildren().clear();
         confirmContent.getChildren().add(detailsNode);
-        
+
         // Show overlay
         confirmOverlay.setVisible(true);
         confirmOverlay.setOpacity(0);
-        
+
         FadeTransition overlayFade = new FadeTransition(Duration.millis(300), confirmOverlay);
         overlayFade.setFromValue(0);
         overlayFade.setToValue(1);
         overlayFade.play();
-        
+
         // Show dialog
         confirmDialog.setVisible(true);
         confirmDialog.setTranslateY(-600);
-        
+
         // Slide in animation from top
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), confirmDialog);
         slideIn.setFromY(-600);
         slideIn.setToY(0);
         slideIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-        
+
         FadeTransition fadeIn = new FadeTransition(Duration.millis(400), confirmDialog);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
-        
+
         ParallelTransition showDialog = new ParallelTransition(slideIn, fadeIn);
         showDialog.play();
     }
-    
+
     @FXML
     private void onConfirmOk() {
         hideConfirmDialog();
@@ -1659,13 +1677,13 @@ public class adminDashboardController {
             confirmCallback = null;
         }
     }
-    
+
     @FXML
     private void onConfirmCancel() {
         hideConfirmDialog();
         confirmCallback = null;
     }
-    
+
     private void hideConfirmDialog() {
         // Fade out overlay
         FadeTransition overlayFadeOut = new FadeTransition(Duration.millis(300), confirmOverlay);
@@ -1673,17 +1691,17 @@ public class adminDashboardController {
         overlayFadeOut.setToValue(0);
         overlayFadeOut.setOnFinished(e -> confirmOverlay.setVisible(false));
         overlayFadeOut.play();
-        
+
         // Slide out dialog
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), confirmDialog);
         slideOut.setFromY(0);
         slideOut.setToY(-600);
         slideOut.setInterpolator(javafx.animation.Interpolator.EASE_IN);
-        
+
         FadeTransition fadeOut = new FadeTransition(Duration.millis(300), confirmDialog);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
-        
+
         ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
         hide.setOnFinished(e -> confirmDialog.setVisible(false));
         hide.play();
@@ -1704,44 +1722,52 @@ public class adminDashboardController {
     private void showSecurityLockOverlay() {
         if (securityLockOverlay != null) {
             // Hide all other panes first
-            if (settingPane != null) settingPane.setVisible(false);
-            if (passwordVerifyPane != null) passwordVerifyPane.setVisible(false);
-            if (profilePane != null) profilePane.setVisible(false);
-            if (targetPane != null) targetPane.setVisible(false);
-            if (salaryPane != null) salaryPane.setVisible(false);
-            if (overlayPane != null) overlayPane.setVisible(false);
-            
+            if (settingPane != null)
+                settingPane.setVisible(false);
+            if (passwordVerifyPane != null)
+                passwordVerifyPane.setVisible(false);
+            if (profilePane != null)
+                profilePane.setVisible(false);
+            if (targetPane != null)
+                targetPane.setVisible(false);
+            if (salaryPane != null)
+                salaryPane.setVisible(false);
+            if (overlayPane != null)
+                overlayPane.setVisible(false);
+
             // Clear any form data
-            if (verifyPasswordField != null) verifyPasswordField.clear();
-            if (passwordErrorLabel != null) passwordErrorLabel.setVisible(false);
-            
+            if (verifyPasswordField != null)
+                verifyPasswordField.clear();
+            if (passwordErrorLabel != null)
+                passwordErrorLabel.setVisible(false);
+
             // Remove any existing effects
             if (root != null) {
                 root.setEffect(null);
                 root.setDisable(true); // Disable the entire dashboard
             }
-            
+
             // Show the security lock overlay
             securityLockOverlay.setVisible(true);
             securityLockOverlay.setOpacity(0);
-            
+
             // Animate the overlay appearance
             FadeTransition fadeIn = new FadeTransition(Duration.millis(500), securityLockOverlay);
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
             fadeIn.play();
-            
+
             // Start lock icon pulse animation
             startLockIconAnimation();
-            
+
             // Update lock message with user-specific information
             updateLockMessage();
-            
+
             // Start monitoring for unlock events
             Utils.UnlockMonitorService.getInstance().startMonitoring(
-                current.getUserid(), 
-                "admin", 
-                this::hideSecurityLockOverlay
+                    current.getUserid(),
+                    "admin",
+                    this::hideSecurityLockOverlay
             );
         }
     }
@@ -1768,10 +1794,10 @@ public class adminDashboardController {
     private void updateLockMessage() {
         if (lockMessage != null && current != null) {
             String message = String.format(
-                "Hello %s, your administrator account has been temporarily locked due to multiple failed login attempts. " +
-                "Please check your email (%s) for an unlock link to regain access immediately.",
-                current.getUsername(),
-                current.getEmail()
+                    "Hello %s, your administrator account has been temporarily locked due to multiple failed login attempts. " +
+                            "Please check your email (%s) for an unlock link to regain access immediately.",
+                    current.getUsername(),
+                    current.getEmail()
             );
             lockMessage.setText(message);
         }
@@ -1796,7 +1822,7 @@ public class adminDashboardController {
     }
 
     // ========== SELF TERMINATE METHODS ==========
-    
+
     @FXML
     private void onSelfTerminateClick() {
         // Check if there are available admins
@@ -1811,7 +1837,7 @@ public class adminDashboardController {
                 }
             }
         };
-        
+
         checkAdminsTask.setOnSucceeded(e -> {
             java.util.List<user> availableAdmins = checkAdminsTask.getValue();
             if (availableAdmins == null || availableAdmins.isEmpty()) {
@@ -1820,26 +1846,27 @@ public class adminDashboardController {
                 showChooseAdminPane(availableAdmins);
             }
         });
-        
+
         checkAdminsTask.setOnFailed(e -> {
             logger.error("Failed to check available admins", checkAdminsTask.getException());
             showToast("Error", "Failed to check available admins", "error");
         });
-        
+
         Thread t = new Thread(checkAdminsTask);
         t.setDaemon(true);
         t.start();
     }
-    
+
     private void showChooseAdminPane(java.util.List<user> availableAdmins) {
-        if (chooseAdminPane == null) return;
-        
+        if (chooseAdminPane == null)
+            return;
+
         selectedNewAdminId = null;
         adminListContainer.getChildren().clear();
-        
+
         // Always show scroll pane, even if empty
         adminListContainer.setVisible(true);
-        
+
         if (availableAdmins.isEmpty()) {
             // Show message in the scroll pane itself
             Label noAdminLabel = new Label("No admins available. Please register a new admin before self-terminating.");
@@ -1849,14 +1876,14 @@ public class adminDashboardController {
             confirmTerminateBtn.setDisable(true);
         } else {
             confirmTerminateBtn.setDisable(false);
-            
+
             // Create admin cards
             for (user admin : availableAdmins) {
                 HBox adminCard = createAdminCard(admin);
                 adminListContainer.getChildren().add(adminCard);
             }
         }
-        
+
         // Show overlay
         if (confirmOverlay != null) {
             confirmOverlay.setVisible(true);
@@ -1866,36 +1893,36 @@ public class adminDashboardController {
             overlayFade.setToValue(1);
             overlayFade.play();
         }
-        
+
         // Show pane with slide-down animation
         chooseAdminPane.setVisible(true);
         chooseAdminPane.setTranslateY(-600);
-        
+
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), chooseAdminPane);
         slideIn.setFromY(-600);
         slideIn.setToY(0);
         slideIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-        
+
         FadeTransition fadeIn = new FadeTransition(Duration.millis(400), chooseAdminPane);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
-        
+
         ParallelTransition showPane = new ParallelTransition(slideIn, fadeIn);
         showPane.play();
     }
-    
+
     private HBox createAdminCard(user admin) {
         HBox card = new HBox();
         card.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 18; -fx-cursor: hand; -fx-border-color: #e5e7eb; -fx-border-radius: 12; -fx-border-width: 1.5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);");
         card.setSpacing(15);
         card.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-        
+
         // Admin image
         ImageView adminImage = new ImageView();
         adminImage.setFitWidth(50);
         adminImage.setFitHeight(50);
         applyCircularClip(adminImage, 50);
-        
+
         try {
             if (admin.getImagePath() != null && !admin.getImagePath().isBlank()) {
                 String path = admin.getImagePath();
@@ -1906,12 +1933,15 @@ public class adminDashboardController {
             } else {
                 adminImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/Image/defaultUserProfile.jpg")).toExternalForm(), true));
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             try {
                 adminImage.setImage(new Image(Objects.requireNonNull(getClass().getResource("/Image/defaultUserProfile.jpg")).toExternalForm(), true));
-            } catch (Exception ignored) {}
+            } catch (
+                    Exception ignored) {
+            }
         }
-        
+
         // Admin info
         VBox infoBox = new VBox(6);
         Label nameLabel = new Label(admin.getUsername());
@@ -1919,17 +1949,17 @@ public class adminDashboardController {
         Label emailLabel = new Label(admin.getEmail());
         emailLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #6b7280;");
         infoBox.getChildren().addAll(nameLabel, emailLabel);
-        
+
         // Selection indicator
         StackPane indicator = new StackPane();
         indicator.setPrefWidth(28);
         indicator.setPrefHeight(28);
         indicator.setStyle("-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #d1d5db; -fx-border-radius: 14; -fx-border-width: 2;");
-        
+
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         card.getChildren().addAll(adminImage, infoBox, spacer, indicator);
-        
+
         // Click handler
         final boolean[] isSelected = {false};
         card.setOnMouseClicked(e -> {
@@ -1942,7 +1972,7 @@ public class adminDashboardController {
                     ind.getChildren().clear();
                 }
             });
-            
+
             // Select this card
             isSelected[0] = !isSelected[0];
             if (isSelected[0]) {
@@ -1958,18 +1988,18 @@ public class adminDashboardController {
                 indicator.setStyle("-fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #d1d5db; -fx-border-radius: 14; -fx-border-width: 2;");
                 indicator.getChildren().clear();
             }
-            
+
             confirmTerminateBtn.setDisable(selectedNewAdminId == null);
         });
-        
+
         return card;
     }
-    
+
     @FXML
     private void hideChooseAdminPane() {
         hideChooseAdminPane(null);
     }
-    
+
     private void hideChooseAdminPane(Runnable onFinished) {
         if (chooseAdminPane == null || !chooseAdminPane.isVisible()) {
             if (onFinished != null) {
@@ -1977,7 +2007,7 @@ public class adminDashboardController {
             }
             return;
         }
-        
+
         // Fade out overlay
         if (confirmOverlay != null) {
             FadeTransition overlayFadeOut = new FadeTransition(Duration.millis(300), confirmOverlay);
@@ -1986,17 +2016,17 @@ public class adminDashboardController {
             overlayFadeOut.setOnFinished(e -> confirmOverlay.setVisible(false));
             overlayFadeOut.play();
         }
-        
+
         // Slide out pane
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), chooseAdminPane);
         slideOut.setFromY(0);
         slideOut.setToY(-600);
         slideOut.setInterpolator(javafx.animation.Interpolator.EASE_IN);
-        
+
         FadeTransition fadeOut = new FadeTransition(Duration.millis(300), chooseAdminPane);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
-        
+
         ParallelTransition hide = new ParallelTransition(slideOut, fadeOut);
         hide.setOnFinished(e -> {
             chooseAdminPane.setVisible(false);
@@ -2011,31 +2041,31 @@ public class adminDashboardController {
         });
         hide.play();
     }
-    
+
     @FXML
     private void onConfirmSelfTerminate() {
         if (selectedNewAdminId == null) {
             showToast("Warning", "Please select a new admin before terminating", "warning");
             return;
         }
-        
+
         // Capture the selected admin ID before showing the confirm dialog
         final int newAdminId = selectedNewAdminId;
-        
+
         // Hide the choose admin pane first
         hideChooseAdminPane(() -> {
             // After the pane is hidden, show the confirm dialog
-            showConfirmDialog("Confirm Self Termination", 
-                "⚠ WARNING: This action cannot be undone!\n\n" +
-                "You are about to terminate your own admin account. " +
-                "Are you sure you want to proceed?", 
-                "⚠", 
-                () -> executeSelfTermination(newAdminId));
+            showConfirmDialog("Confirm Self Termination",
+                    "⚠ WARNING: This action cannot be undone!\n\n" +
+                            "You are about to terminate your own admin account. " +
+                            "Are you sure you want to proceed?",
+                    "⚠",
+                    () -> executeSelfTermination(newAdminId));
         });
     }
-    
+
     private void executeSelfTermination(int newAdminId) {
-        
+
         Task<Boolean> terminateTask = new Task<>() {
             @Override
             protected Boolean call() throws Exception {
@@ -2048,7 +2078,7 @@ public class adminDashboardController {
                 }
             }
         };
-        
+
         terminateTask.setOnSucceeded(e -> {
             if (terminateTask.getValue()) {
                 showCelebrationOverlay();
@@ -2056,29 +2086,30 @@ public class adminDashboardController {
                 showToast("Error", "Failed to terminate account", "error");
             }
         });
-        
+
         terminateTask.setOnFailed(ex -> {
             logger.error("Failed to terminate admin account", terminateTask.getException());
             showToast("Error", "An error occurred during termination", "error");
         });
-        
+
         Thread t = new Thread(terminateTask);
         t.setDaemon(true);
         t.start();
     }
-    
+
     private void showCelebrationOverlay() {
-        if (celebrationOverlay == null) return;
-        
+        if (celebrationOverlay == null)
+            return;
+
         celebrationAdminName.setText("Thank you, " + current.getUsername() + "!");
-        
+
         // Make overlay fill the entire screen - bind to root pane size
         if (rootPane != null) {
             celebrationOverlay.prefWidthProperty().bind(rootPane.widthProperty());
             celebrationOverlay.prefHeightProperty().bind(rootPane.heightProperty());
             celebrationOverlay.maxWidthProperty().bind(rootPane.widthProperty());
             celebrationOverlay.maxHeightProperty().bind(rootPane.heightProperty());
-            
+
             // Also bind the background pane to fill entire space
             javafx.scene.Node backgroundPane = celebrationOverlay.getChildren().get(0);
             if (backgroundPane instanceof Pane) {
@@ -2088,14 +2119,14 @@ public class adminDashboardController {
                 ((Pane) backgroundPane).maxHeightProperty().bind(rootPane.heightProperty());
             }
         }
-        
+
         celebrationOverlay.setVisible(true);
         celebrationOverlay.setOpacity(0);
-        
+
         FadeTransition fadeIn = new FadeTransition(Duration.millis(600), celebrationOverlay);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
-        
+
         // Subtle pulse animation for farewell logo (no rotation)
         ScaleTransition scale = new ScaleTransition(Duration.seconds(1.5), celebrationIcon);
         scale.setFromX(1.0);
@@ -2105,9 +2136,9 @@ public class adminDashboardController {
         scale.setCycleCount(Timeline.INDEFINITE);
         scale.setAutoReverse(true);
         scale.play();
-        
+
         fadeIn.play();
-        
+
         // Wait 10 seconds then redirect to login
         PauseTransition pause = new PauseTransition(Duration.seconds(10));
         pause.setOnFinished(e -> {
@@ -2116,13 +2147,13 @@ public class adminDashboardController {
         });
         pause.play();
     }
-    
+
     private void redirectToLogin() {
         try {
             // Close current window
             Stage stage = (Stage) root.getScene().getWindow();
             stage.close();
-            
+
             // Logout from database
             try {
                 Connection con = DatabaseConnectionManager.getInstance().getConnection();
@@ -2133,17 +2164,19 @@ public class adminDashboardController {
                     check_out.execute();
                 }
                 con.close();
-            } catch (SQLException ex) {
+            } catch (
+                    SQLException ex) {
                 logger.error("Failed to logout from database", ex);
             }
-            
+
             // Clear session
             Session.clearSession();
-            
+
             // Open login page
             login log_in = new login();
             log_in.startDirectLogin(new Stage());
-        } catch (Exception ex) {
+        } catch (
+                Exception ex) {
             logger.error("Failed to redirect to login", ex);
         }
     }

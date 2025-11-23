@@ -268,6 +268,13 @@ public class managerDashboardController {
             lightDarkToggle(null);
         });
 
+        Tooltip profileEditTip = new Tooltip("Edit");
+        profileEditTip.setShowDelay(Duration.ZERO);
+        profileEditTip.setHideDelay(Duration.ZERO);
+        profileEditTip.setShowDuration(Duration.INDEFINITE);
+        profileEditTip.setStyle("-fx-font-size: 12px;");
+
+        Tooltip.install(editProfileBtn, profileEditTip);
 
         String name = current.getUsername();
         nameLbl.setText(name);
