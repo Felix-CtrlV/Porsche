@@ -161,7 +161,7 @@ public class adminUserRegisterController {
             Connection con = connect.connect();
             
             // Only load users with Manager role
-            String query = "SELECT user_name FROM user_info WHERE user_role = 'Manager'";
+            String query = "SELECT user_name FROM user_info WHERE user_role = 'Manager' and user_status = 1";
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             

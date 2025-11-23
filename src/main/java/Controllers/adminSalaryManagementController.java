@@ -96,7 +96,7 @@ public class adminSalaryManagementController {
                             Platform.runLater(() -> {
                                 manualProcessBtn.setDisable(false);
                                 manualProcessBtn.setText("Process Now");
-                                showToast("Processing Complete", "Salary processing completed successfully. Check logs for details.", "success");
+                                showToast("Processing Complete", "Salary processing completed successfully.", "success");
                             });
                             
                         } catch (Exception e) {
