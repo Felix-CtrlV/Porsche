@@ -98,7 +98,6 @@
     -fx-font-weight: bold;
 }
 
-
 .setbtn {
     -fx-background-color: rgba(255, 255, 255, 0.15);
     -fx-text-fill: white;
@@ -314,24 +313,24 @@
     -fx-text-fill: #E0E0E0;
 }
 
-.dark .heading { 
-    -fx-text-fill: #FFFFFF; 
+.dark .heading {
+    -fx-text-fill: #FFFFFF;
 }
 
-.dark .transparent-button { 
-    -fx-text-fill: #E0E0E0; 
+.dark .transparent-button {
+    -fx-text-fill: #E0E0E0;
 }
 
-.dark .transparent-button:hover { 
-    -fx-text-fill: #4a90e2; 
+.dark .transparent-button:hover {
+    -fx-text-fill: #4a90e2;
 }
 
-.dark .transparent-button:pressed { 
-    -fx-text-fill: #2a6bbf; 
+.dark .transparent-button:pressed {
+    -fx-text-fill: #2a6bbf;
 }
 
-.dark .arrow-button { 
-    -fx-border-color: #FFFFFF; 
+.dark .arrow-button {
+    -fx-border-color: #FFFFFF;
     -fx-text-fill: #FFFFFF;
 }
 
@@ -345,4 +344,295 @@
 
 .carousel-vbox {
     -fx-background-radius: 16;
+}
+
+/* Popup menu button styles */
+.popup-menu-button {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 15 8 15;
+    -fx-cursor: hand;
+    -fx-background-radius: 5;
+    -fx-font-size: 14px;
+}
+
+.popup-menu-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+}
+
+.popup-menu-button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-text-fill: white;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white !important;
+}
+
+.square-button {
+    -fx-background-color: #ff4444; /* Changed from #d4af37 to red */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+
+.square-button:hover {
+    -fx-background-color: #cc3333; /* Darker red for hover */
+}
+
+.transparent-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff4444; /* Changed from #d4af37 to red */
+    -fx-font-weight: bold;
+}
+
+.transparent-button:hover {
+    -fx-text-fill: #cc3333; /* Darker red for hover */
+}
+/* Payment Management Table Styling */
+.payment-table {
+    -fx-background-color: #1a1a1a;
+    -fx-text-fill: white;
+    -fx-table-cell-border-color: #333;
+    -fx-table-header-border-color: #555;
+}
+
+.payment-table .column-header {
+    -fx-background-color: #2a2a2a;
+    -fx-border-color: #555;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.payment-table .column-header-background {
+    -fx-background-color: #2a2a2a;
+}
+
+.payment-table .column-header .label {
+    -fx-text-fill: white;
+}
+
+.payment-table .table-cell {
+    -fx-text-fill: white;
+    -fx-border-color: #333;
+    -fx-padding: 8px;
+    -fx-font-size: 12px;
+    -fx-background-color: #1a1a1a;
+}
+
+.payment-table .table-row-cell {
+    -fx-background-color: #1a1a1a;
+    -fx-border-color: #333;
+    -fx-text-fill: white;
+}
+
+.payment-table .table-row-cell:odd {
+    -fx-background-color: #222222;
+}
+
+.payment-table .table-row-cell:even {
+    -fx-background-color: #1a1a1a;
+}
+
+.payment-table .table-row-cell:selected {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+}
+
+.payment-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+.payment-table .table-row-cell:empty {
+    -fx-background-color: #1a1a1a;
+    -fx-border-color: transparent;
+}
+
+/* Status column specific styling - WHITE TEXT */
+.status-column .table-cell {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.status-paid {
+    -fx-text-fill: #4CAF50 !important;
+    -fx-font-weight: bold;
+}
+
+.status-pending {
+    -fx-text-fill: #ffa500 !important;
+    -fx-font-weight: bold;
+}
+
+.status-overdue {
+    -fx-text-fill: #ff4444 !important;
+    -fx-font-weight: bold;
+}
+
+/* Button styling */
+.pay-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10 5 10;
+    -fx-cursor: hand;
+    -fx-border-radius: 3px;
+}
+
+.pay-button:hover {
+    -fx-background-color: #45a049;
+}
+
+.paid-label {
+    -fx-text-fill: #4CAF50;
+    -fx-font-weight: bold;
+}
+
+/* Payment popup styling */
+.payment-popup {
+    -fx-background-color: #1a1a1a;
+    -fx-border-color: #333;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.payment-stat-card {
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+}
+
+.payment-stat-pending {
+    -fx-text-fill: #ffa500;
+}
+
+.payment-stat-overdue {
+    -fx-text-fill: #ff4444;
+}
+
+.payment-stat-paid {
+    -fx-text-fill: #4CAF50;
+}
+
+/* Scrollbar styling for dark theme */
+.payment-table .scroll-bar:horizontal,
+.payment-table .scroll-bar:vertical {
+    -fx-background-color: #2a2a2a;
+}
+
+.payment-table .scroll-bar:horizontal .thumb,
+.payment-table .scroll-bar:vertical .thumb {
+    -fx-background-color: #555;
+    -fx-background-radius: 5;
+}
+
+.payment-table .scroll-bar:horizontal .thumb:hover,
+.payment-table .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #666;
+}
+
+.payment-table .increment-button,
+.payment-table .decrement-button {
+    -fx-background-color: #2a2a2a;
+    -fx-border-color: #555;
+}
+
+.payment-table .increment-button:hover,
+.payment-table .decrement-button:hover {
+    -fx-background-color: #333;
+}
+
+.payment-table .column-header .sort-order-desc,
+.payment-table .column-header .sort-order-asc {
+    -fx-text-fill: white;
+}
+
+.payment-table .column-header .arrow {
+    -fx-background-color: white;
+}
+
+.security-alert-popup {
+    -fx-background-color: #000000;
+}
+
+.security-alert-header {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.security-alert-content {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+.security-alert-button {
+    -fx-background-color: #ff0000;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8 20 8 20;
+    -fx-cursor: hand;
+}
+
+.security-alert-button:hover {
+    -fx-background-color: #cc0000;
+}
+
+.security-alert-button:pressed {
+    -fx-background-color: #990000;
+}
+
+.security-popup-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.85);
+}
+
+.security-popup-container {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 0;
+    -fx-padding: 30;
+    -fx-spacing: 20;
+    -fx-alignment: center;
+    -fx-min-width: 400;
+    -fx-min-height: 250;
+}
+
+.security-popup-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.security-popup-message {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.security-popup-button {
+    -fx-background-color: #ff0000;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10 25 10 25;
+    -fx-cursor: hand;
+    -fx-min-width: 80;
+}
+
+.security-popup-button:hover {
+    -fx-background-color: #cc0000;
+}
+
+.security-popup-button:pressed {
+    -fx-background-color: #990000;
 }

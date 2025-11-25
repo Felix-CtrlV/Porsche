@@ -3,78 +3,18 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" styleClass="main-background" stylesheets="@../CSS/model_select.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffModelSelectController">
-
-    <top>
-        <VBox styleClass="header-container" BorderPane.alignment="CENTER">
-            <children>
-                <HBox alignment="CENTER_LEFT" spacing="20" styleClass="nav-bar">
-                    <children>
-                        <Button fx:id="backbtn" onAction="#goBack" styleClass="back-button" text="← BACK TO SELECTION" />
-                    </children>
-                    <padding>
-                        <Insets bottom="10.0" left="40.0" right="40.0" top="20.0" />
-                    </padding>
-                </HBox>
-
-                <VBox alignment="CENTER" spacing="8">
-                    <children>
-                        <Label fx:id="modelTitle" styleClass="main-title" text="AVAILABLE MODELS" />
-                        <Label styleClass="subtitle" text="Select your dream Porsche" />
-                    </children>
-                    <padding>
-                        <Insets bottom="15.0" top="15.0" />
-                    </padding>
-                </VBox>
-
-                <Line endX="1200" endY="0" startX="0" startY="0" styleClass="accent-divider">
-                    <VBox.margin>
-                        <Insets left="40.0" right="40.0" />
-                    </VBox.margin>
-                </Line>
-            </children>
+<VBox fx:id="rootPane" stylesheets="@../CSS/model_select.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffModelSelectController">
+    <HBox fx:id="headerBox" styleClass="header-section" alignment="CENTER_LEFT" spacing="20">
+        <Button fx:id="backbtn" styleClass="back-button" onAction="#goBack" text="BACK" />
+        <VBox spacing="4">
+            <Label fx:id="modelTitle" styleClass="model-title" text="Models" />
+            <Label styleClass="model-subtitle" text="Select a model to customize" />
         </VBox>
-    </top>
-
-    <center>
-        <VBox alignment="CENTER" styleClass="content-container" BorderPane.alignment="CENTER">
-            <children>
-                <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" styleClass="models-scroll-pane" VBox.vgrow="ALWAYS">
-                    <content>
-                        <FlowPane fx:id="flow_Pane" alignment="CENTER" hgap="32.0" styleClass="models-flow-pane" vgap="32.0">
-                            <padding>
-                                <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
-                            </padding>
-                        </FlowPane>
-                    </content>
-                </ScrollPane>
-            </children>
-            <VBox.margin>
-                <Insets bottom="20.0" top="10.0" />
-            </VBox.margin>
-        </VBox>
-    </center>
-
-    <bottom>
-        <VBox alignment="CENTER" styleClass="footer-container" BorderPane.alignment="CENTER">
-            <children>
-                <Line endX="1200" endY="0" startX="0" startY="0" styleClass="footer-divider">
-                    <VBox.margin>
-                        <Insets left="40.0" right="40.0" />
-                    </VBox.margin>
-                </Line>
-                <Label styleClass="footer-text" text="PORSCHE CONFIGURATOR © 2025" />
-            </children>
-            <padding>
-                <Insets bottom="15.0" top="15.0" />
-            </padding>
-        </VBox>
-    </bottom>
-</BorderPane>
+        <Button fx:id="refreshButton" styleClass="refresh-button" onAction="#handleRefresh" text="⟳" />
+    </HBox>
+    <FlowPane fx:id="flow_Pane" styleClass="cars-flow-pane" />
+</VBox>

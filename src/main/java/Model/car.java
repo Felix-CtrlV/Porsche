@@ -15,10 +15,8 @@ public class car {
     private String carDescription;
     private String carPhoto;
 
-    // Default constructor
     public car() {}
 
-    // Full constructor
     public car(int carId, String modelName, String trimName, String carColor,
                String interiorColor, String fuelType, String carStatus,
                long carSpeed, int productionYear, String carQty,
@@ -38,7 +36,6 @@ public class car {
         this.carPhoto = carPhoto;
     }
 
-    // Getters and Setters
     public int getCarId() {
         return carId;
     }
@@ -143,7 +140,6 @@ public class car {
         this.carPhoto = carPhoto;
     }
 
-    // Helper method to get full display name
     public String getFullName() {
         if (trimName != null && !trimName.isEmpty()) {
             return modelName + " " + trimName;

@@ -31,7 +31,7 @@ public class CarDAO {
                         rs.getString("interior_color"),
                         rs.getString("fuel_type"),
                         rs.getString("car_status"),
-                        rs.getLong("car_speed"),
+                        parseCarSpeed(rs.getString("car_speed")),
                         rs.getInt("production_year"),
                         rs.getString("car_qty"),
                         rs.getDouble("price"),
@@ -67,7 +67,7 @@ public class CarDAO {
                         rs.getString("interior_color"),
                         rs.getString("fuel_type"),
                         rs.getString("car_status"),
-                        rs.getLong("car_speed"),
+                        parseCarSpeed(rs.getString("car_speed")),
                         rs.getInt("production_year"),
                         rs.getString("car_qty"),
                         rs.getDouble("price"),
@@ -103,7 +103,7 @@ public class CarDAO {
                         rs.getString("interior_color"),
                         rs.getString("fuel_type"),
                         rs.getString("car_status"),
-                        rs.getLong("car_speed"),
+                        parseCarSpeed(rs.getString("car_speed")),
                         rs.getInt("production_year"),
                         rs.getString("car_qty"),
                         rs.getDouble("price"),
@@ -119,18 +119,9 @@ public class CarDAO {
         return cars;
     }
 
-    /**
-     * Retrieves all cars that contain the specified model name anywhere in their model_name OR trim_name field.
-     * For example, searching for "911" will return:
-     * - "911 Carrera"
-     * - "911 Turbo S"
-     * - "Porsche 911 GT3"
-     * etc.
-     */
     public List<car> getCarsByModelName(String modelName) {
         List<car> cars = new ArrayList<>();
 
-        // Search in BOTH model_name and trim_name for maximum flexibility
         String sql = "SELECT car_id, model_name, trim_name, car_color, interior_color, fuel_type, " +
                 "car_status, car_speed, production_year, car_qty, price, car_description, car_photo " +
                 "FROM cars WHERE model_name LIKE ? OR trim_name LIKE ? " +
@@ -156,7 +147,7 @@ public class CarDAO {
                         rs.getString("interior_color"),
                         rs.getString("fuel_type"),
                         rs.getString("car_status"),
-                        rs.getLong("car_speed"),
+                        parseCarSpeed(rs.getString("car_speed")),
                         rs.getInt("production_year"),
                         rs.getString("car_qty"),
                         rs.getDouble("price"),
@@ -192,6 +183,27 @@ public class CarDAO {
 
         } catch (SQLException e) {
             logger.error("Failed to update car status for ID: " + carId, e);
+        }
+        return false;
+    }
+
+    public boolean updateCarQuantity(int carId, int newQuantity) {
+        String sql = "UPDATE cars SET car_qty = ? WHERE car_id = ?";
+
+        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, newQuantity);
+            ps.setInt(2, carId);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                logger.info("Updated car quantity for car ID: {} to {}", carId, newQuantity);
+                return true;
+            }
+
+        } catch (SQLException e) {
+            logger.error("Failed to update car quantity for ID: " + carId, e);
         }
         return false;
     }
@@ -309,5 +321,18 @@ public class CarDAO {
             logger.error("Failed to delete car with ID: " + carId, e);
         }
         return false;
+    }
+
+    private long parseCarSpeed(String speedString) {
+        if (speedString == null || speedString.trim().isEmpty()) {
+            return 0L;
+        }
+        try {
+            String cleanSpeed = speedString.replace("km/h", "").trim();
+            return Long.parseLong(cleanSpeed);
+        } catch (NumberFormatException e) {
+            logger.warn("Failed to parse car speed: '{}', using default 0", speedString);
+            return 0L;
+        }
     }
 }

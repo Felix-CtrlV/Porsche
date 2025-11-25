@@ -4,10 +4,6 @@
     -fx-background-color: #F8F8F8;
 }
 
-.root-container.dark-mode {
-    -fx-background-color: #0A0A0A;
-}
-
 .scroll-pane {
     -fx-background-color: transparent;
 }
@@ -17,22 +13,37 @@
 }
 
 .scroll-pane .scroll-bar:vertical .thumb {
-    -fx-background-color: rgba(213, 0, 28, 0.3);
-    -fx-background-radius: 4px;
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:horizontal .thumb {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar .increment-button,
+.scroll-pane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar .track {
+    -fx-background-color: transparent;
 }
 
 .glass-card {
     -fx-background-color: rgba(255, 255, 255, 0.95);
-    -fx-backdrop-filter: blur(30px);
     -fx-background-radius: 24px;
     -fx-border-color: rgba(0, 0, 0, 0.06);
     -fx-border-width: 1px;
     -fx-border-radius: 24px;
-}
-
-.dark-mode .glass-card {
-    -fx-background-color: rgba(26, 26, 26, 0.95);
-    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 15, 0.3, 0, 0);
 }
 
 .section-title {
@@ -41,18 +52,10 @@
     -fx-text-fill: #1A1A1A;
 }
 
-.dark-mode .section-title {
-    -fx-text-fill: #FFFFFF;
-}
-
 .detail-label {
     -fx-font-size: 14px;
     -fx-font-weight: 600;
     -fx-text-fill: #1A1A1A;
-}
-
-.dark-mode .detail-label {
-    -fx-text-fill: #FFFFFF;
 }
 
 .detail-value {
@@ -61,12 +64,14 @@
     -fx-text-fill: #424242;
 }
 
-.dark-mode .detail-value {
-    -fx-text-fill: #B8B8B8;
-}
-
 .price-highlight {
     -fx-text-fill: #D5001C;
+    -fx-font-weight: 700;
+}
+
+.price-accent {
+    -fx-text-fill: #D5001C;
+    -fx-font-size: 15px;
     -fx-font-weight: 700;
 }
 
@@ -74,40 +79,24 @@
     -fx-stroke: rgba(0, 0, 0, 0.08);
 }
 
-.dark-mode .divider {
-    -fx-stroke: rgba(255, 255, 255, 0.08);
-}
-
 .accessories-container {
     -fx-background-color: rgba(248, 248, 248, 0.6);
-    -fx-backdrop-filter: blur(10px);
     -fx-background-radius: 12px;
     -fx-padding: 15px;
-}
-
-.dark-mode .accessories-container {
-    -fx-background-color: rgba(18, 18, 18, 0.6);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0.2, 0, 0);
 }
 
 .summary-container {
     -fx-background-color: rgba(248, 248, 248, 0.6);
-    -fx-backdrop-filter: blur(10px);
     -fx-background-radius: 12px;
     -fx-padding: 20px;
-}
-
-.dark-mode .summary-container {
-    -fx-background-color: rgba(18, 18, 18, 0.6);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0.2, 0, 0);
 }
 
 .total-label {
     -fx-font-size: 20px;
     -fx-font-weight: 800;
     -fx-text-fill: #1A1A1A;
-}
-
-.dark-mode .total-label {
-    -fx-text-fill: #FFFFFF;
 }
 
 .total-value {
@@ -132,7 +121,6 @@
 
 .back-button {
     -fx-background-color: rgba(255, 255, 255, 0.8);
-    -fx-backdrop-filter: blur(10px);
     -fx-text-fill: #D5001C;
     -fx-border-color: rgba(213, 0, 28, 0.3);
     -fx-border-width: 1px;
@@ -140,6 +128,7 @@
     -fx-background-radius: 10px;
     -fx-font-weight: 700;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0.2, 0, 0);
 }
 
 .back-button:hover {
@@ -150,10 +139,25 @@
     -fx-scale-y: 1.05;
 }
 
-.dark-mode .back-button {
-    -fx-background-color: rgba(26, 26, 26, 0.8);
+.home-button {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
     -fx-text-fill: #D5001C;
-    -fx-border-color: rgba(213, 0, 28, 0.5);
+    -fx-border-color: rgba(213, 0, 28, 0.3);
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0.2, 0, 0);
+}
+
+.home-button:hover {
+    -fx-background-color: #D5001C;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: #D5001C;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
 
 .link-button {
@@ -166,10 +170,6 @@
 
 .link-button:hover {
     -fx-text-fill: #D5001C;
-}
-
-.dark-mode .link-button {
-    -fx-text-fill: #B8B8B8;
 }
 
 .remove-button {
@@ -185,10 +185,17 @@
 
 .installment-details-card {
     -fx-background-color: rgba(248, 248, 248, 0.6);
-    -fx-backdrop-filter: blur(10px);
     -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0.2, 0, 0);
 }
 
-.dark-mode .installment-details-card {
-    -fx-background-color: rgba(18, 18, 18, 0.6);
+.monthly-payment-value {
+    -fx-text-fill: #D5001C;
+    -fx-font-weight: 700;
+}
+
+.installment-price-total {
+    -fx-text-fill: #D5001C;
+    -fx-font-weight: 800;
+    -fx-font-size: 18px;
 }

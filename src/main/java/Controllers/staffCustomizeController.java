@@ -1,11 +1,11 @@
 package Controllers;
 
+import DAO.CarDAO;
 import Model.car;
 import Model.CarConfiguration;
 import Model.CustomizationOption;
 import Utils.SessionStaff;
 import Utils.DarkModeManager;
-import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,28 +16,27 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-import javafx.util.Duration;
+import javafx.scene.layout.VBox;
+import javafx.stage.Window;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class staffCustomizeController implements Initializable {
 
-    private static final Logger LOGGER = Logger.getLogger(staffCustomizeController.class.getName());
-    private static final Duration ANIMATION_DURATION = Duration.millis(350);
-    private static final int SLIDE_DISTANCE = 150;
+    private static final Logger LOGGER = LoggerFactory.getLogger(staffCustomizeController.class);
     private static final double IMAGE_FIT_HEIGHT = 100.0;
 
     @FXML private StackPane rootPane;
@@ -46,34 +45,28 @@ public class staffCustomizeController implements Initializable {
     @FXML private Button confirmBtn;
     @FXML private Label modelName;
     @FXML private Label modelPrice;
-    @FXML private Label carFrameNum;
     @FXML private Label fuelType;
     @FXML private Button backBtn;
-    @FXML private Button wheelsLeftBtn;
-    @FXML private Button wheelsRightBtn;
-    @FXML private ScrollPane wheelsScroll;
-    @FXML private Label wheelPriceLabel;
-    @FXML private Button colorLeftBtn;
-    @FXML private Button colorRightBtn;
-    @FXML private ScrollPane colorScroll;
-    @FXML private Label colorPriceLabel;
-    @FXML private Button interiorLeftBtn;
-    @FXML private Button interiorRightBtn;
-    @FXML private ScrollPane interiorScroll;
-    @FXML private Label interiorPriceLabel;
+    @FXML private FlowPane colorContainer;
+    @FXML private FlowPane interiorContainer;
+    @FXML private Label carSpeedLabel;
+    @FXML private Label productionYearLabel;
 
-    private final List<CustomizationOption> wheelOptions = new ArrayList<>();
     private final List<CustomizationOption> colorOptions = new ArrayList<>();
     private final List<CustomizationOption> interiorOptions = new ArrayList<>();
-
-    private int currentWheelIndex = 0;
-    private int currentColorIndex = 0;
-    private int currentInteriorIndex = 0;
-
     private CarConfiguration carConfig;
+    private CarDAO carDAO;
+
+    private VBox selectedColorOption;
+    private VBox selectedInteriorOption;
+    private List<car> allCarsForModel;
+    private car selectedCarForOrder;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        LOGGER.info("Initializing staffCustomizeController");
+        carDAO = new CarDAO();
+
         if (rootPane != null) {
             rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
                 if (newScene != null) {
@@ -82,271 +75,698 @@ public class staffCustomizeController implements Initializable {
             });
         }
 
+        confirmBtn.setDisable(true);
+
         CarConfiguration savedConfig = SessionStaff.getInstance().getCarConfiguration();
 
-        if (savedConfig != null) {
+        if (savedConfig != null && savedConfig.getBaseCar() != null) {
             carConfig = savedConfig;
-        } else {
-            initializeCarConfiguration();
-        }
+            loadAllCarsForModel();
+            updateCarDisplay();
+            loadCustomizationOptions();
+            displayAllOptions();
 
-        loadCustomizationOptions();
-        displayInitialSelections();
+            // FIX: Restore selections after UI is built
+            restoreSelectedOptions();
+        }
     }
 
     public void setSelectedCar(car selectedCar) {
         if (selectedCar != null) {
             carConfig = new CarConfiguration(selectedCar);
-            carConfig.setModelName(selectedCar.getModelName());
-            carConfig.setModelImagePath(selectedCar.getCarPhoto());
-            carConfig.setFrameNumber(String.valueOf(selectedCar.getCarId()));
-            carConfig.setFuelType(selectedCar.getFuelType() != null ? selectedCar.getFuelType() : "GASOLINE");
-            carConfig.setDescription(selectedCar.getCarDescription() != null ? selectedCar.getCarDescription() : "");
-
+            SessionStaff.getInstance().setCarConfiguration(carConfig);
+            selectedCarForOrder = selectedCar;
+            loadAllCarsForModel();
             updateCarDisplay();
             loadCustomizationOptions();
-            displayInitialSelections();
+            displayAllOptions();
+
+            // FIX: Restore selections after UI is built
+            restoreSelectedOptions();
         }
     }
 
-    private void initializeCarConfiguration() {
-        car newCar = new car();
-        newCar.setCarId(1);
-        newCar.setModelName("911 Carrera GTS");
-        newCar.setCarColor("Carrara White");
-        newCar.setProductionYear(2024);
-        newCar.setPrice(140000.0);
-        newCar.setCarStatus("available");
-        newCar.setCarPhoto("/Image/911_select_model.png");
-        newCar.setFuelType("GASOLINE");
-        newCar.setCarDescription(
-                "The 911 Carrera GTS epitomizes precision and driving passion. " +
-                        "Its naturally aspirated flat-six, razor-sharp handling, and track-focused " +
-                        "aerodynamics deliver uncompromising performance—every roar and shift a " +
-                        "statement of speed, control, and automotive excellence."
-        );
+    // ADD THIS METHOD TO RESTORE SELECTIONS
+    private void restoreSelectedOptions() {
+        if (carConfig == null) return;
 
-        carConfig = new CarConfiguration(newCar);
-        carConfig.setModelName(newCar.getModelName());
-        carConfig.setModelImagePath(newCar.getCarPhoto());
-        carConfig.setFrameNumber(String.valueOf(newCar.getCarId()));
-        carConfig.setFuelType(newCar.getFuelType());
-        carConfig.setDescription(newCar.getCarDescription());
+        LOGGER.info("Restoring selected options - Color: {}, Interior: {}",
+                carConfig.getSelectedColor() != null ? carConfig.getSelectedColor().getName() : "null",
+                carConfig.getSelectedInterior() != null ? carConfig.getSelectedInterior().getName() : "null");
 
-        updateCarDisplay();
+        // Restore color selection
+        if (carConfig.getSelectedColor() != null) {
+            for (int i = 0; i < colorContainer.getChildren().size(); i++) {
+                Node node = colorContainer.getChildren().get(i);
+                if (node instanceof VBox) {
+                    VBox optionBox = (VBox) node;
+                    CustomizationOption option = getOptionFromVBox(optionBox);
+                    if (option != null && isSameOption(option, carConfig.getSelectedColor())) {
+                        selectOption(optionBox, option, "color");
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Restore interior selection
+        if (carConfig.getSelectedInterior() != null) {
+            for (int i = 0; i < interiorContainer.getChildren().size(); i++) {
+                Node node = interiorContainer.getChildren().get(i);
+                if (node instanceof VBox) {
+                    VBox optionBox = (VBox) node;
+                    CustomizationOption option = getOptionFromVBox(optionBox);
+                    if (option != null && isSameOption(option, carConfig.getSelectedInterior())) {
+                        selectOption(optionBox, option, "interior");
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Enable confirm button if both selections are valid
+        if (carConfig.getSelectedColor() != null && carConfig.getSelectedInterior() != null) {
+            confirmBtn.setDisable(false);
+        }
+    }
+
+    // ADD THIS HELPER METHOD TO GET OPTION FROM VBOX
+    private CustomizationOption getOptionFromVBox(VBox optionBox) {
+        String optionName = null;
+
+        // Find the name label in the VBox
+        for (Node node : optionBox.getChildren()) {
+            if (node instanceof Label) {
+                Label label = (Label) node;
+                if (label.getStyleClass().contains("option-name")) {
+                    optionName = label.getText();
+                    break;
+                }
+            }
+        }
+
+        if (optionName != null) {
+            // Search in color options
+            for (CustomizationOption option : colorOptions) {
+                if (option.getName().equals(optionName)) {
+                    return option;
+                }
+            }
+
+            // Search in interior options
+            for (CustomizationOption option : interiorOptions) {
+                if (option.getName().equals(optionName)) {
+                    return option;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    // ADD THIS HELPER METHOD TO COMPARE OPTIONS
+    private boolean isSameOption(CustomizationOption option1, CustomizationOption option2) {
+        if (option1 == null || option2 == null) return false;
+        return option1.getName().equals(option2.getName()) &&
+                option1.getPrice() == option2.getPrice();
+    }
+
+    private void loadAllCarsForModel() {
+        if (carConfig == null || carConfig.getBaseCar() == null) return;
+
+        car baseCar = carConfig.getBaseCar();
+        String modelName = baseCar.getModelName();
+        String trimName = baseCar.getTrimName();
+
+        LOGGER.info("Loading all cars for model: {}, trim: {}", modelName, trimName);
+
+        List<car> allCars = carDAO.getAllCars();
+        allCarsForModel = new ArrayList<>();
+
+        for (car car : allCars) {
+            if (car.getModelName().equals(modelName) && car.getTrimName().equals(trimName)) {
+                allCarsForModel.add(car);
+            }
+        }
+
+        LOGGER.info("Found {} cars for model {} and trim {}", allCarsForModel.size(), modelName, trimName);
     }
 
     private void updateCarDisplay() {
-        modelName.setText(carConfig.getModelName());
-        modelPrice.setText(String.format("$%,d", (int) carConfig.getBasePrice()));
-        carDescription.setText(carConfig.getDescription());
-        carFrameNum.setText(carConfig.getFrameNumber());
-        fuelType.setText(carConfig.getFuelType());
+        if (carConfig == null || carConfig.getBaseCar() == null) return;
+
+        car baseCar = carConfig.getBaseCar();
+
+        String fullModelName = baseCar.getModelName();
+        if (baseCar.getTrimName() != null && !baseCar.getTrimName().isEmpty()) {
+            fullModelName += " " + baseCar.getTrimName();
+        }
+        modelName.setText(fullModelName);
+
+        modelPrice.setText(String.format("$%,.0f", carConfig.getTotalPrice()));
+
+        if (baseCar.getCarDescription() != null && !baseCar.getCarDescription().isEmpty()) {
+            carDescription.setText(baseCar.getCarDescription());
+        } else {
+            carDescription.setText("");
+        }
+
+        if (baseCar.getFuelType() != null) {
+            fuelType.setText(baseCar.getFuelType());
+        }
+
+        if (carSpeedLabel != null) {
+            carSpeedLabel.setText(baseCar.getCarSpeed() + " km/h");
+        }
+
+        if (productionYearLabel != null) {
+            productionYearLabel.setText(String.valueOf(baseCar.getProductionYear()));
+        }
+
+        if (modelImage != null && baseCar.getCarPhoto() != null) {
+            Image img = loadCarImage(baseCar.getCarPhoto());
+            if (img != null) modelImage.setImage(img);
+            else loadDefaultCarImage();
+        } else {
+            loadDefaultCarImage();
+        }
+    }
+
+    private Image loadCarImage(String path) {
+        try {
+            File f = new File(path);
+            if (f.exists()) return new Image(new FileInputStream(f));
+        } catch (Exception ignored) {}
+        return null;
+    }
+
+    private void loadDefaultCarImage() {
+        try {
+            InputStream stream = getClass().getResourceAsStream("/Image/911_select_model.png");
+            if (stream != null) modelImage.setImage(new Image(stream));
+        } catch (Exception ignored) {}
     }
 
     private void loadCustomizationOptions() {
-        wheelOptions.clear();
         colorOptions.clear();
         interiorOptions.clear();
 
-        wheelOptions.add(new CustomizationOption("18-inch Standard Wheels", 0, loadImage("/Image/rim 1.png"), true));
-        wheelOptions.add(new CustomizationOption("20-inch Carrera S Wheels", 2500, loadImage("/Image/rim 2.png"), false));
-        wheelOptions.add(new CustomizationOption("21-inch RS Spyder Design", 4200, loadImage("/Image/rim 3.png"), false));
+        if (allCarsForModel == null || allCarsForModel.isEmpty()) return;
 
-        colorOptions.add(new CustomizationOption("Carrara White", 0, loadImage("/Image/white.jpg"), true));
-        colorOptions.add(new CustomizationOption("Jet Black Metallic", 3200, loadImage("/Image/black.jpg"), false));
-        colorOptions.add(new CustomizationOption("Guards Red", 4500, loadImage("/Image/red.jpg"), false));
+        String baseCarColor = carConfig.getBaseCar().getCarColor();
 
-        interiorOptions.add(new CustomizationOption("Standard Black Leather", 0, loadImage("/Image/interior 1.jpg"), true));
-        interiorOptions.add(new CustomizationOption("Exclusive Two-Tone Leather", 7500, loadImage("/Image/interior 2.jpg"), false));
+        boolean hasAvailableBlackColor = false;
+        boolean hasAvailableRedColor = false;
 
-        carConfig.setSelectedWheel(wheelOptions.get(0));
-        carConfig.setSelectedColor(colorOptions.get(0));
-        carConfig.setSelectedInterior(interiorOptions.get(0));
+        for (car car : allCarsForModel) {
+            if (isCarAvailable(car)) {
+                String carColor = car.getCarColor();
+                if (carColor != null) {
+                    if (carColor.equalsIgnoreCase("black")) {
+                        hasAvailableBlackColor = true;
+                    } else if (carColor.equalsIgnoreCase("red")) {
+                        hasAvailableRedColor = true;
+                    }
+                }
+            }
+        }
+
+        LOGGER.info("Color availability - Black: {}, Red: {}", hasAvailableBlackColor, hasAvailableRedColor);
+
+        // FIX: Always show all color options, don't filter based on base car color
+        colorOptions.add(new CustomizationOption("Default", 0, loadColorOption("⊘"), true));
+
+        // FIX: Always show black option, mark availability based on inventory
+        CustomizationOption blackOption = new CustomizationOption("Jet Black Metallic", 3200, loadColorOption("/Image/black.jpg"), hasAvailableBlackColor);
+        colorOptions.add(blackOption);
+
+        // FIX: Always show red option, mark availability based on inventory
+        CustomizationOption redOption = new CustomizationOption("Guards Red", 4500, loadColorOption("/Image/red.jpg"), hasAvailableRedColor);
+        colorOptions.add(redOption);
+
+        // FIX: If we have a selected color that might not be in the standard options, ensure it's included
+        if (carConfig.getSelectedColor() != null) {
+            boolean foundSelectedColor = false;
+            for (CustomizationOption option : colorOptions) {
+                if (isSameOption(option, carConfig.getSelectedColor())) {
+                    foundSelectedColor = true;
+                    break;
+                }
+            }
+
+            // If selected color is not in the options, add it back (this handles edge cases)
+            if (!foundSelectedColor) {
+                LOGGER.info("Selected color {} not found in options, adding it back", carConfig.getSelectedColor().getName());
+                CustomizationOption selectedColor = carConfig.getSelectedColor();
+                if (selectedColor.getName().equals("Jet Black Metallic")) {
+                    // Update the existing black option to match the selected state
+                    blackOption.setAvailable(hasAvailableBlackColor);
+                } else if (selectedColor.getName().equals("Guards Red")) {
+                    // Update the existing red option to match the selected state
+                    redOption.setAvailable(hasAvailableRedColor);
+                }
+            }
+        }
+
+        updateInteriorOptions();
+
+        // Only auto-select if no selection exists
+        if (carConfig.getSelectedColor() == null) {
+            carConfig.setSelectedColor(colorOptions.get(0));
+        }
+        if (carConfig.getSelectedInterior() == null) {
+            autoSelectInteriorOption();
+        }
     }
 
-    private Image loadImage(String path) {
+    private void updateInteriorOptions() {
+        interiorOptions.clear();
+
+        if (allCarsForModel == null || allCarsForModel.isEmpty()) return;
+
+        CustomizationOption selectedColor = carConfig.getSelectedColor();
+        String targetColor = getTargetColorFromOption(selectedColor);
+
+        boolean hasAvailableBlackInterior = false;
+        boolean hasAvailableRedInterior = false;
+
+        LOGGER.info("Checking interior availability for color: '{}'", targetColor);
+
+        for (car car : allCarsForModel) {
+            if (isCarAvailable(car)) {
+                String carColor = car.getCarColor();
+                String interiorColor = car.getInteriorColor();
+
+                boolean colorMatches;
+                if (targetColor.equals("base")) {
+                    colorMatches = carColor != null && carColor.equalsIgnoreCase(carConfig.getBaseCar().getCarColor());
+                } else {
+                    colorMatches = targetColor.isEmpty() ||
+                            (carColor != null && carColor.equalsIgnoreCase(targetColor));
+                }
+
+                if (colorMatches && interiorColor != null) {
+                    if (interiorColor.equalsIgnoreCase("black")) {
+                        hasAvailableBlackInterior = true;
+                    } else if (interiorColor.equalsIgnoreCase("two_tone")) {
+                        hasAvailableRedInterior = true;
+                    }
+                }
+            }
+        }
+
+        // FIX: Always show both interior options, just mark availability
+        interiorOptions.add(new CustomizationOption("Standard Black Leather", 0, loadPlaceholderImageForOption(), hasAvailableBlackInterior));
+        interiorOptions.add(new CustomizationOption("Exclusive Two-Tone Leather", 7500, loadPlaceholderImageForOption(), hasAvailableRedInterior));
+
+        // FIX: If we have a selected interior that might not match current availability, ensure it stays selected
+        if (carConfig.getSelectedInterior() != null) {
+            boolean foundSelectedInterior = false;
+            for (CustomizationOption option : interiorOptions) {
+                if (isSameOption(option, carConfig.getSelectedInterior())) {
+                    foundSelectedInterior = true;
+                    break;
+                }
+            }
+
+            // If selected interior is not in options but we want to keep it, update availability
+            if (!foundSelectedInterior) {
+                LOGGER.info("Selected interior {} not perfectly matching, ensuring availability reflects selection", carConfig.getSelectedInterior().getName());
+                // The interior options are always the same names, so this should rarely happen
+            }
+        }
+    }
+
+    private void autoSelectInteriorOption() {
+        String baseCarInterior = carConfig.getBaseCar().getInteriorColor();
+
+        if (baseCarInterior != null) {
+            if (baseCarInterior.equalsIgnoreCase("black")) {
+                for (CustomizationOption option : interiorOptions) {
+                    if (option.getName().equals("Standard Black Leather") && option.isAvailable()) {
+                        carConfig.setSelectedInterior(option);
+                        return;
+                    }
+                }
+            } else if (baseCarInterior.equalsIgnoreCase("two_tone")) {
+                for (CustomizationOption option : interiorOptions) {
+                    if (option.getName().equals("Exclusive Two-Tone Leather") && option.isAvailable()) {
+                        carConfig.setSelectedInterior(option);
+                        return;
+                    }
+                }
+            }
+        }
+
+        if (!interiorOptions.isEmpty()) {
+            for (CustomizationOption option : interiorOptions) {
+                if (option.isAvailable()) {
+                    carConfig.setSelectedInterior(option);
+                    return;
+                }
+            }
+            // If none available, still select the first one but it will show as unavailable
+            carConfig.setSelectedInterior(interiorOptions.get(0));
+        }
+    }
+
+    private boolean isCarAvailable(car car) {
         try {
-            return new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Failed to load image: " + path, e);
+            int qty = Integer.parseInt(car.getCarQty());
+            return qty > 0;
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Invalid quantity format for car ID: {}", car.getCarId());
+            return false;
+        }
+    }
+
+    private String getTargetColorFromOption(CustomizationOption colorOption) {
+        if (colorOption == null || colorOption.getName().equals("Default")) {
+            return "base";
+        } else if (colorOption.getName().contains("Black")) {
+            return "black";
+        } else if (colorOption.getName().contains("Red")) {
+            return "red";
+        }
+        return "";
+    }
+
+    private Image loadColorOption(String path) {
+        if (path.equals("⊘")) {
             return null;
         }
+        try {
+            InputStream s = getClass().getResourceAsStream(path);
+            if (s != null) return new Image(s);
+        } catch (Exception ignored) {}
+        return loadPlaceholderImageForOption();
     }
 
-    private void displayInitialSelections() {
-        if (!wheelOptions.isEmpty()) {
-            displayOptionWithPrice(wheelsScroll, wheelOptions.get(currentWheelIndex), wheelPriceLabel);
-        }
-        if (!colorOptions.isEmpty()) {
-            displayOptionWithPrice(colorScroll, colorOptions.get(currentColorIndex), colorPriceLabel);
-        }
-        if (!interiorOptions.isEmpty()) {
-            displayOptionWithPrice(interiorScroll, interiorOptions.get(currentInteriorIndex), interiorPriceLabel);
-        }
+    private Image loadPlaceholderImageForOption() {
+        try {
+            InputStream stream = getClass().getResourceAsStream("/Images/placeholder.png");
+            if (stream != null) return new Image(stream);
+        } catch (Exception ignored) {}
+        return null;
     }
 
-    private void displayOptionWithPrice(ScrollPane scrollPane, CustomizationOption option, Label priceLabel) {
-        if (option == null || option.getImage() == null || scrollPane == null) return;
+    private void displayAllOptions() {
+        displayOptions(colorContainer, colorOptions, "color");
+        displayOptions(interiorContainer, interiorOptions, "interior");
+    }
 
-        FlowPane container = (FlowPane) scrollPane.getContent();
+    private void displayOptions(FlowPane container, List<CustomizationOption> options, String type) {
         container.getChildren().clear();
 
-        ImageView imageView = new ImageView(option.getImage());
-        imageView.setFitHeight(IMAGE_FIT_HEIGHT);
-        imageView.setPreserveRatio(true);
+        for (CustomizationOption option : options) {
+            VBox optionBox = createOptionBox(option, type);
+            container.getChildren().add(optionBox);
+        }
+    }
 
-        container.setAlignment(Pos.CENTER);
-        container.getChildren().add(imageView);
+    private VBox createOptionBox(CustomizationOption option, String type) {
+        VBox optionBox = new VBox();
+        optionBox.setAlignment(Pos.CENTER);
+        optionBox.setSpacing(5);
+        optionBox.getStyleClass().add("option-container");
+        optionBox.getStyleClass().add(type + "-option");
 
-        if (priceLabel != null) {
-            priceLabel.setText(option.getFormattedPrice());
-            if (option.isStandard()) {
-                priceLabel.setStyle("-fx-text-fill: #757575;");
+        // FIX: Apply unavailable styling but don't prevent selection entirely
+        if (!option.isAvailable()) {
+            optionBox.getStyleClass().add("unavailable-option");
+            optionBox.setDisable(false); // Allow selection even if unavailable to maintain state
+        } else {
+            optionBox.getStyleClass().add("available-option");
+            optionBox.setDisable(false);
+        }
+
+        if (option.getImage() != null) {
+            ImageView img = new ImageView(option.getImage());
+            img.setFitHeight(IMAGE_FIT_HEIGHT);
+            img.setPreserveRatio(true);
+            img.getStyleClass().add("option-image-container");
+            optionBox.getChildren().add(img);
+        }
+
+        Label nameLabel = new Label(option.getName());
+        nameLabel.getStyleClass().add("option-name");
+        optionBox.getChildren().add(nameLabel);
+
+        Label priceLabel = new Label(option.getFormattedPrice());
+        if (option.getPrice() > 0) {
+            priceLabel.getStyleClass().add("premium-price");
+        } else {
+            priceLabel.getStyleClass().add("standard-price");
+        }
+        optionBox.getChildren().add(priceLabel);
+
+        // FIX: Allow clicking even on unavailable options to maintain selection state
+        optionBox.setOnMouseClicked(event -> {
+            selectOption(optionBox, option, type);
+        });
+
+        return optionBox;
+    }
+
+    private void selectOption(VBox optionBox, CustomizationOption option, String type) {
+        // FIX: Allow selecting any option regardless of availability to maintain state
+        if (!option.isAvailable()) {
+            LOGGER.warn("Selecting unavailable option: {}. This is allowed to maintain selection state.", option.getName());
+            // Don't return - allow the selection to proceed
+        }
+
+        if ("color".equals(type)) {
+            if (selectedColorOption != null) {
+                selectedColorOption.getStyleClass().remove("selected");
+                updateLabelsStyle(selectedColorOption, false);
+            }
+            selectedColorOption = optionBox;
+            carConfig.setSelectedColor(option);
+
+            // FIX: Update session immediately
+            SessionStaff.getInstance().setCarConfiguration(carConfig);
+
+            updateInteriorOptions();
+
+            trackCustomization(option, "c_color");
+
+            if (option.getName().equals("Default")) {
+                validateCurrentInteriorSelection();
             } else {
-                priceLabel.setStyle("-fx-text-fill: #d32f2f; -fx-font-weight: 600;");
+                autoSelectInteriorOption();
+            }
+
+            displayOptions(interiorContainer, interiorOptions, "interior");
+
+            // FIX: Restore interior selection after rebuilding interior options
+            if (carConfig.getSelectedInterior() != null) {
+                restoreInteriorSelection();
+            }
+        } else if ("interior".equals(type)) {
+            if (selectedInteriorOption != null) {
+                selectedInteriorOption.getStyleClass().remove("selected");
+                updateLabelsStyle(selectedInteriorOption, false);
+            }
+            selectedInteriorOption = optionBox;
+            carConfig.setSelectedInterior(option);
+
+            // FIX: Update session immediately
+            SessionStaff.getInstance().setCarConfiguration(carConfig);
+
+            trackCustomization(option, "i_color");
+
+            confirmBtn.setDisable(false);
+        }
+
+        optionBox.getStyleClass().add("selected");
+        updateLabelsStyle(optionBox, true);
+
+        updateCarImageBasedOnSelection();
+        updateTotalPrice();
+    }
+
+    // ADD THIS METHOD TO RESTORE INTERIOR SELECTION
+    private void restoreInteriorSelection() {
+        if (carConfig.getSelectedInterior() != null) {
+            for (int i = 0; i < interiorContainer.getChildren().size(); i++) {
+                Node node = interiorContainer.getChildren().get(i);
+                if (node instanceof VBox) {
+                    VBox optionBox = (VBox) node;
+                    CustomizationOption option = getOptionFromVBox(optionBox);
+                    if (option != null && isSameOption(option, carConfig.getSelectedInterior())) {
+                        selectOption(optionBox, option, "interior");
+                        break;
+                    }
+                }
             }
         }
     }
 
-    @FXML
-    private void handleWheelsLeft(ActionEvent event) {
-        navigateSelection(wheelsScroll, wheelOptions, currentWheelIndex, -1, wheelPriceLabel,
-                index -> {
-                    currentWheelIndex = index;
-                    carConfig.setSelectedWheel(wheelOptions.get(index));
-                });
-    }
+    private void trackCustomization(CustomizationOption option, String customizationType) {
+        if (option.getPrice() > 0) {
+            List<SessionStaff.CustomizationRecord> currentCustomizations = SessionStaff.getInstance().getPendingCustomizations();
+            List<SessionStaff.CustomizationRecord> updatedCustomizations = new ArrayList<>();
 
-    @FXML
-    private void handleWheelsRight(ActionEvent event) {
-        navigateSelection(wheelsScroll, wheelOptions, currentWheelIndex, 1, wheelPriceLabel,
-                index -> {
-                    currentWheelIndex = index;
-                    carConfig.setSelectedWheel(wheelOptions.get(index));
-                });
-    }
-
-    @FXML
-    private void handleColorLeft(ActionEvent event) {
-        navigateSelection(colorScroll, colorOptions, currentColorIndex, -1, colorPriceLabel,
-                index -> {
-                    currentColorIndex = index;
-                    carConfig.setSelectedColor(colorOptions.get(index));
-                });
-    }
-
-    @FXML
-    private void handleColorRight(ActionEvent event) {
-        navigateSelection(colorScroll, colorOptions, currentColorIndex, 1, colorPriceLabel,
-                index -> {
-                    currentColorIndex = index;
-                    carConfig.setSelectedColor(colorOptions.get(index));
-                });
-    }
-
-    @FXML
-    private void handleInteriorLeft(ActionEvent event) {
-        navigateSelection(interiorScroll, interiorOptions, currentInteriorIndex, -1, interiorPriceLabel,
-                index -> {
-                    currentInteriorIndex = index;
-                    carConfig.setSelectedInterior(interiorOptions.get(index));
-                });
-    }
-
-    @FXML
-    private void handleInteriorRight(ActionEvent event) {
-        navigateSelection(interiorScroll, interiorOptions, currentInteriorIndex, 1, interiorPriceLabel,
-                index -> {
-                    currentInteriorIndex = index;
-                    carConfig.setSelectedInterior(interiorOptions.get(index));
-                });
-    }
-
-    private void navigateSelection(ScrollPane scrollPane, List<CustomizationOption> optionList,
-                                   int currentIndex, int direction, Label priceLabel, IndexUpdater updater) {
-        if (optionList.isEmpty() || scrollPane == null) return;
-
-        int newIndex = (currentIndex + direction + optionList.size()) % optionList.size();
-        CustomizationOption newOption = optionList.get(newIndex);
-
-        animateImageTransition(scrollPane, newOption.getImage(), direction,
-                () -> {
-                    updater.update(newIndex);
-                    if (priceLabel != null) {
-                        priceLabel.setText(newOption.getFormattedPrice());
-                        if (newOption.isStandard()) {
-                            priceLabel.setStyle("-fx-text-fill: #757575;");
-                        } else {
-                            priceLabel.setStyle("-fx-text-fill: #d32f2f; -fx-font-weight: 600;");
-                        }
-                    }
-                });
-    }
-
-    private void animateImageTransition(ScrollPane scrollPane, Image newImage, int direction, Runnable onComplete) {
-        FlowPane container = (FlowPane) scrollPane.getContent();
-        if (container.getChildren().isEmpty()) return;
-
-        ImageView currentImageView = (ImageView) container.getChildren().get(0);
-
-        ImageView nextImageView = new ImageView(newImage);
-        nextImageView.setFitHeight(IMAGE_FIT_HEIGHT);
-        nextImageView.setPreserveRatio(true);
-        nextImageView.setOpacity(0);
-        nextImageView.setTranslateX(direction * SLIDE_DISTANCE);
-
-        container.getChildren().add(nextImageView);
-
-        TranslateTransition slideOutCurrent = new TranslateTransition(ANIMATION_DURATION, currentImageView);
-        slideOutCurrent.setToX(-direction * SLIDE_DISTANCE);
-
-        FadeTransition fadeOutCurrent = new FadeTransition(ANIMATION_DURATION, currentImageView);
-        fadeOutCurrent.setToValue(0);
-
-        TranslateTransition slideInNext = new TranslateTransition(ANIMATION_DURATION, nextImageView);
-        slideInNext.setToX(0);
-
-        FadeTransition fadeInNext = new FadeTransition(ANIMATION_DURATION, nextImageView);
-        fadeInNext.setToValue(1);
-
-        ParallelTransition parallel = new ParallelTransition(
-                slideOutCurrent, fadeOutCurrent, slideInNext, fadeInNext
-        );
-
-        parallel.setOnFinished(event -> {
-            container.getChildren().remove(currentImageView);
-            if (onComplete != null) {
-                onComplete.run();
+            boolean found = false;
+            for (SessionStaff.CustomizationRecord cust : currentCustomizations) {
+                if (!cust.getType().equals(customizationType)) {
+                    updatedCustomizations.add(cust);
+                } else {
+                    found = true;
+                }
             }
-        });
 
-        parallel.play();
+            if (!found) {
+                updatedCustomizations.add(new SessionStaff.CustomizationRecord(customizationType, "1", option.getPrice()));
+            }
+
+            SessionStaff.getInstance().setPendingCustomizations(updatedCustomizations);
+        } else {
+            List<SessionStaff.CustomizationRecord> currentCustomizations = SessionStaff.getInstance().getPendingCustomizations();
+            List<SessionStaff.CustomizationRecord> updatedCustomizations = new ArrayList<>();
+
+            for (SessionStaff.CustomizationRecord cust : currentCustomizations) {
+                if (!cust.getType().equals(customizationType)) {
+                    updatedCustomizations.add(cust);
+                }
+            }
+
+            SessionStaff.getInstance().setPendingCustomizations(updatedCustomizations);
+        }
+    }
+
+    private void validateCurrentInteriorSelection() {
+        CustomizationOption currentInterior = carConfig.getSelectedInterior();
+        if (currentInterior != null) {
+            String baseCarColor = carConfig.getBaseCar().getCarColor();
+            boolean isInteriorAvailableForBaseCar = false;
+
+            for (car car : allCarsForModel) {
+                if (isCarAvailable(car)) {
+                    String carColor = car.getCarColor();
+                    String interiorColor = car.getInteriorColor();
+
+                    boolean colorMatches = carColor != null && carColor.equalsIgnoreCase(baseCarColor);
+                    boolean interiorMatches = false;
+
+                    if (currentInterior.getName().equals("Standard Black Leather")) {
+                        interiorMatches = interiorColor != null && interiorColor.equalsIgnoreCase("black");
+                    } else if (currentInterior.getName().equals("Exclusive Two-Tone Leather")) {
+                        interiorMatches = interiorColor != null && interiorColor.equalsIgnoreCase("two_tone");
+                    }
+
+                    if (colorMatches && interiorMatches) {
+                        isInteriorAvailableForBaseCar = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!isInteriorAvailableForBaseCar) {
+                autoSelectInteriorOption();
+            }
+        }
+    }
+
+    private void updateCarImageBasedOnSelection() {
+        if (carConfig == null || carConfig.getBaseCar() == null || allCarsForModel == null) return;
+
+        CustomizationOption selectedColor = carConfig.getSelectedColor();
+        CustomizationOption selectedInterior = carConfig.getSelectedInterior();
+
+        String targetColor = getTargetColorFromOption(selectedColor);
+        String targetInterior = getTargetInteriorFromOption(selectedInterior);
+
+        for (car car : allCarsForModel) {
+            if (isCarAvailable(car)) {
+                String carColor = car.getCarColor();
+
+                boolean colorMatch;
+                if (targetColor.equals("base")) {
+                    colorMatch = carColor != null && carColor.equalsIgnoreCase(carConfig.getBaseCar().getCarColor());
+                } else {
+                    colorMatch = targetColor.isEmpty() ||
+                            (carColor != null && carColor.equalsIgnoreCase(targetColor));
+                }
+
+                boolean interiorMatch = targetInterior.isEmpty() ||
+                        (car.getInteriorColor() != null && car.getInteriorColor().equalsIgnoreCase(targetInterior));
+
+                if (colorMatch && interiorMatch) {
+                    Image img = loadCarImage(car.getCarPhoto());
+                    if (img != null) {
+                        modelImage.setImage(img);
+                        selectedCarForOrder = car;
+                        return;
+                    }
+                }
+            }
+        }
+
+        car baseCar = carConfig.getBaseCar();
+        if (baseCar.getCarPhoto() != null) {
+            Image img = loadCarImage(baseCar.getCarPhoto());
+            if (img != null) {
+                modelImage.setImage(img);
+                selectedCarForOrder = baseCar;
+                return;
+            }
+        }
+
+        loadDefaultCarImage();
+        selectedCarForOrder = carConfig.getBaseCar();
+    }
+
+    private String getTargetInteriorFromOption(CustomizationOption interiorOption) {
+        if (interiorOption == null || interiorOption.getName().equals("Standard Black Leather")) {
+            return "";
+        } else if (interiorOption.getName().contains("Two-Tone")) {
+            return "two_tone";
+        }
+        return "";
+    }
+
+    private void updateLabelsStyle(VBox optionBox, boolean selected) {
+        for (Node node : optionBox.getChildren()) {
+            if (node instanceof Label) {
+                Label label = (Label) node;
+                if (selected) {
+                    label.getStyleClass().add("selected");
+                } else {
+                    label.getStyleClass().remove("selected");
+                }
+            }
+        }
+    }
+
+    private void updateTotalPrice() {
+        if (carConfig != null) {
+            carConfig.updateCarPrice();
+            double totalPrice = carConfig.getTotalPrice();
+            modelPrice.setText(String.format("$%,.0f", totalPrice));
+        }
     }
 
     @FXML
     private void handleConfirmOrder() {
         try {
             carConfig.updateCarPrice();
-            SessionStaff.getInstance().setCarConfiguration(carConfig);
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffFinalize.fxml"));
-            Parent root = loader.load();
-
-            staffFinalizeController controller = loader.getController();
-            if (controller != null) {
-                controller.setCarConfiguration(carConfig);
+            if (selectedCarForOrder != null) {
+                carConfig.setBaseCar(selectedCarForOrder);
+                SessionStaff.getInstance().setCarConfiguration(carConfig);
             }
 
-            Stage stage = (Stage) confirmBtn.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffShopingcart.fxml"));
+            Parent root = loader.load();
+
+            Window w = confirmBtn.getScene().getWindow();
             Scene scene = new Scene(root);
             DarkModeManager.getInstance().registerScene(scene);
-            stage.setScene(scene);
-            stage.show();
+            ((javafx.stage.Stage) w).setScene(scene);
 
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to load finalize order page", e);
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.error("Failed to proceed to shopping cart page", e);
         }
     }
 
@@ -356,19 +776,13 @@ public class staffCustomizeController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffModelSelect.fxml"));
             Parent root = loader.load();
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Window w = ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             DarkModeManager.getInstance().registerScene(scene);
-            stage.setScene(scene);
-            stage.show();
+            ((javafx.stage.Stage) w).setScene(scene);
 
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to navigate back", e);
+            LOGGER.error("Back navigation failed", e);
         }
-    }
-
-    @FunctionalInterface
-    private interface IndexUpdater {
-        void update(int index);
     }
 }

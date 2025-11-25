@@ -5,137 +5,77 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
 
-<StackPane prefHeight="800" prefWidth="1200" styleClass="root-container" stylesheets="@../CSS/staffasset.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffassetController">
-
-    <VBox spacing="0">
-        <HBox alignment="CENTER_LEFT" spacing="15" styleClass="header-container">
-            <padding>
-                <Insets bottom="15" left="35" right="35" top="15" />
-            </padding>
-
-            <Button fx:id="backButton" prefHeight="46.0" prefWidth="55.0" styleClass="back-button" text="←" />
-
-            <VBox spacing="3" HBox.hgrow="ALWAYS">
-                <Label styleClass="page-title" text="Premium Accessories" />
-                <Label styleClass="page-subtitle" text="Enhance your driving experience" />
-            </VBox>
-
-            <HBox alignment="CENTER_RIGHT" spacing="10">
-                <Label styleClass="cart-label" text="Cart Items:" />
-                <Label fx:id="cartCountLabel" styleClass="cart-count" text="0" />
+<StackPane fx:id="rootPane" prefHeight="850.0" prefWidth="1300.0" styleClass="root" stylesheets="@../CSS/staffasset.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffassetController">
+    <VBox spacing="0" StackPane.alignment="TOP_CENTER">
+        <HBox styleClass="top-bar">
+            <Button fx:id="backButton" styleClass="back-nav-accessories" text="← BACK" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label styleClass="page-title-accessories" text="Accessories Catalog" HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox styleClass="cart-section">
+                <VBox alignment="CENTER" spacing="4">
+                    <HBox.margin>
+                        <Insets right="12" />
+                    </HBox.margin>
+                    <Label style="-fx-font-size: 11px; -fx-font-weight: 600; -fx-text-fill: #999999;" text="CART" />
+                    <Label fx:id="cartCountLabel" styleClass="cart-badge" text="0" />
+                </VBox>
                 <Button fx:id="viewCartButton" styleClass="view-cart-button" text="VIEW CART" />
             </HBox>
         </HBox>
 
-        <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
-            <VBox spacing="25">
-                <padding>
-                    <Insets bottom="35" left="35" right="35" top="15" />
-                </padding>
+        <HBox styleClass="filter-bar">
+            <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #999999; -fx-letter-spacing: 0.8px;" text="FILTER BY:">
+                <HBox.margin>
+                    <Insets right="16" />
+                </HBox.margin>
+            </Label>
+            <ToggleButton fx:id="allCategoryButton" styleClass="category-toggle" text="ALL" />
+            <ToggleButton fx:id="accessoriesButton" styleClass="category-toggle" text="ACCESSORIES" />
+            <ToggleButton fx:id="equipmentButton" styleClass="category-toggle" text="EQUIPMENT" />
+        </HBox>
 
-                <VBox spacing="12" styleClass="slider-section">
-                    <Label styleClass="section-title" text="New Arrivals" />
-
-                    <StackPane styleClass="slider-container">
-                        <ImageView fx:id="sliderImage" fitHeight="300" fitWidth="1050" preserveRatio="true" styleClass="slider-image" />
-
-                        <HBox fx:id="sliderIndicators" alignment="CENTER" spacing="8" StackPane.alignment="BOTTOM_CENTER">
-                            <StackPane.margin>
-                                <Insets bottom="15" />
-                            </StackPane.margin>
-                        </HBox>
-
-                        <VBox alignment="BOTTOM_LEFT" StackPane.alignment="BOTTOM_LEFT">
-                            <padding>
-                                <Insets bottom="25" left="25" />
-                            </padding>
-                            <Label fx:id="sliderTitle" styleClass="slider-title" text="Item Name" />
-                            <Label fx:id="sliderDescription" styleClass="slider-description" text="Item Description" />
-                        </VBox>
-                    </StackPane>
-                </VBox>
-
-                <HBox alignment="CENTER" spacing="15" styleClass="filter-container">
-                    <Label styleClass="filter-label" text="Category:" />
-                    <ToggleButton fx:id="allCategoryButton" selected="true" styleClass="filter-button" text="ALL PRODUCTS">
-                        <toggleGroup>
-                            <ToggleGroup fx:id="categoryToggleGroup" />
-                        </toggleGroup>
-                    </ToggleButton>
-                    <ToggleButton fx:id="accessoriesButton" styleClass="filter-button" text="CAR ACCESSORIES" toggleGroup="$categoryToggleGroup" />
-                    <ToggleButton fx:id="equipmentButton" styleClass="filter-button" text="EQUIPMENT" toggleGroup="$categoryToggleGroup" />
-                    <fx:define>
-                        <ToggleGroup fx:id="categoryToggleGroup" />
-                    </fx:define>
-                </HBox>
-
-                <VBox fx:id="productsContainer" spacing="15">
-                </VBox>
-            </VBox>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="products-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+            <VBox fx:id="productsContainer" styleClass="products-container" />
         </ScrollPane>
     </VBox>
 
-    <StackPane fx:id="cartModalOverlay" managed="false" styleClass="modal-overlay" visible="false">
-        <StackPane onMouseClicked="#closeCartModal" styleClass="blur-background" />
-
-        <VBox maxHeight="550" maxWidth="650" styleClass="cart-modal-card">
-            <padding>
-                <Insets bottom="25" left="30" right="30" top="25" />
-            </padding>
-
-            <HBox alignment="CENTER" spacing="10">
-                <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
-                    <Label styleClass="cart-modal-title" text="Shopping Cart" />
-                    <Label fx:id="cartItemCountLabel" styleClass="cart-item-count-modal" text="0 items" />
-                </VBox>
-                <Button fx:id="closeCartButton" onAction="#closeCartModal" styleClass="close-modal-button" text="✕" />
+    <StackPane fx:id="cartModal" visible="false" styleClass="cart-modal-overlay">
+        <VBox styleClass="cart-modal-container">
+            <HBox styleClass="cart-modal-header">
+                <Label text="Shopping Cart" styleClass="cart-modal-title" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="closeCartButton" styleClass="close-cart-button" text="×" />
             </HBox>
 
-            <Line endX="600" strokeWidth="2" styleClass="divider">
-                <VBox.margin>
-                    <Insets bottom="10" top="10" />
-                </VBox.margin>
-            </Line>
-
-            <ScrollPane fitToWidth="true" styleClass="cart-items-scroll" VBox.vgrow="ALWAYS">
-                <VBox fx:id="cartItemsContainer" spacing="10" />
+            <ScrollPane fitToWidth="true" styleClass="cart-items-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                <VBox fx:id="cartItemsContainer" styleClass="cart-items-container" />
             </ScrollPane>
 
-            <Line endX="600" strokeWidth="2" styleClass="divider">
-                <VBox.margin>
-                    <Insets bottom="10" top="15" />
-                </VBox.margin>
-            </Line>
-
-            <VBox spacing="10" styleClass="price-summary-section">
-                <HBox alignment="CENTER_LEFT" spacing="15">
-                    <Label minWidth="90" styleClass="summary-label" text="Subtotal:" />
-                    <Label fx:id="subtotalLabel" styleClass="summary-value" text="0" />
+            <VBox styleClass="cart-totals-container">
+                <HBox styleClass="cart-total-row">
+                    <Label text="Subtotal:" styleClass="cart-total-label" />
+                    <Label fx:id="cartSubtotalLabel" text="0.00" styleClass="cart-total-value" />
                 </HBox>
-                <HBox alignment="CENTER_LEFT" spacing="15">
-                    <Label minWidth="90" styleClass="summary-label" text="Tax (8%):" />
-                    <Label fx:id="taxLabelCart" styleClass="summary-value" text="0" />
+                <HBox styleClass="cart-total-row">
+                    <Label text="Tax (10%):" styleClass="cart-total-label" />
+                    <Label fx:id="cartTaxLabel" text="0.00" styleClass="cart-total-value" />
                 </HBox>
-                <Line endX="600" strokeWidth="1" styleClass="thin-divider" />
-                <HBox alignment="CENTER_LEFT" spacing="15">
-                    <Label minWidth="90" styleClass="total-label-modal" text="Total:" />
-                    <Label fx:id="totalLabel" styleClass="total-value-modal" text="0" />
+                <HBox styleClass="cart-total-row">
+                    <Label text="Total:" styleClass="cart-total-label-total" />
+                    <Label fx:id="cartTotalLabel" text="0.00" styleClass="cart-total-value-total" />
                 </HBox>
             </VBox>
 
-            <HBox alignment="CENTER" spacing="12">
-                <VBox.margin>
-                    <Insets top="20" />
-                </VBox.margin>
-                <Button fx:id="clearCartButton" minHeight="40" minWidth="150" styleClass="clear-cart-button" text="CLEAR CART" />
-                <Button fx:id="checkoutButton" minHeight="40" minWidth="220" styleClass="checkout-button-modal" text="PROCEED TO CHECKOUT" />
+            <HBox styleClass="cart-modal-footer">
+                <Button fx:id="continueShoppingButton" styleClass="continue-shopping-button" text="CONTINUE SHOPPING" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="checkoutButtonModal" styleClass="checkout-button-modal" text="CHECKOUT" />
             </HBox>
         </VBox>
     </StackPane>

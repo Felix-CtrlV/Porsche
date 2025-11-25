@@ -2,7 +2,8 @@ package Controllers;
 
 import DAO.CarDAO;
 import Model.car;
-import Utils.DarkModeManager;
+import Model.CarConfiguration;
+import Utils.SessionStaff;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,17 +19,19 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class staffModelSelectController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(staffModelSelectController.class);
@@ -37,6 +40,8 @@ public class staffModelSelectController implements Initializable {
     @FXML private FlowPane flow_Pane;
     @FXML private Button backbtn;
     @FXML private Label modelTitle;
+    @FXML private HBox headerBox;
+    @FXML private Button refreshButton;
 
     private CarDAO carDAO;
     private String selectedModel;
@@ -44,30 +49,73 @@ public class staffModelSelectController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         logger.info("Initializing staffModelSelectController");
-        if (rootPane != null) {
-            rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
-                if (newScene != null) {
-                    DarkModeManager.getInstance().registerScene(newScene);
-                }
-            });
-        }
         carDAO = new CarDAO();
+
+        rootPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.windowProperty().addListener((obs, oldWindow, newWindow) -> {
+                    if (newWindow != null) {
+                        newWindow.showingProperty().addListener((showObs, oldShowing, newShowing) -> {
+                            if (newShowing) {
+                                Platform.runLater(() -> {
+                                    restoreSelectedModel();
+                                    refreshCarData();
+                                });
+                            }
+                        });
+                        if (newWindow.isShowing()) {
+                            Platform.runLater(() -> {
+                                restoreSelectedModel();
+                                refreshCarData();
+                            });
+                        }
+                    }
+                });
+                if (newScene.getWindow() != null && newScene.getWindow().isShowing()) {
+                    Platform.runLater(() -> {
+                        restoreSelectedModel();
+                        refreshCarData();
+                    });
+                }
+            }
+        });
+    }
+
+    private void restoreSelectedModel() {
+        if (selectedModel == null) {
+            String lastModel = SessionStaff.getInstance().getLastSelectedModel();
+            if (lastModel != null && !lastModel.isEmpty()) {
+                setSelectedModel(lastModel);
+                logger.info("Restored selected model from session: {}", lastModel);
+            }
+        }
+    }
+
+    @FXML
+    private void handleRefresh(ActionEvent event) {
+        logger.info("Manual refresh triggered");
+        refreshCarData();
     }
 
     public void setSelectedModel(String modelName) {
         this.selectedModel = modelName;
+        SessionStaff.getInstance().setLastSelectedModel(modelName);
         logger.info("Selected model set to: {}", modelName);
         if (modelTitle != null) {
             modelTitle.setText(modelName + " Models");
         }
         Platform.runLater(() -> {
-            if (flow_Pane != null) {
-                logger.info("FlowPane is available, loading car cards for model: {}", modelName);
-                loadCarCards();
-            } else {
-                logger.error("FlowPane is null!");
-            }
+            refreshCarData();
         });
+    }
+
+    public void refreshCarData() {
+        if (flow_Pane != null && selectedModel != null) {
+            logger.info("Refreshing car cards for model: {}", selectedModel);
+            loadCarCards();
+        } else {
+            logger.warn("Cannot refresh - flow_Pane: {}, selectedModel: {}", flow_Pane != null, selectedModel);
+        }
     }
 
     private void loadCarCards() {
@@ -79,31 +127,57 @@ public class staffModelSelectController implements Initializable {
             } else {
                 cars = carDAO.getAllCars();
             }
+
             if (cars == null) {
-                logger.error("getCarsByModelName() returned null!");
+                logger.error("CarDAO returned null!");
                 return;
             }
-            if (cars.isEmpty()) {
-                logger.warn("No cars found in database for model: {}", selectedModel);
-                return;
-            }
-            logger.info("Found {} cars for model: {}", cars.size(), selectedModel);
-            flow_Pane.getChildren().clear();
-            for (car carData : cars) {
-                try {
-                    logger.info("Creating card for car: {} (ID: {})", carData.getModelName(), carData.getCarId());
-                    VBox card = createCarCard(carData);
-                    flow_Pane.getChildren().add(card);
-                    logger.info("Successfully added car card: {}", carData.getModelName());
-                } catch (Exception e) {
-                    logger.error("Unexpected error creating card for: " + carData.getModelName(), e);
+
+            List<car> uniqueCars = getUniqueCarsByModelAndTrim(cars);
+
+            Platform.runLater(() -> {
+                if (uniqueCars.isEmpty()) {
+                    logger.warn("No cars found in database for model: {}", selectedModel);
+                    showNoCarsMessage();
+                    return;
                 }
-            }
-            logger.info("Finished loading {} car cards", flow_Pane.getChildren().size());
+
+                logger.info("Found {} unique cars for model: {}", uniqueCars.size(), selectedModel);
+                flow_Pane.getChildren().clear();
+
+                for (car carData : uniqueCars) {
+                    try {
+                        VBox card = createCarCard(carData);
+                        flow_Pane.getChildren().add(card);
+                    } catch (Exception e) {
+                        logger.error("Unexpected error creating card for: {} {}", carData.getModelName(), carData.getTrimName(), e);
+                    }
+                }
+            });
         } catch (Exception e) {
             logger.error("Failed to load cars from database", e);
-            e.printStackTrace();
+            showErrorAlert("Database Error", "Failed to load cars: " + e.getMessage());
         }
+    }
+
+    private List<car> getUniqueCarsByModelAndTrim(List<car> cars) {
+        Map<String, car> uniqueCarsMap = new LinkedHashMap<>();
+        for (car carData : cars) {
+            String key = carData.getModelName() + "_" + carData.getTrimName();
+            if (!uniqueCarsMap.containsKey(key)) {
+                uniqueCarsMap.put(key, carData);
+            }
+        }
+        return new ArrayList<>(uniqueCarsMap.values());
+    }
+
+    private void showNoCarsMessage() {
+        Platform.runLater(() -> {
+            Label noCarsLabel = new Label("No cars found for " + selectedModel);
+            noCarsLabel.getStyleClass().add("no-cars-message");
+            flow_Pane.getChildren().clear();
+            flow_Pane.getChildren().add(noCarsLabel);
+        });
     }
 
     private VBox createCarCard(car carData) {
@@ -125,24 +199,7 @@ public class staffModelSelectController implements Initializable {
         carImage.setSmooth(true);
         carImage.getStyleClass().add("car-image");
 
-        String imagePath = carData.getCarPhoto();
-        if (imagePath != null && !imagePath.isEmpty()) {
-            try (InputStream stream = getClass().getResourceAsStream(imagePath)) {
-                if (stream != null) {
-                    carImage.setImage(new Image(stream));
-                    logger.debug("Loaded car image: {}", imagePath);
-                } else {
-                    logger.warn("Image not found: {}", imagePath);
-                    loadPlaceholderImage(carImage);
-                }
-            } catch (Exception e) {
-                logger.error("Failed to load car image: " + imagePath, e);
-                loadPlaceholderImage(carImage);
-            }
-        } else {
-            loadPlaceholderImage(carImage);
-        }
-
+        loadCarImage(carData, carImage);
         imageContainer.getChildren().add(carImage);
 
         VBox detailsContainer = new VBox(12);
@@ -176,37 +233,100 @@ public class staffModelSelectController implements Initializable {
         return card;
     }
 
-    private void loadPlaceholderImage(ImageView imageView) {
-        String placeholderPath = "/Image/placeholder_car.png";
-        try (InputStream stream = getClass().getResourceAsStream(placeholderPath)) {
+    private void loadCarImage(car carData, ImageView imageView) {
+        String carPhoto = carData.getCarPhoto();
+        if (carPhoto == null || carPhoto.trim().isEmpty()) {
+            loadPlaceholderImage(imageView);
+            return;
+        }
+        String imagePath = carPhoto.trim();
+        Image image = loadImageWithFallbacks(imagePath);
+        if (image != null && !image.isError()) {
+            imageView.setImage(image);
+            return;
+        }
+        loadPlaceholderImage(imageView);
+    }
+
+    private Image loadImageWithFallbacks(String imagePath) {
+        if (imagePath == null || imagePath.isEmpty()) {
+            return null;
+        }
+        try {
+            if (imagePath.startsWith("/")) {
+                InputStream stream = getClass().getResourceAsStream(imagePath);
+                if (stream != null) {
+                    return new Image(stream);
+                }
+            }
+            InputStream stream = getClass().getResourceAsStream("/" + imagePath);
             if (stream != null) {
-                imageView.setImage(new Image(stream));
-                logger.debug("Loaded placeholder image");
+                return new Image(stream);
+            }
+            stream = getClass().getResourceAsStream("/Images/" + imagePath);
+            if (stream != null) {
+                return new Image(stream);
+            }
+            if (imagePath.startsWith("file:")) {
+                return new Image(imagePath);
             } else {
-                logger.error("Placeholder image not found at: {}", placeholderPath);
+                File file = new File(imagePath);
+                if (file.exists()) {
+                    try (FileInputStream fileStream = new FileInputStream(file)) {
+                        return new Image(fileStream);
+                    }
+                }
             }
         } catch (Exception e) {
-            logger.error("Failed to load placeholder image", e);
+            logger.warn("Error loading image: {}", imagePath, e);
         }
+        return null;
+    }
+
+    private void loadPlaceholderImage(ImageView imageView) {
+        String[] placeholderPaths = {
+                "/Images/placeholder_car.png",
+                "/Images/911_select_model.png",
+                "/Images/placeholder.png",
+                "/Images/placeholder_car.jpg",
+                "/Images/placeholder_car.jpeg"
+        };
+        for (String path : placeholderPaths) {
+            try {
+                InputStream stream = getClass().getResourceAsStream(path);
+                if (stream != null) {
+                    Image image = new Image(stream);
+                    imageView.setImage(image);
+                    return;
+                }
+            } catch (Exception e) {
+            }
+        }
+        imageView.setStyle("-fx-background-color: #cccccc; -fx-min-width: 300; -fx-min-height: 200;");
     }
 
     private void navigateToCustomize(car selectedCar) {
         try {
-            logger.info("Navigating to customize page with car: {}", selectedCar.getModelName());
+            CarConfiguration carConfig = new CarConfiguration(selectedCar);
+            SessionStaff.getInstance().setCarConfiguration(carConfig);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffCustomize.fxml"));
             Parent root = loader.load();
             staffCustomizeController controller = loader.getController();
             if (controller != null) {
                 controller.setSelectedCar(selectedCar);
             }
-            Stage stage = (Stage) flow_Pane.getScene().getWindow();
+            Window window = flow_Pane.getScene().getWindow();
             Scene scene = new Scene(root, 1300, 850);
-            DarkModeManager.getInstance().registerScene(scene);
-            stage.setScene(scene);
-            stage.centerOnScreen();
+            if (window instanceof javafx.stage.Stage) {
+                ((javafx.stage.Stage) window).setScene(scene);
+                ((javafx.stage.Stage) window).centerOnScreen();
+            }
         } catch (IOException e) {
             logger.error("Unable to load staffCustomize.fxml", e);
-            e.printStackTrace();
+            showErrorAlert("Navigation Error", "Failed to load customization page: " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("Unexpected error navigating to customize page", e);
+            showErrorAlert("Error", "An unexpected error occurred: " + e.getMessage());
         }
     }
 
@@ -215,13 +335,22 @@ public class staffModelSelectController implements Initializable {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/View/staffCars.fxml"));
             Scene scene = new Scene(root, 1300, 850);
-            DarkModeManager.getInstance().registerScene(scene);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.centerOnScreen();
-            logger.info("Navigated back to staffCars");
+            Window window = ((Node) event.getSource()).getScene().getWindow();
+            if (window instanceof javafx.stage.Stage) {
+                ((javafx.stage.Stage) window).setScene(scene);
+                ((javafx.stage.Stage) window).centerOnScreen();
+            }
         } catch (IOException e) {
             logger.error("Failed to navigate to staffCars", e);
+            showErrorAlert("Navigation Error", "Failed to navigate back: " + e.getMessage());
         }
+    }
+
+    private void showErrorAlert(String title, String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

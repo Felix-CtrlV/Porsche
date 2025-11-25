@@ -1,249 +1,146 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 .root {
-    -porsche-red: #D5001C;
-    -porsche-red-strong: #B00016;
-    -glass-tint: rgba(255,255,255,0.85);
-    -glass-border: rgba(0,0,0,0.06);
-    -muted-gray: #6B6B6B;
-    -muted-gray-2: #9B9B9B;
+    -fx-background-color: #FFFFFF;
+    -fx-font-family: "Inter", "Segoe UI", "Helvetica Neue", sans-serif;
 }
 
-.main-background {
-    -fx-background-color: linear-gradient(to bottom, #FBFBFB 0%, #F3F3F3 100%);
-}
-
-.main-background.dark-mode {
-    -fx-background-color: linear-gradient(to bottom, #060606 0%, #0D0D0D 100%);
-}
-
-.header-container {
-    -fx-background-color: rgba(255,255,255,0.92);
-    -fx-background-radius: 0 0 12 12;
-    -fx-padding: 8 0 12 0;
-    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.06), 10, 0.0, 0, 4);
-    -fx-backdrop-filter: blur(18px);
-    -fx-transition: 250ms ease;
-}
-
-.dark-mode .header-container {
-    -fx-background-color: rgba(18,18,18,0.9);
-}
-
-.nav-bar {
-    -fx-background-color: transparent;
-}
-
-.main-title {
-    -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 28px;
-    -fx-text-fill: #161616;
-    -fx-font-weight: 700;
-    -fx-letter-spacing: -0.4px;
-}
-
-.dark-mode .main-title {
-    -fx-text-fill: #FFFFFF;
-}
-
-.subtitle {
-    -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 13px;
-    -fx-text-fill: var(-muted-gray);
-    -fx-font-weight: 400;
-}
-
-.dark-mode .subtitle {
-    -fx-text-fill: #B8B8B8;
+.header-section {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 20 40;
+    -fx-border-color: rgba(0, 0, 0, 0.06);
+    -fx-border-width: 0 0 1 0;
 }
 
 .back-button {
-    -fx-background-color: rgba(255,255,255,0.9);
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
-    -fx-border-color: rgba(0,0,0,0.06);
-    -fx-border-width: 1px;
-    -fx-padding: 10 20 10 20;
-    -fx-font-family: 'Inter', sans-serif;
+    -fx-background-color: transparent;
+    -fx-text-fill: #000000;
+    -fx-font-size: 13px;
     -fx-font-weight: 600;
-    -fx-font-size: 12px;
-    -fx-text-fill: #161616;
+    -fx-padding: 8 16;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.04), 6, 0, 0, 2);
-    -fx-transition: 180ms ease;
 }
 
 .back-button:hover {
-    -fx-background-color: -porsche-red;
-    -fx-border-color: -porsche-red;
-    -fx-text-fill: white;
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
+    -fx-background-color: #F5F5F5;
+    -fx-border-color: rgba(0, 0, 0, 0.15);
 }
 
-.dark-mode .back-button {
-    -fx-background-color: rgba(22,22,22,0.86);
-    -fx-text-fill: #FFFFFF;
-    -fx-border-color: rgba(255,255,255,0.06);
+.back-button:pressed {
+    -fx-background-color: #EEEEEE;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
 }
 
-.accent-divider {
-    -fx-stroke: -porsche-red;
-    -fx-stroke-width: 2px;
-    -fx-opacity: 0.95;
+.model-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #000000;
 }
 
-.content-container {
-    -fx-background-color: transparent;
-    -fx-padding: 24 0 40 0;
+.model-subtitle {
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #666666;
 }
 
-.models-scroll-pane {
-    -fx-background-color: transparent;
-    -fx-padding: 6 0 20 0;
-}
-
-.models-scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-
-.models-scroll-pane > .scroll-bar:vertical {
-    -fx-background-color: transparent;
-    -fx-pref-width: 8px;
-    -fx-padding: 8 0 8 0;
-}
-
-.models-scroll-pane > .scroll-bar > .thumb {
-    -fx-background-color: rgba(213,0,28,0.18);
-    -fx-background-radius: 6px;
-    -fx-min-height: 40px;
-}
-
-.models-scroll-pane > .scroll-bar > .thumb:hover {
-    -fx-background-color: -porsche-red;
+.cars-flow-pane {
+    -fx-padding: 36 40;
+    -fx-hgap: 20;
+    -fx-vgap: 20;
+    -fx-alignment: center;
 }
 
 .car-card {
-    -fx-background-color: rgba(255,255,255,0.88);
-    -fx-background-radius: 16px;
-    -fx-border-color: -glass-border;
-    -fx-border-width: 1px;
-    -fx-border-radius: 16px;
-    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.04), 12, 0, 0, 6);
-    -fx-pref-width: 320px;
-    -fx-pref-height: 380px;
-    -fx-alignment: top-center;
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(0, 0, 0, 0.08);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
     -fx-cursor: hand;
-    -fx-transition: 240ms cubic-bezier(.2,.8,.2,1);
 }
 
 .car-card:hover {
-    -fx-border-color: rgba(213,0,28,0.24);
-    -fx-translate-y: -6;
-}
-
-.dark-mode .car-card {
-    -fx-background-color: rgba(22,22,22,0.92);
-    -fx-border-color: rgba(255,255,255,0.04);
+    -fx-border-color: #D5001C;
+    -fx-translate-y: -2;
 }
 
 .image-container {
-    -fx-background-color: rgba(250,250,250,0.6);
-    -fx-background-radius: 14px 14px 0 0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 20 16;
     -fx-alignment: center;
-    -fx-padding: 12 0 12 0;
-    -fx-backdrop-filter: blur(10px);
 }
 
-.dark-mode .image-container {
-    -fx-background-color: rgba(20,20,20,0.54);
+.car-image {
+    -fx-smooth: true;
 }
 
 .details-container {
-    -fx-background-color: transparent;
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 0 0 12 12;
+    -fx-padding: 16 20 20 20;
+    -fx-spacing: 8;
     -fx-alignment: center;
-    -fx-padding: 18 20 24 20;
 }
 
 .model-name {
-    -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 17px;
+    -fx-font-size: 18px;
     -fx-font-weight: 700;
-    -fx-text-fill: #161616;
-    -fx-text-alignment: center;
-}
-
-.dark-mode .model-name {
-    -fx-text-fill: #FFFFFF;
+    -fx-text-fill: #000000;
+    -fx-alignment: center;
 }
 
 .model-price {
-    -fx-font-family: 'Inter', sans-serif;
     -fx-font-size: 22px;
-    -fx-font-weight: 800;
-    -fx-text-fill: -porsche-red;
-    -fx-padding: 6 0 6 0;
+    -fx-font-weight: 700;
+    -fx-text-fill: #D5001C;
 }
 
 .model-info {
-    -fx-font-family: 'Inter', sans-serif;
     -fx-font-size: 12px;
     -fx-font-weight: 500;
-    -fx-text-fill: var(-muted-gray);
-    -fx-padding: 2 0 8 0;
-}
-
-.dark-mode .model-info {
-    -fx-text-fill: #B8B8B8;
+    -fx-text-fill: #888888;
 }
 
 .customize-button {
-    -fx-background-color: -porsche-red;
-    -fx-text-fill: white;
-    -fx-font-family: 'Inter', sans-serif;
-    -fx-font-weight: 700;
+    -fx-background-color: #D5001C;
+    -fx-text-fill: #FFFFFF;
     -fx-font-size: 12px;
-    -fx-letter-spacing: 0.6px;
-    -fx-padding: 10 28 10 28;
-    -fx-background-radius: 8px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.8px;
+    -fx-padding: 9 22;
+    -fx-background-radius: 6;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(one-pass-box, rgba(213,0,28,0.12), 6, 0, 0, 4);
-    -fx-transition: 180ms ease;
 }
 
 .customize-button:hover {
-    -fx-background-color: -porsche-red-strong;
-    -fx-scale-y: 1.03;
+    -fx-background-color: #B8001A;
 }
 
-.footer-container {
-    -fx-background-color: rgba(255,255,255,0.9);
-    -fx-background-radius: 12 12 0 0;
-    -fx-padding: 10 0 12 0;
-    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.03), 8, 0, 0, 4);
-    -fx-backdrop-filter: blur(14px);
+.customize-button:pressed {
+    -fx-background-color: #9C0016;
+    -fx-scale-x: 0.96;
+    -fx-scale-y: 0.96;
 }
 
-.dark-mode .footer-container {
-    -fx-background-color: rgba(18,18,18,0.9);
+.no-cars-message {
+    -fx-text-fill: #666666;
+    -fx-font-size: 16px;
+    -fx-font-weight: normal;
+    -fx-padding: 40px;
 }
 
-.footer-divider {
-    -fx-stroke: rgba(0,0,0,0.06);
-    -fx-stroke-width: 1px;
+.refresh-button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-border-radius: 4px;
+    -fx-cursor: hand;
 }
 
-.dark-mode .footer-divider {
-    -fx-stroke: rgba(255,255,255,0.06);
-}
-
-.footer-text {
-    -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 10px;
-    -fx-text-fill: var(-muted-gray-2);
-    -fx-letter-spacing: 1.5px;
-}
-
-.dark-mode .footer-text {
-    -fx-text-fill: #808080;
+.refresh-button:hover {
+    -fx-background-color: #0056b3;
 }

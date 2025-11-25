@@ -1,47 +1,71 @@
 package Model;
 
 public class CarConfiguration {
-    private car carData;
+    private car baseCar;
+    private CustomizationOption selectedColor;
+    private CustomizationOption selectedInterior;
+
     private String modelName;
     private String modelImagePath;
     private String frameNumber;
     private String fuelType;
     private String description;
-    private CustomizationOption selectedWheel;
-    private CustomizationOption selectedColor;
-    private CustomizationOption selectedInterior;
     private double basePrice;
+    private double totalPrice;
 
     public CarConfiguration() {
-        this.carData = new car();
+        this.basePrice = 0;
+        this.totalPrice = 0;
     }
 
-    public CarConfiguration(car existingCar) {
-        this.carData = existingCar;
-        this.basePrice = existingCar.getPrice();
+    public CarConfiguration(car baseCar) {
+        this.baseCar = baseCar;
+        this.basePrice = baseCar.getPrice();
+        this.totalPrice = basePrice;
+        this.modelName = baseCar.getFullName();
+        this.modelImagePath = baseCar.getCarPhoto();
+        this.frameNumber = String.valueOf(baseCar.getCarId());
+        this.fuelType = baseCar.getFuelType();
+        this.description = baseCar.getCarDescription();
     }
 
-    public car getCarData() {
-        return carData;
-    }
+    public void updateCarPrice() {
+        double optionTotal = 0;
 
-    public void setCarData(car carData) {
-        this.carData = carData;
-        if (carData != null) {
-            this.basePrice = carData.getPrice();
+        if (selectedColor != null && selectedColor.getPrice() > 0) {
+            optionTotal += selectedColor.getPrice();
         }
+        if (selectedInterior != null && selectedInterior.getPrice() > 0) {
+            optionTotal += selectedInterior.getPrice();
+        }
+
+        this.totalPrice = this.basePrice + optionTotal;
+    }
+
+    public car getBaseCar() { return baseCar; }
+
+    public void setBaseCar(car baseCar) {
+        this.baseCar = baseCar;
+        this.basePrice = baseCar.getPrice();
+        this.totalPrice = basePrice;
+    }
+
+    public CustomizationOption getSelectedColor() { return selectedColor; }
+
+    public void setSelectedColor(CustomizationOption selectedColor) {
+        this.selectedColor = selectedColor;
+        updateCarPrice();
+    }
+
+    public CustomizationOption getSelectedInterior() { return selectedInterior; }
+
+    public void setSelectedInterior(CustomizationOption selectedInterior) {
+        this.selectedInterior = selectedInterior;
+        updateCarPrice();
     }
 
     public String getModelName() { return modelName; }
     public void setModelName(String modelName) { this.modelName = modelName; }
-
-    public double getBasePrice() { return basePrice; }
-    public void setBasePrice(double basePrice) {
-        this.basePrice = basePrice;
-        if (carData != null) {
-            carData.setPrice(basePrice);
-        }
-    }
 
     public String getModelImagePath() { return modelImagePath; }
     public void setModelImagePath(String modelImagePath) { this.modelImagePath = modelImagePath; }
@@ -55,93 +79,42 @@ public class CarConfiguration {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public CustomizationOption getSelectedWheel() { return selectedWheel; }
-    public void setSelectedWheel(CustomizationOption selectedWheel) {
-        this.selectedWheel = selectedWheel;
+    public double getBasePrice() { return basePrice; }
+
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
+        updateCarPrice();
     }
 
-    public CustomizationOption getSelectedColor() {
-        return selectedColor;
-    }
-
-    public void setSelectedColor(CustomizationOption selectedColor) {
-        this.selectedColor = selectedColor;
-
-        if (carData != null && selectedColor != null) {
-            carData.setCarColor(selectedColor.getName());
-        }
-    }
-
-    public CustomizationOption getSelectedInterior() { return selectedInterior; }
-    public void setSelectedInterior(CustomizationOption selectedInterior) {
-        this.selectedInterior = selectedInterior;
-
-        if (carData != null && selectedInterior != null) {
-            carData.setInteriorColor(selectedInterior.getName());
-        }
-    }
-
-    public double getTotalPrice() {
-        double total = basePrice;
-        if (selectedWheel != null && !selectedWheel.isStandard()) {
-            total += selectedWheel.getPrice();
-        }
-        if (selectedColor != null && !selectedColor.isStandard()) {
-            total += selectedColor.getPrice();
-        }
-        if (selectedInterior != null && !selectedInterior.isStandard()) {
-            total += selectedInterior.getPrice();
-        }
-        return total;
-    }
+    public double getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
 
     public String getFormattedTotalPrice() {
-        return String.format("$%,d", (int) getTotalPrice());
-    }
-
-    public void updateCarPrice() {
-        if (carData != null) {
-            carData.setPrice(getTotalPrice());
-        }
+        return String.format("$%,d", (int) totalPrice);
     }
 
     public int getCarId() {
-        return carData != null ? carData.getCarId() : 0;
+        return baseCar != null ? baseCar.getCarId() : 0;
     }
 
-    public String getCarColor() {
-        return carData != null ? carData.getCarColor() : "";
-    }
+    public String getSelectedOptionsSummary() {
+        StringBuilder summary = new StringBuilder();
 
-    public String getInteriorColor() {
-        return carData != null ? carData.getInteriorColor() : "";
-    }
+        if (selectedColor != null) {
+            summary.append("Color: ").append(selectedColor.getName());
+            if (selectedColor.getPrice() > 0) {
+                summary.append(" (+$").append((int)selectedColor.getPrice()).append(")");
+            }
+            summary.append("\n");
+        }
 
-    public int getProductionYear() {
-        return carData != null ? carData.getProductionYear() : 0;
-    }
+        if (selectedInterior != null) {
+            summary.append("Interior: ").append(selectedInterior.getName());
+            if (selectedInterior.getPrice() > 0) {
+                summary.append(" (+$").append((int)selectedInterior.getPrice()).append(")");
+            }
+        }
 
-    public String getStatus() {
-        return carData != null ? carData.getCarStatus() : "";
-    }
-
-    public String getTrimName() {
-        return carData != null ? carData.getTrimName() : "";
-    }
-
-    public long getCarSpeed() {
-        return carData != null ? carData.getCarSpeed() : 0;
-    }
-
-    public String getCarQty() {
-        return carData != null ? carData.getCarQty() : "0";
-    }
-
-    public String getCarPhoto() {
-        return carData != null ? carData.getCarPhoto() : "";
-    }
-
-    public String getCarDescription() {
-        return carData != null ? carData.getCarDescription() : "";
+        return summary.toString();
     }
 }
