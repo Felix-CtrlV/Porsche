@@ -346,7 +346,6 @@
     -fx-background-radius: 16;
 }
 
-/* Popup menu button styles */
 .popup-menu-button {
     -fx-text-fill: white;
     -fx-background-color: transparent;
@@ -372,26 +371,26 @@
 }
 
 .square-button {
-    -fx-background-color: #ff4444; /* Changed from #d4af37 to red */
+    -fx-background-color: #ff4444;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 5;
 }
 
 .square-button:hover {
-    -fx-background-color: #cc3333; /* Darker red for hover */
+    -fx-background-color: #cc3333;
 }
 
 .transparent-button {
     -fx-background-color: transparent;
-    -fx-text-fill: #ff4444; /* Changed from #d4af37 to red */
+    -fx-text-fill: #ff4444;
     -fx-font-weight: bold;
 }
 
 .transparent-button:hover {
-    -fx-text-fill: #cc3333; /* Darker red for hover */
+    -fx-text-fill: #cc3333;
 }
-/* Payment Management Table Styling */
+
 .payment-table {
     -fx-background-color: #1a1a1a;
     -fx-text-fill: white;
@@ -451,7 +450,6 @@
     -fx-border-color: transparent;
 }
 
-/* Status column specific styling - WHITE TEXT */
 .status-column .table-cell {
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -472,7 +470,6 @@
     -fx-font-weight: bold;
 }
 
-/* Button styling */
 .pay-button {
     -fx-background-color: #4CAF50;
     -fx-text-fill: white;
@@ -491,7 +488,6 @@
     -fx-font-weight: bold;
 }
 
-/* Payment popup styling */
 .payment-popup {
     -fx-background-color: #1a1a1a;
     -fx-border-color: #333;
@@ -518,7 +514,6 @@
     -fx-text-fill: #4CAF50;
 }
 
-/* Scrollbar styling for dark theme */
 .payment-table .scroll-bar:horizontal,
 .payment-table .scroll-bar:vertical {
     -fx-background-color: #2a2a2a;
@@ -635,4 +630,67 @@
 
 .security-popup-button:pressed {
     -fx-background-color: #990000;
+}
+
+.logout-confirm-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.8);
+}
+
+.logout-confirm-container {
+    -fx-background-color: #1a1a1a;
+    -fx-border-color: #333;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 2);
+}
+
+.logout-confirm-title {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.logout-confirm-message {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 13px;
+    -fx-alignment: center;
+}
+
+.logout-cancel-button {
+    -fx-background-color: #666;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 6 15 6 15;
+    -fx-cursor: hand;
+    -fx-background-radius: 4;
+    -fx-min-width: 70;
+}
+
+.logout-cancel-button:hover {
+    -fx-background-color: #777;
+}
+
+.logout-cancel-button:pressed {
+    -fx-background-color: #555;
+}
+
+.logout-confirm-button {
+    -fx-background-color: #d5001f;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 6 15 6 15;
+    -fx-cursor: hand;
+    -fx-background-radius: 4;
+    -fx-min-width: 70;
+}
+
+.logout-confirm-button:hover {
+    -fx-background-color: #ff4444;
+}
+
+.logout-confirm-button:pressed {
+    -fx-background-color: #a00015;
 }

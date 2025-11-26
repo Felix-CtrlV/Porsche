@@ -14,7 +14,6 @@
             <Label fx:id="modelTitle" styleClass="model-title" text="Models" />
             <Label styleClass="model-subtitle" text="Select a model to customize" />
         </VBox>
-        <Button fx:id="refreshButton" styleClass="refresh-button" onAction="#handleRefresh" text="⟳" />
     </HBox>
     <FlowPane fx:id="flow_Pane" styleClass="cars-flow-pane" />
 </VBox>

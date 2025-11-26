@@ -44,7 +44,6 @@ import javafx.geometry.Pos;
 import java.util.Objects;
 
 public class staffWelcomeController {
-
     private static final Logger logger = LoggerFactory.getLogger(staffWelcomeController.class);
 
     @FXML private AnchorPane rootPane;
@@ -86,6 +85,9 @@ public class staffWelcomeController {
     @FXML private Button logoutButton;
     @FXML private StackPane securityAlertOverlay;
     @FXML private Label securityAlertMessage;
+    @FXML private StackPane logoutConfirmOverlay;
+    @FXML private Button logoutCancelBtn;
+    @FXML private Button logoutConfirmBtn;
 
     private boolean isProfileMenuOpen = false;
     private boolean isPaymentMenuOpen = false;
@@ -107,12 +109,58 @@ public class staffWelcomeController {
         initializePasswordVerification();
         checkAccountLockStatus();
         setupLogoutButton();
+        setupLogoutConfirmOverlay();
 
-        // Ensure security alert overlay starts hidden
         if (securityAlertOverlay != null) {
             securityAlertOverlay.setVisible(false);
             securityAlertOverlay.setManaged(false);
         }
+    }
+
+    private void setupLogoutConfirmOverlay() {
+        if (logoutConfirmOverlay != null) {
+            logoutConfirmOverlay.setVisible(false);
+            logoutConfirmOverlay.setManaged(false);
+        }
+    }
+
+    @FXML
+    private void handleLogoutCancel() {
+        hideLogoutConfirmOverlay();
+    }
+
+    @FXML
+    private void handleLogoutConfirm() {
+        hideLogoutConfirmOverlay();
+        performPorscheLogoutAnimation();
+    }
+
+    private void showLogoutConfirmOverlay() {
+        logoutConfirmOverlay.setVisible(true);
+        logoutConfirmOverlay.setManaged(true);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(200), logoutConfirmOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
+        if (mainContent != null) {
+            mainContent.setDisable(true);
+        }
+    }
+
+    private void hideLogoutConfirmOverlay() {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(150), logoutConfirmOverlay);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> {
+            logoutConfirmOverlay.setVisible(false);
+            logoutConfirmOverlay.setManaged(false);
+            if (mainContent != null) {
+                mainContent.setDisable(false);
+            }
+        });
+        fadeOut.play();
     }
 
     private void loadUserInfo() {
@@ -180,174 +228,12 @@ public class staffWelcomeController {
     private void setupLogoutButton() {
         if (logoutButton != null) {
             logoutButton.setOnAction(e -> handleLogout());
-
-            logoutButton.setStyle("-fx-background-color: transparent; " +
-                    "-fx-text-fill: #d5001f; " +
-                    "-fx-font-weight: bold; " +
-                    "-fx-font-size: 14px; " +
-                    "-fx-border-color: #d5001f; " +
-                    "-fx-border-width: 2; " +
-                    "-fx-border-radius: 5; " +
-                    "-fx-background-radius: 5; " +
-                    "-fx-cursor: hand; " +
-                    "-fx-padding: 8 16 8 16;");
-
-            logoutButton.setOnMouseEntered(e -> {
-                logoutButton.setStyle("-fx-background-color: #d5001f; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-font-size: 14px; " +
-                        "-fx-border-color: #d5001f; " +
-                        "-fx-border-width: 2; " +
-                        "-fx-border-radius: 5; " +
-                        "-fx-background-radius: 5; " +
-                        "-fx-cursor: hand; " +
-                        "-fx-padding: 8 16 8 16; " +
-                        "-fx-effect: dropshadow(gaussian, rgba(213, 0, 31, 0.5), 10, 0.5, 0, 0);");
-            });
-
-            logoutButton.setOnMouseExited(e -> {
-                logoutButton.setStyle("-fx-background-color: transparent; " +
-                        "-fx-text-fill: #d5001f; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-font-size: 14px; " +
-                        "-fx-border-color: #d5001f; " +
-                        "-fx-border-width: 2; " +
-                        "-fx-border-radius: 5; " +
-                        "-fx-background-radius: 5; " +
-                        "-fx-cursor: hand; " +
-                        "-fx-padding: 8 16 8 16; " +
-                        "-fx-effect: null;");
-            });
         }
     }
 
     @FXML
     private void handleLogout() {
-        try {
-            Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmAlert.setTitle("Confirm Logout");
-            confirmAlert.setHeaderText("CONFIRM LOGOUT");
-            confirmAlert.setContentText("Are you sure you want to logout from the system?\n\nYou will need to login again to access all features.");
-
-            DialogPane dialogPane = confirmAlert.getDialogPane();
-            dialogPane.setStyle("-fx-background-color: #000000; " +
-                    "-fx-border-color: #d5001f; " +
-                    "-fx-border-width: 2; " +
-                    "-fx-background-radius: 10; " +
-                    "-fx-border-radius: 10;");
-
-            dialogPane.lookup(".content.label").setStyle("-fx-text-fill: #ffffff; " +
-                    "-fx-font-size: 14px; " +
-                    "-fx-font-weight: bold; " +
-                    "-fx-alignment: center;");
-
-            dialogPane.lookup(".header-panel").setStyle("-fx-background-color: #000000;");
-            dialogPane.lookup(".header-panel .label").setStyle("-fx-text-fill: #d5001f; " +
-                    "-fx-font-size: 18px; " +
-                    "-fx-font-weight: bold; " +
-                    "-fx-alignment: center;");
-
-            ButtonType yesButton = new ButtonType("CONFIRM LOGOUT", ButtonBar.ButtonData.YES);
-            ButtonType noButton = new ButtonType("CANCEL", ButtonBar.ButtonData.NO);
-            confirmAlert.getButtonTypes().setAll(yesButton, noButton);
-
-            confirmAlert.showAndWait().ifPresent(response -> {
-                if (response == yesButton) {
-                    performPorscheLogoutAnimation();
-                }
-            });
-
-            Platform.runLater(() -> {
-                Node yesButtonNode = dialogPane.lookupButton(yesButton);
-                if (yesButtonNode instanceof Button) {
-                    Button yesBtn = (Button) yesButtonNode;
-                    yesBtn.setStyle("-fx-background-color: #d5001f; " +
-                            "-fx-text-fill: white; " +
-                            "-fx-font-weight: bold; " +
-                            "-fx-font-size: 14px; " +
-                            "-fx-background-radius: 5; " +
-                            "-fx-border-radius: 5; " +
-                            "-fx-padding: 10 20 10 20; " +
-                            "-fx-cursor: hand;");
-
-                    yesBtn.setOnMouseEntered(e -> {
-                        yesBtn.setStyle("-fx-background-color: #ff4444; " +
-                                "-fx-text-fill: white; " +
-                                "-fx-font-weight: bold; " +
-                                "-fx-font-size: 14px; " +
-                                "-fx-background-radius: 5; " +
-                                "-fx-border-radius: 5; " +
-                                "-fx-padding: 10 20 10 20; " +
-                                "-fx-cursor: hand; " +
-                                "-fx-scale-x: 1.05; " +
-                                "-fx-scale-y: 1.05;");
-                    });
-
-                    yesBtn.setOnMouseExited(e -> {
-                        yesBtn.setStyle("-fx-background-color: #d5001f; " +
-                                "-fx-text-fill: white; " +
-                                "-fx-font-weight: bold; " +
-                                "-fx-font-size: 14px; " +
-                                "-fx-background-radius: 5; " +
-                                "-fx-border-radius: 5; " +
-                                "-fx-padding: 10 20 10 20; " +
-                                "-fx-cursor: hand; " +
-                                "-fx-scale-x: 1.0; " +
-                                "-fx-scale-y: 1.0;");
-                    });
-                }
-
-                Node noButtonNode = dialogPane.lookupButton(noButton);
-                if (noButtonNode instanceof Button) {
-                    Button noBtn = (Button) noButtonNode;
-                    noBtn.setStyle("-fx-background-color: #000000; " +
-                            "-fx-text-fill: #ffffff; " +
-                            "-fx-font-weight: bold; " +
-                            "-fx-font-size: 14px; " +
-                            "-fx-background-radius: 5; " +
-                            "-fx-border-radius: 5; " +
-                            "-fx-padding: 10 20 10 20; " +
-                            "-fx-cursor: hand; " +
-                            "-fx-border-color: #ffffff; " +
-                            "-fx-border-width: 1;");
-
-                    noBtn.setOnMouseEntered(e -> {
-                        noBtn.setStyle("-fx-background-color: #333333; " +
-                                "-fx-text-fill: #ffffff; " +
-                                "-fx-font-weight: bold; " +
-                                "-fx-font-size: 14px; " +
-                                "-fx-background-radius: 5; " +
-                                "-fx-border-radius: 5; " +
-                                "-fx-padding: 10 20 10 20; " +
-                                "-fx-cursor: hand; " +
-                                "-fx-border-color: #ffffff; " +
-                                "-fx-border-width: 1; " +
-                                "-fx-scale-x: 1.05; " +
-                                "-fx-scale-y: 1.05;");
-                    });
-
-                    noBtn.setOnMouseExited(e -> {
-                        noBtn.setStyle("-fx-background-color: #000000; " +
-                                "-fx-text-fill: #ffffff; " +
-                                "-fx-font-weight: bold; " +
-                                "-fx-font-size: 14px; " +
-                                "-fx-background-radius: 5; " +
-                                "-fx-border-radius: 5; " +
-                                "-fx-padding: 10 20 10 20; " +
-                                "-fx-cursor: hand; " +
-                                "-fx-border-color: #ffffff; " +
-                                "-fx-border-width: 1; " +
-                                "-fx-scale-x: 1.0; " +
-                                "-fx-scale-y: 1.0;");
-                    });
-                }
-            });
-
-        } catch (Exception e) {
-            logger.error("Error during logout confirmation", e);
-            performLogout();
-        }
+        showLogoutConfirmOverlay();
     }
 
     private void performPorscheLogoutAnimation() {
@@ -368,9 +254,7 @@ public class staffWelcomeController {
             }
 
             Label logoutLabel = new Label("Logging out | Thank you for your work");
-            logoutLabel.setStyle("-fx-text-fill: white; " +
-                    "-fx-font-size: 24px; " +
-                    "-fx-font-weight: bold; ");
+            logoutLabel.setStyle("-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold; ");
             logoutLabel.setOpacity(0);
 
             VBox animationContent = new VBox(20, porscheLogo, logoutLabel);
@@ -557,17 +441,14 @@ public class staffWelcomeController {
 
     private void showTooManyAttemptsPopup() {
         Platform.runLater(() -> {
-            // Show the security alert overlay
             securityAlertOverlay.setVisible(true);
             securityAlertOverlay.setManaged(true);
 
-            // Add fade-in animation
             FadeTransition fadeIn = new FadeTransition(Duration.millis(300), securityAlertOverlay);
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
             fadeIn.play();
 
-            // Disable interaction with other elements
             if (mainContent != null) {
                 mainContent.setDisable(true);
             }
@@ -576,7 +457,6 @@ public class staffWelcomeController {
 
     @FXML
     private void handleSecurityAlertOk() {
-        // Hide the security alert
         FadeTransition fadeOut = new FadeTransition(Duration.millis(200), securityAlertOverlay);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
@@ -584,12 +464,10 @@ public class staffWelcomeController {
             securityAlertOverlay.setVisible(false);
             securityAlertOverlay.setManaged(false);
 
-            // Re-enable interaction with other elements
             if (mainContent != null) {
                 mainContent.setDisable(false);
             }
 
-            // Proceed with logout
             forceLogoutDueToSecurity();
         });
         fadeOut.play();
@@ -597,7 +475,6 @@ public class staffWelcomeController {
 
     private void forceLogoutDueToSecurity() {
         try {
-            // Ensure popup is hidden
             if (securityAlertOverlay != null) {
                 securityAlertOverlay.setVisible(false);
                 securityAlertOverlay.setManaged(false);
@@ -1137,6 +1014,9 @@ public class staffWelcomeController {
             if (passwordVerifyPane.isVisible() && !isClickInsidePasswordVerification(event)) {
                 hidePasswordVerification();
             }
+            if (logoutConfirmOverlay.isVisible() && !isClickInsideLogoutConfirm(event)) {
+                hideLogoutConfirmOverlay();
+            }
         });
     }
 
@@ -1151,6 +1031,10 @@ public class staffWelcomeController {
 
     private boolean isClickInsidePasswordVerification(MouseEvent event) {
         return passwordVerifyPane.getBoundsInParent().contains(event.getX(), event.getY());
+    }
+
+    private boolean isClickInsideLogoutConfirm(MouseEvent event) {
+        return logoutConfirmOverlay.getBoundsInParent().contains(event.getX(), event.getY());
     }
 
     private void loadProfilePicture(String userPhotoPath) {
@@ -1197,15 +1081,13 @@ public class staffWelcomeController {
 
     @FXML
     private void onSettingsButtonEntered(MouseEvent event) {
-        settingsButton.setStyle("-fx-background-color: rgba(255,255,255,0.1); -fx-cursor: hand; " +
-                "-fx-text-fill: white; -fx-font-size: 20; -fx-padding: 8 8 8 8;");
+        settingsButton.setStyle("-fx-background-color: rgba(255,255,255,0.1); -fx-cursor: hand; -fx-text-fill: white; -fx-font-size: 20; -fx-padding: 8 8 8 8;");
         settingsButtonScale.play();
     }
 
     @FXML
     private void onSettingsButtonExited(MouseEvent event) {
-        settingsButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand; " +
-                "-fx-text-fill: white; -fx-font-size: 20; -fx-padding: 8 8 8 8;");
+        settingsButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-text-fill: white; -fx-font-size: 20; -fx-padding: 8 8 8 8;");
 
         ScaleTransition reverseScale = new ScaleTransition(Duration.millis(200), settingsButton);
         reverseScale.setToX(1.0);
@@ -1533,9 +1415,7 @@ public class staffWelcomeController {
 
     private void navigateToCarManagement() throws IOException {
         String[] possiblePaths = {
-                "/Fxml/staffCars.fxml",
                 "/View/staffCars.fxml",
-                "/staffCars.fxml"
         };
 
         for (String path : possiblePaths) {
@@ -1543,10 +1423,10 @@ public class staffWelcomeController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
                 Parent root = loader.load();
                 Stage stage = (Stage) rootPane.getScene().getWindow();
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
+                stage.setScene(new Scene(root));
                 stage.setTitle("Car Management");
                 stage.centerOnScreen();
+                stage.setFullScreen(true);
                 return;
             } catch (Exception e) {
             }
@@ -1566,10 +1446,10 @@ public class staffWelcomeController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
                 Parent root = loader.load();
                 Stage stage = (Stage) rootPane.getScene().getWindow();
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
+                stage.setScene(new Scene(root));
                 stage.setTitle("Accessory Management");
                 stage.centerOnScreen();
+                stage.setFullScreen(true);
                 return;
             } catch (Exception e) {
             }

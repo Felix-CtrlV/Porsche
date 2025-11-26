@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -29,6 +28,7 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class staffShopingCartController {
@@ -38,8 +38,6 @@ public class staffShopingCartController {
     @FXML private Label modelLabel;
     @FXML private Label totalPriceLabel;
     @FXML private Label basePriceLabel;
-    @FXML private Label colorLabel;
-    @FXML private Label engineLabel;
     @FXML private RadioButton fullPaymentRadio;
     @FXML private RadioButton installmentRadio;
     @FXML private ToggleGroup paymentMethodGroup;
@@ -53,9 +51,9 @@ public class staffShopingCartController {
     @FXML private Label totalWithInterestLabel;
     @FXML private Label summaryBasePriceLabel;
     @FXML private Label accessoriesTotalLabel;
-    @FXML private Label taxLabel;
     @FXML private Button loadAssetButton;
     @FXML private Button backButton;
+    @FXML private Button homeButton;
     @FXML private Button confirmButton;
     @FXML private VBox accessoriesContainer;
     @FXML private VBox accessoriesListContainer;
@@ -78,7 +76,10 @@ public class staffShopingCartController {
     @FXML private TextField customerEmailField;
     @FXML private Label customerErrorLabel;
     @FXML private Button confirmDetailsBtn;
-    @FXML private Button printBtn;
+    @FXML private StackPane successOverlay;
+    @FXML private VBox successPane;
+    @FXML private Label successOrderIdLabel;
+    @FXML private Button successHomeButton;
     @FXML private Label phoneErrorLabel;
 
     private CarConfiguration carConfig;
@@ -117,6 +118,15 @@ public class staffShopingCartController {
             customerInfoPane.setVisible(false);
             customerInfoPane.setManaged(false);
         }
+        if (successOverlay != null) {
+            successOverlay.setVisible(false);
+            successOverlay.setManaged(false);
+        }
+        if (successPane != null) {
+            successPane.setVisible(false);
+            successPane.setManaged(false);
+        }
+
         if (verifyPasswordField != null) {
             verifyPasswordField.setOnKeyPressed(event -> {
                 if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
@@ -133,8 +143,11 @@ public class staffShopingCartController {
         if (confirmDetailsBtn != null) {
             confirmDetailsBtn.setOnAction(e -> onConfirmDetails());
         }
-        if (printBtn != null) {
-            printBtn.setDisable(true);
+        if (successHomeButton != null) {
+            successHomeButton.setOnAction(e -> onSuccessHome());
+        }
+        if (homeButton != null) {
+            homeButton.setOnAction(e -> goHome());
         }
         if (phoneErrorLabel != null) {
             phoneErrorLabel.setVisible(false);
@@ -145,10 +158,26 @@ public class staffShopingCartController {
     private void setupButtonHoverEffects() {
         if (verifyPasswordBtn != null) {
             verifyPasswordBtn.setOnMouseEntered(e -> {
-                verifyPasswordBtn.setStyle("-fx-background-color: #b00016; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 160; -fx-pref-height: 35; -fx-background-radius: 8;");
+                verifyPasswordBtn.setStyle("-fx-background-color: #b00016; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 140; -fx-pref-height: 32; -fx-background-radius: 8;");
             });
             verifyPasswordBtn.setOnMouseExited(e -> {
-                verifyPasswordBtn.setStyle("-fx-background-color: #d5001f; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 160; -fx-pref-height: 35; -fx-background-radius: 8;");
+                verifyPasswordBtn.setStyle("-fx-background-color: #d5001f; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 140; -fx-pref-height: 32; -fx-background-radius: 8;");
+            });
+        }
+        if (successHomeButton != null) {
+            successHomeButton.setOnMouseEntered(e -> {
+                successHomeButton.setStyle("-fx-background-color: #45a049; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 160; -fx-pref-height: 40; -fx-background-radius: 10; -fx-font-size: 14;");
+            });
+            successHomeButton.setOnMouseExited(e -> {
+                successHomeButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 160; -fx-pref-height: 40; -fx-background-radius: 10; -fx-font-size: 14;");
+            });
+        }
+        if (homeButton != null) {
+            homeButton.setOnMouseEntered(e -> {
+                homeButton.setStyle("-fx-background-color: #D5001C; -fx-text-fill: #FFFFFF; -fx-border-color: #D5001C; -fx-scale-x: 1.05; -fx-scale-y: 1.05;");
+            });
+            homeButton.setOnMouseExited(e -> {
+                homeButton.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8); -fx-text-fill: #D5001C; -fx-border-color: rgba(213, 0, 28, 0.3); -fx-scale-x: 1.0; -fx-scale-y: 1.0;");
             });
         }
     }
@@ -334,7 +363,6 @@ public class staffShopingCartController {
 
     private void resetAllPricesToZero() {
         if (accessoriesTotalLabel != null) accessoriesTotalLabel.setText("$0.00");
-        if (taxLabel != null) taxLabel.setText("$0.00");
         if (totalPriceLabel != null) totalPriceLabel.setText("$0.00");
         if (summaryBasePriceLabel != null) summaryBasePriceLabel.setText("$0.00");
         if (basePriceLabel != null) basePriceLabel.setText("$0.00");
@@ -346,20 +374,11 @@ public class staffShopingCartController {
             if (modelLabel != null) modelLabel.setText(carConfig.getModelName());
             if (totalPriceLabel != null) totalPriceLabel.setText(String.format("$%,.2f", carConfig.getTotalPrice()));
             if (basePriceLabel != null) basePriceLabel.setText(String.format("$%,.2f", carConfig.getBasePrice()));
-            if (colorLabel != null) colorLabel.setText("Jet Black Metallic");
-            if (engineLabel != null) engineLabel.setText("3.0L Twin-Turbo V6");
             if (summaryBasePriceLabel != null) summaryBasePriceLabel.setText(String.format("$%,.2f", carConfig.getBasePrice()));
             double accessoriesTotal = calculateAccessoriesTotal();
             if (accessoriesTotalLabel != null) accessoriesTotalLabel.setText(String.format("$%,.2f", accessoriesTotal));
-            double totalWithAccessories = carConfig.getTotalPrice() + accessoriesTotal;
-            if (totalWithAccessories > 0) {
-                double tax = totalWithAccessories * 0.08;
-                double grandTotal = totalWithAccessories + tax;
-                if (taxLabel != null) taxLabel.setText(String.format("$%,.2f", tax));
-                if (totalPriceLabel != null) totalPriceLabel.setText(String.format("$%,.2f", grandTotal));
-            } else {
-                resetAllPricesToZero();
-            }
+            double grandTotal = carConfig.getTotalPrice() + accessoriesTotal;
+            if (totalPriceLabel != null) totalPriceLabel.setText(String.format("$%,.2f", grandTotal));
         }
     }
 
@@ -369,17 +388,12 @@ public class staffShopingCartController {
             configDetailsContainer.setManaged(false);
         }
         if (modelLabel != null) modelLabel.setText("Accessories Only");
-        if (colorLabel != null) colorLabel.setText("N/A");
-        if (engineLabel != null) engineLabel.setText("N/A");
         if (basePriceLabel != null) basePriceLabel.setText("$0.00");
         if (summaryBasePriceLabel != null) summaryBasePriceLabel.setText("$0.00");
         double accessoriesTotal = calculateAccessoriesTotal();
         if (accessoriesTotalLabel != null) accessoriesTotalLabel.setText(String.format("$%,.2f", accessoriesTotal));
         if (accessoriesTotal > 0) {
-            double tax = accessoriesTotal * 0.08;
-            double grandTotal = accessoriesTotal + tax;
-            if (taxLabel != null) taxLabel.setText(String.format("$%,.2f", tax));
-            if (totalPriceLabel != null) totalPriceLabel.setText(String.format("$%,.2f", grandTotal));
+            if (totalPriceLabel != null) totalPriceLabel.setText(String.format("$%,.2f", accessoriesTotal));
         } else {
             resetAllPricesToZero();
         }
@@ -388,15 +402,8 @@ public class staffShopingCartController {
     private void updateAccessoriesPriceSummary(double accessoriesTotal) {
         if (accessoriesTotalLabel != null) accessoriesTotalLabel.setText(String.format("$%,.2f", accessoriesTotal));
         double basePrice = carConfig != null ? carConfig.getTotalPrice() : 0.0;
-        double totalWithAccessories = basePrice + accessoriesTotal;
-        if (totalWithAccessories > 0) {
-            double tax = totalWithAccessories * 0.08;
-            double grandTotal = totalWithAccessories + tax;
-            if (taxLabel != null) taxLabel.setText(String.format("$%,.2f", tax));
-            if (totalPriceLabel != null) totalPriceLabel.setText(String.format("$%,.2f", grandTotal));
-        } else {
-            resetAllPricesToZero();
-        }
+        double grandTotal = basePrice + accessoriesTotal;
+        if (totalPriceLabel != null) totalPriceLabel.setText(String.format("$%,.2f", grandTotal));
     }
 
     private double calculateAccessoriesTotal() {
@@ -429,12 +436,32 @@ public class staffShopingCartController {
     private void setupEventHandlers() {
         if (confirmButton != null) confirmButton.setOnAction(event -> showPasswordVerification());
         if (backButton != null) backButton.setOnAction(event -> goBack());
+        if (homeButton != null) homeButton.setOnAction(event -> goHome());
         if (loadAssetButton != null) loadAssetButton.setOnAction(event -> loadAccessories());
         if (paymentMethodGroup != null) {
             paymentMethodGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue == installmentRadio) showInstallmentOptions();
-                else hideInstallmentOptions();
+                if (newValue == installmentRadio) {
+                    showInstallmentOptions();
+                    hideGrandTotalDisplay();
+                } else {
+                    hideInstallmentOptions();
+                    showGrandTotalDisplay();
+                }
             });
+        }
+    }
+
+    private void hideGrandTotalDisplay() {
+        if (totalPriceLabel != null) {
+            totalPriceLabel.setVisible(false);
+            totalPriceLabel.setManaged(false);
+        }
+    }
+
+    private void showGrandTotalDisplay() {
+        if (totalPriceLabel != null) {
+            totalPriceLabel.setVisible(true);
+            totalPriceLabel.setManaged(true);
         }
     }
 
@@ -514,7 +541,6 @@ public class staffShopingCartController {
         customerErrorLabel.setVisible(false);
         hidePhoneError();
         confirmDetailsBtn.setDisable(false);
-        printBtn.setDisable(true);
         GaussianBlur blur = new GaussianBlur(10);
         if (accessoriesContainer != null) accessoriesContainer.setEffect(blur);
         customerInfoPane.setScaleX(0.8);
@@ -538,6 +564,39 @@ public class staffShopingCartController {
             customerInfoPane.setManaged(false);
             customerInfoOverlay.setVisible(false);
             customerInfoOverlay.setManaged(false);
+            if (accessoriesContainer != null) accessoriesContainer.setEffect(null);
+        });
+        fadeTransition.play();
+    }
+
+    private void showSuccessOverlay() {
+        successOverlay.setVisible(true);
+        successOverlay.setManaged(true);
+        successPane.setVisible(true);
+        successPane.setManaged(true);
+        successOrderIdLabel.setText("Order #" + currentOrderId);
+        GaussianBlur blur = new GaussianBlur(10);
+        if (accessoriesContainer != null) accessoriesContainer.setEffect(blur);
+        successPane.setScaleX(0.8);
+        successPane.setScaleY(0.8);
+        successPane.setOpacity(0);
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(300), successPane);
+        scaleTransition.setToX(1.0);
+        scaleTransition.setToY(1.0);
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), successPane);
+        fadeTransition.setToValue(1.0);
+        ParallelTransition parallelTransition = new ParallelTransition(scaleTransition, fadeTransition);
+        parallelTransition.play();
+    }
+
+    private void hideSuccessOverlay() {
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(150), successPane);
+        fadeTransition.setToValue(0);
+        fadeTransition.setOnFinished(e -> {
+            successPane.setVisible(false);
+            successPane.setManaged(false);
+            successOverlay.setVisible(false);
+            successOverlay.setManaged(false);
             if (accessoriesContainer != null) accessoriesContainer.setEffect(null);
         });
         fadeTransition.play();
@@ -570,66 +629,102 @@ public class staffShopingCartController {
     @FXML
     private void onConfirmDetails() {
         if (validateCustomerInputs()) {
-            int customerId = saveCustomerToDatabase();
-            if (customerId != -1) {
+            int customerId = findOrCreateCustomer();
+            if (customerId > 0) {
                 currentCustomerId = customerId;
                 customerErrorLabel.setVisible(false);
                 confirmDetailsBtn.setDisable(true);
-                printBtn.setDisable(false);
                 createOrderWithCustomer(customerId);
+            } else if (customerId == -1) {
+                // NRC conflict error - already shown to user
+                // Don't proceed with order creation
+                confirmDetailsBtn.setDisable(false);
             } else {
                 customerErrorLabel.setText("Failed to save customer information. Please try again.");
                 customerErrorLabel.setVisible(true);
+                confirmDetailsBtn.setDisable(false);
             }
+        } else {
+            confirmDetailsBtn.setDisable(false);
         }
     }
 
-    @FXML
-    private void onPrint() {
-        hideCustomerInfoOverlay();
-        handlePrintReceipt();
+    private void onSuccessHome() {
+        hideSuccessOverlay();
+        navigateToStaffWelcome();
     }
 
-    private boolean validateCustomerInputs() {
-        if (customerNameField.getText().trim().isEmpty() ||
-                nrc_first.getValue() == null ||
-                nrc_second.getValue() == null ||
-                nrc_third.getValue() == null ||
-                nrc_number.getText().trim().isEmpty() ||
-                customerPhoneField.getText().trim().isEmpty() ||
-                customerAddressField.getText().trim().isEmpty()) {
-            customerErrorLabel.setText("Please fill in all required fields");
-            customerErrorLabel.setVisible(true);
-            return false;
-        }
-
-        String phone = customerPhoneField.getText().trim();
-        if (phone.length() > 20) {
-            showPhoneError("Phone number too long. Maximum 20 characters allowed.");
-            return false;
-        }
-
-        if (phone.length() < 8) {
-            showPhoneError("Phone number too short. Minimum 8 digits required.");
-            return false;
-        }
-
-        if (!phone.matches("^[+]?[0-9\\s\\-\\(\\)]{8,20}$")) {
-            showPhoneError("Invalid phone number format");
-            return false;
-        }
-
-        return true;
+    private void goHome() {
+        clearCart();
+        navigateToStaffWelcome();
     }
 
-    private int saveCustomerToDatabase() {
+    private int findOrCreateCustomer() {
         String nrc = nrc_first.getValue() + "/" + nrc_second.getValue() + "(" + nrc_third.getValue() + ")" + nrc_number.getText().trim();
+        String name = customerNameField.getText().trim();
+        String phone = customerPhoneField.getText().trim();
+
+        // First check if exact match exists
+        Integer existingCustomerId = findExistingCustomer(name, nrc, phone);
+        if (existingCustomerId != null) {
+            logger.info("Found exact matching customer with ID: " + existingCustomerId);
+            return existingCustomerId;
+        }
+
+        // Check if NRC exists but details are different
+        Integer customerIdByNRC = findExistingCustomerByNRC(nrc);
+        if (customerIdByNRC != null) {
+            logger.warn("NRC " + nrc + " exists but with different details. Showing error to user.");
+            customerErrorLabel.setText("This NRC number already exists with different customer information. Please verify the details.");
+            customerErrorLabel.setVisible(true);
+            return -1; // Indicate error
+        }
+
+        // Create new customer
+        return createNewCustomer(name, nrc, phone);
+    }
+
+    private Integer findExistingCustomer(String name, String nrc, String phone) {
+        String sql = "SELECT customer_id FROM customer_info WHERE customer_name = ? AND customer_nrc = ? AND customer_phone = ?";
+        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, nrc);
+            ps.setString(3, phone);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("customer_id");
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error finding existing customer", e);
+        }
+        return null;
+    }
+
+    private Integer findExistingCustomerByNRC(String nrc) {
+        String sql = "SELECT customer_id FROM customer_info WHERE customer_nrc = ?";
+        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nrc);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("customer_id");
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error finding existing customer by NRC", e);
+        }
+        return null;
+    }
+
+    private int createNewCustomer(String name, String nrc, String phone) {
         String sql = "INSERT INTO customer_info (customer_name, customer_nrc, customer_phone, customer_address, customer_email, created_at) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, customerNameField.getText().trim());
+            ps.setString(1, name);
             ps.setString(2, nrc);
-            ps.setString(3, customerPhoneField.getText().trim());
+            ps.setString(3, phone);
             ps.setString(4, customerAddressField.getText().trim());
             ps.setString(5, customerEmailField.getText().trim());
             ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
@@ -680,11 +775,13 @@ public class staffShopingCartController {
                     boolean installmentCreated = paymentDAO.createInstallmentPlan(orderId, totalAmount, months);
                     logger.info("Installment plan created: " + installmentCreated + " for " + months + " months");
                 }
+                int carCount = carConfig != null ? 1 : 0;
+                int accessoryCount = getAccessoryIdsFromSession().size();
+                updateUserTargets(carCount, accessoryCount);
                 clearCart();
                 currentOrderId = orderId;
-                customerErrorLabel.setStyle("-fx-text-fill: #4CAF50;");
-                customerErrorLabel.setText("Order #" + orderId + " created successfully for customer! Click Print to generate receipt.");
-                customerErrorLabel.setVisible(true);
+                hideCustomerInfoOverlay();
+                showSuccessOverlay();
                 SessionStaff.getInstance().clearPendingCustomizations();
             } else {
                 showAlert("Error", "Failed to create order. Please try again.");
@@ -692,6 +789,116 @@ public class staffShopingCartController {
         } catch (Exception e) {
             logger.error("Error in createOrderWithCustomer", e);
             showAlert("Error", "An unexpected error occurred: " + e.getMessage());
+        }
+    }
+
+    private void updateUserTargets(int carCount, int accessoryCount) {
+        try {
+            int staffId = SessionStaff.getLoggedInStaffId();
+            Integer managerId = getManagerId(staffId);
+            if (managerId != null) {
+                updateSingleUserTarget(staffId, carCount, accessoryCount, false);
+                updateManagerTarget(managerId);
+            } else {
+                updateSingleUserTarget(staffId, carCount, accessoryCount, false);
+            }
+        } catch (Exception e) {
+            logger.error("Error updating user targets", e);
+        }
+    }
+
+    private Integer getManagerId(int staffId) {
+        String sql = "SELECT manager FROM user_workinfo WHERE user_id = ?";
+        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("manager");
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting manager ID for staff: " + staffId, e);
+        }
+        return null;
+    }
+
+    private void updateSingleUserTarget(int userId, int carCount, int accessoryCount, boolean isManagerUpdate) {
+        String selectSql = "SELECT achieve FROM user_target WHERE user_id = ?";
+        String updateSql = "UPDATE user_target SET achieve = ? WHERE user_id = ?";
+        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement selectPs = conn.prepareStatement(selectSql);
+             PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
+            selectPs.setInt(1, userId);
+            String currentAchieve = "car-0,parts-0";
+            try (ResultSet rs = selectPs.executeQuery()) {
+                if (rs.next()) {
+                    currentAchieve = rs.getString("achieve");
+                    if (currentAchieve == null) {
+                        currentAchieve = "car-0,parts-0";
+                    }
+                }
+            }
+            int currentCars = 0;
+            int currentParts = 0;
+            try {
+                String[] parts = currentAchieve.split(",");
+                if (parts.length == 2) {
+                    currentCars = Integer.parseInt(parts[0].replace("car-", "").trim());
+                    currentParts = Integer.parseInt(parts[1].replace("parts-", "").trim());
+                }
+            } catch (NumberFormatException e) {
+                logger.warn("Error parsing achievement string: " + currentAchieve + ", resetting to 0");
+                currentCars = 0;
+                currentParts = 0;
+            }
+            int newCars, newParts;
+            if (isManagerUpdate) {
+                newCars = carCount;
+                newParts = accessoryCount;
+            } else {
+                newCars = currentCars + carCount;
+                newParts = currentParts + accessoryCount;
+            }
+            String newAchieve = "car-" + newCars + ",parts-" + newParts;
+            updatePs.setString(1, newAchieve);
+            updatePs.setInt(2, userId);
+            int rowsAffected = updatePs.executeUpdate();
+            logger.info("Updated user_target for user " + userId + " from '" + currentAchieve + "' to '" + newAchieve + "', rows affected: " + rowsAffected);
+        } catch (SQLException e) {
+            logger.error("Error updating user_target for user: " + userId, e);
+        }
+    }
+
+    private void updateManagerTarget(int managerId) {
+        String sql = "SELECT achieve FROM user_target WHERE user_id IN (SELECT user_id FROM user_workinfo WHERE manager = ?)";
+        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, managerId);
+            int totalCars = 0;
+            int totalParts = 0;
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String staffAchieve = rs.getString("achieve");
+                    if (staffAchieve != null) {
+                        try {
+                            String[] parts = staffAchieve.split(",");
+                            if (parts.length == 2) {
+                                int staffCars = Integer.parseInt(parts[0].replace("car-", "").trim());
+                                int staffParts = Integer.parseInt(parts[1].replace("parts-", "").trim());
+                                totalCars += staffCars;
+                                totalParts += staffParts;
+                            }
+                        } catch (NumberFormatException e) {
+                            logger.warn("Error parsing staff achievement: " + staffAchieve);
+                        }
+                    }
+                }
+            }
+            updateSingleUserTarget(managerId, totalCars, totalParts, true);
+            logger.info("Updated manager " + managerId + " target with total: car-" + totalCars + ",parts-" + totalParts);
+        } catch (SQLException e) {
+            logger.error("Error updating manager target for manager: " + managerId, e);
         }
     }
 
@@ -722,6 +929,7 @@ public class staffShopingCartController {
     private void setupPaymentOptions() {
         if (fullPaymentRadio != null) fullPaymentRadio.setSelected(true);
         hideInstallmentOptions();
+        showGrandTotalDisplay();
     }
 
     private void setupInstallmentPlans() {
@@ -808,9 +1016,10 @@ public class staffShopingCartController {
                 showAlert("Navigation Error", "Could not find accessories page.");
                 return;
             }
-            Stage stage = (Stage) loadAssetButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            Stage currentStage = (Stage) loadAssetButton.getScene().getWindow();
+            currentStage.setScene(new Scene(root));
+            currentStage.setTitle("Accessories");
+            currentStage.show();
         } catch (Exception e) {
             showAlert("Navigation Error", "Failed to load accessories: " + e.getMessage());
         }
@@ -925,16 +1134,6 @@ public class staffShopingCartController {
         return total;
     }
 
-    private void handlePrintReceipt() {
-        try {
-            Thread.sleep(1500);
-            showAlert("Receipt Generated", "Receipt for Order #" + currentOrderId + " has been generated successfully!");
-        } catch (Exception e) {
-            showAlert("Receipt Warning", "Order was processed successfully but receipt generation failed.");
-        }
-        navigateToStaffWelcome();
-    }
-
     private void navigateToStaffWelcome() {
         try {
             String[] possiblePaths = {"/Fxml/staffWelcome.fxml", "/View/staffWelcome.fxml", "/staffWelcome.fxml"};
@@ -946,9 +1145,11 @@ public class staffShopingCartController {
                 } catch (Exception e) {}
             }
             if (root == null) throw new IOException("Could not find staffWelcome.fxml in any location");
-            Stage stage = (Stage) confirmButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            Stage currentStage = (Stage) homeButton.getScene().getWindow();
+            currentStage.setScene(new Scene(root));
+            currentStage.setTitle("Welcome");
+            currentStage.setFullScreen(true);
+            currentStage.show();
         } catch (IOException e) {
             showAlert("Navigation Error", "Failed to return to dashboard: " + e.getMessage());
         }
@@ -961,6 +1162,38 @@ public class staffShopingCartController {
 
     private void clearCart() {
         SessionStaff.getInstance().clearCart();
+    }
+
+    private boolean validateCustomerInputs() {
+        if (customerNameField.getText().trim().isEmpty() ||
+                nrc_first.getValue() == null ||
+                nrc_second.getValue() == null ||
+                nrc_third.getValue() == null ||
+                nrc_number.getText().trim().isEmpty() ||
+                customerPhoneField.getText().trim().isEmpty() ||
+                customerAddressField.getText().trim().isEmpty()) {
+            customerErrorLabel.setText("Please fill in all required fields");
+            customerErrorLabel.setVisible(true);
+            return false;
+        }
+
+        String phone = customerPhoneField.getText().trim();
+        if (phone.length() > 20) {
+            showPhoneError("Phone number too long. Maximum 20 characters allowed.");
+            return false;
+        }
+
+        if (phone.length() < 8) {
+            showPhoneError("Phone number too short. Minimum 8 digits required.");
+            return false;
+        }
+
+        if (!phone.matches("^[+]?[0-9\\s\\-\\(\\)]{8,20}$")) {
+            showPhoneError("Invalid phone number format");
+            return false;
+        }
+
+        return true;
     }
 
     @FXML
@@ -979,7 +1212,9 @@ public class staffShopingCartController {
     private void goBack() {
         String[] possiblePaths;
         SessionStaff session = SessionStaff.getInstance();
+
         boolean hasAccessories = !session.getSelectedAccessories().isEmpty();
+
         if (carConfig == null && hasAccessories) {
             possiblePaths = new String[]{"/Fxml/staffAsset.fxml", "/View/staffAsset.fxml", "/staffAsset.fxml"};
         } else if (carConfig != null) {
@@ -987,21 +1222,35 @@ public class staffShopingCartController {
         } else {
             possiblePaths = new String[]{"/Fxml/staffWelcome.fxml", "/View/staffWelcome.fxml", "/staffWelcome.fxml"};
         }
+
         Parent root = null;
+
         for (String path : possiblePaths) {
             try {
                 root = FXMLLoader.load(getClass().getResource(path));
                 break;
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
         }
+
+        // Fallback navigation
         if (root == null) {
             navigateToStaffWelcome();
             return;
         }
-        Stage stage = (Stage) backButton.getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
+
+        Stage currentStage = (Stage) backButton.getScene().getWindow();
+        Scene scene = new Scene(root);
+
+        currentStage.setScene(scene);
+        currentStage.setTitle("Navigation");
+
+        // Enable fullscreen
+        currentStage.setFullScreen(true);
+
+        currentStage.centerOnScreen();
+        currentStage.show();
     }
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

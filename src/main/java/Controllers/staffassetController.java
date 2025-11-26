@@ -37,7 +37,6 @@ public class staffassetController {
     @FXML private StackPane cartModal;
     @FXML private VBox cartItemsContainer;
     @FXML private Label cartSubtotalLabel;
-    @FXML private Label cartTaxLabel;
     @FXML private Label cartTotalLabel;
     @FXML private Button closeCartButton;
     @FXML private Button continueShoppingButton;
@@ -67,6 +66,7 @@ public class staffassetController {
                 try {
                     goBack();
                 } catch (IOException e) {
+                    logger.error("Error going back", e);
                 }
             });
         }
@@ -167,6 +167,7 @@ public class staffassetController {
         }
         HBox currentRow = new HBox(20);
         currentRow.setPadding(new Insets(0, 0, 20, 0));
+        currentRow.setAlignment(Pos.CENTER);
         for (int i = 0; i < parts.size(); i++) {
             Node card = createPartCard(parts.get(i));
             currentRow.getChildren().add(card);
@@ -175,6 +176,7 @@ public class staffassetController {
                 if (i < parts.size() - 1) {
                     currentRow = new HBox(20);
                     currentRow.setPadding(new Insets(0, 0, 20, 0));
+                    currentRow.setAlignment(Pos.CENTER);
                 }
             }
         }
@@ -268,6 +270,7 @@ public class staffassetController {
         try {
             img.setImage(new Image(new FileInputStream("src/Assets/Images/placeholder.png")));
         } catch (Exception e) {
+            logger.error("Error loading placeholder image", e);
         }
     }
 
@@ -327,7 +330,7 @@ public class staffassetController {
             Label emptyLabel = new Label("Your cart is empty");
             emptyLabel.getStyleClass().add("empty-cart-message");
             cartItemsContainer.getChildren().add(emptyLabel);
-            updateCartTotals(0, 0, 0);
+            updateCartTotals(0);
             checkoutButtonModal.setDisable(true);
             return;
         }
@@ -352,9 +355,7 @@ public class staffassetController {
             }
         }
 
-        double tax = subtotal * 0.1;
-        double total = subtotal + tax;
-        updateCartTotals(subtotal, tax, total);
+        updateCartTotals(subtotal);
     }
 
     private CarPart findPartById(int partId) {
@@ -424,10 +425,13 @@ public class staffassetController {
         return itemBox;
     }
 
-    private void updateCartTotals(double subtotal, double tax, double total) {
-        cartSubtotalLabel.setText(String.format("$%.2f", subtotal));
-        cartTaxLabel.setText(String.format("$%.2f", tax));
-        cartTotalLabel.setText(String.format("$%.2f", total));
+    private void updateCartTotals(double subtotal) {
+        if (cartSubtotalLabel != null) {
+            cartSubtotalLabel.setText(String.format("$%.2f", subtotal));
+        }
+        if (cartTotalLabel != null) {
+            cartTotalLabel.setText(String.format("$%.2f", subtotal));
+        }
     }
 
     private void proceedToCheckout() {
@@ -440,6 +444,7 @@ public class staffassetController {
             Parent root = loader.load();
             Stage stage = (Stage) viewCartButton.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.setFullScreen(true);
             stage.show();
         } catch (IOException e) {
             showErrorMessage("Failed to proceed to checkout");
@@ -450,6 +455,7 @@ public class staffassetController {
         FXMLLoader.load(getClass().getResource("/View/staffWelcome.fxml"));
         Stage stage = (Stage) backButton.getScene().getWindow();
         stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/View/staffWelcome.fxml"))));
+        stage.setFullScreen(true);
         stage.show();
     }
 

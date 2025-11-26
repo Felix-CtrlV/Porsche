@@ -17,6 +17,7 @@
     import javafx.scene.input.MouseEvent;
     import javafx.event.ActionEvent;
     import javafx.scene.layout.*;
+    import javafx.stage.Stage;
     import javafx.stage.Window;
     import javafx.util.Duration;
     import org.slf4j.Logger;
@@ -173,6 +174,7 @@
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
                 Parent root = loader.load();
 
+                // Pass selected model only for staffModelSelect.fxml
                 if (selectedModel != null && fxmlPath.contains("staffModelSelect")) {
                     staffModelSelectController controller = loader.getController();
                     if (controller != null) {
@@ -180,15 +182,23 @@
                     }
                 }
 
-                Scene newScene = new Scene(root, 1300, 850);
+                Scene newScene = new Scene(root);
                 Window window = ((Node) event.getSource()).getScene().getWindow();
-                if (window instanceof javafx.stage.Stage) {
-                    ((javafx.stage.Stage) window).setScene(newScene);
-                    ((javafx.stage.Stage) window).centerOnScreen();
+
+                if (window instanceof Stage stage) {
+                    stage.setScene(newScene);
+
+                    // Auto fullscreen
+                    stage.setFullScreen(true);
+
+                    stage.centerOnScreen();
                 }
+
                 logger.info("Navigated to: {} with model: {}", fxmlPath, selectedModel);
+
             } catch (IOException | NullPointerException ex) {
                 logger.error("Failed to navigate: " + fxmlPath, ex);
             }
         }
+
     }

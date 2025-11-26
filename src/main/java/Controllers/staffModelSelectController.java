@@ -22,6 +22,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -309,18 +310,27 @@ public class staffModelSelectController implements Initializable {
         try {
             CarConfiguration carConfig = new CarConfiguration(selectedCar);
             SessionStaff.getInstance().setCarConfiguration(carConfig);
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/staffCustomize.fxml"));
             Parent root = loader.load();
+
             staffCustomizeController controller = loader.getController();
             if (controller != null) {
                 controller.setSelectedCar(selectedCar);
             }
+
             Window window = flow_Pane.getScene().getWindow();
-            Scene scene = new Scene(root, 1300, 850);
-            if (window instanceof javafx.stage.Stage) {
-                ((javafx.stage.Stage) window).setScene(scene);
-                ((javafx.stage.Stage) window).centerOnScreen();
+            Scene scene = new Scene(root);
+
+            if (window instanceof Stage stage) {
+                stage.setScene(scene);
+
+                // Make fullscreen
+                stage.setFullScreen(true);
+
+                stage.centerOnScreen();
             }
+
         } catch (IOException e) {
             logger.error("Unable to load staffCustomize.fxml", e);
             showErrorAlert("Navigation Error", "Failed to load customization page: " + e.getMessage());
@@ -330,21 +340,25 @@ public class staffModelSelectController implements Initializable {
         }
     }
 
+
     @FXML
     private void goBack(ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/View/staffCars.fxml"));
-            Scene scene = new Scene(root, 1300, 850);
+            Scene scene = new Scene(root);
+
             Window window = ((Node) event.getSource()).getScene().getWindow();
-            if (window instanceof javafx.stage.Stage) {
-                ((javafx.stage.Stage) window).setScene(scene);
-                ((javafx.stage.Stage) window).centerOnScreen();
+            if (window instanceof Stage stage) {
+                stage.setScene(scene);
+                stage.setFullScreen(true);
+                stage.centerOnScreen();
             }
         } catch (IOException e) {
             logger.error("Failed to navigate to staffCars", e);
             showErrorAlert("Navigation Error", "Failed to navigate back: " + e.getMessage());
         }
     }
+
 
     private void showErrorAlert(String title, String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);

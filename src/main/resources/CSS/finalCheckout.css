@@ -120,44 +120,51 @@
 }
 
 .back-button {
-    -fx-background-color: rgba(255, 255, 255, 0.8);
-    -fx-text-fill: #D5001C;
-    -fx-border-color: rgba(213, 0, 28, 0.3);
-    -fx-border-width: 1px;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-    -fx-font-weight: 700;
+    -fx-background-color: transparent;
+    -fx-text-fill: #000000;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 8 16;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0.2, 0, 0);
 }
 
 .back-button:hover {
-    -fx-background-color: #D5001C;
-    -fx-text-fill: #FFFFFF;
-    -fx-border-color: #D5001C;
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-background-color: #F5F5F5;
+    -fx-border-color: rgba(0, 0, 0, 0.15);
+}
+
+.back-button:pressed {
+    -fx-background-color: #EEEEEE;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
 }
 
 .home-button {
-    -fx-background-color: rgba(255, 255, 255, 0.8);
-    -fx-text-fill: #D5001C;
-    -fx-border-color: rgba(213, 0, 28, 0.3);
-    -fx-border-width: 1px;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-    -fx-font-weight: 700;
+    -fx-background-color: transparent;
+    -fx-text-fill: #000000;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 8 16;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
     -fx-cursor: hand;
-    -fx-font-size: 16px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0.2, 0, 0);
 }
 
 .home-button:hover {
-    -fx-background-color: #D5001C;
-    -fx-text-fill: #FFFFFF;
-    -fx-border-color: #D5001C;
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-background-color: #F5F5F5;
+    -fx-border-color: rgba(0, 0, 0, 0.15);
+}
+
+.home-button:pressed {
+    -fx-background-color: #EEEEEE;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
 }
 
 .link-button {

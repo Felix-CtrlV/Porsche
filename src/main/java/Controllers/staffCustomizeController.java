@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -292,17 +293,28 @@ public class staffCustomizeController implements Initializable {
         }
 
         LOGGER.info("Color availability - Black: {}, Red: {}", hasAvailableBlackColor, hasAvailableRedColor);
+        LOGGER.info("Base car color: {}", baseCarColor);
 
-        // FIX: Always show all color options, don't filter based on base car color
+        // FIX: Always show default option
         colorOptions.add(new CustomizationOption("Default", 0, loadColorOption("⊘"), true));
 
-        // FIX: Always show black option, mark availability based on inventory
-        CustomizationOption blackOption = new CustomizationOption("Jet Black Metallic", 3200, loadColorOption("/Image/black.jpg"), hasAvailableBlackColor);
-        colorOptions.add(blackOption);
+        // FIX: Only show black color option if base car is NOT black
+        if (baseCarColor == null || !baseCarColor.equalsIgnoreCase("black")) {
+            CustomizationOption blackOption = new CustomizationOption("Jet Black Metallic", 3200, loadColorOption("/Image/black.jpg"), hasAvailableBlackColor);
+            colorOptions.add(blackOption);
+            LOGGER.info("Added black color option (base car is not black)");
+        } else {
+            LOGGER.info("Skipping black color option (base car is already black)");
+        }
 
-        // FIX: Always show red option, mark availability based on inventory
-        CustomizationOption redOption = new CustomizationOption("Guards Red", 4500, loadColorOption("/Image/red.jpg"), hasAvailableRedColor);
-        colorOptions.add(redOption);
+        // FIX: Only show red color option if base car is NOT red
+        if (baseCarColor == null || !baseCarColor.equalsIgnoreCase("red")) {
+            CustomizationOption redOption = new CustomizationOption("Guards Red", 4500, loadColorOption("/Image/red.jpg"), hasAvailableRedColor);
+            colorOptions.add(redOption);
+            LOGGER.info("Added red color option (base car is not red)");
+        } else {
+            LOGGER.info("Skipping red color option (base car is already red)");
+        }
 
         // FIX: If we have a selected color that might not be in the standard options, ensure it's included
         if (carConfig.getSelectedColor() != null) {
@@ -319,11 +331,13 @@ public class staffCustomizeController implements Initializable {
                 LOGGER.info("Selected color {} not found in options, adding it back", carConfig.getSelectedColor().getName());
                 CustomizationOption selectedColor = carConfig.getSelectedColor();
                 if (selectedColor.getName().equals("Jet Black Metallic")) {
-                    // Update the existing black option to match the selected state
-                    blackOption.setAvailable(hasAvailableBlackColor);
+                    // Add black option back but mark as unavailable
+                    CustomizationOption unavailableBlack = new CustomizationOption("Jet Black Metallic", 3200, loadColorOption("/Image/black.jpg"), false);
+                    colorOptions.add(unavailableBlack);
                 } else if (selectedColor.getName().equals("Guards Red")) {
-                    // Update the existing red option to match the selected state
-                    redOption.setAvailable(hasAvailableRedColor);
+                    // Add red option back but mark as unavailable
+                    CustomizationOption unavailableRed = new CustomizationOption("Guards Red", 4500, loadColorOption("/Image/red.jpg"), false);
+                    colorOptions.add(unavailableRed);
                 }
             }
         }
@@ -491,10 +505,13 @@ public class staffCustomizeController implements Initializable {
         optionBox.getStyleClass().add("option-container");
         optionBox.getStyleClass().add(type + "-option");
 
-        // FIX: Apply unavailable styling but don't prevent selection entirely
+        // FIX: Add faint grey border to all option boxes for better visual appeal
+        optionBox.setStyle("-fx-border-color: #e0e0e0; -fx-border-width: 1px; -fx-border-radius: 8px;");
+
+        // FIX: Apply unavailable styling and make unclickable
         if (!option.isAvailable()) {
             optionBox.getStyleClass().add("unavailable-option");
-            optionBox.setDisable(false); // Allow selection even if unavailable to maintain state
+            optionBox.setDisable(true); // Make unavailable options unclickable
         } else {
             optionBox.getStyleClass().add("available-option");
             optionBox.setDisable(false);
@@ -505,6 +522,8 @@ public class staffCustomizeController implements Initializable {
             img.setFitHeight(IMAGE_FIT_HEIGHT);
             img.setPreserveRatio(true);
             img.getStyleClass().add("option-image-container");
+            // FIX: Add border to image container as well
+            img.setStyle("-fx-border-color: #f0f0f0; -fx-border-width: 1px; -fx-border-radius: 6px;");
             optionBox.getChildren().add(img);
         }
 
@@ -520,19 +539,21 @@ public class staffCustomizeController implements Initializable {
         }
         optionBox.getChildren().add(priceLabel);
 
-        // FIX: Allow clicking even on unavailable options to maintain selection state
-        optionBox.setOnMouseClicked(event -> {
-            selectOption(optionBox, option, type);
-        });
+        // FIX: Only add click handler for available options
+        if (option.isAvailable()) {
+            optionBox.setOnMouseClicked(event -> {
+                selectOption(optionBox, option, type);
+            });
+        }
 
         return optionBox;
     }
 
     private void selectOption(VBox optionBox, CustomizationOption option, String type) {
-        // FIX: Allow selecting any option regardless of availability to maintain state
+        // FIX: Don't allow selecting unavailable options
         if (!option.isAvailable()) {
-            LOGGER.warn("Selecting unavailable option: {}. This is allowed to maintain selection state.", option.getName());
-            // Don't return - allow the selection to proceed
+            LOGGER.warn("Attempted to select unavailable option: {}", option.getName());
+            return;
         }
 
         if ("color".equals(type)) {
@@ -762,13 +783,24 @@ public class staffCustomizeController implements Initializable {
 
             Window w = confirmBtn.getScene().getWindow();
             Scene scene = new Scene(root);
+
+            // Dark mode support
             DarkModeManager.getInstance().registerScene(scene);
-            ((javafx.stage.Stage) w).setScene(scene);
+
+            if (w instanceof Stage stage) {
+                stage.setScene(scene);
+
+                // Make fullscreen
+                stage.setFullScreen(true);
+
+                stage.centerOnScreen();
+            }
 
         } catch (Exception e) {
             LOGGER.error("Failed to proceed to shopping cart page", e);
         }
     }
+
 
     @FXML
     private void handleBack(ActionEvent event) {
@@ -778,11 +810,22 @@ public class staffCustomizeController implements Initializable {
 
             Window w = ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
+
+            // Dark mode support
             DarkModeManager.getInstance().registerScene(scene);
-            ((javafx.stage.Stage) w).setScene(scene);
+
+            if (w instanceof Stage stage) {
+                stage.setScene(scene);
+
+                // Auto fullscreen
+                stage.setFullScreen(true);
+
+                stage.centerOnScreen();
+            }
 
         } catch (IOException e) {
             LOGGER.error("Back navigation failed", e);
         }
     }
+
 }

@@ -11,8 +11,8 @@
 <?import javafx.scene.layout.VBox?>
 
 <StackPane fx:id="rootPane" prefHeight="850.0" prefWidth="1300.0" styleClass="root" stylesheets="@../CSS/staffasset.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.staffassetController">
-    <VBox spacing="0" StackPane.alignment="TOP_CENTER">
-        <HBox styleClass="top-bar">
+    <VBox spacing="0" StackPane.alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+        <HBox styleClass="top-bar" HBox.hgrow="ALWAYS">
             <Button fx:id="backButton" styleClass="back-nav-accessories" text="← BACK" />
             <Region HBox.hgrow="ALWAYS" />
             <Label styleClass="page-title-accessories" text="Accessories Catalog" HBox.hgrow="ALWAYS" />
@@ -29,7 +29,7 @@
             </HBox>
         </HBox>
 
-        <HBox styleClass="filter-bar">
+        <HBox styleClass="filter-bar" HBox.hgrow="ALWAYS">
             <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #999999; -fx-letter-spacing: 0.8px;" text="FILTER BY:">
                 <HBox.margin>
                     <Insets right="16" />
@@ -40,8 +40,8 @@
             <ToggleButton fx:id="equipmentButton" styleClass="category-toggle" text="EQUIPMENT" />
         </HBox>
 
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="products-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
-            <VBox fx:id="productsContainer" styleClass="products-container" />
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="products-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+            <VBox fx:id="productsContainer" styleClass="products-container" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" />
         </ScrollPane>
     </VBox>
 
@@ -61,10 +61,6 @@
                 <HBox styleClass="cart-total-row">
                     <Label text="Subtotal:" styleClass="cart-total-label" />
                     <Label fx:id="cartSubtotalLabel" text="0.00" styleClass="cart-total-value" />
-                </HBox>
-                <HBox styleClass="cart-total-row">
-                    <Label text="Tax (10%):" styleClass="cart-total-label" />
-                    <Label fx:id="cartTaxLabel" text="0.00" styleClass="cart-total-value" />
                 </HBox>
                 <HBox styleClass="cart-total-row">
                     <Label text="Total:" styleClass="cart-total-label-total" />
