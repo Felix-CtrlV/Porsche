@@ -636,8 +636,6 @@ public class staffShopingCartController {
                 confirmDetailsBtn.setDisable(true);
                 createOrderWithCustomer(customerId);
             } else if (customerId == -1) {
-                // NRC conflict error - already shown to user
-                // Don't proceed with order creation
                 confirmDetailsBtn.setDisable(false);
             } else {
                 customerErrorLabel.setText("Failed to save customer information. Please try again.");
@@ -664,23 +662,20 @@ public class staffShopingCartController {
         String name = customerNameField.getText().trim();
         String phone = customerPhoneField.getText().trim();
 
-        // First check if exact match exists
         Integer existingCustomerId = findExistingCustomer(name, nrc, phone);
         if (existingCustomerId != null) {
             logger.info("Found exact matching customer with ID: " + existingCustomerId);
             return existingCustomerId;
         }
 
-        // Check if NRC exists but details are different
         Integer customerIdByNRC = findExistingCustomerByNRC(nrc);
         if (customerIdByNRC != null) {
             logger.warn("NRC " + nrc + " exists but with different details. Showing error to user.");
             customerErrorLabel.setText("This NRC number already exists with different customer information. Please verify the details.");
             customerErrorLabel.setVisible(true);
-            return -1; // Indicate error
+            return -1;
         }
 
-        // Create new customer
         return createNewCustomer(name, nrc, phone);
     }
 
@@ -797,10 +792,10 @@ public class staffShopingCartController {
             int staffId = SessionStaff.getLoggedInStaffId();
             Integer managerId = getManagerId(staffId);
             if (managerId != null) {
-                updateSingleUserTarget(staffId, carCount, accessoryCount, false);
+                updateSingleUserTarget(staffId, carCount, accessoryCount);
                 updateManagerTarget(managerId);
             } else {
-                updateSingleUserTarget(staffId, carCount, accessoryCount, false);
+                updateSingleUserTarget(staffId, carCount, accessoryCount);
             }
         } catch (Exception e) {
             logger.error("Error updating user targets", e);
@@ -823,22 +818,33 @@ public class staffShopingCartController {
         return null;
     }
 
-    private void updateSingleUserTarget(int userId, int carCount, int accessoryCount, boolean isManagerUpdate) {
-        String selectSql = "SELECT achieve FROM user_target WHERE user_id = ?";
-        String updateSql = "UPDATE user_target SET achieve = ? WHERE user_id = ?";
+    private void updateSingleUserTarget(int userId, int carCount, int accessoryCount) {
+        String currentMonth = java.time.LocalDate.now().withDayOfMonth(1).toString();
+        String selectSql = "SELECT achieve FROM user_target WHERE user_id = ? AND DATE_FORMAT(effective_date, '%Y-%m') = DATE_FORMAT(?, '%Y-%m')";
+        String updateSql = "UPDATE user_target SET achieve = ? WHERE user_id = ? AND DATE_FORMAT(effective_date, '%Y-%m') = DATE_FORMAT(?, '%Y-%m')";
+        String insertSql = "INSERT INTO user_target (user_id, effective_date, target, achieve) VALUES (?, ?, ?, ?)";
+
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
              PreparedStatement selectPs = conn.prepareStatement(selectSql);
-             PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
+             PreparedStatement updatePs = conn.prepareStatement(updateSql);
+             PreparedStatement insertPs = conn.prepareStatement(insertSql)) {
+
             selectPs.setInt(1, userId);
+            selectPs.setString(2, currentMonth);
+
             String currentAchieve = "car-0,parts-0";
+            boolean recordExists = false;
+
             try (ResultSet rs = selectPs.executeQuery()) {
                 if (rs.next()) {
                     currentAchieve = rs.getString("achieve");
                     if (currentAchieve == null) {
                         currentAchieve = "car-0,parts-0";
                     }
+                    recordExists = true;
                 }
             }
+
             int currentCars = 0;
             int currentParts = 0;
             try {
@@ -848,55 +854,106 @@ public class staffShopingCartController {
                     currentParts = Integer.parseInt(parts[1].replace("parts-", "").trim());
                 }
             } catch (NumberFormatException e) {
-                logger.warn("Error parsing achievement string: " + currentAchieve + ", resetting to 0");
                 currentCars = 0;
                 currentParts = 0;
             }
-            int newCars, newParts;
-            if (isManagerUpdate) {
-                newCars = carCount;
-                newParts = accessoryCount;
-            } else {
-                newCars = currentCars + carCount;
-                newParts = currentParts + accessoryCount;
-            }
+
+            int newCars = currentCars + carCount;
+            int newParts = currentParts + accessoryCount;
             String newAchieve = "car-" + newCars + ",parts-" + newParts;
-            updatePs.setString(1, newAchieve);
-            updatePs.setInt(2, userId);
-            int rowsAffected = updatePs.executeUpdate();
-            logger.info("Updated user_target for user " + userId + " from '" + currentAchieve + "' to '" + newAchieve + "', rows affected: " + rowsAffected);
+
+            if (recordExists) {
+                updatePs.setString(1, newAchieve);
+                updatePs.setInt(2, userId);
+                updatePs.setString(3, currentMonth);
+                int rowsAffected = updatePs.executeUpdate();
+                logger.info("Updated user_target for user " + userId + " from '" + currentAchieve + "' to '" + newAchieve + "', rows affected: " + rowsAffected);
+            } else {
+                insertPs.setInt(1, userId);
+                insertPs.setString(2, currentMonth + "-01");
+                insertPs.setString(3, "car-0,parts-0");
+                insertPs.setString(4, newAchieve);
+                int rowsAffected = insertPs.executeUpdate();
+                logger.info("Added new user_target entry for user " + userId + " with achieve: " + newAchieve + ", rows affected: " + rowsAffected);
+            }
         } catch (SQLException e) {
             logger.error("Error updating user_target for user: " + userId, e);
         }
     }
 
     private void updateManagerTarget(int managerId) {
-        String sql = "SELECT achieve FROM user_target WHERE user_id IN (SELECT user_id FROM user_workinfo WHERE manager = ?)";
+        String currentMonth = java.time.LocalDate.now().withDayOfMonth(1).toString();
+        String selectSql = "SELECT achieve FROM user_target WHERE user_id = ? AND DATE_FORMAT(effective_date, '%Y-%m') = DATE_FORMAT(?, '%Y-%m')";
+        String updateSql = "UPDATE user_target SET achieve = ? WHERE user_id = ? AND DATE_FORMAT(effective_date, '%Y-%m') = DATE_FORMAT(?, '%Y-%m')";
+        String insertSql = "INSERT INTO user_target (user_id, effective_date, target, achieve) VALUES (?, ?, ?, ?)";
+
         try (Connection conn = DatabaseConnectionManager.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, managerId);
-            int totalCars = 0;
-            int totalParts = 0;
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    String staffAchieve = rs.getString("achieve");
-                    if (staffAchieve != null) {
-                        try {
-                            String[] parts = staffAchieve.split(",");
-                            if (parts.length == 2) {
-                                int staffCars = Integer.parseInt(parts[0].replace("car-", "").trim());
-                                int staffParts = Integer.parseInt(parts[1].replace("parts-", "").trim());
-                                totalCars += staffCars;
-                                totalParts += staffParts;
+             PreparedStatement selectPs = conn.prepareStatement(selectSql);
+             PreparedStatement updatePs = conn.prepareStatement(updateSql);
+             PreparedStatement insertPs = conn.prepareStatement(insertSql)) {
+
+            selectPs.setInt(1, managerId);
+            selectPs.setString(2, currentMonth);
+
+            boolean managerRecordExists = false;
+            try (ResultSet rs = selectPs.executeQuery()) {
+                if (rs.next()) {
+                    managerRecordExists = true;
+                }
+            }
+
+            String staffSql = "SELECT user_id FROM user_workinfo WHERE manager = ?";
+            try (PreparedStatement staffPs = conn.prepareStatement(staffSql)) {
+                staffPs.setInt(1, managerId);
+                int totalCars = 0;
+                int totalParts = 0;
+
+                try (ResultSet staffRs = staffPs.executeQuery()) {
+                    while (staffRs.next()) {
+                        int staffId = staffRs.getInt("user_id");
+                        String achieveSql = "SELECT achieve FROM user_target WHERE user_id = ? AND DATE_FORMAT(effective_date, '%Y-%m') = DATE_FORMAT(?, '%Y-%m')";
+                        try (PreparedStatement achievePs = conn.prepareStatement(achieveSql)) {
+                            achievePs.setInt(1, staffId);
+                            achievePs.setString(2, currentMonth);
+                            try (ResultSet achieveRs = achievePs.executeQuery()) {
+                                if (achieveRs.next()) {
+                                    String staffAchieve = achieveRs.getString("achieve");
+                                    if (staffAchieve != null) {
+                                        try {
+                                            String[] parts = staffAchieve.split(",");
+                                            if (parts.length == 2) {
+                                                int staffCars = Integer.parseInt(parts[0].replace("car-", "").trim());
+                                                int staffParts = Integer.parseInt(parts[1].replace("parts-", "").trim());
+                                                totalCars += staffCars;
+                                                totalParts += staffParts;
+                                            }
+                                        } catch (NumberFormatException e) {
+                                            logger.warn("Error parsing staff achievement: " + staffAchieve);
+                                        }
+                                    }
+                                }
                             }
-                        } catch (NumberFormatException e) {
-                            logger.warn("Error parsing staff achievement: " + staffAchieve);
                         }
                     }
                 }
+
+                String achieveValue = "car-" + totalCars + ",parts-" + totalParts;
+
+                if (managerRecordExists) {
+                    updatePs.setString(1, achieveValue);
+                    updatePs.setInt(2, managerId);
+                    updatePs.setString(3, currentMonth);
+                    int rowsAffected = updatePs.executeUpdate();
+                    logger.info("Updated manager " + managerId + " target with total: car-" + totalCars + ",parts-" + totalParts + ", rows affected: " + rowsAffected);
+                } else {
+                    insertPs.setInt(1, managerId);
+                    insertPs.setString(2, currentMonth + "-01");
+                    insertPs.setString(3, "car-0,parts-0");
+                    insertPs.setString(4, achieveValue);
+                    int rowsAffected = insertPs.executeUpdate();
+                    logger.info("Added new manager " + managerId + " target with total: car-" + totalCars + ",parts-" + totalParts + ", rows affected: " + rowsAffected);
+                }
             }
-            updateSingleUserTarget(managerId, totalCars, totalParts, true);
-            logger.info("Updated manager " + managerId + " target with total: car-" + totalCars + ",parts-" + totalParts);
         } catch (SQLException e) {
             logger.error("Error updating manager target for manager: " + managerId, e);
         }
@@ -1148,7 +1205,6 @@ public class staffShopingCartController {
             Stage currentStage = (Stage) homeButton.getScene().getWindow();
             currentStage.setScene(new Scene(root));
             currentStage.setTitle("Welcome");
-            currentStage.setFullScreen(true);
             currentStage.show();
         } catch (IOException e) {
             showAlert("Navigation Error", "Failed to return to dashboard: " + e.getMessage());
@@ -1212,9 +1268,7 @@ public class staffShopingCartController {
     private void goBack() {
         String[] possiblePaths;
         SessionStaff session = SessionStaff.getInstance();
-
         boolean hasAccessories = !session.getSelectedAccessories().isEmpty();
-
         if (carConfig == null && hasAccessories) {
             possiblePaths = new String[]{"/Fxml/staffAsset.fxml", "/View/staffAsset.fxml", "/staffAsset.fxml"};
         } else if (carConfig != null) {
@@ -1222,35 +1276,22 @@ public class staffShopingCartController {
         } else {
             possiblePaths = new String[]{"/Fxml/staffWelcome.fxml", "/View/staffWelcome.fxml", "/staffWelcome.fxml"};
         }
-
         Parent root = null;
-
         for (String path : possiblePaths) {
             try {
                 root = FXMLLoader.load(getClass().getResource(path));
                 break;
-            } catch (Exception ignored) {}
+            } catch (Exception e) {}
         }
-
-        // Fallback navigation
         if (root == null) {
             navigateToStaffWelcome();
             return;
         }
-
         Stage currentStage = (Stage) backButton.getScene().getWindow();
-        Scene scene = new Scene(root);
-
-        currentStage.setScene(scene);
+        currentStage.setScene(new Scene(root));
         currentStage.setTitle("Navigation");
-
-        // Enable fullscreen
-        currentStage.setFullScreen(true);
-
-        currentStage.centerOnScreen();
         currentStage.show();
     }
-
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
