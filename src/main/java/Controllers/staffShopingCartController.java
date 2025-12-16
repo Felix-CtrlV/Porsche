@@ -832,14 +832,14 @@ public class staffShopingCartController {
             selectPs.setInt(1, userId);
             selectPs.setString(2, currentMonth);
 
-            String currentAchieve = "car-0,parts-0";
+            String currentAchieve = "cars-0,parts-0";
             boolean recordExists = false;
 
             try (ResultSet rs = selectPs.executeQuery()) {
                 if (rs.next()) {
                     currentAchieve = rs.getString("achieve");
                     if (currentAchieve == null) {
-                        currentAchieve = "car-0,parts-0";
+                        currentAchieve = "cars-0,parts-0";
                     }
                     recordExists = true;
                 }
@@ -850,7 +850,7 @@ public class staffShopingCartController {
             try {
                 String[] parts = currentAchieve.split(",");
                 if (parts.length == 2) {
-                    currentCars = Integer.parseInt(parts[0].replace("car-", "").trim());
+                    currentCars = Integer.parseInt(parts[0].replace("cars-", "").trim());
                     currentParts = Integer.parseInt(parts[1].replace("parts-", "").trim());
                 }
             } catch (NumberFormatException e) {
@@ -860,7 +860,7 @@ public class staffShopingCartController {
 
             int newCars = currentCars + carCount;
             int newParts = currentParts + accessoryCount;
-            String newAchieve = "car-" + newCars + ",parts-" + newParts;
+            String newAchieve = "cars-" + newCars + ",parts-" + newParts;
 
             if (recordExists) {
                 updatePs.setString(1, newAchieve);
@@ -871,7 +871,7 @@ public class staffShopingCartController {
             } else {
                 insertPs.setInt(1, userId);
                 insertPs.setString(2, currentMonth + "-01");
-                insertPs.setString(3, "car-0,parts-0");
+                insertPs.setString(3, "cars-0,parts-0");
                 insertPs.setString(4, newAchieve);
                 int rowsAffected = insertPs.executeUpdate();
                 logger.info("Added new user_target entry for user " + userId + " with achieve: " + newAchieve + ", rows affected: " + rowsAffected);
@@ -922,7 +922,7 @@ public class staffShopingCartController {
                                         try {
                                             String[] parts = staffAchieve.split(",");
                                             if (parts.length == 2) {
-                                                int staffCars = Integer.parseInt(parts[0].replace("car-", "").trim());
+                                                int staffCars = Integer.parseInt(parts[0].replace("cars-", "").trim());
                                                 int staffParts = Integer.parseInt(parts[1].replace("parts-", "").trim());
                                                 totalCars += staffCars;
                                                 totalParts += staffParts;
@@ -937,21 +937,21 @@ public class staffShopingCartController {
                     }
                 }
 
-                String achieveValue = "car-" + totalCars + ",parts-" + totalParts;
+                String achieveValue = "cars-" + totalCars + ",parts-" + totalParts;
 
                 if (managerRecordExists) {
                     updatePs.setString(1, achieveValue);
                     updatePs.setInt(2, managerId);
                     updatePs.setString(3, currentMonth);
                     int rowsAffected = updatePs.executeUpdate();
-                    logger.info("Updated manager " + managerId + " target with total: car-" + totalCars + ",parts-" + totalParts + ", rows affected: " + rowsAffected);
+                    logger.info("Updated manager " + managerId + " target with total: cars-" + totalCars + ",parts-" + totalParts + ", rows affected: " + rowsAffected);
                 } else {
                     insertPs.setInt(1, managerId);
                     insertPs.setString(2, currentMonth + "-01");
-                    insertPs.setString(3, "car-0,parts-0");
+                    insertPs.setString(3, "cars-0,parts-0");
                     insertPs.setString(4, achieveValue);
                     int rowsAffected = insertPs.executeUpdate();
-                    logger.info("Added new manager " + managerId + " target with total: car-" + totalCars + ",parts-" + totalParts + ", rows affected: " + rowsAffected);
+                    logger.info("Added new manager " + managerId + " target with total: cars-" + totalCars + ",parts-" + totalParts + ", rows affected: " + rowsAffected);
                 }
             }
         } catch (SQLException e) {
@@ -1205,6 +1205,7 @@ public class staffShopingCartController {
             Stage currentStage = (Stage) homeButton.getScene().getWindow();
             currentStage.setScene(new Scene(root));
             currentStage.setTitle("Welcome");
+            currentStage.setFullScreen(true);
             currentStage.show();
         } catch (IOException e) {
             showAlert("Navigation Error", "Failed to return to dashboard: " + e.getMessage());
