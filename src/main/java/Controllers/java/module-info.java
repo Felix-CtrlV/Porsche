@@ -1,4 +1,4 @@
-module Porsche{
+module MainUI {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.fxml;
@@ -19,6 +19,7 @@ module Porsche{
     requires java.net.http;
     requires java.prefs;
     requires jdk.httpserver;
+    requires Porsche;
 
     opens MainUI to javafx.fxml;
     opens Controllers to javafx.fxml;
@@ -26,5 +27,4 @@ module Porsche{
 
     exports MainUI;
     exports Controllers;
-    exports Model;
 }

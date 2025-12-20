@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.PaymentDetailsController"
+            stylesheets="@../CSS/payment-details.css">
+
+    <top>
+        <HBox spacing="10" padding="10">
+            <children>
+                <Label text="Payment Details"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="searchField" promptText="Search by customer name..." />
+                <Button text="Search" onAction="#onSearch" />
+                <Button text="Refresh" onAction="#onRefresh" />
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" padding="10">
+            <children>
+                <TableView fx:id="paymentsTable" VBox.vgrow="ALWAYS" prefHeight="400" maxWidth="Infinity">
+                    <columns>
+                        <TableColumn fx:id="colOrderId" text="Order ID" prefWidth="90" />
+                        <TableColumn fx:id="colCustomerId" text="Customer ID" prefWidth="110" />
+                        <TableColumn fx:id="colCustomerName" text="Customer Name" prefWidth="180" />
+                        <TableColumn fx:id="colTotal" text="Total" prefWidth="120" />
+                        <TableColumn fx:id="colDown" text="Down" prefWidth="100" />
+                        <TableColumn fx:id="colMonthly" text="Monthly" prefWidth="110" />
+                        <TableColumn fx:id="colMonthsRem" text="Months Left" prefWidth="100" />
+                        <TableColumn fx:id="colPaid" text="Paid" prefWidth="120" />
+                        <TableColumn fx:id="colRemain" text="Remaining" prefWidth="120" />
+                        <TableColumn fx:id="colStatus" text="Status" prefWidth="100" />
+                        <TableColumn fx:id="colLastPay" text="Last Payment" prefWidth="160" />
+                    </columns>
+                </TableView>
+
+                <HBox spacing="10">
+                    <children>
+                        <TextField fx:id="orderIdInput" promptText="Order ID" />
+                        <Button text="Record Monthly Payment" onAction="#onRecordMonthly" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>
